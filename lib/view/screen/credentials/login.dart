@@ -57,10 +57,7 @@ class Login extends StatelessWidget {
                   SizedBox(height: Get.height / 20),
 
                   //button
-                  GestureDetector(
-                    onTap: validation.SiginTab,
-                    child: button(AppString.signin),
-                  ),
+                  GestureDetector(onTap: validation.SiginTab, child: button(AppString.signin)),
                   SizedBox(height: Get.height / 40),
 
                   //Or
