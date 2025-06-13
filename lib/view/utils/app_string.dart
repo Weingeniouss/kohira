@@ -1,6 +1,9 @@
 // ignore_for_file: constant_identifier_names
 
 class AppString {
+  //Error
+  static const fild = 'Please Fild All Error !';
+
   //Button
   static const google = 'google';
   static const facebook = 'facebook';
@@ -24,6 +27,7 @@ class AppString {
   static const hintconfirmpassword = 'Enter Confirm Password';
   static const firstname = 'First Name';
   static const lastname = 'Last Name';
+  static const notarobot  = "I'm Not a Robot";
 
   //Forget password
   static const subHadingforgat = 'If You Forgot your password no worry Enter Your Email';

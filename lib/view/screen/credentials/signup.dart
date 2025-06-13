@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_gif.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
-
+import '../../../controller/user_inerface/credentials/singup_controller.dart';
 import '../../utils/app_String.dart';
 import '../../utils/app_icon.dart';
 import '../../utils/widget/button.dart';
@@ -12,148 +13,118 @@ import '../../utils/widget/inputField.dart';
 import '../../utils/widget/set_logo.dart';
 import '../../utils/widget/title_text.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
-
+class Signup extends StatelessWidget {
+  SingupController validation = Get.put(SingupController());
+  Signup({super.key});
   @override
-  State<Signup> createState() => _SignupState();
-}
+  Widget build(BuildContext context) {
+    return Obx(() => Scaffold(
+      body: Container(
+        width: Get.width, height: Get.height,
+        decoration: BoxDecoration(color: AppColor.white_color),
+        child: SafeArea(
+          child: horizontalpadding(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      setLogo(),
+                    ],
+                  ),
+                  title_text(AppString.signin),
+                  SizedBox(height: Get.height / 80),
+                  sub_titel_text(AppString.subsignin),
+                  SizedBox(height: Get.height / 20),
 
-class _SignupState extends State<Signup> {
+                  //Inputfild
+                  inputField(hintText: AppString.firstname, icon: AppIcon.parson, controller: validation.frist_controller, empty: validation.firstname_type.value),
+                  inputField(hintText: AppString.lastname, icon: AppIcon.parson, controller: validation.last_controller, empty: validation.lastname_type.value),
+                  inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColor.textfild_color,
+                        )
+                      )
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(AppGif.earth,scale: 1.5),
+                        SizedBox(width: Get.width / 50),
+                        Expanded(
+                          child: DropdownButton(
+                            underline: SizedBox(),
+                            value: validation.selectedValue.value,
+                            isExpanded: true,
+                            items: validation.Contycode.map((item) => DropdownMenuItem(value: item ,child: Text(item))).toList(),
+                            onChanged: validation.selectedvalue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: Get.height / 50),
+                  inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
+                  inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
+                  inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value),
+                  Row(
+                    children: [
+                      Transform.scale(
+                        scale: 1.3,
+                        child: Checkbox(
+                          value: validation.value.value,
+                          onChanged: validation.selectedcheak,
+                          overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
+                          side: BorderSide(color: AppColor.pink_color, width: 2),
+                          checkColor: Colors.white,
+                          activeColor: AppColor.pink_color,
+                        ),
+                      ),
+                      Text(AppString.notarobot,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500,fontSize: Get.width * 0.04)),
+                    ],
+                  ),
+                  SizedBox(height: Get.height / 50),
 
-  bool firstname_type = false;
-  bool lastname_type = false;
-  bool email_type = false;
-  bool password_type = false;
-  bool mobile_type = false;
-  bool confirmpassword_type = false;
-
-
-  TextEditingController frist_controller = TextEditingController();
-  TextEditingController last_controller = TextEditingController();
-  TextEditingController email_controller = TextEditingController();
-  TextEditingController mobile_controller = TextEditingController();
-  TextEditingController password_controller = TextEditingController();
-  TextEditingController confiim_password_controller = TextEditingController();
-
-
-  void SignupnTab() {
-    if (email_controller.text.isEmpty) {
-      setState(() {
-        email_type = true;
-      });
-    }
-    else {
-      setState(() {
-        email_type = false;
-      });
-    }
-    if (password_controller.text.isEmpty) {
-      setState(() {
-        password_type = true;
-      });
-    }
-    else {
-      setState(() {
-        password_type = false;
-      });
-    }
-    if (mobile_controller.text.isEmpty) {
-      setState(() {
-        mobile_type = true;
-      });
-    }
-    else {
-      setState(() {
-        mobile_type = false;
-      });
-    }
-    if (frist_controller.text.isEmpty) {
-      setState(() {
-        firstname_type = true;
-      });
-    }
-    else {
-      setState(() {
-        firstname_type = false;
-      });
-    }
-    if (last_controller.text.isEmpty) {
-      setState(() {
-        lastname_type = true;
-      });
-    }
-    else {
-      setState(() {
-        lastname_type = false;
-      });
-    }
-  }
-
-
-  @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Container(
-      width: Get.width,
-      height: Get.height,
-      decoration: BoxDecoration(color: AppColor.white_color),
-      child: SafeArea(
-        child: horizontalpadding(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    setLogo(),
-                  ],
-                ),
-                title_text(AppString.signin),
-                SizedBox(height: Get.height / 80),
-                sub_titel_text(AppString.subsignin),
-                SizedBox(height: Get.height / 20),
-
-                 //Inputfild
-                inputField(hintText: AppString.firstname,icon: AppIcon.parson,controller: frist_controller,empty: firstname_type),
-                inputField(hintText: AppString.lastname,icon: AppIcon.parson,controller: last_controller,empty: lastname_type),
-                inputField(hintText: AppString.hintemail,icon: AppIcon.mail,controller: email_controller,empty: email_type),
-                inputField(hintText: AppString.hintmobile,icon: AppIcon.mobile,controller: mobile_controller,empty: mobile_type),
-                inputField(hintText: AppString.hintpassword,icon: AppIcon.password,controller: password_controller,empty: password_type),
-                inputField(hintText: AppString.hintconfirmpassword,icon: AppIcon.password,controller: confiim_password_controller,empty: confirmpassword_type),
-                SizedBox(height: Get.height / 50),
-
-                //
-                Text(AppString.singupHading,style: TextStyle(fontSize: Get.width * 0.033)),
-                SizedBox(height: Get.height / 30),
-                GestureDetector(
-                  onTap: SignupnTab,
-                  child: button(AppString.signUp),
-                ),
-              ],
+                  //
+                  Text(AppString.singupHading, style: TextStyle(fontSize: Get.width * 0.033)),
+                  SizedBox(height: Get.height / 30),
+                  GestureDetector(
+                    onTap: validation.SignupnTab,
+                    child: button(AppString.signUp),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-    bottomNavigationBar: GestureDetector(
-      onTap: () => Get.back(),
-      child: Container(
-        height: Get.height *0.050,
-        decoration: BoxDecoration(
-          color: AppColor.white_color,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(AppString.donthaveanaccount,style: TextStyle(fontSize: Get.width * 0.04)),
-            SizedBox(width: Get.width / 100),
-            Text(AppString.signin,style: TextStyle(fontSize: Get.width * 0.04,fontWeight: FontWeight.w600,color: AppColor.pink_color)),
-          ],
+      bottomNavigationBar: GestureDetector(
+        onTap: () => Get.back(),
+        child: Container(
+          height: Get.height * 0.050,
+          decoration: BoxDecoration(color: AppColor.white_color),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(AppString.donthaveanaccount, style: TextStyle(fontSize: Get.width * 0.04)),
+              SizedBox(width: Get.width / 100),
+              Text(
+                AppString.signin,
+                style: TextStyle(
+                  fontSize: Get.width * 0.04,
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.pink_color,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    ));
+  }
 }
