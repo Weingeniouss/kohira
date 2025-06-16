@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/API/credentials/login.dart';
 import 'package:kohira/controller/user_inerface/credentials/login_controller.dart';
 import 'package:kohira/view/screen/credentials/forgetpassword.dart';
 import 'package:kohira/view/screen/credentials/signup.dart';
@@ -18,6 +19,7 @@ import '../../utils/widget/title_text.dart';
 
 class Login extends StatelessWidget {
   LoginController validation = Get.put(LoginController());
+  LoginCalling login = Get.put(LoginCalling());
   Login({super.key});
   @override
   Widget build(BuildContext context) {
@@ -27,60 +29,69 @@ class Login extends StatelessWidget {
         decoration: BoxDecoration(color: AppColor.white_color),
         child: SafeArea(
           child: horizontalpadding(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      setLogo(),
-                    ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    setLogo(),
+                  ],
+                ),
+                title_text(AppString.signin),
+                SizedBox(height: Get.height / 80),
+                sub_titel_text(AppString.subsignin),
+                SizedBox(height: Get.height / 20),
+
+                //Inputfild
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                         inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
+                    inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () => Get.to(() => Forgetpassword()),
+                          child: forgetpassword(AppString.forgetPassword),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: Get.height / 20),
+
+                    //button
+                    GestureDetector(
+                      onTap: () => validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text)),
+                      child: button(AppString.signin),
+                    ),
+                    SizedBox(height: Get.height / 40),
+
+                    //Or
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: AppColor.textfild_color)),
+                        SizedBox(width: Get.width / 20),
+                        Text('Or', style: TextStyle(color: AppColor.othersub_color, fontSize: Get.width * 0.04)),
+                        SizedBox(width: Get.width / 20),
+                        Expanded(child: Divider(color: AppColor.textfild_color)),
+                      ],
+                    ),
+                    SizedBox(height: Get.height / 30),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        company_button(AppString.google, AppIcon.google),
+                        company_button(AppString.facebook, AppIcon.facebook),
+                      ],
+                    ),
+                      ],
+                    ),
                   ),
-                  title_text(AppString.signin),
-                  SizedBox(height: Get.height / 80),
-                  sub_titel_text(AppString.subsignin),
-                  SizedBox(height: Get.height / 20),
-
-                  //Inputfild
-                  inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
-                  inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Get.to(() => Forgetpassword()),
-                        child: forgetpassword(AppString.forgetPassword),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Get.height / 20),
-
-                  //button
-                  GestureDetector(onTap: validation.SiginTab, child: button(AppString.signin)),
-                  SizedBox(height: Get.height / 40),
-
-                  //Or
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: AppColor.textfild_color)),
-                      SizedBox(width: Get.width / 20),
-                      Text('Or', style: TextStyle(color: AppColor.othersub_color, fontSize: Get.width * 0.04)),
-                      SizedBox(width: Get.width / 20),
-                      Expanded(child: Divider(color: AppColor.textfild_color)),
-                    ],
-                  ),
-                  SizedBox(height: Get.height / 30),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      company_button(AppString.google, AppIcon.google),
-                      company_button(AppString.facebook, AppIcon.facebook),
-                    ],
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),

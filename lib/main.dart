@@ -1,11 +1,28 @@
 // ignore_for_file: prefer_const_constructors
+// Registered a new Firebase ios app on Firebase project kohira-2ac25.
+// Firebase configuration file lib\firebase_options.dart generated successfully with the following Firebase apps:
+//
+// Platform  Firebase App Id
+// android   1:346758579783:android:cbbe85b0324c7a6ba45362
+// ios       1:346758579783:ios:d1a15726b5fabe9ea45362
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:toastification/toastification.dart';
 
-void main() {runApp(const MyApp());}
+import 'firebase_options.dart';
+
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
