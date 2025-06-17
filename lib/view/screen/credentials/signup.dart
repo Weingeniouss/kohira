@@ -188,7 +188,7 @@ class Signup extends StatelessWidget {
                                 onChanged: validation.selectedcheak,
                                 overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                 side: BorderSide(color: AppColor.pink_color, width: 2),
-                                checkColor: Colors.white,
+                                checkColor: AppColor.white_color,
                                 activeColor: AppColor.pink_color,
                               ),
                             ),
