@@ -10,22 +10,57 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
+import '../../utils/app_json.dart';
 import '../../utils/widget/app_size_text.dart';
 import '../../utils/widget/button.dart';
 import '../../utils/widget/company_button.dart';
 import '../../utils/widget/inputField.dart';
+import '../../utils/widget/lodingstate.dart';
+import '../../utils/widget/pop.dart';
 import '../../utils/widget/set_logo.dart';
 import '../../utils/widget/title_text.dart';
 
 class Login extends StatelessWidget {
   LoginController validation = Get.put(LoginController());
   LoginCalling login = Get.put(LoginCalling());
+
   Login({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Scaffold(
+    ever(login.isLoading, (isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (isLoading) {
+          LoadingState.show(AppJson.loading2);
+        } else {
+          LoadingState.hide();
+        }
+      });
+    });
+
+    return Obx(() {
+      void logins(){
+        if(validation.email_controller.value.text.isEmpty && validation.password_controller.value.text.isEmpty){
+          ToastificationError.Error("Error, Please fill All");
+          validation.email_type.value = true;
+          validation.password_type.value = true;
+        }else if(validation.password_controller.value.text.isEmpty){
+          ToastificationError.Error("Error, Please fill Password");
+          validation.password_type.value = true;
+          validation.email_type.value = false;
+        }else if(validation.email_controller.value.text.isEmpty){
+          ToastificationError.Error("Error, Please fill Email");
+          validation.email_type.value = true;
+          validation.password_type.value = false;
+        }
+        else{
+          validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
+        }
+      }
+      return Scaffold(
       body: Container(
-        height: Get.height, width: Get.width,
+        height: Get.height,
+        width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: SafeArea(
           child: horizontalpadding(
@@ -48,45 +83,45 @@ class Login extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                         inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
-                    inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Get.to(() => Forgetpassword()),
-                          child: forgetpassword(AppString.forgetPassword),
+                        inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
+                        inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Get.to(() => Forgetpassword()),
+                              child: forgetpassword(AppString.forgetPassword),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    SizedBox(height: Get.height / 20),
+                        SizedBox(height: Get.height / 20),
 
-                    //button
-                    GestureDetector(
-                      onTap: () => validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text)),
-                      child: button(AppString.signin),
-                    ),
-                    SizedBox(height: Get.height / 40),
+                        //button
+                        GestureDetector(
+                          onTap: logins,
+                          child: button(AppString.signin),
+                        ),
+                        SizedBox(height: Get.height / 40),
 
-                    //Or
-                    Row(
-                      children: [
-                        Expanded(child: Divider(color: AppColor.textfild_color)),
-                        SizedBox(width: Get.width / 20),
-                        Text('Or', style: TextStyle(color: AppColor.othersub_color, fontSize: Get.width * 0.04)),
-                        SizedBox(width: Get.width / 20),
-                        Expanded(child: Divider(color: AppColor.textfild_color)),
-                      ],
-                    ),
-                    SizedBox(height: Get.height / 30),
+                        //Or
+                        Row(
+                          children: [
+                            Expanded(child: Divider(color: AppColor.textfild_color)),
+                            SizedBox(width: Get.width / 20),
+                            Text('Or', style: TextStyle(color: AppColor.othersub_color, fontSize: Get.width * 0.04)),
+                            SizedBox(width: Get.width / 20),
+                            Expanded(child: Divider(color: AppColor.textfild_color)),
+                          ],
+                        ),
+                        SizedBox(height: Get.height / 30),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        company_button(AppString.google, AppIcon.google),
-                        company_button(AppString.facebook, AppIcon.facebook),
-                      ],
-                    ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            company_button(AppString.google, AppIcon.google),
+                            company_button(AppString.facebook, AppIcon.facebook),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -124,6 +159,7 @@ class Login extends StatelessWidget {
           ),
         ),
       ),
-    ));
+    );
+    });
   }
 }

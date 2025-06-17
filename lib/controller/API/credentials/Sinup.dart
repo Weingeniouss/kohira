@@ -41,7 +41,7 @@ class SinupCalling extends GetxController {
 
     if (result != null && result.status == true) {
       response.value = result;
-      ToastificationSuccess.Success("'Success', ${result.message} ?? Signup successful");
+      ToastificationSuccess.Success("'Success', ${result.message}");
       print({
         '\n Frist Name :-$firstname \n'
             'Last Name:- $lastname \n'
@@ -55,7 +55,7 @@ class SinupCalling extends GetxController {
             'login_type :-$login_type \n'
       });
     } else {
-      ToastificationError.Error("Error, ${result?.message} ?? Signup failed");
+      ToastificationError.Error("Error, ${result?.message}");
 
       print({
         '\n Frist Name :-$firstname \n'

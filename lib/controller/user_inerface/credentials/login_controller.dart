@@ -15,8 +15,9 @@ class LoginController extends GetxController {
   void SiginTab(widget) {
     if (email_controller.text.isEmpty && password_controller.text.isEmpty)
     {
-      email_type.value = true;password_type.value = true;
       ToastificationError.Error(AppString.fild);
+      email_type.value = true;
+      password_type.value = true;
     }
       if (email_controller.text.isEmpty) {email_type.value = true;} else {email_type.value = false;}
       if (password_controller.text.isEmpty) {password_type.value = true;} else {password_type.value = false;
@@ -30,4 +31,3 @@ class LoginController extends GetxController {
     }
   }
 }
-

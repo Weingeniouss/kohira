@@ -1,6 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/API/credentials/forgetpasssword.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -10,10 +13,12 @@ import '../../utils/widget/inputField.dart';
 import '../../utils/widget/title_text.dart';
 
 class Forgetpassword extends StatelessWidget {
-  const Forgetpassword({super.key});
+  final forgetpassswordCalling = Get.put(ForgetpassswordCalling());
+  Forgetpassword({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final email_controller = TextEditingController();
     return Scaffold(
       body: horizontalpadding(
         child: Column(
@@ -28,11 +33,22 @@ class Forgetpassword extends StatelessWidget {
             SizedBox(height: Get.height / 20),
 
             //Inputfild
-            inputField(hintText: AppString.hintemail,icon: AppIcon.mail),
-            SizedBox(height: Get.height / 5.5),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: email_controller),
+                    SizedBox(height: Get.height / 5.5),
 
-            //button
-            button(AppString.GetEmailLink),
+                    //button
+                    GestureDetector(
+                      onTap: () => forgetpassswordCalling.forgetpassworduser(email: email_controller.text),
+                      child: button(AppString.GetEmailLink),
+                    ),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),

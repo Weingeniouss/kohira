@@ -20,6 +20,7 @@ class LoginService {
 
       if (response.statusCode == 200) {
         final login = loginFromJson(response.body);
+        print('Login success:- ${login.toJson()}');
         print('Login success: ${login.message}');
         return login;
       } else {
