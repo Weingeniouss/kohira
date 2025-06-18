@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable, avoid_print
 
 
 // else if(validation.frist_controller.text.isEmpty){
@@ -43,6 +43,7 @@
 //                               ToastificationError.Error('Plsese Enter the ConfimPassword !');
 //                             }
 
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,11 +58,13 @@ import '../../../controller/user_inerface/credentials/singup_controller.dart';
 import '../../utils/app_String.dart';
 import '../../utils/app_icon.dart';
 import '../../utils/widget/button.dart';
+import '../../utils/widget/connction.dart';
 import '../../utils/widget/inputField.dart';
 import '../../utils/widget/lodingstate.dart';
 import '../../utils/widget/pop.dart';
 import '../../utils/widget/set_logo.dart';
 import '../../utils/widget/title_text.dart';
+
 
 class Signup extends StatelessWidget {
   final Country = Get.put(CountryCalling());
@@ -84,9 +87,14 @@ class Signup extends StatelessWidget {
     final TextEditingController searchController = TextEditingController();
     return Obx(() {
       void sinup(){
-        if (validation.password_controller.value == validation.confiim_password_controller.value) {
-          validation.SignupnTab(() {
-            Sinup.registerUser(
+        hasInternetConnection().then((connect){
+          if(!connect){
+            ToastificationError.Error('No Internet Connection! Conncet the Internet then try Agen !!');
+            return;
+          }else{
+            if (validation.password_controller.value == validation.confiim_password_controller.value) {
+              validation.SignupnTab(() {
+              Sinup.registerUser(
               firstname: validation.frist_controller.text,
               lastname: validation.last_controller.text,
               email: validation.email_controller.text,
@@ -101,7 +109,8 @@ class Signup extends StatelessWidget {
           });
         } else {
           ToastificationError.Error('Password dose not mache !');
-        }
+        }}
+        });
       }
       return Scaffold(
       body: Container(
@@ -185,7 +194,7 @@ class Signup extends StatelessWidget {
                               scale: 1.3,
                               child: Checkbox(
                                 value: validation.value.value,
-                                onChanged: validation.selectedcheak,
+                                onChanged: validation.selectedvalue,
                                 overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                 side: BorderSide(color: AppColor.pink_color, width: 2),
                                 checkColor: AppColor.white_color,
