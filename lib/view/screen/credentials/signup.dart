@@ -43,7 +43,6 @@
 //                               ToastificationError.Error('Plsese Enter the ConfimPassword !');
 //                             }
 
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -65,14 +64,12 @@ import '../../utils/widget/pop.dart';
 import '../../utils/widget/set_logo.dart';
 import '../../utils/widget/title_text.dart';
 
-
 class Signup extends StatelessWidget {
-  final Country = Get.put(CountryCalling());
-  final validation = Get.put(SingupController());
-  final Sinup = Get.put(SinupCalling());
+  final Country = Get.put(CountryCalling());  //CountryAPI
+  final validation = Get.put(SingupController()); // UserInterface
+  final Sinup = Get.put(SinupCalling()); // SinupAPI
 
   Signup({super.key});
-
   @override
   Widget build(BuildContext context) {
     ever(Sinup.isLoading, (isLoading) {
@@ -91,7 +88,8 @@ class Signup extends StatelessWidget {
           if(!connect){
             ToastificationError.Error('No Internet Connection! Conncet the Internet then try Agen !!');
             return;
-          }else{
+          }
+          else{
             if (validation.password_controller.value == validation.confiim_password_controller.value) {
               validation.SignupnTab(() {
               Sinup.registerUser(
@@ -251,3 +249,33 @@ class Signup extends StatelessWidget {
     });
   }
 }
+
+// String? _recaptchaToken;
+//   bool _isVerifying = false;
+//
+//   Future<void> _executeRecaptcha() async {
+//   setState(() => _isVerifying = true);
+//
+//   try {
+//     final token = await RecaptchaEnterprise.execute(
+//       '6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF' as RecaptchaAction, // This is a positional argument
+//     );
+//
+//     setState(() {
+//       _recaptchaToken = token;
+//       _isVerifying = false;
+//     });
+//
+//     print("reCAPTCHA token: $token");
+//
+//   } catch (e) {
+//     print("reCAPTCHA execution error: $e");
+//     ToastificationError.Error("Failed to verify reCAPTCHA");
+//     setState(() => _isVerifying = false);
+//   }
+// }
+
+// if (_recaptchaToken == null) { // Add reCAPTCHA check
+//       ToastificationError.Error('Complete reCAPTCHA verification!');
+//       return;
+//     }
