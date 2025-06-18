@@ -194,7 +194,7 @@ class Signup extends StatelessWidget {
                               scale: 1.3,
                               child: Checkbox(
                                 value: validation.value.value,
-                                onChanged: validation.selectedvalue,
+                                onChanged: validation.selectedcheak,
                                 overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                 side: BorderSide(color: AppColor.pink_color, width: 2),
                                 checkColor: AppColor.white_color,
