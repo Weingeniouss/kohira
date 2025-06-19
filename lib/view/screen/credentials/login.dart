@@ -66,8 +66,7 @@ class Login extends StatelessWidget {
       }
         return Scaffold(
         body: Container(
-          height: Get.height,
-          width: Get.width,
+          height: Get.height, width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: SafeArea(
             child: horizontalpadding(
@@ -138,35 +137,37 @@ class Login extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: GestureDetector(
-          onTap: () {
-            Get.to(() => Signup(),
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              transition: Transition.rightToLeft,
-            );
-          },
-          child: Container(
-            height: Get.height * 0.050,
-            decoration: BoxDecoration(color: AppColor.white_color),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(AppString.donthaveanaccount, style: TextStyle(fontSize: Get.width * 0.04)),
-                SizedBox(width: Get.width / 100),
-                Text(
-                  AppString.signUp,
-                  style: TextStyle(
-                    fontSize: Get.width * 0.04,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.pink_color,
+        bottomNavigationBar: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              Get.to(() => Signup(),
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                transition: Transition.rightToLeft,
+              );
+            },
+            child: Container(
+              height: Get.height * 0.050,
+              decoration: BoxDecoration(color: AppColor.white_color),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(AppString.donthaveanaccount, style: TextStyle(fontSize: Get.width * 0.04)),
+                  SizedBox(width: Get.width / 100),
+                  Text(
+                    AppString.signUp,
+                    style: TextStyle(
+                      fontSize: Get.width * 0.04,
+                      fontWeight: FontWeight.w600,
+                      color: AppColor.pink_color,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      );
+        );
     });
   }
 }

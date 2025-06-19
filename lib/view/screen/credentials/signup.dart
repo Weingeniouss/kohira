@@ -112,136 +112,143 @@ class Signup extends StatelessWidget {
       }
       return Scaffold(
       body: Container(
-        width: Get.width,
-        height: Get.height,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: SafeArea(
-          child: horizontalpadding(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          child: Container(
+            width: Get.width,
+            height: Get.height,
+            decoration: BoxDecoration(color: AppColor.white_color),
+            child: SafeArea(
+              child: horizontalpadding(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    setLogo(),
-                  ],
-                ),
-                title_text(AppString.signin),
-                SizedBox(height: Get.height / 80),
-                sub_titel_text(AppString.subsignin),
-                SizedBox(height: Get.height / 20),
-
-                //Inputfild
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        inputField(hintText: AppString.firstname, icon: AppIcon.parson, controller: validation.frist_controller, empty: validation.firstname_type.value),
-                        inputField(hintText: AppString.lastname, icon: AppIcon.parson, controller: validation.last_controller, empty: validation.lastname_type.value),
-                        inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
-                          child: Row(
-                            children: [
-                              Image.asset(AppGif.earth, scale: 1.5),
-                              SizedBox(width: Get.width / 50),
-                              Expanded(
-                                child: DropdownButton2<Data>(
-                                  value: Country.selectedCountry.value,
-                                  dropdownSearchData: DropdownSearchData(
-                                    searchController: searchController,
-                                    searchInnerWidgetHeight: 40,
-                                    searchInnerWidget: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: TextField(
-                                        controller: searchController,
-                                        decoration: InputDecoration(
-                                          hintText: 'Search...',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                    ),
-                                    searchMatchFn: (item, searchValue) {
-                                      return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
-                                    },
-                                  ),
-                                  underline: SizedBox(),
-                                  isExpanded: true,
-                                  items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
-                                  onChanged: (newValue) {
-                                    Country.selectedCountry.value = newValue!;
-                                  },
-                                  dropdownStyleData: DropdownStyleData(
-                                    offset: Offset(0, -10),
-                                    maxHeight: Get.height / 3,
-                                    decoration: BoxDecoration(color: AppColor.white_color),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: Get.height / 50),
-                        inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
-                        inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
-                        inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value),
-                        Row(
-                          children: [
-                            Transform.scale(
-                              scale: 1.3,
-                              child: Checkbox(
-                                value: validation.value.value,
-                                onChanged: validation.selectedcheak,
-                                overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
-                                side: BorderSide(color: AppColor.pink_color, width: 2),
-                                checkColor: AppColor.white_color,
-                                activeColor: AppColor.pink_color,
-                              ),
-                            ),
-                            Text(AppString.notarobot, style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
-                          ],
-                        ),
-                        SizedBox(height: Get.height / 50),
-
-                        //
-                        Text(AppString.singupHading, style: TextStyle(fontSize: Get.width * 0.033)),
-                        SizedBox(height: Get.height / 30),
-                        GestureDetector(
-                          onTap: sinup,
-                          child: (Sinup.isLoading.value)
-                              ? circle(CircularProgressIndicator(color: AppColor.white_color))
-                              : button(AppString.signUp),
-                        ),
-                        SizedBox(height: Get.height / 50),
+                        setLogo(),
                       ],
                     ),
-                  ),
-                )
-              ],
+                    title_text(AppString.signin),
+                    SizedBox(height: Get.height / 80),
+                    sub_titel_text(AppString.subsignin),
+                    SizedBox(height: Get.height / 20),
+
+                    //Inputfild
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            inputField(hintText: AppString.firstname, icon: AppIcon.parson, controller: validation.frist_controller, empty: validation.firstname_type.value),
+                            inputField(hintText: AppString.lastname, icon: AppIcon.parson, controller: validation.last_controller, empty: validation.lastname_type.value),
+                            inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
+                              child: Row(
+                                children: [
+                                  Image.asset(AppGif.earth, scale: 1.5),
+                                  SizedBox(width: Get.width / 50),
+                                  Expanded(
+                                    child: DropdownButton2<Data>(
+                                      value: Country.selectedCountry.value,
+                                      dropdownSearchData: DropdownSearchData(
+                                        searchController: searchController,
+                                        searchInnerWidgetHeight: 40,
+                                        searchInnerWidget: Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: TextField(
+                                            controller: searchController,
+                                            decoration: InputDecoration(
+                                              hintText: 'Search...',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          ),
+                                        ),
+                                        searchMatchFn: (item, searchValue) {
+                                          return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
+                                        },
+                                      ),
+                                      underline: SizedBox(),
+                                      isExpanded: true,
+                                      items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
+                                      onChanged: (newValue) {
+                                        Country.selectedCountry.value = newValue!;
+                                      },
+                                      dropdownStyleData: DropdownStyleData(
+                                        offset: Offset(0, -10),
+                                        maxHeight: Get.height / 3,
+                                        decoration: BoxDecoration(color: AppColor.white_color),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: Get.height / 50),
+                            inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
+                            inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
+                            inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value),
+                            Row(
+                              children: [
+                                Transform.scale(
+                                  scale: 1.3,
+                                  child: Checkbox(
+                                    value: validation.value.value,
+                                    onChanged: validation.selectedcheak,
+                                    overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
+                                    side: BorderSide(color: AppColor.pink_color, width: 2),
+                                    checkColor: AppColor.white_color,
+                                    activeColor: AppColor.pink_color,
+                                  ),
+                                ),
+                                Text(AppString.notarobot, style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 50),
+
+                            //
+                            Text(AppString.singupHading, style: TextStyle(fontSize: Get.width * 0.033)),
+                            SizedBox(height: Get.height / 30),
+                            GestureDetector(
+                              onTap: sinup,
+                              child: (Sinup.isLoading.value)
+                                  ? circle(CircularProgressIndicator(color: AppColor.white_color))
+                                  : button(AppString.signUp),
+                            ),
+                            SizedBox(height: Get.height / 50),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: GestureDetector(
-        onTap: () => Get.back(),
-        child: Container(
-          height: Get.height * 0.050,
-          decoration: BoxDecoration(color: AppColor.white_color),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(AppString.donthaveanaccount, style: TextStyle(fontSize: Get.width * 0.04)),
-              SizedBox(width: Get.width / 100),
-              Text(
-                AppString.signin,
-                style: TextStyle(
-                  fontSize: Get.width * 0.04,
-                  fontWeight: FontWeight.w600,
-                  color: AppColor.pink_color,
+      bottomNavigationBar: SafeArea(
+        child: GestureDetector(
+          onTap: () => Get.back(),
+          child: Container(
+            height: Get.height * 0.050,
+            decoration: BoxDecoration(color: AppColor.white_color),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(AppString.donthaveanaccount, style: TextStyle(fontSize: Get.width * 0.04)),
+                SizedBox(width: Get.width / 100),
+                Text(
+                  AppString.signin,
+                  style: TextStyle(
+                    fontSize: Get.width * 0.04,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.pink_color,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

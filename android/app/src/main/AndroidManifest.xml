@@ -1,5 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+     <uses-sdk tools:overrideLibrary="com.google.firebase.auth"/>
     <application
         android:label="kohira"
         android:name="${applicationName}"
