@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
      <uses-sdk tools:overrideLibrary="com.google.firebase.auth"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="true"
         android:label="kohira"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -22,6 +25,13 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <meta-data
+                android:name="io.flutter.embedded_views_preview"
+                android:value="true"
+                />
+            <meta-data
+    android:name="com.google.android.recaptcha.site_key"
+    android:value="https://next.weingenious.in/" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
