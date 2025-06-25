@@ -13,6 +13,13 @@ class AppString {
   static const signUp = 'Sign Up';
   static const signin = 'Sign In';
 
+  //Bottam
+  static const home = 'Home';
+  static const category = 'Category';
+  static const cart = "My Cart";
+  static const find = 'Find Store';
+  static const account = 'Account';
+
   //credentials
   //Login
   static const subsignin = 'If you have a Kohira customer account please sign in';
@@ -31,4 +38,8 @@ class AppString {
 
   //Forget password
   static const subHadingforgat = 'If You Forgot your password no worry Enter Your Email';
+
+  //Menu
+   //home
+    static const matter_heading = 'Wear What Matter';
 }

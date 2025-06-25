@@ -10,4 +10,8 @@ class AppColor {
   static Color pink_color = Color(0xffF37D78);
   static Color othersub_color = Color(0xff999999);
   static Color green_color = Color(0xff208E53);
+  static Color Appbercolor = Color(0xffF5EFE9);
+  static Color bottomColor = Color(0xffBFBFBF);
+  static Color hintColor = Color(0xff949494);
+  static Color spicalcontainer = Color(0xffF4F4F4);
 }

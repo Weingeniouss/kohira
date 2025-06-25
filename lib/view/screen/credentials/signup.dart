@@ -228,10 +228,10 @@ class Signup extends StatelessWidget {
     validation.value.value = val ?? false;
 
     try {
-      final _siteKey = Platform.isAndroid
+      final siteKey = Platform.isAndroid
           ? '6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF' : '<IOS_SITE_KEY>';
 
-      _recaptchaClient = await Recaptcha.fetchClient(_siteKey);
+      _recaptchaClient = await Recaptcha.fetchClient(siteKey);
 
       final token = await _recaptchaClient!.execute(
         RecaptchaAction.LOGIN(), // 👈 use meaningful action

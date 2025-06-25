@@ -24,12 +24,9 @@ class Forgetpassword extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: Get.height / 10),
-            SvgPicture.asset(AppIcon.forgetpassword),
-            SizedBox(height: Get.height / 30),
-            title_text(AppString.forgetPassword),
-            SizedBox(height: Get.height / 80),
-            sub_titel_text(AppString.subHadingforgat),
+            SizedBox(height: Get.height / 10), SvgPicture.asset(AppIcon.forgetpassword),
+            SizedBox(height: Get.height / 30), title_text(AppString.forgetPassword),
+            SizedBox(height: Get.height / 80), sub_titel_text(AppString.subHadingforgat),
             SizedBox(height: Get.height / 20),
 
             //Inputfild

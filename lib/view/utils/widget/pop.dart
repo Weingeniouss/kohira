@@ -11,7 +11,7 @@ class ToastificationSuccess {
       dismissDirection: DismissDirection.startToEnd,
       type: ToastificationType.success,
       style: ToastificationStyle.minimal,
-      autoCloseDuration: Duration(seconds: 2),
+      autoCloseDuration: Duration(seconds: 5),
       boxShadow: kElevationToShadow[2],
     );
   }
