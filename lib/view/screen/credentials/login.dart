@@ -50,14 +50,17 @@ class Login extends StatelessWidget {
               ToastificationError.Error("Error, Please fill All");
               validation.email_type.value = true;
               validation.password_type.value = true;
+              return;
             } else if (validation.password_controller.value.text.isEmpty) {
               ToastificationError.Error("Error, Please fill Password");
               validation.password_type.value = true;
               validation.email_type.value = false;
+              return;
             } else if (validation.email_controller.value.text.isEmpty) {
               ToastificationError.Error("Error, Please fill Email");
               validation.email_type.value = true;
               validation.password_type.value = false;
+              return;
             } else {
               validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
             }

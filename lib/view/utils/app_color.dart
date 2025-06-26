@@ -13,5 +13,7 @@ class AppColor {
   static Color Appbercolor = Color(0xffF5EFE9);
   static Color bottomColor = Color(0xffBFBFBF);
   static Color hintColor = Color(0xff949494);
+  static Color hintColor2 = Color(0xffE8E2DD);
+  static Color dividercolor = Color(0xffD8D2CD);
   static Color spicalcontainer = Color(0xffF4F4F4);
 }

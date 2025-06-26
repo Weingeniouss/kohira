@@ -19,6 +19,7 @@ class Bottom extends StatefulWidget {
 }
 
 class _BottomState extends State<Bottom> {
+
   int selectindex = 0;
 
   List<Widget> scrren = [

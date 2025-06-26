@@ -8,7 +8,7 @@ import '../app_icon.dart';
 import '../app_logo.dart';
 import 'horizontalpading.dart';
 
-PreferredSizeWidget Appbar() {
+PreferredSizeWidget Appbar({String? prefixicon,void Function()? prefixonTap}) {
   final appbarsize = Get.height * 0.10;
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
@@ -22,7 +22,7 @@ PreferredSizeWidget Appbar() {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SvgPicture.asset(AppIcon.menu),
+                GestureDetector(onTap: prefixonTap,child: SvgPicture.asset(prefixicon!)),
                 SizedBox(width: Get.width / 50),
                 Image.asset(AppLogo.logo, scale: 15),
                 Row(

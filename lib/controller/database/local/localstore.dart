@@ -10,21 +10,21 @@ class localdatabase {
     required String mobile,
     required String password,
     required String countrycode,
-  }) async{
-    await pref!.setString('fristname', fristname);
-    await pref!.setString('lastname', lastname);
-    await pref!.setString('email', email);
-    await pref!.setString('mobile', mobile);
-    await pref!.setString('password', password);
-    await pref!.setString('countrycode', countrycode);
-    
-    pref!.get('fristname');
-    pref!.get('lastname');
-    pref!.get('email');
-    pref!.get('mobile');
-    pref!.get('password');
-    pref!.get('countrycode');
-    
+  }) {
+    pref!.setString('fristname', fristname);
+    pref!.setString('lastname', lastname);
+    pref!.setString('email', email);
+    pref!.setString('mobile', mobile);
+    pref!.setString('password', password);
+    pref!.setString('countrycode', countrycode);
+
+    Fristname = pref!.getString('fristname')!;
+    Lastname = pref!.getString('lastname')!;
+    Email = pref!.getString('email')!;
+    Mobile = pref!.getString('mobile')!;
+    Password = pref!.getString('password')!;
+    Countrycode = pref!.getString('countrycode')!;
+
     print('fristname :- $Fristname');
     print('lastname :- $Lastname');
     print('email :- $Email');

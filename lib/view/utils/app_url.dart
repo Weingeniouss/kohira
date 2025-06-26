@@ -14,4 +14,5 @@ class AppUrl {
     //home
       static const categories = '$baseurl/home/categories';
       static const slider = '$baseurl/home/slider';
+      static const homecollcation = '$baseurl/home/collections';
 }
