@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 // Registered a new Firebase ios app on Firebase project kohira-2ac25.
 // Firebase configuration file lib\firebase_options.dart generated successfully with the following Firebase apps:
 //
@@ -20,6 +20,26 @@ Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   pref = await SharedPreferences.getInstance();
+
+  Fristname = pref!.getString('fristname') ?? '';
+  Lastname = pref!.getString('lastname') ?? '';
+  Mobile = pref!.getString('mobile') ?? '';
+  Email = pref!.getString('email') ?? '';
+  Countrycode = pref!.getString('countrycode') ?? '';
+  Password = pref!.getString('password') ?? '';
+
+  islogin = pref!.getBool('login') ?? false;
+
+  print('Fristname $Fristname');
+  print('Lastname $Lastname');
+  print('Mobile $Mobile');
+  print('Email $Email');
+  print('Countrycode $Countrycode');
+  print('Password $Password');
+
+
+  print('Is Login :- $islogin');
+
   runApp(const MyApp());
 }
 

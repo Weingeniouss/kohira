@@ -32,4 +32,13 @@ class localdatabase {
     print('password :- $Password');
     print('countrycode :- $Countrycode');
   }
+
+  void loginstrore({required String email, required String password}){
+    if(Email == email && Password == password){
+      pref!.setBool('login', true);
+      islogin = pref!.getBool('login')!;
+
+      print('isLogin :- $islogin');
+    }
+  }
 }

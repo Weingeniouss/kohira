@@ -10,3 +10,5 @@ String Email = '';
 String Countrycode = '';
 String Mobile = '';
 String Password = '';
+
+bool islogin = false;

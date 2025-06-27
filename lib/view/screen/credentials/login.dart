@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/credentials/login.dart';
+import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/credentials/login_controller.dart';
 import 'package:kohira/view/screen/credentials/forgetpassword.dart';
 import 'package:kohira/view/screen/credentials/signup.dart';
@@ -63,6 +64,7 @@ class Login extends StatelessWidget {
               return;
             } else {
               validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
+              localdatabase().loginstrore(email: validation.email_controller.text, password: validation.password_controller.text);
             }
           }
         });
