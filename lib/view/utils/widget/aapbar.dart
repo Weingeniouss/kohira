@@ -1,15 +1,23 @@
-// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers
+// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../app_color.dart';
-import '../app_icon.dart';
-import '../app_logo.dart';
 import 'horizontalpading.dart';
 
-PreferredSizeWidget Appbar({String? prefixicon,void Function()? prefixonTap}) {
+PreferredSizeWidget Appbar({
+  String? prefixicon,
+  String? logo,
+  void Function()? prefixonTap,
+  String? lefticon,
+  String? hedingname,
+  String? suffixicon_1,
+  String? suffixicon_2,
+}) {
   final appbarsize = Get.height * 0.10;
+
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(
@@ -21,17 +29,30 @@ PreferredSizeWidget Appbar({String? prefixicon,void Function()? prefixonTap}) {
           child: horizontalpadding(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(onTap: prefixonTap,child: SvgPicture.asset(prefixicon!)),
-                SizedBox(width: Get.width / 50),
-                Image.asset(AppLogo.logo, scale: 15),
-                Row(
+              children: <Widget?>[
+                (prefixicon != null && prefixonTap != null)
+                    ? GestureDetector(onTap: prefixonTap, child: SvgPicture.asset(prefixicon))
+                    : null,
+                (lefticon != null) ? GestureDetector(onTap: () => Get.back(), child: SvgPicture.asset(lefticon)) : null,
+
+                (logo != null) ? Row(
                   children: [
-                    SizedBox(width: Get.width / 20), SvgPicture.asset(AppIcon.like),
-                    SizedBox(width: Get.width / 50), SvgPicture.asset(AppIcon.shop),
+                    SizedBox(width: Get.width / 8),
+                    Image.asset(logo, scale: 15),
                   ],
-                )
-              ],
+                ) : null,
+
+                (hedingname != null)
+                    ? Text(hedingname,style: TextStyle(fontSize: Get.width / 23,fontWeight: FontWeight.w600,color: AppColor.pink_color))
+                    : null,
+
+                Row(
+                  children: <Widget?>[
+                    SizedBox(width: Get.width / 20), (suffixicon_1 != null) ? SvgPicture.asset(suffixicon_1) : null,
+                    SizedBox(width: Get.width / 50), (suffixicon_2 != null) ? SvgPicture.asset(suffixicon_2) : null,
+                  ].whereType<Widget>().toList(),
+                ),
+              ].whereType<Widget>().toList(),
             ),
           ),
         ),

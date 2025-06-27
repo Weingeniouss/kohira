@@ -1,13 +1,16 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/home/categories.dart';
 import 'package:kohira/controller/API/menu/home/homecollction.dart';
 import 'package:kohira/controller/API/menu/home/slider.dart';
+import 'package:kohira/view/screen/menu/home/Search.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_json.dart';
+import 'package:kohira/view/utils/app_logo.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
@@ -54,16 +57,51 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: Appbar(prefixicon: AppIcon.menu, prefixonTap: () => scaffoldKey.currentState?.openDrawer()),
-      drawer: Drawer(
-    child: SafeArea(
-      child: Column(
-        children: [
-          Text('dfljjhbg'),
-        ],
+      appBar: Appbar(
+        prefixicon: AppIcon.menu,
+        prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
+        logo: AppLogo.logo,
+        suffixicon_1: AppIcon.like,
+        suffixicon_2: AppIcon.shop,
       ),
-    )// Populate the Drawer in the next step.
-  ),
+      drawer: Drawer(
+        elevation: 0,
+          backgroundColor: AppColor.white_color,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: Get.height * 0.030),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       Image.asset(AppLogo.logo,scale: 13),
+                     ],
+                   ),
+                  SizedBox(height: Get.height * 0.030),
+                  Divider(color: AppColor.textfild_color),
+                  SizedBox(height: Get.height * 0.030),
+                  drawerIcon(icon: AppIcon.bracelet, text: AppString.bracelet,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.collection, text: AppString.collection,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.earrings, text: AppString.earrings,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.mangalsutra, text: AppString.mangalsutra,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.necklace, text: AppString.necklace,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.ring, text: AppString.ring,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.custom, text: AppString.custom,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.dummy, text: AppString.dummy,color: AppColor.white_color),
+                  drawerIcon(icon: AppIcon.Order, text: AppString.Order),
+                  drawerIcon(icon: AppIcon.Wishlist, text: AppString.Wishlist),
+                  drawerIcon(icon: AppIcon.Wallet, text: AppString.Wallet),
+                  drawerIcon(icon: AppIcon.Addresses, text: AppString.Addresses),
+                  drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
+                  drawerIcon(icon: AppIcon.PrivacyPolicy, text: AppString.PrivacyPolicy),
+                  drawerIcon(icon: AppIcon.Logout, text: AppString.Logout),
+                  SizedBox(height: Get.height * 0.030),
+                ],
+              ),
+            ),
+          )
+        ),
       body: Container(
         width: Get.width,
         height: Get.height,
@@ -93,10 +131,11 @@ class _HomeState extends State<Home> {
                         ),
                         child: Center(
                           child: TextField(
+                            onTap: () => Get.dialog(Search(), barrierDismissible: true, useSafeArea: true),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(vertical: Get.height / 60),
                               prefixIcon: Icon(Icons.search, color: AppColor.hintColor),
-                              hintText: 'Search',
+                              hintText: AppString.Searchs,
                               hintStyle: TextStyle(color: AppColor.hintColor),
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -635,6 +674,40 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+Widget drawerIcon({
+  required String icon,
+  required String text,
+  void Function()? onTap,
+  Color? color
+}){
+  return horizontalpadding(
+    child: GestureDetector(
+      onTap: () => onTap,
+      child: Row(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+            decoration: BoxDecoration(
+              color: AppColor.pink_color,
+              borderRadius: BorderRadius.circular(Get.width / 50),
+            ),
+            padding: EdgeInsets.all(10),
+            child: SvgPicture.asset(icon, width: Get.width * 0.018,height: Get.height * 0.018,color: color),
+          ),
+          SizedBox(width: Get.width / 30),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: Get.width * 0.032,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 //Set Alignment

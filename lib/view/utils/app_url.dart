@@ -1,5 +1,9 @@
+// ignore_for_file: unused_import
+
+import 'package:kohira/view/screen/menu/home/Search.dart';
+
 class AppUrl {
-  //loack
+  //local
   // static const baseurl = 'http://192.168.1.101:8888/kohira-next-lara/api';
   //staging
   static const baseurl = 'https://api.weingenious.in/kohira/api';
@@ -15,4 +19,7 @@ class AppUrl {
       static const categories = '$baseurl/home/categories';
       static const slider = '$baseurl/home/slider';
       static const homecollcation = '$baseurl/home/collections';
+
+    //Seach
+     static const search = '$baseurl/search';
 }

@@ -42,4 +42,24 @@ class AppString {
   //Menu
    //home
     static const matter_heading = 'Wear What Matter';
+
+     //Drawer
+     static const bracelet = 'Bracelet';
+     static const collection = 'Collection';
+     static const earrings = 'Earrings';
+     static const mangalsutra = 'Mangalsutra';
+     static const necklace = 'Necklace';
+     static const ring = 'Ring';
+     static const custom = 'Custom';
+     static const dummy = 'Dummy';
+     static const Order = 'Order History';
+     static const Wishlist = 'Wishlist';
+     static const Wallet = 'Wallet';
+     static const Addresses = 'Addresses';
+     static const HelpCenter = 'HelpCenter';
+     static const PrivacyPolicy = 'PrivacyPolicy';
+     static const Logout = 'Logout';
+
+    //Search
+    static const Searchs = 'Search';
 }
