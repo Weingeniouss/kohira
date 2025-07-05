@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+  <div class="cf-turnstile"
+       data-sitekey="YOUR_SITEKEY"
+       data-callback="onSubmit"></div>
+
+  <script>
+    function onSubmit(token) {
+      window.location.href = window.location.href.split('#')[0] + '#token=' + token;
+    }
+  </script>
+</body>
+</html>
