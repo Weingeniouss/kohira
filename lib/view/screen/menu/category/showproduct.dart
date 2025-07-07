@@ -322,7 +322,7 @@ class _ShowproductState extends State<Showproduct> {
                       ),
                       child: selectindex < allImages.length
                           ? Image.network(allImages[selectindex]['feature'], fit: BoxFit.cover)
-                          : (video.isNotEmpty ? horizontalpadding(child: VideoPlayerMenu(videoUrl: video[0]['path'])) : Placeholder()),
+                          : (video.isNotEmpty ? horizontalpadding(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])) : Placeholder()),
                     ),
                   ),
                   SizedBox(height: Get.height / 80),
@@ -361,8 +361,8 @@ class _ShowproductState extends State<Showproduct> {
                                 borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                 border: Border.all(color: AppColor.textfild_color),
                               ),
-                              // child: Center(child: VideoPlayerMenu(videoUrl: video[0]['path'])),
-                              child: Center(child: Icon(Icons.record_voice_over)),
+                              child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                              // child: Center(child: Icon(Icons.record_voice_over)),
                             ),
                           );
                         }
