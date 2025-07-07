@@ -108,7 +108,7 @@ class _ShowproductState extends State<Showproduct> {
         height: Get.height,
         decoration: BoxDecoration(color: Colors.white),
         child: Obx(() {
-           if (jewellerydetail.isLoading.value) {
+          if (jewellerydetail.isLoading.value) {
             return Center(child: Lottie.asset(AppJson.loading2));
           }
 
@@ -118,16 +118,14 @@ class _ShowproductState extends State<Showproduct> {
 
           // Initialize selections
           if (!initialized && variants.isNotEmpty) {
-            final defaultSize = allRingSizes.firstWhere(
-              (element) => element['default'] == 1,
+            final defaultSize = allRingSizes.firstWhere((element) => element['default'] == 1,
               orElse: () => allRingSizes.isNotEmpty ? allRingSizes[0] : null,
             );
 
             selectedRingSize = defaultSize != null ? defaultSize['paraname'] : null;
 
             // Find parent variant (default selection)
-            final parentVariant = variants.firstWhere(
-              (v) => v['parentitemcode'] == '',
+            final parentVariant = variants.firstWhere((v) => v['parentitemcode'] == '',
               orElse: () => variants.first,
             );
 
@@ -152,10 +150,10 @@ class _ShowproductState extends State<Showproduct> {
 
           // Sort metal stamps (9k, 10k, 14k, 18k)
           final uniqueMetalStamps = metalStamps.toList()..sort((a, b) {
-              final aVal = int.tryParse(a.replaceAll('k', '')) ?? 0;
-              final bVal = int.tryParse(b.replaceAll('k', '')) ?? 0;
-              return aVal.compareTo(bVal);
-            });
+            final aVal = int.tryParse(a.replaceAll('k', '')) ?? 0;
+            final bVal = int.tryParse(b.replaceAll('k', '')) ?? 0;
+            return aVal.compareTo(bVal);
+          });
 
           // Get available colors for selected metal stamp
           final availableColors = <String, bool>{
@@ -179,37 +177,116 @@ class _ShowproductState extends State<Showproduct> {
             }
           }
 
-           final diamondQualitySet = <String>{};
-           final diamondQualityMap = <String, Map<String, dynamic>>{};
+          final diamondQualitySet = <String>{};
+          final diamondQualityMap = <String, Map<String, dynamic>>{};
 
-           for (var variant in variants) {
-             if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
-                 variant['metal_type']?['paraname'] == selectedMetalType &&
-                 variant['jewelry_diamonds'] != null &&
-                 variant['jewelry_diamonds'].isNotEmpty) {
+          for (var variant in variants) {
+            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
+                variant['metal_type']?['paraname'] == selectedMetalType &&
+                variant['jewelry_diamonds'] != null &&
+                variant['jewelry_diamonds'].isNotEmpty) {
 
-               final diamond = variant['jewelry_diamonds'][0];
-               final color = diamond['color'] as String;
-               final clarity = diamond['clarity'] as String;
-               final quality = '$color $clarity';
+              final diamond = variant['jewelry_diamonds'][0];
+              final color = diamond['color'] as String;
+              final clarity = diamond['clarity'] as String;
+              final quality = '$color $clarity';
 
-               // Only add if we haven't seen this quality before
-               if (!diamondQualitySet.contains(quality)) {
-                 diamondQualitySet.add(quality);
-                 diamondQualityMap[quality] = variant;
-               }
-             }
-           }
+              // Only add if we haven't seen this quality before
+              if (!diamondQualitySet.contains(quality)) {
+                diamondQualitySet.add(quality);
+                diamondQualityMap[quality] = variant;
+              }
+            }
+          }
 
-           final totaldiamonds =  currentVariant?['jewelry_diamonds']?[0]?['totaldiamonds'].toString();
-           final totalweight = currentVariant?['jewelry_diamonds']?[0]?['totalweight'].toString();
+          final totaldiamonds =  currentVariant?['jewelry_diamonds']?[0]?['totaldiamonds'].toString();
+          final totalweight = currentVariant?['jewelry_diamonds']?[0]?['totalweight'].toString();
 
-           // Get values and safely parse them to double
-           final double goldPrice = double.tryParse(currentVariant?['sync_metal_price']?.toString() ?? '0') ?? 0.0;
-           final double makingCharge = double.tryParse(currentVariant?['sync_labour_charge_price']?.toString() ?? '0') ?? 0.0;
-           final double diamondPrice = double.tryParse(currentVariant?['sync_dia_price']?.toString() ?? '0') ?? 0.0;
+          // Custom sorting for diamond qualities
+          List<String> diamondQualities = diamondQualitySet.toList();
+          diamondQualities.sort((a, b) {
+            const colorOrder = ['EF', 'F', 'FG', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+            const clarityOrder = ['FL', 'IF', 'VVS', 'VS', 'SI', 'I'];
 
-           // Calculate total
+            String normalizeClarity(String clarity) {
+              if (clarity.startsWith('VVS')) return 'VVS';
+              if (clarity.startsWith('VS')) return 'VS';
+              if (clarity.startsWith('SI')) return 'SI';
+              if (clarity.startsWith('I')) return 'I';
+              return clarity;
+            }
+
+            final aParts = a.split(' ');
+            final bParts = b.split(' ');
+
+            if (aParts.length < 2 || bParts.length < 2) return 0;
+
+            final aColor = aParts[0];
+            final bColor = bParts[0];
+            final aClarity = normalizeClarity(aParts[1]);
+            final bClarity = normalizeClarity(bParts[1]);
+
+            final colorIndexA = colorOrder.indexOf(aColor);
+            final colorIndexB = colorOrder.indexOf(bColor);
+
+            if (colorIndexA != colorIndexB) {
+              return colorIndexA.compareTo(colorIndexB);
+            }
+
+            final clarityIndexA = clarityOrder.indexOf(aClarity);
+            final clarityIndexB = clarityOrder.indexOf(bClarity);
+
+            return clarityIndexA.compareTo(clarityIndexB);
+          });
+
+          if (!diamondQualityInitialized && diamondQualities.isNotEmpty) {
+            selectedDiamondQuality = diamondQualities.contains('FG VVS')
+                ? 'FG VVS'
+                : diamondQualities.first;
+            diamondQualityInitialized = true;
+          }
+
+          // 3. Filter variants by selected diamond quality
+          List<Map<String, dynamic>> filteredVariants = [];
+          Set<String> seenVariants = Set();
+
+          for (var variant in variants) {
+            if (variant['jewelry_diamonds'] == null ||
+                variant['jewelry_diamonds'].isEmpty) continue;
+
+            final diamond = variant['jewelry_diamonds'][0];
+            final quality = '${diamond['color']} ${diamond['clarity']}';
+
+            // Check if quality matches and we haven't added a similar variant
+            if (quality == selectedDiamondQuality) {
+              final variantKey = '${variant['metal_type']?['paraname']}-${variant['metal_stamp']?['paraname']}';
+
+              if (!seenVariants.contains(variantKey)) {
+                seenVariants.add(variantKey);
+                filteredVariants.add(variant);
+              }
+            }
+          }
+
+          for (var variant in filteredVariants) {
+            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
+                variant['metal_type']?['paraname'] == selectedMetalType &&
+                variant['jewelry_ring_size']?['paraname'] == selectedRingSize) {
+              currentVariant = variant;
+              break;
+            }
+          }
+
+          if (currentVariant == null && filteredVariants.isNotEmpty) {
+            currentVariant = filteredVariants.first;
+          }
+
+          // Get values and safely parse them to double
+          final double goldPrice = double.tryParse(currentVariant?['sync_metal_price']?.toString() ?? '0') ?? 0.0;
+          final double makingCharge = double.tryParse(currentVariant?['sync_labour_charge_price']?.toString() ?? '0') ?? 0.0;
+          final double diamondPrice = double.tryParse(currentVariant?['sync_dia_price']?.toString() ?? '0') ?? 0.0;
+
+          // Calculate total
           final double total = goldPrice + makingCharge + diamondPrice;
 
           // Format values
@@ -218,89 +295,7 @@ class _ShowproductState extends State<Showproduct> {
           final diamoinds = '₹ ${NumberFormat('#,##0.00', 'en_IN').format(diamondPrice)}';
           final totals = '₹ ${NumberFormat('#,##0.00', 'en_IN').format(total)}';
 
-           // Custom sorting for diamond qualities
-           List<String> diamondQualities = diamondQualitySet.toList();
-           diamondQualities.sort((a, b) {
-             const colorOrder = ['EF', 'F', 'FG', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
-             const clarityOrder = ['FL', 'IF', 'VVS', 'VS', 'SI', 'I'];
-
-             String normalizeClarity(String clarity) {
-               if (clarity.startsWith('VVS')) return 'VVS';
-               if (clarity.startsWith('VS')) return 'VS';
-               if (clarity.startsWith('SI')) return 'SI';
-               if (clarity.startsWith('I')) return 'I';
-               return clarity;
-             }
-
-             final aParts = a.split(' ');
-             final bParts = b.split(' ');
-
-             if (aParts.length < 2 || bParts.length < 2) return 0;
-
-             final aColor = aParts[0];
-             final bColor = bParts[0];
-             final aClarity = normalizeClarity(aParts[1]);
-             final bClarity = normalizeClarity(bParts[1]);
-
-             final colorIndexA = colorOrder.indexOf(aColor);
-             final colorIndexB = colorOrder.indexOf(bColor);
-
-             if (colorIndexA != colorIndexB) {
-               return colorIndexA.compareTo(colorIndexB);
-             }
-
-             final clarityIndexA = clarityOrder.indexOf(aClarity);
-             final clarityIndexB = clarityOrder.indexOf(bClarity);
-
-             return clarityIndexA.compareTo(clarityIndexB);
-           });
-
-           if (!diamondQualityInitialized && diamondQualities.isNotEmpty) {
-             selectedDiamondQuality = diamondQualities.contains('FG VVS')
-                 ? 'FG VVS'
-                 : diamondQualities.first;
-             diamondQualityInitialized = true;
-           }
-
-           // 3. Filter variants by selected diamond quality
-           List<Map<String, dynamic>> filteredVariants = [];
-           Set<String> seenVariants = Set();
-
-           for (var variant in variants) {
-             if (variant['jewelry_diamonds'] == null ||
-                 variant['jewelry_diamonds'].isEmpty) continue;
-
-             final diamond = variant['jewelry_diamonds'][0];
-             final quality = '${diamond['color']} ${diamond['clarity']}';
-
-             // Check if quality matches and we haven't added a similar variant
-             if (quality == selectedDiamondQuality) {
-               final variantKey = '${variant['metal_type']?['paraname']}-${variant['metal_stamp']?['paraname']}';
-
-               if (!seenVariants.contains(variantKey)) {
-                 seenVariants.add(variantKey);
-                 filteredVariants.add(variant);
-               }
-             }
-           }
-
-           for (var variant in filteredVariants) {
-             if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
-                 variant['metal_type']?['paraname'] == selectedMetalType &&
-                 variant['jewelry_ring_size']?['paraname'] == selectedRingSize) {
-               currentVariant = variant;
-               break;
-             }
-           }
-
-           if (currentVariant == null && filteredVariants.isNotEmpty) {
-             currentVariant = filteredVariants.first;
-           }
-
-
-
-
-           // Fallback to first variant if none found
+          // Fallback to first variant if none found
           currentVariant ??= variants.isNotEmpty ? variants.first : null;
 
           // Use current variant for display
@@ -364,7 +359,7 @@ class _ShowproductState extends State<Showproduct> {
                               margin: EdgeInsets.only(right: Get.width / 50,left: Get.width / 50),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
-                                  border: Border.all(color: AppColor.textfild_color),
+                                border: Border.all(color: AppColor.textfild_color),
                               ),
                               // child: Center(child: VideoPlayerMenu(videoUrl: video[0]['path'])),
                               child: Center(child: Icon(Icons.record_voice_over)),
@@ -386,7 +381,7 @@ class _ShowproductState extends State<Showproduct> {
                         SizedBox(height: Get.width / 50),
                         Text('SKU: ${currentVariant?['itemcode'] ?? 'N/A'}', style: TextStyle(fontSize: Get.width * 0.040, color: AppColor.grey_color)),
                         SizedBox(height: Get.width / 50),
-                    
+
                         // Price
                         Row(
                           children: [
@@ -395,10 +390,10 @@ class _ShowproductState extends State<Showproduct> {
                             Text("(inclusive of all taxes)", style: TextStyle(color: AppColor.grey_color)),
                           ],
                         ),
-                    
+
                         SizedBox(height: Get.height / 50),
-                    
-                    
+
+
                         // Metal Stamp Selection
                         Row(
                           children: [
@@ -430,7 +425,7 @@ class _ShowproductState extends State<Showproduct> {
                                               if (type == 'Rose Gold') rosegoldcolor = true;
                                               if (type == 'White Gold') graycolor = true;
                                               if (type != null) {selectedMetalType = type;
-                                                break;
+                                              break;
                                               }
                                             }
                                           }
@@ -461,7 +456,7 @@ class _ShowproductState extends State<Showproduct> {
                           ],
                         ),
                         SizedBox(height:Get.height / 50),
-                    
+
                         // Color Selection
                         Row(
                           children: [
@@ -515,24 +510,24 @@ class _ShowproductState extends State<Showproduct> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                             children: [
-                               Text('Shape :', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                               SizedBox(width: Get.width / 50),
-                               Row(
-                                 children: diamondList.map<Widget>((diamond) {
-                                   return Container(
-                                     margin: EdgeInsets.only(right: 10),
-                                     decoration: BoxDecoration(
-                                       border: Border.all(color: AppColor.textfild_color),
-                                       borderRadius: BorderRadius.circular(Get.width / 50),
-                                     ),
-                                     padding: EdgeInsets.all(10),
-                                     child: Image.network(diamond['shape']['image'], width: 40, height: 40, fit: BoxFit.contain),
-                                   );
-                                 }).toList(),
-                               ),
-                             ],
-                           ),
+                            children: [
+                              Text('Shape :', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                              SizedBox(width: Get.width / 50),
+                              Row(
+                                children: diamondList.map<Widget>((diamond) {
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColor.textfild_color),
+                                      borderRadius: BorderRadius.circular(Get.width / 50),
+                                    ),
+                                    padding: EdgeInsets.all(10),
+                                    child: Image.network(diamond['shape']['image'], width: 40, height: 40, fit: BoxFit.contain),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height:Get.height / 50),
 
@@ -551,39 +546,39 @@ class _ShowproductState extends State<Showproduct> {
                           ],
                         ),
                         SizedBox(height:Get.height / 50),
-                    
+
                         // Ring Size
                         (allRingSizes.isNotEmpty) ?  Row(
-                          children: [
-                            Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                            SizedBox(width: Get.width / 50),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColor.textfild_color),
-                                borderRadius: BorderRadius.circular(8)),
-                              child: DropdownButton<String>(
-                                menuMaxHeight: Get.height /5,
-                                borderRadius: BorderRadius.circular(Get.width / 50),
-                                value: selectedRingSize,
-                                items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
-                                  return DropdownMenuItem<String>(
-                                    value: ring['paraname']?.toString() ?? '',
-                                    child: Text(ring['paraname']?.toString() ?? ''),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedRingSize = value;
-                                  });
-                                  },
-                                underline: SizedBox(),
-                                icon: SizedBox()
+                            children: [
+                              Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                              SizedBox(width: Get.width / 50),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: AppColor.textfild_color),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: DropdownButton<String>(
+                                    menuMaxHeight: Get.height /5,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                    value: selectedRingSize,
+                                    items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
+                                      return DropdownMenuItem<String>(
+                                        value: ring['paraname']?.toString() ?? '',
+                                        child: Text(ring['paraname']?.toString() ?? ''),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedRingSize = value;
+                                      });
+                                    },
+                                    underline: SizedBox(),
+                                    icon: SizedBox()
+                                ),
                               ),
-                            ),
-                            SizedBox(width: Get.width / 50),
-                            Text('Find Ring Size'),
-                          ]) : SizedBox(),
+                              SizedBox(width: Get.width / 50),
+                              Text('Find Ring Size'),
+                            ]) : SizedBox(),
                         SizedBox(height: Get.height / 50),
 
                         Column(
@@ -644,73 +639,73 @@ class _ShowproductState extends State<Showproduct> {
                         Text(currentVariant['description'],style: TextStyle(color: AppColor.grey_color,fontSize: Get.width * 0.035)),
                         SizedBox(height: Get.height / 50),
 
-                         //Product Details
+                        //Product Details
                         GestureDetector(
-                           onTap: () {
-                             setState(() {
-                                productdetails = !productdetails;
-                             });
-                             },
-                           child: AnimatedContainer(
-                             duration: Duration(milliseconds: 300),
-                             child: Column(
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               children: [
-                                 Row(
-                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                   children: [
-                                     Text(
-                                       'Product details',
-                                       style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                     ),
-                                     Text(
-                                       productdetails ? '-' : '+',
-                                       style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                     ),
-                                   ],
-                                 ),
-                                 AnimatedCrossFade(
-                                   firstChild: SizedBox.shrink(),
-                                   secondChild: Column(
-                                     children: [
-                                       SizedBox(height: 8),
-                                       Row(
-                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                         children: [
-                                           Text('Product Code :', style: TextStyle(color: AppColor.grey_color)),
-                                           Text(currentVariant['itemcode'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                         ],
-                                       ),
-                                       Row(
-                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                         children: [
-                                           Text('Category :', style: TextStyle(color: AppColor.grey_color)),
-                                           Text(currentVariant['metal_type']?['slug'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                         ],
-                                       ),
-                                       Row(
-                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                         children: [
-                                           Text('Product Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
-                                           Text("${currentVariant['metalweight'].toString()} gram", style: TextStyle(color: AppColor.grey_color)),
-                                         ],
-                                       ),
-                                       Row(
-                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                         children: [
-                                           Text('Diamond Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
-                                           Text(currentVariant['total_carat'].toString(),style: TextStyle(color: AppColor.grey_color)),
-                                         ],
-                                       ),
-                                     ],
-                                   ),
-                                   crossFadeState: productdetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                   duration: Duration(milliseconds: 300),
-                                 ),
-                               ],
-                             ),
-                           ),
-                         ),
+                          onTap: () {
+                            setState(() {
+                              productdetails = !productdetails;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Product details',
+                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
+                                    ),
+                                    Text(
+                                      productdetails ? '-' : '+',
+                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                AnimatedCrossFade(
+                                  firstChild: SizedBox.shrink(),
+                                  secondChild: Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Product Code :', style: TextStyle(color: AppColor.grey_color)),
+                                          Text(currentVariant['itemcode'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Category :', style: TextStyle(color: AppColor.grey_color)),
+                                          Text(currentVariant['metal_type']?['slug'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Product Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
+                                          Text("${currentVariant['metalweight'].toString()} gram", style: TextStyle(color: AppColor.grey_color)),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Diamond Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
+                                          Text(currentVariant['total_carat'].toString(),style: TextStyle(color: AppColor.grey_color)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  crossFadeState: productdetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                  duration: Duration(milliseconds: 300),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         SizedBox(height: Get.height / 150),
 
                         //Side Diamond Details
@@ -950,7 +945,7 @@ class _ShowproductState extends State<Showproduct> {
                             SvgPicture.asset(AppIcon.mobileIcon,color: AppColor.graycolor,width: 28),
                             SizedBox(width: Get.width / 30),
                             SizedBox(
-                              width: Get.width / 1.3,
+                                width: Get.width / 1.3,
                                 child: Text('Call us at +917851005200 (9:30 AM to 8:00 PM)',style: TextStyle(fontSize: Get.width / 28))),
                           ],
                         ),
@@ -1017,30 +1012,53 @@ class _ShowproductState extends State<Showproduct> {
                     ),
                   ),
                   SizedBox(
-                    height: Get.height * 0.2,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: list.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final recommended = list[index];
-                        return Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: Get.width / 25),
-                              padding: EdgeInsets.all(70),
-                              decoration: BoxDecoration(
-                                image: DecorationImage(image: NetworkImage(recommended['second_image'],scale: 15),fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(Get.width / 50),
+                    height: Get.height * 0.25, // Adjust overall height responsively
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        double imageSize = constraints.maxHeight * 0.65; // 65% of available height
+                        double textHeight = constraints.maxHeight * 0.2;  // 20% for text spacing
+                        double imageRadius = Get.width / 50;
+
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: list.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final recommended = list[index];
+                            return Container(
+                              margin: EdgeInsets.only(left: Get.width / 25, right: Get.width / 50),
+                              width: Get.width * 0.35, // Make each card take ~35% of width
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: imageSize,
+                                    width: imageSize,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(recommended['second_image']),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.circular(imageRadius),
+                                    ),
+                                  ),
+                                  SizedBox(height: constraints.maxHeight * 0.05),
+                                  SizedBox(
+                                    height: textHeight,
+                                    child: Text(
+                                      recommended['title'],
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: AppColor.grey_color, fontSize: Get.width * 0.03),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(height: Get.height / 150),
-                            SizedBox(
-                              width: Get.width / 2.9,
-                              child: Text(textAlign: TextAlign.center, recommended['title'],style: TextStyle(color:AppColor.grey_color)),
-                            ),
-                          ],
+                            );
+                          },
                         );
-                      },),
+                      },
+                    ),
                   ),
                   SizedBox(height: Get.height / 80),
                 ],
