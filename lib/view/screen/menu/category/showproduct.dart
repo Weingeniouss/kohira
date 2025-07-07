@@ -35,6 +35,9 @@ class _ShowproductState extends State<Showproduct> {
   bool rosegoldcolor = false;
   bool graycolor = false;
   bool initialized = false;
+
+  bool diamondQualityInitialized = false;
+  List<String> diamondQualities = ['FG VVS', 'EF IF', 'G VS', 'H SI'];
   String? selectedDiamondQuality;
 
   bool productdetails = false;
@@ -176,22 +179,28 @@ class _ShowproductState extends State<Showproduct> {
             }
           }
 
-          final diamondQualities = <String>[];
-          final diamondQualityMap = <String, Map<String, dynamic>>{};
+           final diamondQualitySet = <String>{};
+           final diamondQualityMap = <String, Map<String, dynamic>>{};
 
-          for (var variant in variants) {
-            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp
-                && variant['metal_type']?['paraname'] == selectedMetalType
-                && variant['jewelry_diamonds'] != null
-                && variant['jewelry_diamonds'].isNotEmpty) {
-              final diamond = variant['jewelry_diamonds'][0];
-              final quality = '${diamond['color']} ${diamond['clarity']}';
-              if (!diamondQualityMap.containsKey(quality)) {
-                diamondQualities.add(quality);
-                diamondQualityMap[quality] = variant;
-              }
-            }
-          }
+           for (var variant in variants) {
+             if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
+                 variant['metal_type']?['paraname'] == selectedMetalType &&
+                 variant['jewelry_diamonds'] != null &&
+                 variant['jewelry_diamonds'].isNotEmpty) {
+
+               final diamond = variant['jewelry_diamonds'][0];
+               final color = diamond['color'] as String;
+               final clarity = diamond['clarity'] as String;
+               final quality = '$color $clarity';
+
+               // Only add if we haven't seen this quality before
+               if (!diamondQualitySet.contains(quality)) {
+                 diamondQualitySet.add(quality);
+                 diamondQualityMap[quality] = variant;
+               }
+             }
+           }
+
            final totaldiamonds =  currentVariant?['jewelry_diamonds']?[0]?['totaldiamonds'].toString();
            final totalweight = currentVariant?['jewelry_diamonds']?[0]?['totalweight'].toString();
 
@@ -209,42 +218,89 @@ class _ShowproductState extends State<Showproduct> {
           final diamoinds = '₹ ${NumberFormat('#,##0.00', 'en_IN').format(diamondPrice)}';
           final totals = '₹ ${NumberFormat('#,##0.00', 'en_IN').format(total)}';
 
-          // Custom sorting for diamond qualities
-diamondQualities.sort((a, b) {
-  // Define the order of diamond colors from best to worst
-  const colorOrder = ['EF', 'F', 'FG', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+           // Custom sorting for diamond qualities
+           List<String> diamondQualities = diamondQualitySet.toList();
+           diamondQualities.sort((a, b) {
+             const colorOrder = ['EF', 'F', 'FG', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+             const clarityOrder = ['FL', 'IF', 'VVS', 'VS', 'SI', 'I'];
 
-  // Define the order of diamond clarities from best to worst
-  const clarityOrder = ['FL', 'IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1', 'I2', 'I3'];
+             String normalizeClarity(String clarity) {
+               if (clarity.startsWith('VVS')) return 'VVS';
+               if (clarity.startsWith('VS')) return 'VS';
+               if (clarity.startsWith('SI')) return 'SI';
+               if (clarity.startsWith('I')) return 'I';
+               return clarity;
+             }
 
-  // Extract color and clarity from quality strings
-  final aParts = a.split(' ');
-  final bParts = b.split(' ');
+             final aParts = a.split(' ');
+             final bParts = b.split(' ');
 
-  if (aParts.length < 2 || bParts.length < 2) return 0;
+             if (aParts.length < 2 || bParts.length < 2) return 0;
 
-  final aColor = aParts[0];
-  final bColor = bParts[0];
-  final aClarity = aParts[1];
-  final bClarity = bParts[1];
+             final aColor = aParts[0];
+             final bColor = bParts[0];
+             final aClarity = normalizeClarity(aParts[1]);
+             final bClarity = normalizeClarity(bParts[1]);
 
-  // Compare colors first
-  final colorIndexA = colorOrder.indexOf(aColor);
-  final colorIndexB = colorOrder.indexOf(bColor);
+             final colorIndexA = colorOrder.indexOf(aColor);
+             final colorIndexB = colorOrder.indexOf(bColor);
 
-  if (colorIndexA != colorIndexB) {
-    // Lower index means better quality
-    return colorIndexA.compareTo(colorIndexB);
-  }
+             if (colorIndexA != colorIndexB) {
+               return colorIndexA.compareTo(colorIndexB);
+             }
 
-  // If colors are same, compare clarities
-  final clarityIndexA = clarityOrder.indexOf(aClarity);
-  final clarityIndexB = clarityOrder.indexOf(bClarity);
+             final clarityIndexA = clarityOrder.indexOf(aClarity);
+             final clarityIndexB = clarityOrder.indexOf(bClarity);
 
-  return clarityIndexA.compareTo(clarityIndexB);
-});
+             return clarityIndexA.compareTo(clarityIndexB);
+           });
 
-          // Fallback to first variant if none found
+           if (!diamondQualityInitialized && diamondQualities.isNotEmpty) {
+             selectedDiamondQuality = diamondQualities.contains('FG VVS')
+                 ? 'FG VVS'
+                 : diamondQualities.first;
+             diamondQualityInitialized = true;
+           }
+
+           // 3. Filter variants by selected diamond quality
+           List<Map<String, dynamic>> filteredVariants = [];
+           Set<String> seenVariants = Set();
+
+           for (var variant in variants) {
+             if (variant['jewelry_diamonds'] == null ||
+                 variant['jewelry_diamonds'].isEmpty) continue;
+
+             final diamond = variant['jewelry_diamonds'][0];
+             final quality = '${diamond['color']} ${diamond['clarity']}';
+
+             // Check if quality matches and we haven't added a similar variant
+             if (quality == selectedDiamondQuality) {
+               final variantKey = '${variant['metal_type']?['paraname']}-${variant['metal_stamp']?['paraname']}';
+
+               if (!seenVariants.contains(variantKey)) {
+                 seenVariants.add(variantKey);
+                 filteredVariants.add(variant);
+               }
+             }
+           }
+
+           for (var variant in filteredVariants) {
+             if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
+                 variant['metal_type']?['paraname'] == selectedMetalType &&
+                 variant['jewelry_ring_size']?['paraname'] == selectedRingSize) {
+               currentVariant = variant;
+               break;
+             }
+           }
+
+           if (currentVariant == null && filteredVariants.isNotEmpty) {
+             currentVariant = filteredVariants.first;
+           }
+
+
+
+
+           // Fallback to first variant if none found
           currentVariant ??= variants.isNotEmpty ? variants.first : null;
 
           // Use current variant for display
@@ -252,8 +308,7 @@ diamondQualities.sort((a, b) {
           final allImages = currentVariant?['allImages'] ?? [];
           final video = currentVariant?['video'] ?? [];
 
-
-           final list = recommendedjewellerylist.data['data'];
+          final list = recommendedjewellerylist.data['data'];
 
           return SafeArea(
             child: SingleChildScrollView(
@@ -534,7 +589,13 @@ diamondQualities.sort((a, b) {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Diamond Quality:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                            Text(
+                                'Diamond Quality:',
+                                style: TextStyle(
+                                    fontSize: Get.width * 0.040,
+                                    fontWeight: FontWeight.w500
+                                )
+                            ),
                             SizedBox(height: Get.height / 150),
                             SizedBox(
                               height: 40,
@@ -550,18 +611,30 @@ diamondQualities.sort((a, b) {
                                       setState(() {
                                         selectedDiamondQuality = quality;
                                       });
-                                      },
+                                    },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                       margin: EdgeInsets.only(right: 8),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(color: isSelected ? Colors.amber : AppColor.textfild_color),
-                                        color: isSelected ? Colors.amber.withOpacity(0.1) : Colors.transparent,
+                                        border: Border.all(
+                                            color: isSelected ? Colors.amber : AppColor.textfild_color
+                                        ),
+                                        color: isSelected
+                                            ? Colors.amber.withOpacity(0.1)
+                                            : Colors.transparent,
                                       ),
-                                      child: Text(quality, style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width / 30, color: isSelected ? Colors.amber : Colors.black)),
+                                      child: Text(
+                                          quality,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: Get.width / 30,
+                                              color: isSelected ? Colors.amber : Colors.black
+                                          )
+                                      ),
                                     ),
-                                  );},
+                                  );
+                                },
                               ),
                             ),
                           ],
