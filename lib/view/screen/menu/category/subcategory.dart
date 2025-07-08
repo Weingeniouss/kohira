@@ -34,15 +34,6 @@ class _SubcategorysState extends State<Subcategorys> {
 
   @override
   Widget build(BuildContext context) {
-    ever(subcategrory.isLoading, (isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (isLoading) {
-          LoadingState.show(AppJson.loading2);
-        } else {
-          LoadingState.hide();
-        }
-      });
-    });
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: widget.subcategrorysname),
       body: Container(

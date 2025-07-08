@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:kohira/controller/service/credentials/login.dart';
 import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
@@ -19,6 +21,12 @@ class LoginCalling extends GetxController {
 
       if (login != null && login.success == true) {
         data.value = login.data;
+        if (login.message == 'Validation failed') {
+          final errorResponse = LoginService();
+          final decoded = json.decode(errorResponse as String);
+          ToastificationError.Error(decoded['errors'].toString());
+        }
+
         ToastificationSuccess.Success("'Success', ${login.message}");
         Get.offAll(() => Bottom());
       } else {

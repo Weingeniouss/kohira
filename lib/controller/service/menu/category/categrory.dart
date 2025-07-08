@@ -9,6 +9,7 @@ class CategroryModal {
   final url = Uri.parse(AppUrl.category);
 
   Future<Category?> categroryservice() async {
+    print("Sending request to: $url");
     try {
       final responce = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
 

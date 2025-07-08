@@ -9,8 +9,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:kohira/view/utils/appconstants.dart';
-import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart' show Bottom;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
 
@@ -37,7 +37,6 @@ Future<void> main() async{
   print('Countrycode $Countrycode');
   print('Password $Password');
 
-
   print('Is Login :- $islogin');
 
   runApp(const MyApp());
@@ -52,7 +51,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         theme: ThemeData(fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
-        home: Bottom(),
+        home: Logo(),
       ),
     );
   }

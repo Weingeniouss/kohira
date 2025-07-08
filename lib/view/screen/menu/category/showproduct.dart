@@ -1,11 +1,10 @@
-// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use
+// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart'
-    show JewellerydetailCall;
+import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart' show JewellerydetailCall;
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
@@ -181,11 +180,7 @@ class _ShowproductState extends State<Showproduct> {
           final diamondQualityMap = <String, Map<String, dynamic>>{};
 
           for (var variant in variants) {
-            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
-                variant['metal_type']?['paraname'] == selectedMetalType &&
-                variant['jewelry_diamonds'] != null &&
-                variant['jewelry_diamonds'].isNotEmpty) {
-
+            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp && variant['metal_type']?['paraname'] == selectedMetalType && variant['jewelry_diamonds'] != null && variant['jewelry_diamonds'].isNotEmpty) {
               final diamond = variant['jewelry_diamonds'][0];
               final color = diamond['color'] as String;
               final clarity = diamond['clarity'] as String;
@@ -251,8 +246,7 @@ class _ShowproductState extends State<Showproduct> {
           Set<String> seenVariants = Set();
 
           for (var variant in variants) {
-            if (variant['jewelry_diamonds'] == null ||
-                variant['jewelry_diamonds'].isEmpty) continue;
+            if (variant['jewelry_diamonds'] == null || variant['jewelry_diamonds'].isEmpty) continue;
 
             final diamond = variant['jewelry_diamonds'][0];
             final quality = '${diamond['color']} ${diamond['clarity']}';
@@ -269,9 +263,7 @@ class _ShowproductState extends State<Showproduct> {
           }
 
           for (var variant in filteredVariants) {
-            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp &&
-                variant['metal_type']?['paraname'] == selectedMetalType &&
-                variant['jewelry_ring_size']?['paraname'] == selectedRingSize) {
+            if (variant['metal_stamp']?['paraname'] == selectedMetalStamp && variant['metal_type']?['paraname'] == selectedMetalType && variant['jewelry_ring_size']?['paraname'] == selectedRingSize) {
               currentVariant = variant;
               break;
             }
@@ -549,48 +541,42 @@ class _ShowproductState extends State<Showproduct> {
 
                         // Ring Size
                         (allRingSizes.isNotEmpty) ?  Row(
-                            children: [
-                              Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                              SizedBox(width: Get.width / 50),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: AppColor.textfild_color),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: DropdownButton<String>(
-                                    menuMaxHeight: Get.height /5,
-                                    borderRadius: BorderRadius.circular(Get.width / 50),
-                                    value: selectedRingSize,
-                                    items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
-                                      return DropdownMenuItem<String>(
-                                        value: ring['paraname']?.toString() ?? '',
-                                        child: Text(ring['paraname']?.toString() ?? ''),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedRingSize = value;
-                                      });
+                          children: [
+                            Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                            SizedBox(width: Get.width / 50),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColor.textfild_color),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: DropdownButton<String>(
+                                  menuMaxHeight: Get.height /5,
+                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                  value: selectedRingSize,
+                                  items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
+                                    return DropdownMenuItem<String>(
+                                      value: ring['paraname']?.toString() ?? '',
+                                      child: Text(ring['paraname']?.toString() ?? ''),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                     setState(() {selectedRingSize = value;});
                                     },
-                                    underline: SizedBox(),
-                                    icon: SizedBox()
+                                  underline: SizedBox(),
+                                  icon: SizedBox()
                                 ),
                               ),
                               SizedBox(width: Get.width / 50),
                               Text('Find Ring Size'),
-                            ]) : SizedBox(),
+                            ],
+                        ) : SizedBox(),
                         SizedBox(height: Get.height / 50),
 
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                                'Diamond Quality:',
-                                style: TextStyle(
-                                    fontSize: Get.width * 0.040,
-                                    fontWeight: FontWeight.w500
-                                )
-                            ),
+                            Text('Diamond Quality:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                             SizedBox(height: Get.height / 150),
                             SizedBox(
                               height: 40,
@@ -612,21 +598,10 @@ class _ShowproductState extends State<Showproduct> {
                                       margin: EdgeInsets.only(right: 8),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            color: isSelected ? Colors.amber : AppColor.textfild_color
-                                        ),
-                                        color: isSelected
-                                            ? Colors.amber.withOpacity(0.1)
-                                            : Colors.transparent,
+                                        border: Border.all(color: isSelected ? Colors.amber : AppColor.textfild_color),
+                                        color: isSelected ? Colors.amber.withOpacity(0.1) : Colors.transparent,
                                       ),
-                                      child: Text(
-                                          quality,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: Get.width / 30,
-                                              color: isSelected ? Colors.amber : Colors.black
-                                          )
-                                      ),
+                                      child: Text(quality, style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width / 30, color: isSelected ? Colors.amber : Colors.black)),
                                     ),
                                   );
                                 },
@@ -723,14 +698,8 @@ class _ShowproductState extends State<Showproduct> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Side Diamond Details',
-                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      sidediamondDetails ? '-' : '+',
-                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                    ),
+                                    Text('Side Diamond Details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                    Text(sidediamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                   ],
                                 ),
                                 AnimatedCrossFade(
@@ -799,14 +768,8 @@ class _ShowproductState extends State<Showproduct> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Center Diamond Details',
-                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      centerdiamondDetails ? '-' : '+',
-                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                    ),
+                                    Text('Center Diamond Details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                    Text(centerdiamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                   ],
                                 ),
                                 AnimatedCrossFade(

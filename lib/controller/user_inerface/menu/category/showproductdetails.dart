@@ -10,6 +10,7 @@ class JewelleryDetailController extends GetxController {
 
   // Reactive variables
   var selectindex = 0.obs;
+  @override
   var initialized = false;
   var diamondQualityInitialized = false.obs;
   var selectedRingSize = "".obs;

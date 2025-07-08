@@ -23,7 +23,7 @@ class AppUrl {
 
       //Categorie
       static const recommendedJewelleryList ='$baseurl/recommendedJewelleryList';
-      static const addtocart = '$baseurl/wishlist';
+      static const wishlist = '$baseurl/wishlist';
       static const jewelleryDetail = '$baseurl/JewelleryDetailApp';
 
      //Seach

@@ -17,6 +17,8 @@ class SliderModal {
            ApiHeaders.contect: ApiHeaders.peramitters
          });
 
+      print("Sending request to: $url");
+
       if (responce.statusCode == 200 || responce.statusCode == 201) {
         final slider = sliderFromJson(responce.body);
         print('Slider data :-  ${slider}');

@@ -34,11 +34,25 @@ class localdatabase {
   }
 
   void loginstrore({required String email, required String password}){
-    if(Email == email && Password == password){
-      pref!.setBool('login', true);
-      islogin = pref!.getBool('login')!;
+    pref!.setString('email', email);
+    pref!.setString('password', password);
 
-      print('isLogin :- $islogin');
-    }
+    Email = pref!.getString('email')!;
+    Password = pref!.getString('password')!;
+
+    print('email :- $Email');
+    print('password :- $Password');
+
+    pref!.setBool('login', true);
+    islogin = pref!.getBool('login')?? false;
+
+    print('isLogin :- $islogin');
+
+    // if(Email == email && Password == password){
+    //   pref!.setBool('login', true);
+    //   islogin = pref!.getBool('login')!;
+    //
+    //   print('isLogin :- $islogin');
+    // }
   }
 }

@@ -10,6 +10,7 @@ class CategoriesModal {
   final url = Uri.parse(AppUrl.categories);
 
   Future<Categories?> categories_Service() async {
+    print("Sending request to: $url");
     try {
       final responce = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
 
