@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../../view/utils/app_String.dart';
 import '../../../view/utils/widget/pop.dart';
+import '../../API/credentials/login.dart';
 
 class LoginController extends GetxController {
+ final login = Get.put(LoginCalling());
   var email_type = false.obs;
   var password_type = false.obs;
 

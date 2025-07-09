@@ -46,6 +46,7 @@ class localdatabase {
     pref!.setBool('login', true);
     islogin = pref!.getBool('login')?? false;
 
+    print('tokan :- $tokans');
     print('isLogin :- $islogin');
 
     // if(Email == email && Password == password){

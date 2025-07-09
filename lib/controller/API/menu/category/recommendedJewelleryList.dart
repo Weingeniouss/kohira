@@ -18,6 +18,7 @@ class Recommendedjewellerylist extends GetxController{
       isLoading.value = true;
 
       final url = Uri.parse('${AppUrl.recommendedJewelleryList}/$slug');
+      print("Sending request to: $url");
       final responses = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters});
 
       if(responses.statusCode == 200 || responses.statusCode == 201){

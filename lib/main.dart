@@ -28,6 +28,8 @@ Future<void> main() async{
   Countrycode = pref!.getString('countrycode') ?? '';
   Password = pref!.getString('password') ?? '';
 
+  tokans = pref!.getString('tokan') ?? '';
+
   islogin = pref!.getBool('login') ?? false;
 
   print('Fristname $Fristname');
@@ -38,6 +40,8 @@ Future<void> main() async{
   print('Password $Password');
 
   print('Is Login :- $islogin');
+
+  print('tokans :- $tokans');
 
   runApp(const MyApp());
 }

@@ -16,6 +16,7 @@ class JewellerydetailCall extends GetxController {
     try {
       isLoading.value = true;
       final url = Uri.parse("${AppUrl.jewelleryDetail}/$slug");
+      print("Sending request to: $url");
       final response = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
 
       if (response.statusCode == 200 || response.statusCode == 201) {

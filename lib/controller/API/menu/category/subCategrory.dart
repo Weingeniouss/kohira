@@ -39,6 +39,7 @@ class Subcategrory extends GetxController {
       isLoading.value = true;
 
       final url = Uri.parse(AppUrl.product);
+      print("Sending request to: $url");
       final Map<String, String?> body = {
         'draw': draw,
         'start': start,

@@ -23,6 +23,7 @@ class AppIcon {
   static const menu ='asset/icon/appbaricon/menu.svg';
   static const like = 'asset/icon/appbaricon/like.svg';
   static const left = 'asset/icon/appbaricon/left.svg';
+  static const heart = 'asset/icon/appbaricon/heart.svg';
 
   //Bottam Icon
   static const account = 'asset/icon/bottomIcon/account.svg';

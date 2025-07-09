@@ -62,3 +62,25 @@ class LoadingDialog {
     }
   }
 }
+
+Widget loading({required bool conditiona,required Widget widget}){
+  if (conditiona) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.isDialogOpen != true) {
+        Get.dialog(
+          Center(child: Lottie.asset(AppJson.loading2)),
+          barrierDismissible: false,
+        );
+      }
+    });
+    return Scaffold(backgroundColor: Colors.transparent);
+  } else {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.isDialogOpen == true) {
+        Get.back();
+      }
+    });
+
+    return widget;
+  }
+}
