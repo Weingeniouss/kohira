@@ -52,6 +52,8 @@ Widget inputField({
 Widget searchField({
   void Function(String)? onChanged,
   void Function()? onTap,
+  bool? readOnly,
+  FocusNode? focusNode
 }){
   return Container(
     decoration: BoxDecoration(
@@ -60,6 +62,8 @@ Widget searchField({
     ),
     child: Center(
       child: TextField(
+        focusNode: focusNode,
+        readOnly: readOnly ?? false,
         onTap: onTap,
         onChanged: onChanged,
         decoration: InputDecoration(

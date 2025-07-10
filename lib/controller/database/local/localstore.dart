@@ -56,4 +56,19 @@ class localdatabase {
     //   print('isLogin :- $islogin');
     // }
   }
+
+  //Product details
+  // Save to SharedPreferences
+  Future<void> saveToWishlist(storageKey) async {
+    try {
+      List<String> currentList = pref!.getStringList(storageKey) ?? [];
+      if (!currentList.contains(storageKey)) {
+        currentList.add(storageKey);
+        await pref!.setStringList(storageKey, currentList);
+      }
+      print('Saved wishlist: ${pref!.getStringList(storageKey)}');
+    } catch (e) {
+      print('Error saving to wishlist: $e');
+    }
+  }
 }

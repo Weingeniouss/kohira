@@ -64,7 +64,7 @@ class Home extends StatelessWidget {
                     SizedBox(height: Get.height / 50),
 
                     //SearchBar Start
-                    horizontalpadding(child: searchField(onTap: () => Get.dialog(Search(), barrierDismissible: true, useSafeArea: true))),
+                    horizontalpadding(child: searchField(readOnly: true,onTap: () => Get.to(Search()))),
                     //SearchBar End
 
                     SizedBox(height: Get.height / 50),

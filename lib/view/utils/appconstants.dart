@@ -14,5 +14,3 @@ String Password = '';
 bool islogin = false;
 
 String tokans =  '';
-
-List savewishlist = [];
