@@ -337,45 +337,66 @@ class _ShowproductState extends State<Showproduct> {
               Set<int> shapeIds = {};
 
               for (var variant in variants) {
-                if (variant['jewelry_diamonds'] is List) {
-                  for (var diamond in variant['jewelry_diamonds']) {
-                    if (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase() &&
-                        diamond['shape'] is Map &&
-                        !shapeIds.contains(diamond['shape']['id'])) {
-                      shapeIds.add(diamond['shape']['id']);
-                      uniqueShapes.add(diamond['shape']);
+                final diamonds = variant['jewelry_diamonds'];
+                if (diamonds is List) {
+                  for (var diamond in diamonds) {
+                    final typeMatches = (diamond['diamondtype']?.toLowerCase() ?? '') == diamondType.toLowerCase();
+                    final shapeMap = diamond['shape'];
+
+                    if (typeMatches &&
+                        shapeMap is Map &&
+                        shapeMap['id'] is int &&
+                        !shapeIds.contains(shapeMap['id'])) {
+                      shapeIds.add(shapeMap['id']);
+                      uniqueShapes.add(Map<String, dynamic>.from(shapeMap)); // ✅ Cast explicitly here
                     }
                   }
                 }
               }
+
               return uniqueShapes;
             }
 
-            void filterVariantsByShape(Map<String, dynamic> shape) {
+            void filterVariantsByShape({required Map<String, dynamic>? shape, required String diamondType}) {
+              if (shape == null) return;
               setState(() {
                 selectedShape = shape;
-                // Find first variant that matches shape + metal type/stamp
+
+                // Prioritize finding a variant that also matches selected metal type/stamp
                 currentVariant = variants.firstWhere((variant) {
-                    bool matchesMetal = variant['metal_stamp']?['paraname'] == selectedMetalStamp;
-                    bool matchesType = variant['metal_type']?['paraname'] == selectedMetalType;
-                    bool matchesShape = variant['jewelry_diamonds'].any((diamond) => diamond['diamondtype']?.toLowerCase() == 'center' && diamond['shape']['id'] == shape['id']);
-                    return matchesMetal && matchesType && matchesShape;
+                    final matchesMetal = variant['metal_stamp']?['paraname'] == selectedMetalStamp;
+                    final matchesType = variant['metal_type']?['paraname'] == selectedMetalType;
+
+                    final hasMatchingShape = (variant['jewelry_diamonds'] as List?)?.any((diamond) {
+                      return (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) && (diamond['shape']?['id'] == shape['id']);
+                    }) ?? false;
+
+                    return matchesMetal && matchesType && hasMatchingShape;
                   },
-                  orElse: () => variants.firstWhere((variant) => variant['jewelry_diamonds'].any((diamond) => diamond['diamondtype']?.toLowerCase() == 'center' && diamond['shape']['id'] == shape['id']),
-                    orElse: () => variants.first,
-                  ),
+                  orElse: () {
+                    // Fallback: find any variant with matching shape + diamondType
+                    return variants.firstWhere((variant) {
+                        return (variant['jewelry_diamonds'] as List?)?.any((diamond) {
+                          return (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) && (diamond['shape']?['id'] == shape['id']);
+                        }) ?? false;
+                      },
+                      orElse: () => variants.first,
+                    );
+                  },
                 );
 
-                // Update diamond quality selection using only the center diamond
-                if (currentVariant?['jewelry_diamonds'] != null) {
-                  final diamond = currentVariant!['jewelry_diamonds'].firstWhere((d) => d['diamondtype']?.toLowerCase() == 'center',
-                    orElse: () => null,
-                  );
+                // Update selected diamond quality (based on diamondType, e.g., 'center')
+                final centerDiamond = (currentVariant?['jewelry_diamonds'] as List?)?.firstWhere((d) => d['diamondtype']?.toLowerCase() == diamondType.toLowerCase(),
+                  orElse: () => null,
+                );
 
-                  if (diamond != null) {
-                    selectedDiamondQuality = '${diamond['color']} ${diamond['clarity']}';
-                  }
+                if (centerDiamond != null) {
+                  selectedDiamondQuality = '${centerDiamond['color']} ${centerDiamond['clarity']}';
                 }
+              });
+
+              setState(() {
+                selectedShape = shape;
               });
             }
 
@@ -656,7 +677,13 @@ class _ShowproductState extends State<Showproduct> {
 
                           (uniqueShapes.isEmpty) ?  SizedBox() : Row(
                             children: [
-                              Text('Shape:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                              Text(
+                                'Shape:',
+                                style: TextStyle(
+                                  fontSize: Get.width * 0.040,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                               SizedBox(width: Get.width / 50),
                               Expanded(
                                 child: SingleChildScrollView(
@@ -665,11 +692,14 @@ class _ShowproductState extends State<Showproduct> {
                                     children: uniqueShapes.map((shape) {
                                       bool isSelected = selectedShape != null && selectedShape!['id'] == shape['id'];
                                       return GestureDetector(
-                                        onTap: () => filterVariantsByShape(shape),
+                                        onTap: () => filterVariantsByShape(shape: shape, diamondType: 'center'),
                                         child: Container(
                                           margin: EdgeInsets.only(right: 10),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: isSelected ? Colors.amber : Colors.grey, width: isSelected ? 2 : 1),
+                                            border: Border.all(
+                                              color: isSelected ? Colors.amber : Colors.grey,
+                                              width: isSelected ? 2 : 1,
+                                            ),
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.all(8),
