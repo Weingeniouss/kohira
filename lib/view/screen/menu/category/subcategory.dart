@@ -93,8 +93,8 @@ class _SubcategorysState extends State<Subcategorys> {
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                "₹ ${subcategrorys['offerprice'].toString()}",
-                                style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora', color: AppColor.pink_color),
+                                "₹ ${subcategrorys['offerprice'].toString()}.00",
+                                style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora', color: AppColor.pink_color,fontWeight: FontWeight.w700),
                                 textAlign: TextAlign.center,
                               ),
                             ],

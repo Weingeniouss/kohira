@@ -9,6 +9,9 @@ class AppUrl {
   //staging
   static const baseurl = 'https://api.weingenious.in/kohira/api';
 
+  //Live
+  // static const baseurl = 'https://kdadmin.kohira.com/api';
+
   //credentials
   static const login = '$baseurl/login';
   static const sinup = '$baseurl/signup';

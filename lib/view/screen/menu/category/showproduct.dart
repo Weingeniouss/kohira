@@ -332,14 +332,16 @@ class _ShowproductState extends State<Showproduct> {
               currentVariant = filteredVariants.first;
             }
 
-            List<Map<String, dynamic>> getUniqueShapes(List variants) {
+            List<Map<String, dynamic>> getUniqueShapes(List variants, String diamondType) {
               List<Map<String, dynamic>> uniqueShapes = [];
               Set<int> shapeIds = {};
 
               for (var variant in variants) {
                 if (variant['jewelry_diamonds'] is List) {
                   for (var diamond in variant['jewelry_diamonds']) {
-                    if (diamond['shape'] is Map && !shapeIds.contains(diamond['shape']['id'])) {
+                    if (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase() &&
+                        diamond['shape'] is Map &&
+                        !shapeIds.contains(diamond['shape']['id'])) {
                       shapeIds.add(diamond['shape']['id']);
                       uniqueShapes.add(diamond['shape']);
                     }
@@ -352,23 +354,27 @@ class _ShowproductState extends State<Showproduct> {
             void filterVariantsByShape(Map<String, dynamic> shape) {
               setState(() {
                 selectedShape = shape;
-
-                // Find first variant that matches the selected shape and current metal selections
+                // Find first variant that matches shape + metal type/stamp
                 currentVariant = variants.firstWhere((variant) {
                     bool matchesMetal = variant['metal_stamp']?['paraname'] == selectedMetalStamp;
                     bool matchesType = variant['metal_type']?['paraname'] == selectedMetalType;
-                    bool matchesShape = variant['jewelry_diamonds'].any((diamond) => diamond['shape']['id'] == shape['id']);
+                    bool matchesShape = variant['jewelry_diamonds'].any((diamond) => diamond['diamondtype']?.toLowerCase() == 'center' && diamond['shape']['id'] == shape['id']);
                     return matchesMetal && matchesType && matchesShape;
                   },
-                  orElse: () => variants.firstWhere((variant) => variant['jewelry_diamonds'].any((diamond) => diamond['shape']['id'] == shape['id']),
+                  orElse: () => variants.firstWhere((variant) => variant['jewelry_diamonds'].any((diamond) => diamond['diamondtype']?.toLowerCase() == 'center' && diamond['shape']['id'] == shape['id']),
                     orElse: () => variants.first,
                   ),
                 );
 
-                // Update diamond quality selection
-                if (currentVariant?['jewelry_diamonds'] != null && currentVariant!['jewelry_diamonds'].isNotEmpty) {
-                  final diamond = currentVariant!['jewelry_diamonds'][0];
-                  selectedDiamondQuality = '${diamond['color']} ${diamond['clarity']}';
+                // Update diamond quality selection using only the center diamond
+                if (currentVariant?['jewelry_diamonds'] != null) {
+                  final diamond = currentVariant!['jewelry_diamonds'].firstWhere((d) => d['diamondtype']?.toLowerCase() == 'center',
+                    orElse: () => null,
+                  );
+
+                  if (diamond != null) {
+                    selectedDiamondQuality = '${diamond['color']} ${diamond['clarity']}';
+                  }
                 }
               });
             }
@@ -412,6 +418,8 @@ class _ShowproductState extends State<Showproduct> {
             final video = currentVariant?['video'] ?? [];
 
             final list = recommendedjewellerylist.data['data'];
+            String selectedDiamondType = 'center';
+            final uniqueShapes = getUniqueShapes(variants, selectedDiamondType);
 
             return SafeArea(
               child: SingleChildScrollView(
@@ -646,14 +654,15 @@ class _ShowproductState extends State<Showproduct> {
                           ),
                           SizedBox(height:Get.height / 50),
 
-                          Row(
+                          (uniqueShapes.isEmpty) ?  SizedBox() : Row(
                             children: [
-                              Text('hape:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                              Text('Shape:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                               SizedBox(width: Get.width / 50),
-                              SingleChildScrollView(
+                              Expanded(
+                                child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                    children: getUniqueShapes(variants).map((shape) {
+                                    children: uniqueShapes.map((shape) {
                                       bool isSelected = selectedShape != null && selectedShape!['id'] == shape['id'];
                                       return GestureDetector(
                                         onTap: () => filterVariantsByShape(shape),
@@ -664,11 +673,12 @@ class _ShowproductState extends State<Showproduct> {
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           padding: EdgeInsets.all(8),
-                                          child: Image.network(shape['image'], width: 40, height: 40, color: isSelected ? null : null),
+                                          child: Image.network(shape['image'], width: 40, height: 40),
                                         ),
                                       );
                                     }).toList(),
                                   ),
+                                ),
                               ),
                             ],
                           ),
