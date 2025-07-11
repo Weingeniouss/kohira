@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals
+// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,7 +13,6 @@ import 'package:kohira/view/utils/appconstants.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/video.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
 import '../../../utils/app_String.dart';
@@ -40,6 +39,7 @@ class _ShowproductState extends State<Showproduct> {
   bool rosegoldcolor = false;
   bool graycolor = false;
   bool initialized = false;
+  String? diamondType;
 
   bool diamondQualityInitialized = false;
   List<String> diamondQualities = ['FG VVS', 'EF IF', 'G VS', 'H SI'];
@@ -116,16 +116,16 @@ class _ShowproductState extends State<Showproduct> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                       if (Addtocart().isLoading.value) {
-                         Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                       } else {
-                         Addtocart().addtocartservice(
-                           jewelryid: jewellery['id'].toString(),
-                           ringsize: selectedRingSize,
-                           tokan: tokans,
-                          );
-                        }
-                      },
+                      if (Addtocart().isLoading.value) {
+                        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                      } else {
+                        Addtocart().addtocartservice(
+                          jewelryid: jewellery['id'].toString(),
+                          ringsize: selectedRingSize,
+                          tokan: tokans,
+                        );
+                      }
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.12, vertical: Get.height * 0.015),
                       decoration: BoxDecoration(
@@ -364,22 +364,22 @@ class _ShowproductState extends State<Showproduct> {
 
                 // Prioritize finding a variant that also matches selected metal type/stamp
                 currentVariant = variants.firstWhere((variant) {
-                    final matchesMetal = variant['metal_stamp']?['paraname'] == selectedMetalStamp;
-                    final matchesType = variant['metal_type']?['paraname'] == selectedMetalType;
+                  final matchesMetal = variant['metal_stamp']?['paraname'] == selectedMetalStamp;
+                  final matchesType = variant['metal_type']?['paraname'] == selectedMetalType;
 
-                    final hasMatchingShape = (variant['jewelry_diamonds'] as List?)?.any((diamond) {
-                      return (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) && (diamond['shape']?['id'] == shape['id']);
-                    }) ?? false;
+                  final hasMatchingShape = (variant['jewelry_diamonds'] as List?)?.any((diamond) {
+                    return (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) && (diamond['shape']?['id'] == shape['id']);
+                  }) ?? false;
 
-                    return matchesMetal && matchesType && hasMatchingShape;
-                  },
+                  return matchesMetal && matchesType && hasMatchingShape;
+                },
                   orElse: () {
                     // Fallback: find any variant with matching shape + diamondType
                     return variants.firstWhere((variant) {
-                        return (variant['jewelry_diamonds'] as List?)?.any((diamond) {
-                          return (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) && (diamond['shape']?['id'] == shape['id']);
-                        }) ?? false;
-                      },
+                      return (variant['jewelry_diamonds'] as List?)?.any((diamond) {
+                        return (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) && (diamond['shape']?['id'] == shape['id']);
+                      }) ?? false;
+                    },
                       orElse: () => variants.first,
                     );
                   },
@@ -406,15 +406,155 @@ class _ShowproductState extends State<Showproduct> {
               selectedDiamondQuality = '${diamond['color']} ${diamond['clarity']}';
             }
 
-            final uniqueCarats = variants.map((v) {
-              // Safely handle null values
-              final carat = v['total_carat'];
-              if (carat == null) return null;
-              if (carat is double) return carat;
-              if (carat is int) return carat.toDouble();
-              if (carat is String) return double.tryParse(carat);
-              return null;
-            }).whereType<double>().toSet().toList()..sort();
+            List<double> getUniqueCarats(List variants, {String? diamondType}) {
+              final Set<double> seen = {};
+              final uniqueCarats = <double>[];
+
+              for (var variant in variants) {
+                if (variant is! Map<String, dynamic>) continue;
+
+                // Handle both total_carat and jewelry_diamonds cases
+                if (variant.containsKey('total_carat')) {
+                  final carat = variant['total_carat'];
+                  if (carat is num && seen.add(carat.toDouble())) {
+                    uniqueCarats.add(carat.toDouble());
+                  }
+                }
+                else if (diamondType != null && variant.containsKey('jewelry_diamonds')) {
+                  final diamonds = variant['jewelry_diamonds'];
+                  if (diamonds is List) {
+                    for (var diamond in diamonds) {
+                      if (diamond is Map<String, dynamic> &&
+                          (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase())) {
+                        final carat = diamond['carat'];
+                        if (carat is num && seen.add(carat.toDouble())) {
+                          uniqueCarats.add(carat.toDouble());
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              uniqueCarats.sort();
+              return uniqueCarats;
+            }
+            double? selectedCaratWeight;
+
+            void filterVariantsByCarat(double? selectedCarat, {String? diamondType}) {
+              if (selectedCarat == null) return;
+
+              setState(() {
+                selectedCaratWeight = selectedCarat;
+                Map<String, dynamic>? matchedVariant;
+
+                // Matching strategy priority:
+                // 1. Exact carat + metal type + stamp match
+                // 2. Exact carat + metal type match
+                // 3. Exact carat match
+                // 4. Closest carat match (within 0.1ct tolerance)
+                // 5. Fallback to first variant
+
+                // Check all variants for best possible match
+                for (final variant in variants) {
+                  if (variant is! Map<String, dynamic>) continue;
+
+                  // Get carat value based on filtering mode
+                  double? variantCarat;
+                  if (diamondType == null) {
+                    variantCarat = (variant['total_carat'] as num?)?.toDouble();
+                  } else {
+                    final diamonds = variant['jewelry_diamonds'] as List?;
+                    if (diamonds != null) {
+                      for (var diamond in diamonds) {
+                        if (diamond is Map<String, dynamic> &&
+                            diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
+                          variantCarat = (diamond['carat'] as num?)?.toDouble();
+                          break;
+                        }
+                      }
+                    }
+                  }
+
+                  if (variantCarat == null) continue;
+
+                  // Check if carat matches (with floating point tolerance)
+                  final caratMatch = (variantCarat - selectedCarat).abs() < 0.001;
+                  if (!caratMatch) continue;
+
+                  final variantMetal = variant['metal_type']?['paraname'];
+                  final variantStamp = variant['metal_stamp']?['paraname'];
+
+                  // Priority 1: Exact match on all criteria
+                  if (variantMetal == selectedMetalType && variantStamp == selectedMetalStamp) {
+                    matchedVariant = variant;
+                    break;
+                  }
+
+                  // Priority 2: Match on metal type only
+                  if (matchedVariant == null && variantMetal == selectedMetalType) {
+                    matchedVariant = variant;
+                  }
+
+                  // Priority 3: Just carat match (keep first found)
+                  if (matchedVariant == null) {
+                    matchedVariant = variant;
+                  }
+                }
+
+                // If no exact match found, look for closest carat within tolerance
+                if (matchedVariant == null) {
+                  double? closestDiff;
+                  for (final variant in variants) {
+                    if (variant is! Map<String, dynamic>) continue;
+
+                    double? variantCarat;
+                    if (diamondType == null) {
+                      variantCarat = (variant['total_carat'] as num?)?.toDouble();
+                    } else {
+                      final diamonds = variant['jewelry_diamonds'] as List?;
+                      if (diamonds != null) {
+                        for (var diamond in diamonds) {
+                          if (diamond is Map<String, dynamic> &&
+                              diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
+                            variantCarat = (diamond['carat'] as num?)?.toDouble();
+                            break;
+                          }
+                        }
+                      }
+                    }
+
+                    if (variantCarat == null) continue;
+
+                    final diff = (variantCarat - selectedCarat).abs();
+                    if (diff <= 0.1 && (closestDiff == null || diff < closestDiff)) {
+                      closestDiff = diff;
+                      matchedVariant = variant;
+                    }
+                  }
+                }
+
+                currentVariant = matchedVariant ?? variants.first;
+
+                // Update all dependent selections
+                selectedMetalType = currentVariant?['metal_type']?['paraname'];
+                selectedMetalStamp = currentVariant?['metal_stamp']?['paraname'];
+
+                // Update diamond quality if filtering by diamond type
+                if (diamondType != null) {
+                  final diamonds = currentVariant?['jewelry_diamonds'] as List?;
+                  if (diamonds != null) {
+                    for (var diamond in diamonds) {
+                      if (diamond is Map<String, dynamic> &&
+                          diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
+                        selectedDiamondQuality = '${diamond['color']} ${diamond['clarity']}';
+                        break;
+                      }
+                    }
+                  }
+                }
+              });
+            }
 
             // Get values and safely parse them to double
             final double goldPrice = double.tryParse(currentVariant?['sync_metal_price']?.toString() ?? '0') ?? 0.0;
@@ -539,8 +679,8 @@ class _ShowproductState extends State<Showproduct> {
                                     );
 
                                     final String storageKey = jewellery['id'].toString();
-                                      localdatabase().saveToWishlist(storageKey);
-                                    }
+                                    localdatabase().saveToWishlist(storageKey);
+                                  }
                                 },
                                 child: (isWishlisted)
                                     ? SvgPicture.asset(AppIcon.heart,width: 30,height: 30,color: AppColor.pink_color)
@@ -714,51 +854,50 @@ class _ShowproductState extends State<Showproduct> {
                           ),
                           SizedBox(height:Get.height / 50),
 
-                          (uniqueCarats.isNotEmpty) ?  Row(
+
+                          Row(
                             children: [
                               Text('Carat Weight : ', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                               SizedBox(width: Get.width / 50),
                               SizedBox(
                                 height: Get.height / 20,
-                                child: (uniqueCarats.isEmpty) ? Text('No carat available') : ListView.builder(
+                                child: (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
+                                    ? Text('No carat available')
+                                    : ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
-                                  itemCount: uniqueCarats.length,
+                                  itemCount: getUniqueCarats(variants, diamondType: diamondType).length,
                                   itemBuilder: (context, index) {
-                                    final carat = uniqueCarats[index];
+                                    final carat = getUniqueCarats(variants, diamondType: diamondType)[index];
                                     final isSelected = currentVariant?['total_carat'] == carat;
 
                                     return Padding(
                                       padding: EdgeInsets.only(right: 8),
                                       child: ChoiceChip(
                                         color: WidgetStatePropertyAll(Colors.amber.withOpacity(0.1)),
-                                        label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ..ct', style: TextStyle(color: Colors.amber)),
+                                        label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
+                                            style: TextStyle(color: Colors.amber)),
                                         selected: isSelected,
                                         onSelected: (selected) {
                                           if (selected) {
-                                            final newVariant = variants.firstWhere((v) {
-                                              final vCarat = v['total_carat'];
-                                              if (vCarat == null) return false;
-                                              if (vCarat is double) return vCarat == carat;
-                                              if (vCarat is int) return vCarat == carat.toInt();
-                                              if (vCarat is String) return double.tryParse(vCarat) == carat;
-                                                return false;
-                                              },
-                                              orElse: () => currentVariant!,
-                                            );
-                                            setState(() => currentVariant = newVariant);
+                                            filterVariantsByCarat(carat, diamondType: diamondType);
                                           }
                                         },
                                         backgroundColor: Colors.amber.withOpacity(0.1),
                                         selectedColor: Colors.amber.withOpacity(0.1),
-                                        shape: StadiumBorder(side: BorderSide(color: isSelected ? Colors.amber : Colors.amber, width: 1.5)),
+                                        shape: StadiumBorder(
+                                            side: BorderSide(
+                                                color: isSelected ? Colors.amber : Colors.amber,
+                                                width: 1.5
+                                            )
+                                        ),
                                       ),
                                     );
                                   },
                                 ),
                               ),
                             ],
-                          ) : SizedBox(),
+                          ),
                           SizedBox(height:Get.height / 50),
 
                           // Ring Size
