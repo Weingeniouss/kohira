@@ -10,12 +10,14 @@ import 'package:kohira/view/utils/widget/pop.dart';
 
 class Subcategrory extends GetxController {
   var isLoading = false.obs;
-   var data = [].obs;
+  var data = [].obs;
+  var draw = 1.obs;
+  var start = 0.obs;
+  var length = 10.obs;
+  var hasMore = true.obs;
 
   Future<void> subcategroryuser({
-    String? draw,
-    String? start,
-    String? length,
+    bool isLoadMore = false,
     String? metal_type,
     String? metal_stamp,
     String? diamond_type,
@@ -35,62 +37,71 @@ class Subcategrory extends GetxController {
     String? j_count,
     String? userid,
   }) async {
+    if (isLoading.value || !hasMore.value) return;
+
     try {
       isLoading.value = true;
 
       final url = Uri.parse(AppUrl.product);
       print("Sending request to: $url");
-      final Map<String, String?> body = {
-        'draw': draw,
-        'start': start,
-        'length': length,
-        'metal_type': metal_type,
-        'metal_stamp': metal_stamp,
-        'diamond_type': diamond_type,
-        'setting_type': setting_type,
-        'weight_min': weight_min,
-        'weight_max': weight_max,
-        'price_min': price_min,
-        'price_max': price_max,
-        'order_column': order_column,
-        'sort': sort,
-        'category_slug': category_slug,
-        'subcategory_slug': subcategory_slug,
-        'finish_status': finish_status,
-        'center_stone_caret': center_stone_caret,
-        'center_stone_shape': center_stone_shape,
-        'collection_id': collection_id,
-        'j_count': j_count,
-        'userid': userid,
-      };
-      final filteredBody = <String, String>{};
-      body.forEach((key, value) {
-        if (value != null) {
-          filteredBody[key] = value;
-        }
-      });
 
-      final response = await http.post(
-        url,
-        headers: {ApiHeaders.heading: ApiHeaders.peramitters},
-        body: filteredBody,
-      );
+      final Map<String, String> body = {
+        'draw': draw.value.toString(),
+        'start': start.value.toString(),
+        'length': length.value.toString(),
+        if (metal_type != null) 'metal_type': metal_type,
+        if (metal_stamp != null) 'metal_stamp': metal_stamp,
+        if (diamond_type != null) 'diamond_type': diamond_type,
+        if (setting_type != null) 'setting_type': setting_type,
+        if (weight_min != null) 'weight_min': weight_min,
+        if (weight_max != null) 'weight_max': weight_max,
+        if (price_min != null) 'price_min': price_min,
+        if (price_max != null) 'price_max': price_max,
+        if (order_column != null) 'order_column': order_column,
+        if (sort != null) 'sort': sort,
+        if (category_slug != null) 'category_slug': category_slug,
+        if (subcategory_slug != null) 'subcategory_slug': subcategory_slug,
+        if (finish_status != null) 'finish_status': finish_status,
+        if (center_stone_caret != null) 'center_stone_caret': center_stone_caret,
+        if (center_stone_shape != null) 'center_stone_shape': center_stone_shape,
+        if (collection_id != null) 'collection_id': collection_id,
+        if (j_count != null) 'j_count': j_count,
+        if (userid != null) 'userid': userid,
+      };
+      print('Subcategrory BODY:- $body');
+
+      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters}, body: body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonData = jsonDecode(response.body);
-        data.value = jsonData['data'] ?? [];
-        log('Subcategrory :- $jsonData');
+        final newItems = jsonData['data'] ?? [];
+
+        if (newItems.isEmpty) {
+          hasMore.value = false;
+        } else {
+          if (isLoadMore) {
+            data.addAll(newItems);
+          } else {
+            data.value = newItems;
+          }
+          draw.value++;
+          start.value += length.value;
+        }
+
+        log('Subcategrory Response: $jsonData');
       } else {
-        ToastificationError.Error('Subcategrory Error this :- ${response.statusCode}, ${response.body}');
-        throw {
-          'Subcategrory Error this :- ${response.statusCode}, ${response.body}'
-        };
+        ToastificationError.Error('Subcategrory Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
-      ToastificationError.Error('Subcategrory Error this :- $e');
-      print('Subcategrory Error this :- $e');
-    }finally{
+      ToastificationError.Error('Subcategrory Exception: $e');
+    } finally {
       isLoading.value = false;
     }
+  }
+
+  void resetPagination() {
+    draw.value = 1;
+    start.value = 0;
+    hasMore.value = true;
   }
 }
