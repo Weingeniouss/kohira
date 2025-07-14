@@ -69,4 +69,10 @@ class AppString {
     static const headingMade = 'Made Just for You';
     static const conceptMade = 'Kohira brings the brilliance of lab-grown Type IIA diamonds with exquisite designs, blending sustainability with luxury. Experience ethical, high-quality jewelry crafted for timeless elegance';
     static const youMay = 'You May Also Like';
+
+    //SubCategorie
+    static const filter = 'Filter';
+    static const sortbay = 'Sort By';
+    static const metalstamp = 'Metal Stamp';
+    static const metaltaype = 'Metal Type';
 }

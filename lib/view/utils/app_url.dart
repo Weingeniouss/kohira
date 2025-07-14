@@ -30,6 +30,10 @@ class AppUrl {
       static const addtocart = '$baseurl/cart';
       static const jewelleryDetail = '$baseurl/JewelleryDetailApp';
 
+      //subCategorie
+      static const jewelleryfilter = '$baseurl/Jewellery-filter';
+      static const filtercategory = '$baseurl/category';
+
      //Seach
       static const search = '$baseurl/search';
       static const category = '$baseurl/category';

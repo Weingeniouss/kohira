@@ -11,6 +11,7 @@ import 'package:kohira/view/utils/widget/pop.dart';
 class Subcategrory extends GetxController {
   var isLoading = false.obs;
   var data = [].obs;
+  List<dynamic> allData = [];
   var draw = 1.obs;
   var start = 0.obs;
   var length = 10.obs;
@@ -68,9 +69,14 @@ class Subcategrory extends GetxController {
         if (j_count != null) 'j_count': j_count,
         if (userid != null) 'userid': userid,
       };
+
       print('Subcategrory BODY:- $body');
 
-      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters}, body: body);
+      final response = await http.post(
+        url,
+        headers: {ApiHeaders.heading: ApiHeaders.peramitters},
+        body: body,
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonData = jsonDecode(response.body);
@@ -80,8 +86,10 @@ class Subcategrory extends GetxController {
           hasMore.value = false;
         } else {
           if (isLoadMore) {
+            allData.addAll(newItems);
             data.addAll(newItems);
           } else {
+            allData = newItems;
             data.value = newItems;
           }
           draw.value++;
@@ -103,5 +111,15 @@ class Subcategrory extends GetxController {
     draw.value = 1;
     start.value = 0;
     hasMore.value = true;
+    data.clear();
+    allData.clear(); // ✅ Reset both
+  }
+
+  void filterSearch(String query) {
+    if (query.isEmpty) {
+      data.value = allData;
+    } else {
+      data.value = allData.where((item) => item['title'].toString().toLowerCase().contains(query.toLowerCase())).toList();
+    }
   }
 }

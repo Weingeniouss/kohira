@@ -621,10 +621,7 @@ class _ShowproductState extends State<Showproduct> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                   border: Border.all(color: AppColor.textfild_color),
-                                  image: DecorationImage(
-                                    image: NetworkImage(allImages[index]['feature']),
-                                    fit: BoxFit.cover,
-                                  ),
+                                  image: DecorationImage(image: NetworkImage(allImages[index]['feature']), fit: BoxFit.cover),
                                 ),
                               ),
                             );
