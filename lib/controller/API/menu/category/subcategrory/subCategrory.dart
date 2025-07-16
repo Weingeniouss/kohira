@@ -17,7 +17,22 @@ class Subcategrory extends GetxController {
   var length = 10.obs;
   var hasMore = true.obs;
 
+  // Filters state
+  String? selectedMetalType;
+  String? selectedMetalStamp;
+  String? selectedCategorySlug;
+  String? selectedSubcategorySlug;
+  String? selectediamondtype;
+  String? selectedweightmin;
+  String? selectedweightmax;
+  String? selectedpricemin;
+  String? selectedpricemax;
+  String? selectcenterstoneshape;
+
   Future<void> subcategroryuser({
+    String? draws,
+    String? starts,
+    String? lengths,
     bool isLoadMore = false,
     String? metal_type,
     String? metal_stamp,
@@ -40,6 +55,26 @@ class Subcategrory extends GetxController {
   }) async {
     if (isLoading.value || !hasMore.value) return;
 
+    // Save selected filters (used for next pagination)
+    if (!isLoadMore) {
+      start.value = 0; // reset if new filter is applied
+      draw.value = 1;
+      hasMore.value = true;
+      allData.clear();
+
+      selectedMetalType = metal_type;
+      selectedMetalStamp = metal_stamp;
+      selectedCategorySlug = category_slug;
+      selectedSubcategorySlug = subcategory_slug;
+      selectediamondtype = diamond_type;
+      selectedweightmin = weight_min;
+      selectedweightmax = weight_max;
+      selectedpricemin = price_min;
+      selectedweightmax = price_max;
+      selectcenterstoneshape = center_stone_shape;
+    }
+
+
     try {
       isLoading.value = true;
 
@@ -47,24 +82,25 @@ class Subcategrory extends GetxController {
       print("Sending request to: $url");
 
       final Map<String, String> body = {
-        'draw': draw.value.toString(),
-        'start': start.value.toString(),
-        'length': length.value.toString(),
-        if (metal_type != null) 'metal_type': metal_type,
-        if (metal_stamp != null) 'metal_stamp': metal_stamp,
-        if (diamond_type != null) 'diamond_type': diamond_type,
-        if (setting_type != null) 'setting_type': setting_type,
-        if (weight_min != null) 'weight_min': weight_min,
-        if (weight_max != null) 'weight_max': weight_max,
-        if (price_min != null) 'price_min': price_min,
-        if (price_max != null) 'price_max': price_max,
+        'draw':  draws ?? draw.value.toString(),
+        'start': starts ??start.value.toString(),
+        'length': lengths ?? length.value.toString(),
+        if (selectedMetalType != null) 'metal_type': selectedMetalType!,
+        if (selectedMetalStamp != null) 'metal_stamp': selectedMetalStamp!,
+        if (selectedCategorySlug != null) 'category_slug': selectedCategorySlug!,
+        if (selectedSubcategorySlug != null) 'subcategory_slug': selectedSubcategorySlug!,
+        if (selectediamondtype != null) 'diamond_type' : selectediamondtype!,
+        if (selectedweightmin != null) 'weight_min': selectedweightmin!,
+        if (selectedweightmax != null) 'weight_max': selectedweightmax!,
+        if (selectedpricemin != null) 'price_min': selectedpricemin!,
+        if (selectedpricemax != null) 'price_max': selectedpricemax!,
         if (order_column != null) 'order_column': order_column,
         if (sort != null) 'sort': sort,
         if (category_slug != null) 'category_slug': category_slug,
         if (subcategory_slug != null) 'subcategory_slug': subcategory_slug,
         if (finish_status != null) 'finish_status': finish_status,
         if (center_stone_caret != null) 'center_stone_caret': center_stone_caret,
-        if (center_stone_shape != null) 'center_stone_shape': center_stone_shape,
+        if (selectcenterstoneshape != null) 'center_stone_shape': selectcenterstoneshape!,
         if (collection_id != null) 'collection_id': collection_id,
         if (j_count != null) 'j_count': j_count,
         if (userid != null) 'userid': userid,

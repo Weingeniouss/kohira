@@ -12,6 +12,8 @@ class AppString {
   //Heding
   static const signUp = 'Sign Up';
   static const signin = 'Sign In';
+  static const clear = 'Clear';
+  static const save = 'Save';
 
   //Bottam
   static const home = 'Home';
@@ -75,4 +77,7 @@ class AppString {
     static const sortbay = 'Sort By';
     static const metalstamp = 'Metal Stamp';
     static const metaltaype = 'Metal Type';
+    static const weight = 'Weight';
+    static const price = 'Price';
+    static const shape = 'Shape';
 }

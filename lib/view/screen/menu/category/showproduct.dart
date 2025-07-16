@@ -127,7 +127,7 @@ class _ShowproductState extends State<Showproduct> {
                       }
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.12, vertical: Get.height * 0.015),
+                      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.105, vertical: Get.height * 0.015),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(Get.width / 50),
                         color: Colors.black,
