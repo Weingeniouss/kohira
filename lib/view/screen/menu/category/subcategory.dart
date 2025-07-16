@@ -18,13 +18,14 @@ import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/inputField.dart';
 
 class Subcategorys extends StatefulWidget {
-  final String subcategrorys;
+  String? subcategrorys;
+  String? subcategory_slug;
   final String subcategrorysname;
 
-  const Subcategorys({
-    super.key,
-    required this.subcategrorys,
+   Subcategorys({
+    super.key, this.subcategrorys,
     required this.subcategrorysname,
+    this.subcategory_slug,
   });
 
   @override
@@ -38,8 +39,13 @@ class _SubcategorysState extends State<Subcategorys> {
   @override
   void initState() {
     super.initState();
-    subcategrory.resetPagination();
-    subcategrory.subcategroryuser(category_slug: widget.subcategrorys);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.wait([
+       subcategrory.resetPagination(),
+       subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug),
+      ] as Iterable<Future>);
+    });
 
     scrollController.addListener(() {
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 && !subcategrory.isLoading.value && subcategrory.hasMore.value) {
@@ -72,7 +78,7 @@ class _SubcategorysState extends State<Subcategorys> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   GestureDetector(
-                    onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys),
+                    onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys!),
                     child: Row(
                       children: [
                         Icon(Icons.sort,color: AppColor.glodcolor),
@@ -83,7 +89,7 @@ class _SubcategorysState extends State<Subcategorys> {
                   ),
                   Text("|",style: TextStyle(color: AppColor.graycolor),),
                   GestureDetector(
-                    onTap: () => ShowBottam().showbottam(context, category_slug: widget.subcategrorys),
+                    onTap: () => ShowBottam().showbottam(context, category_slug: widget.subcategrorys!),
                     child: Row(
                       children: [
                         Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
@@ -102,18 +108,39 @@ class _SubcategorysState extends State<Subcategorys> {
         height: Get.height,
         width: Get.width,
         color: AppColor.white_color,
-        child: Obx(() => loading(
-          conditiona: subcategrory.isLoading.value && subcategrory.data.isEmpty,
-          widget: SafeArea(
+        child: Obx(() {
+          if(subcategrory.isLoading.value && subcategrory.data.isEmpty){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.isDialogOpen != true) {
+                Get.dialog(
+                  Center(child: Lottie.asset(AppJson.loading2)),
+                  barrierDismissible: false,
+                );
+              }
+            });
+            return Scaffold(backgroundColor: Colors.transparent);
+          } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.isDialogOpen == true) {
+                Get.back();
+              }
+            });
+          }
+
+          if(subcategrory.data.isEmpty){
+            return Center(child: Lottie.asset(AppJson.noData));
+          }
+
+          return SafeArea(
             child: horizontalpadding(
               child: RefreshIndicator(
                 strokeWidth: 3.5,
                 color: AppColor.pink_color,
                 backgroundColor: AppColor.white_color,
                 onRefresh: () async {
-                    subcategrory.resetPagination();
-                    await subcategrory.subcategroryuser(category_slug: widget.subcategrorys);
-                  },
+                  subcategrory.resetPagination();
+                  await subcategrory.subcategroryuser(category_slug: widget.subcategrorys);
+                },
                 child: Column(
                   children: [
                     SizedBox(height: Get.height / 50),
@@ -192,8 +219,8 @@ class _SubcategorysState extends State<Subcategorys> {
                 ),
               ),
             ),
-          ),
-        )),
+          );
+        }),
       ),
     );
   }

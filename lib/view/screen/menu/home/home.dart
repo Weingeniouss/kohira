@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,29 +13,40 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
+import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../../controller/user_inerface/menu/home/home.dart' show HomeController;
 import '../../../utils/app_String.dart';
 import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/lodingstate.dart';
 import '../../../utils/widget/video.dart';
 
-class Home extends StatelessWidget {
-  final home = Get.put(HomeController());
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
+class Home extends StatefulWidget {
   Home({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    ever(home.homecollction.isLoading, (isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (isLoading) {
-          LoadingState.show(AppJson.loading2);
-        } else {
-          LoadingState.hide();
-        }
-      });
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final home = Get.put(HomeController());
+  final jewellery = Get.put(Jewelleryfilter());
+  final category = Get.put(JewelleryFilterCategory());
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.wait([
+        jewellery.fetchJewelleryFilter(),
+        category.fetchFilter(),
+      ] as Iterable<Future>);
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     home.onInit();
     return Scaffold(
       key: scaffoldKey,
@@ -51,6 +62,24 @@ class Home extends StatelessWidget {
         width: Get.width, height: Get.height,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
+          if(home.homecollction.isLoading.value && home.homecollction.data.isEmpty){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.isDialogOpen != true) {
+                Get.dialog(
+                  Center(child: Lottie.asset(AppJson.loading2)),
+                  barrierDismissible: false,
+                );
+              }
+            });
+            return Scaffold(backgroundColor: Colors.transparent);
+          } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.isDialogOpen == true) {
+                Get.back();
+              }
+            });
+          }
+
             final section = home.homecollction.data['3']?['collection_section_3'];
 
             if (section == null) {

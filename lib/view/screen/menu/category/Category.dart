@@ -7,32 +7,25 @@ import 'package:kohira/view/screen/menu/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import '../../../../controller/API/menu/category/category.dart';
+import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/lodingstate.dart';
 
-class Category extends StatefulWidget {
-  const Category({super.key});
+class Category extends StatelessWidget {
+  final category = Get.put(JewelleryFilterCategory());
+   Category({super.key});
 
-  @override
-  State<Category> createState() => _CategoryState();
-}
+  // final categrory = Get.put(CategoryCalling());
 
-class _CategoryState extends State<Category> {
-  final categrory = Get.put(CategoryCalling());
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
-    super.initState();
-    categrory.categroryservice();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    ever(categrory.isLoading, (isLoading) {
+    ever(category.isLoading, (isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (isLoading) {
           LoadingState.show(AppJson.loading2);
@@ -68,7 +61,7 @@ class _CategoryState extends State<Category> {
                 // Use Expanded properly for GridView
                 Expanded(
                   child: GridView.builder(
-                    itemCount: categrory.data.length,
+                    itemCount: category.filterData.value!.data.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisSpacing: Get.height / 50,
@@ -76,7 +69,7 @@ class _CategoryState extends State<Category> {
                       childAspectRatio: 0.8,
                     ),
                     itemBuilder: (context, index) {
-                      final categorieslist = categrory.data[index];
+                      final categorieslist = category.filterData.value!.data[index];
                       return GestureDetector(
                         onTap: () {
                            categorieslist.slug;

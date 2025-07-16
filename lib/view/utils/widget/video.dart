@@ -42,9 +42,12 @@ class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isReady) {
-      return Center(child: Lottie.asset(AppJson.loading2));
-    }
+
+    //Loading
+
+    // if (!_isReady) {
+    //   return Center(child: Lottie.asset(AppJson.loading2));
+    // }
 
     return Stack(
       fit: StackFit.expand,
