@@ -87,7 +87,7 @@ class _SubcategorysState extends State<Subcategorys> {
                       ],
                     ),
                   ),
-                  Text("|",style: TextStyle(color: AppColor.graycolor),),
+                  Text("|",style: TextStyle(color: AppColor.graycolor)),
                   GestureDetector(
                     onTap: () => ShowBottam().showbottam(context, category_slug: widget.subcategrorys!),
                     child: Row(
