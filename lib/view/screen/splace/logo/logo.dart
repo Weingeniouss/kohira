@@ -10,12 +10,11 @@ import '../../../../controller/user_inerface/splace/logo/logo_controller.dart';
 import '../../../utils/widget/horizontalpading.dart';
 
 class Logo extends StatelessWidget {
-  LogoController logo = Get.put(LogoController());
-  Logo({super.key});
+  const Logo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    logo.onInit();
+    Get.put(LogoController());
     return Scaffold(
       body: Container(
         height: Get.height, width: Get.width,

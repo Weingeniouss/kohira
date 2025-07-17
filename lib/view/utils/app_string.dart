@@ -55,6 +55,7 @@ class AppString {
      static const custom = 'Custom';
      static const dummy = 'Dummy';
      static const Order = 'Order History';
+     static const allJewellery = 'All Jewellery';
      static const Wishlist = 'Wishlist';
      static const Wallet = 'Wallet';
      static const Addresses = 'Addresses';

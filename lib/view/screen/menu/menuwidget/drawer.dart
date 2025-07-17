@@ -1,12 +1,18 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/database/local/localstore.dart';
+import 'package:kohira/view/screen/credentials/login.dart';
+import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:lottie/lottie.dart';
+import 'package:restart_app/restart_app.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../../controller/API/menu/category/subcategrory/subCategrory.dart';
+import '../../../../controller/user_inerface/splace/logo/logo_controller.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/app_icon.dart';
@@ -27,10 +33,26 @@ class _DrawersState extends State<Drawers> {
   final category = Get.put(JewelleryFilterCategory());
   final subcategrory = Get.put(Subcategrory());
 
+  bool allJewellery = false;
+
+  String getCategoryIcon(String category) {
+    switch (category.toLowerCase()) {
+      case 'bracelet' :return AppIcon.bracelet;
+      case 'collection':return AppIcon.collection;
+      case 'earrings':return AppIcon.earrings;
+      case 'mangalsutra':return AppIcon.mangalsutra;
+      case 'necklace' :return AppIcon.necklace;
+      case 'rings': return AppIcon.ring;
+      default: return 'asset/icon/drawericon/default_icon.svg'; // fallback
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredCategories = category.filterData.value!.data.where((item) => ![7, 8, 9].contains(item.id)).toList();
+    final filteredCategories2 = category.filterData.value!.data.where((item) => ![1, 2, 3, 4, 5, 6].contains(item.id)).toList();
     return Drawer(
-      width: Get.width * 0.550,
+      width: Get.width * 0.650,
       elevation: 0,
       backgroundColor: AppColor.white_color,
       child: SafeArea(
@@ -53,9 +75,9 @@ class _DrawersState extends State<Drawers> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: category.filterData.value!.data.length,
+                          itemCount: filteredCategories.length,
                           itemBuilder: (BuildContext context, int index) {
-                            final categoryItem = category.filterData.value!.data[index];
+                            final categoryItem = filteredCategories[index];
                             return Column(
                               children: [
                                 GestureDetector(
@@ -67,7 +89,7 @@ class _DrawersState extends State<Drawers> {
                                           margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
                                           decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
                                           padding: EdgeInsets.all(10),
-                                          child: SvgPicture.asset(AppIcon.Order, width: Get.width * 0.018, height: Get.height * 0.018),
+                                          child: SvgPicture.asset(getCategoryIcon(categoryItem.name), width: Get.width * 0.018, height: Get.height * 0.018,color: AppColor.white_color),
                                         ),
                                         SizedBox(width: Get.width / 30),
                                         SizedBox(width: Get.width / 3.5, child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500))),
@@ -79,8 +101,7 @@ class _DrawersState extends State<Drawers> {
                                 AnimatedCrossFade(
                                   duration: Duration(milliseconds: 600),
                                   firstChild: SizedBox.shrink(),
-                                  secondChild: categoryItem.subcategory.isNotEmpty
-                                      ? Padding(
+                                  secondChild: categoryItem.subcategory.isNotEmpty ? Padding(
                                     padding: EdgeInsets.only(left: Get.width * 0.08),
                                     child: Column(
                                       children: [
@@ -91,10 +112,7 @@ class _DrawersState extends State<Drawers> {
                                               Get.to(() => Subcategorys(
                                                 subcategory_slug: subItem.slug,
                                                 subcategrorysname: AppString.product,
-                                              ),
-                                                transition: Transition.rightToLeft,
-                                                duration: Duration(milliseconds: 600),
-                                              );
+                                              ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                             },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -114,8 +132,10 @@ class _DrawersState extends State<Drawers> {
                                         if (categoryItem.subcategory.length > 6)
                                           GestureDetector(
                                             onTap: () {
-                                              Get.to(() => Subcategorys(subcategrorys: categoryItem.slug, subcategrorysname: AppString.product),
-                                                  transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                              Get.to(() => Subcategorys(
+                                                subcategrorys: categoryItem.slug,
+                                                subcategrorysname: AppString.product,
+                                              ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                             },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -123,8 +143,7 @@ class _DrawersState extends State<Drawers> {
                                                 children: [
                                                   Text("*"),
                                                   SizedBox(width: Get.width * 0.015),
-                                                  Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue),
-                                                  ),
+                                                  Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
                                                 ],
                                               ),
                                             ),
@@ -149,13 +168,126 @@ class _DrawersState extends State<Drawers> {
                       // drawerIcon(icon: AppIcon.ring, text: AppString.ring, color: AppColor.white_color),
                       // drawerIcon(icon: AppIcon.custom, text: AppString.custom, color: AppColor.white_color),
                       // drawerIcon(icon: AppIcon.dummy, text: AppString.dummy, color: AppColor.white_color),
+
+                      drawerIcon(icon: AppIcon.Order, text: AppString.allJewellery, onTap: () => setState(() => allJewellery =! allJewellery)),
+                      AnimatedSize(
+                        curve: Curves.easeInOut,
+                        duration: Duration(milliseconds: 600),
+                        child: (allJewellery) ? horizontalpadding(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: Get.width / 20),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: filteredCategories2.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final categoryItem = filteredCategories2[index];
+                                return Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded ?? false)),
+                                      child: SizedBox(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+                                              decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
+                                              padding: EdgeInsets.all(10),
+                                              child: SvgPicture.asset(AppIcon.Order, width: Get.width * 0.018, height: Get.height * 0.018),
+                                            ),
+                                            SizedBox(width: Get.width / 30),
+                                            SizedBox(width: Get.width / 3.5, child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500))),
+                                            Spacer(),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    AnimatedCrossFade(
+                                      duration: Duration(milliseconds: 600),
+                                      firstChild: SizedBox.shrink(),
+                                      secondChild: categoryItem.subcategory.isNotEmpty ? Padding(
+                                        padding: EdgeInsets.only(left: Get.width * 0.08),
+                                        child: Column(
+                                          children: [
+                                            ...categoryItem.subcategory.take(6).map((subItem) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  category.selectCategorySlug(subItem.slug);
+                                                  Get.to(() => Subcategorys(
+                                                    subcategory_slug: subItem.slug,
+                                                    subcategrorysname: AppString.product,
+                                                  ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                  child: Row(
+                                                    children: [
+                                                      Text("*"),
+                                                      SizedBox(width: Get.width * 0.015),
+                                                      SizedBox(
+                                                        width: Get.width / 3,
+                                                        child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                            if (categoryItem.subcategory.length > 6)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Get.to(() => Subcategorys(
+                                                    subcategrorys: categoryItem.slug,
+                                                    subcategrorysname: AppString.product,
+                                                  ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                  child: Row(
+                                                    children: [
+                                                      Text("*"),
+                                                      SizedBox(width: Get.width * 0.015),
+                                                      Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ) : SizedBox.shrink(),
+                                      crossFadeState: categoryItem.isExpanded == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                    ),
+                                    Divider(color: AppColor.textfild_color, height: 1),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ) : SizedBox.shrink(),
+                      ),
+
                       drawerIcon(icon: AppIcon.Order, text: AppString.Order),
                       drawerIcon(icon: AppIcon.Wishlist, text: AppString.Wishlist),
                       drawerIcon(icon: AppIcon.Wallet, text: AppString.Wallet),
                       drawerIcon(icon: AppIcon.Addresses, text: AppString.Addresses),
                       drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
                       drawerIcon(icon: AppIcon.PrivacyPolicy, text: AppString.PrivacyPolicy),
-                      drawerIcon(icon: AppIcon.Logout, text: AppString.Logout),
+                      drawerIcon(
+                          icon: AppIcon.Logout,
+                          text: AppString.Logout,
+                          onTap: () async {
+                            Get.dialog(
+                              Center(child: Lottie.asset(AppJson.loading2)),
+                              barrierDismissible: false,
+                            );
+
+                            await Future.delayed(const Duration(seconds: 2)); // Show loader for 2 seconds
+
+                            await localdatabase().logout(); // Clear app data
+
+                            Get.back(); // Close the dialog
+                            Get.off(() => Login()); // Navigate to Login screen
+                            }),
                       SizedBox(height: Get.height * 0.030),
                     ],
                   );
@@ -172,7 +304,7 @@ class _DrawersState extends State<Drawers> {
 Widget drawerIcon({required String icon, required String text, void Function()? onTap, Color? color}) {
   return horizontalpadding(
     child: GestureDetector(
-      onTap: () => onTap,
+      onTap: onTap,
       child: Column(
         children: [
           Row(

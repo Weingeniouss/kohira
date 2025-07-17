@@ -1,5 +1,8 @@
-// ignore_for_file: avoid_print, camel_case_types
+// ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors
 
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:kohira/view/utils/appconstants.dart';
 
 class localdatabase {
@@ -55,6 +58,33 @@ class localdatabase {
     //
     //   print('isLogin :- $islogin');
     // }
+  }
+
+  Future logout() async{
+   await pref!.setBool('login', false);
+    islogin = pref!.getBool('login')?? false;
+    print('isLogin :- $islogin');
+
+    pref!.setString('fristname', '');
+    pref!.setString('lastname', '');
+    pref!.setString('email', '');
+    pref!.setString('mobile', '');
+    pref!.setString('password', '');
+    pref!.setString('countrycode', '');
+
+    Fristname = pref!.getString('fristname')!;
+    Lastname = pref!.getString('lastname')!;
+    Email = pref!.getString('email')!;
+    Mobile = pref!.getString('mobile')!;
+    Password = pref!.getString('password')!;
+    Countrycode = pref!.getString('countrycode')!;
+
+    print('fristname :- $Fristname');
+    print('lastname :- $Lastname');
+    print('email :- $Email');
+    print('mobile :- $Mobile');
+    print('password :- $Password');
+    print('countrycode :- $Countrycode');
   }
 
   //Product details

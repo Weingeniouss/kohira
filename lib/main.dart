@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         theme: ThemeData(fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
+        title: 'Kohira',
         home: Logo(),
       ),
     );
