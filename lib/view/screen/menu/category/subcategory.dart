@@ -67,43 +67,50 @@ class _SubcategorysState extends State<Subcategorys> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.product),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(color: AppColor.white_color),
-          height: Get.height * 0.05,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys!),
-                    child: Row(
-                      children: [
-                        Icon(Icons.sort,color: AppColor.glodcolor),
-                        SizedBox(width: Get.width / 60),
-                        Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                      ],
+      bottomNavigationBar: Obx((){
+
+        if(subcategrory.data.isEmpty){
+          return SizedBox();
+        }
+
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(color: AppColor.white_color),
+            height: Get.height * 0.05,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys.toString()),
+                      child: Row(
+                        children: [
+                          Icon(Icons.sort,color: AppColor.glodcolor),
+                          SizedBox(width: Get.width / 60),
+                          Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
+                        ],
+                      ),
                     ),
-                  ),
-                  Text("|",style: TextStyle(color: AppColor.graycolor)),
-                  GestureDetector(
-                    onTap: () => ShowBottam().showbottam(context, category_slug: widget.subcategrorys!),
-                    child: Row(
-                      children: [
-                        Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
-                        SizedBox(width: Get.width / 60),
-                        Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                      ],
+                    Text("|",style: TextStyle(color: AppColor.graycolor)),
+                    GestureDetector(
+                      onTap: () => ShowBottam().showbottam(context, category_slug: widget.subcategrorys.toString()),
+                      child: Row(
+                        children: [
+                          Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
+                          SizedBox(width: Get.width / 60),
+                          Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
       body: Container(
         height: Get.height,
         width: Get.width,

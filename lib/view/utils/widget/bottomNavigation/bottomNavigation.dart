@@ -105,7 +105,12 @@ Widget bottamIcon({
       children: [
         SvgPicture.asset(icon, color: condition ? AppColor.pink_color : null),
         SizedBox(height: Get.height / 200),
-        Text(name,style: TextStyle(color: condition ? AppColor.pink_color : AppColor.bottomColor)),
+        Text(name,style: TextStyle(
+            color: condition ? AppColor.pink_color : AppColor.bottomColor,
+            fontWeight: condition ? FontWeight.w500 : FontWeight.w400,
+            fontSize: Get.width / 27,
+          ),
+        ),
       ],
     ),
   );

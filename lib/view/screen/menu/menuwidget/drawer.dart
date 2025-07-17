@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../../controller/API/menu/category/subcategrory/subCategrory.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/app_icon.dart';
+import '../../../utils/app_json.dart';
 import '../../../utils/app_logo.dart';
 import '../../../utils/widget/horizontalpading.dart';
 import '../category/subcategory.dart';
@@ -28,7 +30,7 @@ class _DrawersState extends State<Drawers> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: Get.width *0.550,
+      width: Get.width * 0.550,
       elevation: 0,
       backgroundColor: AppColor.white_color,
       child: SafeArea(
@@ -43,12 +45,12 @@ class _DrawersState extends State<Drawers> {
               child: SingleChildScrollView(
                 child: Obx((){
                   if (category.filterData.value == null) {
-                    return Center(child: Text("No data available"));
+                    return Scaffold(body: Center(child: Lottie.asset(AppJson.noData)));
                   }
                   return Column(
                     children: [
                       horizontalpadding(
-                        child:ListView.builder(
+                        child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: category.filterData.value!.data.length,
@@ -74,18 +76,26 @@ class _DrawersState extends State<Drawers> {
                                     ),
                                   ),
                                 ),
-                                if (categoryItem.isExpanded == true && categoryItem.subcategory.isNotEmpty)
-                                  Padding(
+                                AnimatedCrossFade(
+                                  duration: Duration(milliseconds: 600),
+                                  firstChild: SizedBox.shrink(),
+                                  secondChild: categoryItem.subcategory.isNotEmpty
+                                      ? Padding(
                                     padding: EdgeInsets.only(left: Get.width * 0.08),
                                     child: Column(
                                       children: [
-                                        // Show first 6 subcategories
                                         ...categoryItem.subcategory.take(6).map((subItem) {
                                           return GestureDetector(
                                             onTap: () {
-                                               category.selectCategorySlug(subItem.slug);
-                                               Get.to(() => Subcategorys( subcategory_slug: subItem.slug, subcategrorysname: AppString.product));
-                                              },
+                                              category.selectCategorySlug(subItem.slug);
+                                              Get.to(() => Subcategorys(
+                                                subcategory_slug: subItem.slug,
+                                                subcategrorysname: AppString.product,
+                                              ),
+                                                transition: Transition.rightToLeft,
+                                                duration: Duration(milliseconds: 600),
+                                              );
+                                            },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
                                               child: Row(
@@ -93,7 +103,7 @@ class _DrawersState extends State<Drawers> {
                                                   Text("*"),
                                                   SizedBox(width: Get.width * 0.015),
                                                   SizedBox(
-                                                    width: Get.width / 4,
+                                                    width: Get.width / 3,
                                                     child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
                                                   ),
                                                 ],
@@ -104,29 +114,8 @@ class _DrawersState extends State<Drawers> {
                                         if (categoryItem.subcategory.length > 6)
                                           GestureDetector(
                                             onTap: () {
-                                              Get.dialog(
-                                                AlertDialog(
-                                                  title: Text("All ${categoryItem.name} Subcategories"),
-                                                  content: SingleChildScrollView(
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      children: categoryItem.subcategory.map((subItem) {
-                                                        return ListTile(
-                                                          leading: Text("*"),
-                                                          title: Text(subItem.name),
-                                                          onTap: () {
-                                                            category.selectCategorySlug(subItem.slug);
-                                                            Get.back();
-                                                          },
-                                                        );
-                                                      }).toList(),
-                                                    ),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(onPressed: () => Get.back(), child: Text("Close")),
-                                                  ],
-                                                ),
-                                              );
+                                              Get.to(() => Subcategorys(subcategrorys: categoryItem.slug, subcategrorysname: AppString.product),
+                                                  transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                             },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -134,14 +123,17 @@ class _DrawersState extends State<Drawers> {
                                                 children: [
                                                   Text("*"),
                                                   SizedBox(width: Get.width * 0.015),
-                                                  Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
+                                                  Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue),
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                           ),
                                       ],
                                     ),
-                                  ),
+                                  ) : SizedBox.shrink(),
+                                  crossFadeState: categoryItem.isExpanded == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                ),
                                 Divider(color: AppColor.textfild_color, height: 1),
                               ],
                             );

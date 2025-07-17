@@ -744,12 +744,14 @@ class _ShowproductState extends State<Showproduct> {
                                             border: Border.all(color: isSelected ? Colors.amber : AppColor.textfild_color),
                                             color: isSelected ? Colors.amber.withOpacity(0.1) : Colors.transparent,
                                           ),
-                                          child: Text(
-                                            stamp,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: Get.width / 30,
-                                              color: isSelected ? Colors.amber : Colors.black,
+                                          child: Center(
+                                            child: Text(
+                                              stamp,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: Get.width / 30,
+                                                color: isSelected ? Colors.amber : Colors.black,
+                                              ),
                                             ),
                                           ),
                                         ),

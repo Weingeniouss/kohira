@@ -4,10 +4,10 @@ import 'package:kohira/view/screen/menu/home/Search.dart';
 
 class AppUrl {
   //local
-  // static const baseurl = 'http://192.168.1.101:8888/kohira-next-lara/api';
+  static const baseurl = 'http://192.168.1.101:8888/kohira-next-lara/api';
 
   //staging
-  static const baseurl = 'https://api.weingenious.in/kohira/api';
+  // static const baseurl = 'https://api.weingenious.in/kohira/api';
 
   //Live
   // static const baseurl = 'https://kdadmin.kohira.com/api';
