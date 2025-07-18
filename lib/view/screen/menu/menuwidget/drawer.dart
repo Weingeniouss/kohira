@@ -1,18 +1,14 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/view/screen/credentials/login.dart';
-import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:lottie/lottie.dart';
-import 'package:restart_app/restart_app.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../../controller/API/menu/category/subcategrory/subCategrory.dart';
-import '../../../../controller/user_inerface/splace/logo/logo_controller.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/app_icon.dart';
@@ -81,7 +77,7 @@ class _DrawersState extends State<Drawers> {
                             return Column(
                               children: [
                                 GestureDetector(
-                                  onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded ?? false)),
+                                  onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
                                   child: SizedBox(
                                     child: Row(
                                       children: [
@@ -185,7 +181,7 @@ class _DrawersState extends State<Drawers> {
                                 return Column(
                                   children: [
                                     GestureDetector(
-                                      onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded ?? false)),
+                                      onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
                                       child: SizedBox(
                                         child: Row(
                                           children: [

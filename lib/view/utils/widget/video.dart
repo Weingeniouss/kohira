@@ -18,7 +18,6 @@ class VideoPlayerMenu extends StatefulWidget {
 
 class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
   late VideoPlayerController _controller;
-  bool _isReady = false;
 
   @override
   void initState() {
@@ -29,7 +28,6 @@ class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
         _controller.setLooping(true);
         _controller.play();
         setState(() {
-          _isReady = true;
         });
       });
   }

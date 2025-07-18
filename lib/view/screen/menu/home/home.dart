@@ -18,7 +18,6 @@ import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.da
 import '../../../../controller/user_inerface/menu/home/home.dart' show HomeController;
 import '../../../utils/app_String.dart';
 import '../../../utils/widget/inputField.dart';
-import '../../../utils/widget/lodingstate.dart';
 import '../../../utils/widget/video.dart';
 
 class Home extends StatefulWidget {

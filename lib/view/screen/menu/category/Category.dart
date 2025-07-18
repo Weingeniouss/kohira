@@ -6,7 +6,6 @@ import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/screen/menu/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
-import '../../../../controller/API/menu/category/category.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
@@ -15,13 +14,12 @@ import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/lodingstate.dart';
 
 class Category extends StatelessWidget {
-  final category = Get.put(JewelleryFilterCategory());
-   Category({super.key});
+  Category({super.key});
 
   // final categrory = Get.put(CategoryCalling());
 
-
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+   final category = Get.put(JewelleryFilterCategory());
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +51,7 @@ class Category extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: Get.height / 50),
-
                 Text(AppString.categories, style: TextStyle(fontFamily: 'Zapf', fontSize: Get.width / 20)),
-
                 SizedBox(height: Get.height / 50),
 
                 // Use Expanded properly for GridView
@@ -75,7 +71,11 @@ class Category extends StatelessWidget {
                            categorieslist.slug;
                            categorieslist.name;
                            print("categorieslist :- ${categorieslist.slug}");
-                           Get.to(() => Subcategorys(subcategrorys: categorieslist.slug.toString(), subcategrorysname: categorieslist.name.toString(),));
+                           Get.to(() => Subcategorys(
+                             subcategrorys: categorieslist.slug.toString(),
+                             subcategrorysname: categorieslist.name.toString(),
+                            ),
+                           );
                           },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

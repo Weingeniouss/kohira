@@ -1,8 +1,5 @@
 // ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors
 
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:kohira/view/utils/appconstants.dart';
 
 class localdatabase {
