@@ -18,8 +18,8 @@ class AppUrl {
   static const forgetpassword = '$baseurl/forgot-password';
   static const country = '$baseurl/country';
 
-    //Menu
-     //home
+     //Menu
+      //home
       static const categories = '$baseurl/home/categories';
       static const slider = '$baseurl/home/slider';
       static const homecollcation = '$baseurl/home/collections';
@@ -34,8 +34,13 @@ class AppUrl {
       static const jewelleryfilter = '$baseurl/Jewellery-filter';
       static const filtercategory = '$baseurl/category';
 
-     //Seach
+      //Seach
       static const search = '$baseurl/search';
       static const category = '$baseurl/category';
       static const product = '$baseurl/products';
+
+      //Cart
+      static const cart = '$baseurl/cart';
+      static const countcart = '$baseurl/cart';
+      static const deletcart = '$baseurl/cart-delete-particular';
 }

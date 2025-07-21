@@ -4,33 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:kohira/view/screen/menu/category/Category.dart';
+import 'package:kohira/controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
-import '../../../screen/menu/home/home.dart' show Home;
 import '../horizontalpading.dart';
 
-class Bottom extends StatefulWidget {
-  const Bottom({super.key});
+class Bottom extends StatelessWidget {
+  Bottom({super.key});
 
-  @override
-  State<Bottom> createState() => _BottomState();
-}
-
-class _BottomState extends State<Bottom> {
   final internetController = Get.put(InternetCheckerController());
-  int selectindex = 0;
-
-  List<Widget> scrren = [
-    Home(),
-    Category(),
-  ];
-
-  Widget selectscreen(int index) {
-    return scrren[index];
-  }
+  final bottamSelect =  Get.put(Bottamnavigation());
 
   @override
   Widget build(BuildContext context) {
@@ -64,40 +49,45 @@ class _BottomState extends State<Bottom> {
           ),
           child: horizontalpadding(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
+                //defult home Sccrren
                 bottamIcon(
                   icon: AppIcon.home,
                   name: AppString.home,
-                  onTap: () => setState(() => selectindex=0),
-                  condition: selectindex == 0,
+                  onTap: bottamSelect.indexOne,
+                  condition: bottamSelect.selectindex.value == 0,
                 ),
+
+                //Category Screen
                 bottamIcon(
                   icon: AppIcon.category,
                   name: AppString.category,
-                  onTap: () => setState(() => selectindex=1),
-                  condition: selectindex == 1,
+                  onTap: bottamSelect.indexTwo,
+                  condition: bottamSelect.selectindex.value == 1,
                 ),
-                bottamIcon(icon: AppIcon.cart, name: AppString.cart),
+
+                //Mycart Screen
+                bottamIcon(
+                  icon: AppIcon.cart,
+                  name: AppString.cart,
+                  onTap: bottamSelect.indexThree,
+                  condition: bottamSelect.selectindex.value == 2,
+                ),
                 bottamIcon(icon: AppIcon.find, name: AppString.find),
                 bottamIcon(icon: AppIcon.account, name: AppString.account),
               ],
+             ),
             ),
           ),
-        ),
-      ),
-      body: selectscreen(selectindex),
-    );
+        ),body: bottamSelect.selectscreen(bottamSelect.selectindex.value),
+      );
     });
   }
 }
 
-Widget bottamIcon({
-  void Function()? onTap,
-  required String icon,
-  required String name,
-  bool condition = false,
-}) {
+Widget bottamIcon({void Function()? onTap, required String icon, required String name, bool condition = false}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(
@@ -105,11 +95,12 @@ Widget bottamIcon({
       children: [
         SvgPicture.asset(icon, color: condition ? AppColor.pink_color : null),
         SizedBox(height: Get.height / 200),
-        Text(name,style: TextStyle(
-            color: condition ? AppColor.pink_color : AppColor.bottomColor,
-            fontWeight: condition ? FontWeight.w500 : FontWeight.w400,
-            fontSize: Get.width / 27,
-          ),
+        Text(
+          name,style: TextStyle(
+          color: condition ? AppColor.pink_color : AppColor.bottomColor,
+          fontWeight: condition ? FontWeight.w500 : FontWeight.w400,
+          fontSize: Get.width / 30,
+         ),
         ),
       ],
     ),

@@ -15,34 +15,19 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.dart';
+import '../../../../controller/API/menu/myCart/fetchcart.dart';
 import '../../../../controller/user_inerface/menu/home/home.dart' show HomeController;
 import '../../../utils/app_String.dart';
 import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/video.dart';
 
-class Home extends StatefulWidget {
-  Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
   final home = Get.put(HomeController());
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
+  final fetchcart = Get.put(FetchcartCalling());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.wait([
-        jewellery.fetchJewelleryFilter(),
-        category.fetchFilter(),
-      ] as Iterable<Future>);
-    });
-  }
+  Home({super.key});
 
   @override
   Widget build(BuildContext context) {

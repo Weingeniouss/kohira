@@ -31,6 +31,7 @@ class Showproduct extends StatefulWidget {
 class _ShowproductState extends State<Showproduct> {
   int selectindex = 0;
   String? selectedRingSize;
+  String? selectedRingSizeid;
   int? selectedRingId;
   String? selectedMetalStamp;
   String? selectedMetalType;
@@ -56,6 +57,8 @@ class _ShowproductState extends State<Showproduct> {
 
   List<String> savewishlist = [];
   bool isWishlisted = false;
+
+  String? ringsizeid;
 
   @override
   void initState() {
@@ -121,7 +124,7 @@ class _ShowproductState extends State<Showproduct> {
                       } else {
                         Addtocart().addtocartservice(
                           jewelryid: jewellery['id'].toString(),
-                          ringsize: selectedRingSize,
+                          ringsize: ringsizeid.toString(),
                           tokan: tokans,
                         );
                       }
@@ -636,7 +639,7 @@ class _ShowproductState extends State<Showproduct> {
                                   borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                   border: Border.all(color: AppColor.textfild_color),
                                 ),
-                                child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                                // child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
                               ),
                             );
                           }
@@ -915,13 +918,17 @@ class _ShowproductState extends State<Showproduct> {
                                     borderRadius: BorderRadius.circular(Get.width / 50),
                                     value: selectedRingSize,
                                     items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
+                                       ringsizeid = ring['id'].toString();
                                       return DropdownMenuItem<String>(
                                         value: ring['paraname']?.toString() ?? '',
                                         child: Text(ring['paraname']?.toString() ?? ''),
                                       );
                                     }).toList(),
                                     onChanged: (value) {
-                                      setState(() {selectedRingSize = value;});
+                                      setState(() {
+                                        selectedRingSize = value;
+                                        selectedRingSizeid = ringsizeid.toString();
+                                      });
                                     },
                                     underline: SizedBox(),
                                     icon: SizedBox()

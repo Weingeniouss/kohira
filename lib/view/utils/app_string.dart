@@ -81,4 +81,13 @@ class AppString {
     static const weight = 'Weight';
     static const price = 'Price';
     static const shape = 'Shape';
+
+    //Cart
+    static const shoppingcart = 'Shopping Cart';
+    static const CartTotal = 'Cart Total';
+    static const myCart = 'My Cart';
+    static const subTotal = 'Sub Total';
+    static const discount = 'Discount';
+    static const shipping = 'Shipping';
+    static const total = 'Total';
 }

@@ -13,8 +13,8 @@ import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/lodingstate.dart';
 
-class Category extends StatelessWidget {
-  Category({super.key});
+class Categorys extends StatelessWidget {
+  Categorys({super.key});
 
   // final categrory = Get.put(CategoryCalling());
 
