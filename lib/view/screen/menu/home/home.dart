@@ -28,7 +28,6 @@ class Home extends StatelessWidget {
   final fetchcart = Get.put(FetchcartCalling());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Home({super.key});
-
   @override
   Widget build(BuildContext context) {
     home.onInit();
