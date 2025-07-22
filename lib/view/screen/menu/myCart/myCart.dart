@@ -30,33 +30,163 @@ class _MycartState extends State<Mycart> {
   final countcart = Get.put(CountCart());
   final deletcount = Get.put(Deletcart());
 
+  double subTotal = 0.0;
+  double discount = 0.0;
+  double total = 0.0;
+
+
+  List<int> itemCounts = [];
+  Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
-    fetchcart.fetchcartcall();
+    _loadCartData(); // Initialize data when screen loads
   }
 
-  final List<int> itemCounts = List.generate(11000, (index) => 1);
+  Future<void> _loadCartData() async {
+    try {
+      await fetchcart.fetchcartcall();
+      if (!mounted) return;
 
-  Timer? _debounce;
+      if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
+        // Create new lists/objects to ensure state changes are detected
+        final newItemCounts = fetchcart.data['carts'].map<int>((item) {
+          return int.tryParse(item['qty'].toString()) ?? 1;
+        }).toList();
+
+        final newSubTotal = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;
+        final newDiscount = double.tryParse(fetchcart.data['discount_price'].toString()) ?? 0.0;
+        final newTotal = newSubTotal - newDiscount;
+
+        if (mounted) {
+          setState(() {
+            itemCounts = newItemCounts;
+            subTotal = newSubTotal;
+            discount = newDiscount;
+            total = newTotal;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error loading cart data: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void initializeItemCounts() {
+    if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
+      itemCounts = List.generate(
+        fetchcart.data['carts'].length, (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()),
+      );
+    }
+  }
+
+  void initializeCartData() {
+    if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
+      // Initialize item counts with quantities from the cart
+      itemCounts = fetchcart.data['carts'].map<int>((item) {
+        return int.tryParse(item['qty'].toString()) ?? 1;
+      }).toList();
+
+      // Initialize totals
+      subTotal = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;
+      discount = double.tryParse(fetchcart.data['discount_price'].toString()) ?? 0.0;
+      total = subTotal - discount;
+
+      setState(() {});
+    }
+  }
+
+  void initializeCartTotals() {
+    if (fetchcart.data.isNotEmpty) {
+      subTotal = double.parse(fetchcart.data['old_gross_total'].toString());
+      discount = double.parse(fetchcart.data['discount_price'].toString());
+      total = subTotal - discount;
+
+      // Initialize item counts with quantities from the cart
+      itemCounts = List.generate(
+        fetchcart.data['carts'].length,
+            (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()),
+      );
+    }
+  }
 
   void incrementValueOfCount(int index) {
+    if (index >= itemCounts.length) return;
+
+    final item = fetchcart.data['carts'][index];
+    final price = double.parse(item['CartJewelryData']['offerprice'].toString());
+    final cartId = item['id'].toString();
+    final updatedQty = itemCounts[index] + 1;
+
+    // Update UI immediately
     setState(() {
-      itemCounts[index]++;
+      itemCounts[index] = updatedQty;
+      subTotal += price;
+      total = subTotal - discount;
+    });
+
+    // Debounce API call
+    _debounce?.cancel();
+    _debounce = Timer(Duration(milliseconds: 800), () async {
+      await fetchcart.fetchcartcall(
+        flag: 'flag',
+        cart: cartId,
+        qty: updatedQty.toString(),
+        type: 'mobile',
+      );
+      if (mounted) {
+        setState(() {
+          // Sync with server response
+          subTotal = double.parse(fetchcart.data['old_gross_total'].toString());
+          discount = double.parse(fetchcart.data['discount_price'].toString());
+          total = subTotal - discount;
+        });
+      }
     });
   }
 
   void decrementValueOfCount(int index) {
-    if (itemCounts[index] > 1) {
-      itemCounts[index] -= 1;
-      final updatedCount = itemCounts[index];
-      final cartId = fetchcart.data['carts'][index]['id'];
-      countcart.countcardcall(qty: updatedCount.toString(), jewelryid: cartId.toString());
-      _debounce?.cancel();
-      _debounce = Timer(Duration(milliseconds: 800), () => fetchcart.fetchcartcall());
-      setState(() {});
-    }
+    if (index >= itemCounts.length || itemCounts[index] <= 1) return;
+
+    final item = fetchcart.data['carts'][index];
+    final price = double.parse(item['CartJewelryData']['offerprice'].toString());
+    final cartId = item['id'].toString();
+    final updatedQty = itemCounts[index] - 1;
+
+    // Update UI immediately
+    setState(() {
+      itemCounts[index] = updatedQty;
+      subTotal -= price;
+      total = subTotal - discount;
+    });
+
+    // Debounce API call
+    _debounce?.cancel();
+    _debounce = Timer(Duration(milliseconds: 800), () async {
+      await fetchcart.fetchcartcall(
+        flag: 'flag',
+        cart: cartId,
+        qty: updatedQty.toString(),
+        type: 'mobile',
+      );
+      if (mounted) {
+        setState(() {
+          // Sync with server response
+          subTotal = double.parse(fetchcart.data['old_gross_total'].toString());
+          discount = double.parse(fetchcart.data['discount_price'].toString());
+          total = subTotal - discount;
+        });
+      }
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +221,14 @@ class _MycartState extends State<Mycart> {
                 }
               });
 
-              final fetch = fetchcart.data['carts'];
+              // Initialize item counts when data is loaded
+              if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null && itemCounts.length != fetchcart.data['carts'].length) {
+                initializeItemCounts();
+              }
 
-              if(fetchcart.data.isEmpty){
+              final fetch = fetchcart.data['carts'] ?? [];
+
+              if (fetch.isEmpty) {
                 return Center(child: Lottie.asset(AppJson.noData));
               }
 
@@ -102,10 +237,18 @@ class _MycartState extends State<Mycart> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: Get.height / 50),
-                    Text(AppString.shoppingcart, style: TextStyle(color: AppColor.pink_color, fontSize: Get.width / 18, fontWeight: FontWeight.w500, fontFamily: 'Lora')),
+                    Text(
+                      AppString.shoppingcart,
+                      style: TextStyle(
+                        color: AppColor.pink_color,
+                        fontSize: Get.width / 18,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Lora',
+                      ),
+                    ),
                     SizedBox(height: Get.height / 50),
 
-                    //Add Cart List
+                    // Add Cart List
                     Expanded(
                       flex: 2,
                       child: ListView.builder(
@@ -114,20 +257,42 @@ class _MycartState extends State<Mycart> {
                         itemBuilder: (context, index) {
                           final item = fetch[index];
                           final fetchdata = item['CartJewelryData'];
-                          final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
+                          final fetchimage = (fetchdata['allImages'].isNotEmpty)
+                              ? fetchdata['allImages'][0]
+                              : null;
+
+                          // Ensure itemCounts is properly initialized for this index
+                          if (index >= itemCounts.length) {
+                            return Container(); // Or some loading/placeholder
+                          }
+
                           return Container(
                             margin: EdgeInsets.symmetric(vertical: Get.height / 120),
                             child: Row(
                               children: [
-                                Image(image: NetworkImage(fetchimage['thumb']), fit: BoxFit.cover, width: 100, height: 100),
+                                if (fetchimage != null)
+                                  Image(
+                                    image: NetworkImage(fetchimage['thumb']),
+                                    fit: BoxFit.cover,
+                                    width: 100,
+                                    height: 100,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Icon(Icons.error),
+                                  ),
                                 Expanded(
                                   child: Column(
                                     children: [
                                       ListTile(
-                                        title: Text(fetchdata['title'],style: TextStyle(fontSize: Get.width / 27)),
+                                        title: Text(
+                                          fetchdata['title'],
+                                          style: TextStyle(fontSize: Get.width / 27),
+                                        ),
                                         subtitle: Text(
                                           '₹${fetchdata['offerprice'].toString()}.00',
-                                          style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600),
+                                          style: TextStyle(
+                                            color: AppColor.pink_color,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: Get.height / 300),
@@ -139,7 +304,10 @@ class _MycartState extends State<Mycart> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () => decrementValueOfCount(index),
-                                                  child: Text('-',style: TextStyle(fontSize: Get.width / 20)),
+                                                  child: Text(
+                                                    '-',
+                                                    style: TextStyle(fontSize: Get.width / 20),
+                                                  ),
                                                 ),
                                                 SizedBox(width: Get.width / 50),
                                                 Text(itemCounts[index].toString()),
@@ -151,23 +319,42 @@ class _MycartState extends State<Mycart> {
                                                       color: AppColor.textfild_color,
                                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                                     ),
-                                                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 1),
-                                                    child: Text('+',style: TextStyle(fontSize: Get.width / 20)),
+                                                    padding: EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 1,
+                                                    ),
+                                                    child: Text(
+                                                      '+',
+                                                      style: TextStyle(fontSize: Get.width / 20),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                             GestureDetector(
-                                              child: SvgPicture.asset(AppIcon.close,width: 10,height: 10),
-                                              onTap: () async{
-                                                final deletid = fetchcart.data['carts'][index]['id'].toString();
-                                                final diamondid = fetchcart.data['carts'][index]['diamondid'].toString();
-                                                final jewelryid = fetchcart.data['carts'][index]['jewelryid'].toString();
-                                                await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
+                                              child: SvgPicture.asset(
+                                                AppIcon.close,
+                                                width: 10,
+                                                height: 10,
+                                              ),
+                                              onTap: () async {
+                                                final deletid = item['id'].toString();
+                                                final diamondid = item['diamondid'].toString();
+                                                final jewelryid = item['jewelryid'].toString();
+
+                                                await deletcount.deletcartcall(
+                                                  id: deletid,
+                                                  jewelryid: jewelryid,
+                                                  diamondid: diamondid,
+                                                );
+
+                                                // Update both lists
                                                 setState(() {
-                                                  fetchcart.data['carts'].removeAt(index);
+                                                  fetch.removeAt(index);
+                                                  if (index < itemCounts.length) {
+                                                    itemCounts.removeAt(index);
+                                                  }
                                                 });
-                                                setState(() {});
                                               },
                                             ),
                                           ],
@@ -183,19 +370,27 @@ class _MycartState extends State<Mycart> {
                       ),
                     ),
 
-                    //Details Cart List
+                    // Details Cart List
                     Expanded(
                       flex: 1,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(AppString.CartTotal, style: TextStyle(fontSize: Get.width / 18, fontWeight: FontWeight.w500, color: AppColor.grey_color, fontFamily: 'Lora')),
+                          Text(
+                            AppString.CartTotal,
+                            style: TextStyle(
+                              fontSize: Get.width / 18,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.grey_color,
+                              fontFamily: 'Lora',
+                            ),
+                          ),
                           SizedBox(height: Get.height / 80),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppString.subTotal),
-                              Text('₹${fetchcart.data['old_gross_total'].toString()}.00'),
+                              Text('₹${subTotal.toStringAsFixed(2)}'),
                             ],
                           ),
                           SizedBox(height: Get.height / 80),

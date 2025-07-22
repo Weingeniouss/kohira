@@ -31,8 +31,8 @@ class Showproduct extends StatefulWidget {
 class _ShowproductState extends State<Showproduct> {
   int selectindex = 0;
   String? selectedRingSize;
-  String? selectedRingSizeid;
-  int? selectedRingId;
+  String? selectedRingSizeParaname;
+  String? selectedRingSizeId;
   String? selectedMetalStamp;
   String? selectedMetalType;
   Map<String, dynamic>? selectedShape;
@@ -124,7 +124,7 @@ class _ShowproductState extends State<Showproduct> {
                       } else {
                         Addtocart().addtocartservice(
                           jewelryid: jewellery['id'].toString(),
-                          ringsize: ringsizeid.toString(),
+                          ringsize: selectedRingSizeId.toString(),
                           tokan: tokans,
                         );
                       }
@@ -559,6 +559,16 @@ class _ShowproductState extends State<Showproduct> {
               });
             }
 
+            if (allRingSizes.isNotEmpty && selectedRingSizeParaname == null) {
+              final defaultRing = allRingSizes.firstWhere(
+                    (ring) => ring['paraname'].toString() == '18',
+                orElse: () => allRingSizes.first,
+              );
+
+              selectedRingSizeParaname = defaultRing['paraname'].toString();
+              selectedRingSizeId = defaultRing['id'].toString();
+            }
+
             // Get values and safely parse them to double
             final double goldPrice = double.tryParse(currentVariant?['sync_metal_price']?.toString() ?? '0') ?? 0.0;
             final double makingCharge = double.tryParse(currentVariant?['sync_labour_charge_price']?.toString() ?? '0') ?? 0.0;
@@ -903,9 +913,16 @@ class _ShowproductState extends State<Showproduct> {
                           SizedBox(height:Get.height / 50),
 
                           // Ring Size
-                          (allRingSizes.isNotEmpty) ?  Row(
+                          (allRingSizes.isNotEmpty)
+                              ? Row(
                             children: [
-                              Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                              Text(
+                                'Ring Size:',
+                                style: TextStyle(
+                                  fontSize: Get.width * 0.040,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                               SizedBox(width: Get.width / 50),
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -914,30 +931,33 @@ class _ShowproductState extends State<Showproduct> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: DropdownButton<String>(
-                                    menuMaxHeight: Get.height /5,
-                                    borderRadius: BorderRadius.circular(Get.width / 50),
-                                    value: selectedRingSize,
-                                    items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
-                                       ringsizeid = ring['id'].toString();
-                                      return DropdownMenuItem<String>(
-                                        value: ring['paraname']?.toString() ?? '',
-                                        child: Text(ring['paraname']?.toString() ?? ''),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedRingSize = value;
-                                        selectedRingSizeid = ringsizeid.toString();
-                                      });
-                                    },
-                                    underline: SizedBox(),
-                                    icon: SizedBox()
+                                  menuMaxHeight: Get.height / 5,
+                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                  value: selectedRingSizeParaname,
+                                  items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
+                                    return DropdownMenuItem<String>(
+                                      value: ring['paraname'].toString(),
+                                      child: Text(ring['paraname'].toString()),
+                                      onTap: () {
+                                        selectedRingSizeId = ring['id'].toString();
+                                      },
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedRingSizeParaname = value;
+                                    });
+                                  },
+                                  underline: SizedBox(),
+                                  icon: SizedBox(),
                                 ),
                               ),
                               SizedBox(width: Get.width / 50),
                               Text('Find Ring Size'),
                             ],
-                          ) : SizedBox(),
+                          )
+                              : SizedBox(),
+
                           SizedBox(height: Get.height / 50),
 
                           Row(

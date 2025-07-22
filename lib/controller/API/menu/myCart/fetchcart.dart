@@ -16,11 +16,11 @@ class FetchcartCalling extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future fetchcartcall() async {
+  Future fetchcartcall({String? flag, String? qty, String? cart, String? type}) async {
     try {
       isLoading.value = true;
 
-      final url = Uri.parse(AppUrl.cart);
+      final url = Uri.parse('${AppUrl.cart}?flag=${flag ?? ''}&qty=${qty ?? ''}&cart=${cart ?? ''}&type=${type ?? ''}');
       print('Sending request to: $url');
       final responses = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
 
