@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
-import 'package:kohira/view/screen/menu/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
@@ -12,15 +11,12 @@ import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/lodingstate.dart';
+import '../home/menuwidget/drawer.dart';
 
 class Categorys extends StatelessWidget {
-  Categorys({super.key});
-
-  // final categrory = Get.put(CategoryCalling());
-
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-   final category = Get.put(JewelleryFilterCategory());
-
+  final category = Get.put(JewelleryFilterCategory());
+  Categorys({super.key});
   @override
   Widget build(BuildContext context) {
     ever(category.isLoading, (isLoading) {

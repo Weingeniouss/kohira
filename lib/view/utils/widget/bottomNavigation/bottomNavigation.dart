@@ -12,11 +12,9 @@ import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
 import '../horizontalpading.dart';
 
 class Bottom extends StatelessWidget {
-  Bottom({super.key});
-
   final internetController = Get.put(InternetCheckerController());
   final bottamSelect =  Get.put(Bottamnavigation());
-
+  Bottom({super.key});
   @override
   Widget build(BuildContext context) {
     return Obx((){
@@ -49,7 +47,7 @@ class Bottom extends StatelessWidget {
           ),
           child: horizontalpadding(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
 
                 //defult home Sccrren
@@ -75,8 +73,14 @@ class Bottom extends StatelessWidget {
                   onTap: bottamSelect.indexThree,
                   condition: bottamSelect.selectindex.value == 2,
                 ),
-                bottamIcon(icon: AppIcon.find, name: AppString.find),
-                bottamIcon(icon: AppIcon.account, name: AppString.account),
+
+                //Account
+                bottamIcon(
+                  icon: AppIcon.account,
+                  name: AppString.account,
+                  onTap: bottamSelect.indexFour,
+                  condition: bottamSelect.selectindex.value == 3,
+                ),
               ],
              ),
             ),

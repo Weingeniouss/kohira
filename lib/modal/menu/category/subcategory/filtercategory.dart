@@ -26,7 +26,7 @@ class Datum {
   final String image;
   final int sort;
   final List<Datum> subcategory;
-  bool isExpanded; // Add this line
+  bool isExpanded;
 
   Datum({
     required this.id,
@@ -35,7 +35,7 @@ class Datum {
     required this.image,
     required this.sort,
     required this.subcategory,
-    this.isExpanded = false, // Initialize as false
+    this.isExpanded = false,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -44,9 +44,7 @@ class Datum {
     slug: json["slug"] ?? "",
     image: json["image"] ?? "",
     sort: json["sort"] ?? 0,
-    subcategory: json["subcategory"] != null
-        ? List<Datum>.from(json["subcategory"].map((x) => Datum.fromJson(x)))
-        : [],
-    isExpanded: false, // Initialize as false when creating from JSON
+    subcategory: json["subcategory"] != null ? List<Datum>.from(json["subcategory"].map((x) => Datum.fromJson(x))) : [],
+    isExpanded: false,
   );
 }

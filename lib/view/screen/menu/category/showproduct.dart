@@ -866,46 +866,47 @@ class _ShowproductState extends State<Showproduct> {
                           ),
                           SizedBox(height:Get.height / 50),
 
-
                           Row(
                             children: [
                               Text('Carat Weight : ', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                               SizedBox(width: Get.width / 50),
-                              SizedBox(
-                                height: Get.height / 20,
-                                child: (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
-                                    ? Text('No carat available')
-                                    : ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  itemCount: getUniqueCarats(variants, diamondType: diamondType).length,
-                                  itemBuilder: (context, index) {
-                                    final carat = getUniqueCarats(variants, diamondType: diamondType)[index];
-                                    final isSelected = currentVariant?['total_carat'] == carat;
-
-                                    return Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: ChoiceChip(
-                                        color: WidgetStatePropertyAll(Colors.amber.withOpacity(0.1)),
-                                        label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
-                                            style: TextStyle(color: Colors.amber)),
-                                        selected: isSelected,
-                                        onSelected: (selected) {
-                                          if (selected) {
-                                            filterVariantsByCarat(carat, diamondType: diamondType);
-                                          }
-                                        },
-                                        backgroundColor: Colors.amber.withOpacity(0.1),
-                                        selectedColor: Colors.amber.withOpacity(0.1),
-                                        shape: StadiumBorder(
-                                            side: BorderSide(
-                                                color: isSelected ? Colors.amber : Colors.amber,
-                                                width: 1.5
-                                            )
+                              Expanded(
+                                child: SizedBox(
+                                  height: Get.height / 20,
+                                  child: (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
+                                      ? Text('No carat available')
+                                      : ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount: getUniqueCarats(variants, diamondType: diamondType).length,
+                                    itemBuilder: (context, index) {
+                                      final carat = getUniqueCarats(variants, diamondType: diamondType)[index];
+                                      final isSelected = currentVariant?['total_carat'] == carat;
+                                
+                                      return Padding(
+                                        padding: EdgeInsets.only(right: 8),
+                                        child: ChoiceChip(
+                                          color: WidgetStatePropertyAll(Colors.amber.withOpacity(0.1)),
+                                          label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
+                                              style: TextStyle(color: Colors.amber)),
+                                          selected: isSelected,
+                                          onSelected: (selected) {
+                                            if (selected) {
+                                              filterVariantsByCarat(carat, diamondType: diamondType);
+                                            }
+                                          },
+                                          backgroundColor: Colors.amber.withOpacity(0.1),
+                                          selectedColor: Colors.amber.withOpacity(0.1),
+                                          shape: StadiumBorder(
+                                              side: BorderSide(
+                                                  color: isSelected ? Colors.amber : Colors.amber,
+                                                  width: 1.5
+                                              )
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],

@@ -109,17 +109,12 @@ class MyCartValueChange extends GetxController {
     final diamondid = item['diamondid'].toString();
     final jewelryid = item['jewelryid'].toString();
 
-    await deletcount.deletcartcall(
-      id: deletid,
-      jewelryid: jewelryid,
-      diamondid: diamondid,
-    );
+    await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
 
     if (index < itemCounts.length) {
-      itemCounts.removeAt(index); // Automatically updates UI
+      itemCounts.removeAt(index);
     }
 
-    // Optional: Refresh totals if needed
     await fetchcart.fetchcartcall();
     subTotal.value = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;
     discount.value = double.tryParse(fetchcart.data['discount_price'].toString()) ?? 0.0;

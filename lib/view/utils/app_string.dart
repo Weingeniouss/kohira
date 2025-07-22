@@ -90,4 +90,7 @@ class AppString {
     static const discount = 'Discount';
     static const shipping = 'Shipping';
     static const total = 'Total';
+
+    //Account
+    static const accounttitale = 'Visit our Strore';
 }

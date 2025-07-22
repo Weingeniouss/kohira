@@ -41,10 +41,8 @@ class _SubcategorysState extends State<Subcategorys> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.wait([
-       subcategrory.resetPagination(),
-       subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug),
-      ] as Iterable<Future>);
+       subcategrory.resetPagination();
+       subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug);
     });
 
     scrollController.addListener(() {
@@ -146,7 +144,7 @@ class _SubcategorysState extends State<Subcategorys> {
                 backgroundColor: AppColor.white_color,
                 onRefresh: () async {
                   subcategrory.resetPagination();
-                  await subcategrory.subcategroryuser(category_slug: widget.subcategrorys);
+                  await subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug);
                 },
                 child: Column(
                   children: [

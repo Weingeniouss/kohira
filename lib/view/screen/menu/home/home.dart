@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/screen/menu/home/Search.dart';
-import 'package:kohira/view/screen/menu/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_json.dart';
@@ -20,12 +19,12 @@ import '../../../../controller/user_inerface/menu/home/home.dart' show HomeContr
 import '../../../utils/app_String.dart';
 import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/video.dart';
+import 'menuwidget/drawer.dart';
 
 class Home extends StatelessWidget {
   final home = Get.put(HomeController());
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
-  final fetchcart = Get.put(FetchcartCalling());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Home({super.key});
   @override
