@@ -70,7 +70,7 @@ class Subcategrory extends GetxController {
       selectedweightmin = weight_min;
       selectedweightmax = weight_max;
       selectedpricemin = price_min;
-      selectedweightmax = price_max;
+      selectedpricemax = price_max;
       selectcenterstoneshape = center_stone_shape;
     }
 
@@ -96,8 +96,6 @@ class Subcategrory extends GetxController {
         if (selectedpricemax != null) 'price_max': selectedpricemax!,
         if (order_column != null) 'order_column': order_column,
         if (sort != null) 'sort': sort,
-        if (category_slug != null) 'category_slug': category_slug,
-        if (subcategory_slug != null) 'subcategory_slug': subcategory_slug,
         if (finish_status != null) 'finish_status': finish_status,
         if (center_stone_caret != null) 'center_stone_caret': center_stone_caret,
         if (selectcenterstoneshape != null) 'center_stone_shape': selectcenterstoneshape!,
