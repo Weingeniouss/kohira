@@ -7,6 +7,8 @@ import 'package:kohira/view/utils/app_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/widget/pop.dart';
 
+import '../../../../view/utils/errorcode.dart';
+
 class Homecollction extends GetxController {
   var isLoading = false.obs;
   var data = <String, dynamic>{}.obs;
@@ -27,7 +29,8 @@ class Homecollction extends GetxController {
       } else {
         throw {
           'homecollction data Error :- ${response.body}, ${response.statusCode}',
-          ToastificationError.Error('homecollction data Error :- ${response.statusCode}'),
+          print('homecollction data Error :- ${response.statusCode}'),
+          handleHttpError(response.statusCode)
         };
       }
     } catch (e) {

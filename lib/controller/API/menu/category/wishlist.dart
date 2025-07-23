@@ -27,45 +27,51 @@ class Wishlist extends GetxController {
     String? sideDiaGrpId,
     required String tokan
   }) async {
-   try{
-     isLoading.value = true;
-     Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+    try {
+      isLoading.value = true;
+      Get.dialog(
+        Center(child: Lottie.asset(AppJson.loading2)),
+        barrierDismissible: false,
+      );
 
-     final url = Uri.parse(AppUrl.wishlist);
-     print("Sending request to: $url");
-     final body = {
-       'jewelryid': jewelryid,
-       'qty': qty,
-       'ringsize': ringsize,
-       'metal_type': metal_type,
-       'metal_stamp': metal_stamp,
-       'sideDiaGrpId': sideDiaGrpId,
-     }..removeWhere((key,value) => value == null);
+      final url = Uri.parse(AppUrl.wishlist);
+      print("Sending request to: $url");
 
-     print('Whishlist body :- $body');
-     final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters , ApiHeaders.authorization : tokan}, body: body);
+      final body = {
+        'jewelryid': jewelryid,
+        'qty': qty,
+        'ringsize': ringsize,
+        'metal_type': metal_type,
+        'metal_stamp': metal_stamp,
+        'sideDiaGrpId': sideDiaGrpId,
+      }..removeWhere((key, value) => value == null);
 
-     if(response.statusCode == 200 || response.statusCode == 201){
-       data.value = jsonDecode(response.body);
-       log('Add to cart :- $data');
-       ToastificationSuccess.Success(data['message']);
+      print('Wishlist body :- $body');
 
-       if(data['success'] == false){
-         // ToastificationError.Error(data.value['message']);
-         print(data['message']);
-       }
+      final response = await http.post(
+        url,
+        headers: {
+          ApiHeaders.heading: ApiHeaders.peramitters,
+          ApiHeaders.authorization: tokan
+        },
+        body: body,
+      );
 
-     }else{
-       throw{
-         'Add to cart Error this :-  ${response.body}, ${response.statusCode}'
-       };
-     }
-   }catch(e){
-     print('Add to cart Error this :- $e');
-     ToastificationSuccess.Success('$e');
-   }finally{
-     isLoading.value = true;
-     if (Get.isDialogOpen == true) Get.back();
-   }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        data.value = jsonDecode(response.body);
+        log('Add to wishlist response :- $data');
+
+        /// ✅ Always show toast with the message (even if success is false)
+        ToastificationSuccess.Success(data['message']);
+      } else {
+        throw 'Add to wishlist Error :- ${response.body}, ${response.statusCode}';
+      }
+    } catch (e) {
+      print('Add to wishlist Error :- $e');
+      ToastificationSuccess.Success('$e'); // Consider using Error toast here
+    } finally {
+      isLoading.value = false; // ✅ Fixed to false (not true)
+      if (Get.isDialogOpen == true) Get.back();
+    }
   }
 }

@@ -75,17 +75,23 @@ class _ShowproductState extends State<Showproduct> {
       final String storageKey = jewellery['id'].toString();
       List<String> loadedList = pref!.getStringList(storageKey) ?? [];
 
+      // Define allowed metal stamps
+      final allowedStamps = ['9K', '10K', '14K', '18K'];
+      final metalStamp = selectedMetalStamp?.toUpperCase();
+
       setState(() {
         savewishlist = loadedList;
-        isWishlisted = loadedList.contains(storageKey);
+        isWishlisted = allowedStamps.contains(metalStamp) && loadedList.contains(storageKey);
       });
 
       print('Loaded wishlist: $loadedList');
+      print('Selected Metal Stamp: $selectedMetalStamp');
+      print('Selected Metal Type: $selectedMetalType');
+      print('Is Wishlisted: $isWishlisted');
     } else {
       print("Error: jewellerydetail.data['data'] is null");
     }
   }
-
   void select(int index) {
     setState(() {
       selectindex = index;
@@ -685,12 +691,14 @@ class _ShowproductState extends State<Showproduct> {
                                     await wishlist.wishlistservice(
                                       ringsize: selectedRingSize,
                                       jewelryid: jewellery['id'].toString(),
+                                      metal_stamp: selectedMetalStamp,
+                                      metal_type: selectedMetalType,
                                       tokan: tokans,
                                     );
-
                                     final String storageKey = jewellery['id'].toString();
                                     localdatabase().saveToWishlist(storageKey);
                                   }
+                                  setState(() {});
                                 },
                                 child: (isWishlisted)
                                     ? SvgPicture.asset(AppIcon.heart,width: 30,height: 30,color: AppColor.pink_color)
