@@ -1,4 +1,6 @@
 
+// ignore_for_file: file_names
+
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -24,6 +26,7 @@ class MyCartValueChange extends GetxController {
     loadCartData();
   }
 
+  //load data
   Future<void> loadCartData() async {
     try {
       await fetchcart.fetchcartcall();
@@ -49,6 +52,7 @@ class MyCartValueChange extends GetxController {
     }
   }
 
+  //Viwe of Index
   void initializeItemCounts() {
     if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
       itemCounts = List.generate(
@@ -58,6 +62,7 @@ class MyCartValueChange extends GetxController {
     }
   }
 
+  //increment Value
   void incrementValueOfCount(int index) {
     if (index >= itemCounts.length) return;
 
@@ -81,6 +86,7 @@ class MyCartValueChange extends GetxController {
     });
   }
 
+  //Decrement Value
   void decrementValueOfCount(int index) {
     if (index >= itemCounts.length || itemCounts[index] <= 1) return;
 
@@ -104,6 +110,7 @@ class MyCartValueChange extends GetxController {
     });
   }
 
+  //Delet Value
   void deletValueofcount(item, fetch, int index) async {
     final deletid = item['id'].toString();
     final diamondid = item['diamondid'].toString();

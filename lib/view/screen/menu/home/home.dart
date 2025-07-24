@@ -12,9 +12,6 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
-import '../../../../controller/API/menu/category/subcategrory/jewelleryfilter.dart';
-import '../../../../controller/API/menu/myCart/fetchcart.dart';
 import '../../../../controller/user_inerface/menu/home/home.dart' show HomeController;
 import '../../../utils/app_String.dart';
 import '../../../utils/widget/inputField.dart';
@@ -23,13 +20,10 @@ import 'menuwidget/drawer.dart';
 
 class Home extends StatelessWidget {
   final home = Get.put(HomeController());
-  final jewellery = Get.put(Jewelleryfilter());
-  final category = Get.put(JewelleryFilterCategory());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Home({super.key});
   @override
   Widget build(BuildContext context) {
-    home.onInit();
     return Scaffold(
       key: scaffoldKey,
       appBar: Appbar(

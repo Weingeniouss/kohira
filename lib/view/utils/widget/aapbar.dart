@@ -18,6 +18,7 @@ PreferredSizeWidget Appbar({
   String? hedingname,
   String? suffixicon_1,
   String? suffixicon_2,
+  void Function()? onTaplefticon
 }) {
   final appbarsize = Get.height * 0.06;
   final bottamSelect =  Get.put(Bottamnavigation());
@@ -37,7 +38,13 @@ PreferredSizeWidget Appbar({
                 (prefixicon != null && prefixonTap != null)
                     ? GestureDetector(onTap: prefixonTap, child: SvgPicture.asset(prefixicon))
                     : null,
-                (lefticon != null) ? GestureDetector(onTap: () => Get.back(), child: SvgPicture.asset(lefticon)) : null,
+
+                (lefticon != null) ? GestureDetector(
+                  onTap: () {
+                    if (onTaplefticon != null) {onTaplefticon();}
+                    else {Get.back();}
+                  }, child: SvgPicture.asset(lefticon),
+                ) : SizedBox.shrink(),
 
                 (logo != null) ? Row(
                   children: [

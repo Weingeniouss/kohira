@@ -103,7 +103,7 @@ class _ShowproductState extends State<Showproduct> {
     return Scaffold(
       appBar: Appbar(
         lefticon: AppIcon.left,
-        hedingname: AppString.Searchs,
+        hedingname: AppString.productdetails,
         suffixicon_1: AppIcon.like,
         suffixicon_2: AppIcon.shop,
       ),

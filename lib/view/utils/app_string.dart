@@ -66,6 +66,10 @@ class AppString {
     //Search
     static const Searchs = 'Search';
     static const product = 'Product';
+    static const editprofile = 'Edit Profile';
+
+    //Product Details
+    static const productdetails = 'Product Detailflutrer';
 
     //Categorie
     static const categories = 'Categrory';

@@ -43,4 +43,8 @@ class AppUrl {
       static const cart = '$baseurl/cart';
       static const countcart = '$baseurl/cart';
       static const deletcart = '$baseurl/cart-delete-particular';
+
+      //Acount
+      static const profileDetail = '$baseurl/profileDetail';
+      static const profile = '$baseurl/profile';
 }

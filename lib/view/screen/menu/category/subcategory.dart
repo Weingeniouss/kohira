@@ -13,12 +13,14 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/lodingstate.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../controller/user_inerface/menu/categroy/subcetegroy/filter.dart';
+import '../../../../controller/user_inerface/menu/categroy/subcetegroy/subcetegrory.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/inputField.dart';
 
-class Subcategorys extends StatefulWidget {
+class Subcategorys extends StatelessWidget {
+  final show = Get.put(SubcetegroryShow());
   String? subcategrorys;
   String? subcategory_slug;
   final String subcategrorysname;
@@ -30,45 +32,14 @@ class Subcategorys extends StatefulWidget {
   });
 
   @override
-  State<Subcategorys> createState() => _SubcategorysState();
-}
-
-class _SubcategorysState extends State<Subcategorys> {
-  final subcategrory = Get.put(Subcategrory());
-  final ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-       subcategrory.resetPagination();
-       subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug);
-    });
-
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 && !subcategrory.isLoading.value && subcategrory.hasMore.value) {
-        subcategrory.subcategroryuser(
-          category_slug: widget.subcategrorys,
-          isLoadMore: true,
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    show.onInit();
+    show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString());
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.product),
       bottomNavigationBar: Obx((){
 
-        if(subcategrory.data.isEmpty){
+        if(show.subcategrory.data.isEmpty){
           return SizedBox();
         }
 
@@ -83,7 +54,7 @@ class _SubcategorysState extends State<Subcategorys> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
-                      onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString()),
+                      onTap: () => Storebay().storebay(context, subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString()),
                       child: Row(
                         children: [
                           Icon(Icons.sort,color: AppColor.glodcolor),
@@ -96,8 +67,8 @@ class _SubcategorysState extends State<Subcategorys> {
                     GestureDetector(
                       onTap: () {
                          ShowBottam().showbottam(
-                           context, category_slug: widget.subcategrorys.toString(),
-                           subcategrorys: widget.subcategory_slug.toString(),
+                           context, category_slug: subcategrorys.toString(),
+                           subcategrorys: subcategory_slug.toString(),
                           );
                         },
                       child: Row(
@@ -120,7 +91,7 @@ class _SubcategorysState extends State<Subcategorys> {
         width: Get.width,
         color: AppColor.white_color,
         child: Obx(() {
-          if(subcategrory.isLoading.value && subcategrory.data.isEmpty){
+          if(show.subcategrory.isLoading.value && show.subcategrory.data.isEmpty){
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (Get.isDialogOpen != true) {
                 Get.dialog(
@@ -138,7 +109,7 @@ class _SubcategorysState extends State<Subcategorys> {
             });
           }
 
-          if(subcategrory.data.isEmpty){
+          if(show.subcategrory.data.isEmpty){
             return Center(child: Lottie.asset(AppJson.noData));
           }
 
@@ -149,17 +120,17 @@ class _SubcategorysState extends State<Subcategorys> {
                 color: AppColor.pink_color,
                 backgroundColor: AppColor.white_color,
                 onRefresh: () async {
-                  subcategrory.resetPagination();
-                  await subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug);
+                  show.subcategrory.resetPagination();
+                  await show.subcategrory.subcategroryuser(category_slug: subcategrorys,subcategory_slug: subcategory_slug);
                 },
                 child: Column(
                   children: [
                     SizedBox(height: Get.height / 50),
-                    searchField(onChanged: (val) => subcategrory.filterSearch(val)),
+                    searchField(onChanged: (val) => show.subcategrory.filterSearch(val)),
                     SizedBox(height: Get.height / 50),
                     Expanded(
                       child: GridView.builder(
-                        controller: scrollController,
+                        controller: show.scrollController,
                         gridDelegate:
                         SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -167,10 +138,10 @@ class _SubcategorysState extends State<Subcategorys> {
                           crossAxisSpacing: Get.width / 50,
                           childAspectRatio: 0.8,
                         ),
-                        itemCount: subcategrory.data.length + 1,
+                        itemCount: show.subcategrory.data.length + 1,
                         itemBuilder: (context, index) {
-                          if (index < subcategrory.data.length) {
-                            final subcategrorys = subcategrory.data[index];
+                          if (index < show.subcategrory.data.length) {
+                            final subcategrorys = show.subcategrory.data[index];
                             return GestureDetector(
                               onTap: () {
                                 print('Id :- ${subcategrorys['id']}');
@@ -212,7 +183,7 @@ class _SubcategorysState extends State<Subcategorys> {
                         },
                       ),
                     ),
-                    (subcategrory.hasMore.value && subcategrory.isLoading.value) ?
+                    (show.subcategrory.hasMore.value && show.subcategrory.isLoading.value) ?
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: Center(

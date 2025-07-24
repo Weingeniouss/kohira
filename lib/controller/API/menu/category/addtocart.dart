@@ -10,6 +10,7 @@ import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../view/utils/app_json.dart';
+import '../../../../view/utils/errorcode.dart';
 
 class Addtocart extends GetxController{
   var isLoading = false.obs;
@@ -59,7 +60,8 @@ class Addtocart extends GetxController{
       }else{
         throw{
           'Addtocart to cart data Error :- ${responcse.statusCode}, ${responcse.body}',
-          ToastificationError.Error('${responcse.statusCode}, ${data.value['message']}'),
+          print('${responcse.statusCode}, ${data.value['message']}'),
+          handleHttpError(responcse.statusCode),
         };
       }
     }catch(e){

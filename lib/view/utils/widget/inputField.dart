@@ -7,7 +7,7 @@ import '../app_String.dart';
 import '../app_color.dart';
 
 Widget inputField({
-  required String hintText,
+  String? hintText,
   String? icon,
   TextEditingController? controller,
   bool empty = false,
