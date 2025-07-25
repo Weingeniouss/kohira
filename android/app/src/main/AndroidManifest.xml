@@ -3,6 +3,7 @@
      <uses-sdk tools:overrideLibrary="com.google.firebase.auth"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:enableOnBackInvokedCallback="true"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true"
         android:label="kohira"

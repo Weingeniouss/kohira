@@ -54,6 +54,7 @@ class ProfiledetailsController extends GetxController {
         throw {
           'Profile Detail this Error :- ${responce.statusCode}, ${responce.body}',
           print('CountCart data this :- ${responce.statusCode}, ${responce.body}'),
+          ToastificationError.Error(data['message']),
           handleHttpError(responce.statusCode),
         };
       }

@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+
 class AppString {
   //Error
   static const fild = 'Please Fild All Error !';
@@ -8,12 +9,15 @@ class AppString {
   static const google = 'google';
   static const facebook = 'facebook';
   static const GetEmailLink ='Get Email Link';
+  static const submit ='Submit';
+  static const save = 'Save';
+  static const change = 'Change';
+  static const cancel = 'Cancel';
 
   //Heding
   static const signUp = 'Sign Up';
   static const signin = 'Sign In';
   static const clear = 'Clear';
-  static const save = 'Save';
 
   //Bottam
   static const home = 'Home';
@@ -65,8 +69,7 @@ class AppString {
 
     //Search
     static const Searchs = 'Search';
-    static const product = 'Product';
-    static const editprofile = 'Edit Profile';
+
 
     //Product Details
     static const productdetails = 'Product Detailflutrer';
@@ -97,4 +100,30 @@ class AppString {
 
     //Account
     static const accounttitale = 'Visit our Strore';
+
+      //Order
+       static const orderid = 'Orderid';
+       static const orderDate = 'Order Date';
+       static const orderTotal = 'Order Total';
+       static const orderstatas = 'statas';
+
+      //Wallet
+       static const points = 'KOHIRA Points';
+       static const points1 = '1 Points = 1 Rupee';
+       static const recent = 'Recent Transaction';
+       static const date = 'Date';
+       static const debit = 'Debit';
+       static const credit = 'Credit';
+       static const balance = 'Balance';
+
+         //Account Heders
+          static const product = 'Product';
+          static const editprofile = 'Edit Profile';
+          static const orderhistroy = 'Order Histroy';
+          static const wallet = 'Wallet';
+
+         //Password Change
+          static const oldpassword =  'Old password';
+          static const newpassword =  'New password';
+          static const confirmpassword =  'Confirm Oldpassword';
 }

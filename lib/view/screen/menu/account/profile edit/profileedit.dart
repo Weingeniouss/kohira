@@ -64,6 +64,7 @@ class _ProfileeditState extends State<Profileedit> {
         return true;
       },
       child: Scaffold(
+        key: scaffoldKey,
         appBar: Appbar(
           lefticon: AppIcon.left,
           onTaplefticon: (){

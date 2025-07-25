@@ -1,39 +1,24 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/API/menu/account/profiledetails.dart'
-    show ProfiledetailsController;
+import 'package:kohira/controller/user_inerface/menu/account/account.dart';
 import 'package:kohira/modal/menu/account/accountlist.dart';
 import 'package:kohira/view/screen/menu/account/profile%20edit/profileedit.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
-
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 
-class Account extends StatefulWidget {
-  Account({super.key});
-
-  @override
-  State<Account> createState() => _AccountState();
-}
-
-class _AccountState extends State<Account> {
-  final profileDetails = Get.put(ProfiledetailsController());
+class Account extends StatelessWidget {
+  final account = Get.put(AccountController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    profileDetails.profiledetailscall();
-  }
-
+  Account({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +36,7 @@ class _AccountState extends State<Account> {
         height: Get.height,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
-          if (profileDetails.isLoading.value) {
+          if (account.profileDetails.isLoading.value) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (Get.isDialogOpen != true) {
                 Get.dialog(
@@ -67,6 +52,9 @@ class _AccountState extends State<Account> {
                 Get.back();
               }
             });
+
+            final item = account.profileDetails.data['data'];
+
             return Column(
               children: [
                 Expanded(
@@ -85,12 +73,12 @@ class _AccountState extends State<Account> {
                                   SizedBox(height: Get.height / 40),
                                   Row(
                                     children: [
-                                      Text(profileDetails.data['data']['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
+                                      Text(item['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
                                       SizedBox(width: Get.width / 80),
-                                      Text(profileDetails.data['data']['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
+                                      Text(item['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
                                     ],
                                   ),
-                                  Text(profileDetails.data['data']['email'], style: TextStyle(color: AppColor.grey_color)),
+                                  Text(item['email'], style: TextStyle(color: AppColor.grey_color)),
                                   SizedBox(height: Get.height / 50),
                                 ],
                               ),
@@ -110,15 +98,7 @@ class _AccountState extends State<Account> {
                       itemCount: accountlist.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          onTap: (){
-                            if(index == 0){
-                              print('Order History');
-                            }
-
-                            if(index == 1){
-                              print('Wishlist');
-                            }
-                          },
+                          onTap: () => account.listButton(index,context),
                           child: Row(
                             children: [
                               Container(

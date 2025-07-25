@@ -63,8 +63,8 @@ class LoadingDialog {
   }
 }
 
-Widget loading({required bool conditiona,required Widget widget}){
-  if (conditiona) {
+Widget loading({required bool condition,required Widget widget}){
+  if (condition) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (Get.isDialogOpen != true) {
         Get.dialog(

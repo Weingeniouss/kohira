@@ -19,6 +19,7 @@ class AppIcon {
   static const puzzle = 'asset/icon/otherIcon/puzzle-strategy.svg';
   static const close = 'asset/icon/otherIcon/close.svg';
   static const editing = 'asset/icon/otherIcon/editing.svg';
+  static const star = 'asset/icon/otherIcon/star.svg';
 
   //AppbarIcon
   static const shop = 'asset/icon/appbaricon/shop.svg';
