@@ -82,7 +82,7 @@ class ChangePassword {
 
                     if (result['success'] == true && result['message'] != null) {
                       ToastificationSuccess.Success(result['message']);
-                      Get.back(); // Close dialog
+                      Get.back();
                     } else {
                       if (result['errors'] != null) {
                         final errors = result['errors'];

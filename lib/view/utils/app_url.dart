@@ -18,6 +18,9 @@ class AppUrl {
   static const forgetpassword = '$baseurl/forgot-password';
   static const country = '$baseurl/country';
 
+  //Counting
+  static const count = '$baseurl/count-wish-cart';
+
      //Menu
       //home
       static const categories = '$baseurl/home/categories';

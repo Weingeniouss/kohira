@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart' show JewellerydetailCall;
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
+import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
@@ -54,6 +55,7 @@ class _ShowproductState extends State<Showproduct> {
   final jewellerydetail = Get.put(JewellerydetailCall());
   final recommendedjewellerylist = Get.put(Recommendedjewellerylist());
   final wishlist = Get.put(Wishlist());
+  final count = Get.put(CountController());
 
   List<String> savewishlist = [];
   bool isWishlisted = false;
@@ -133,6 +135,9 @@ class _ShowproductState extends State<Showproduct> {
                           ringsize: selectedRingSizeId.toString(),
                           tokan: tokans,
                         );
+                        setState(() {
+                          count.counting();
+                        });
                       }
                     },
                     child: Container(
@@ -655,7 +660,7 @@ class _ShowproductState extends State<Showproduct> {
                                   borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                   border: Border.all(color: AppColor.textfild_color),
                                 ),
-                                child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                                // child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
                               ),
                             );
                           }
