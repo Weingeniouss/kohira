@@ -15,7 +15,7 @@ class ProfileEdit extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future<void> profileedit({
+  Future<Map<String, dynamic>> profileedit({
     String? firstname,
     String? lastname,
     String? email,
@@ -24,22 +24,26 @@ class ProfileEdit extends GetxController {
     String? old_password,
     String? password,
     String? confirm_password,
-}) async {
-    try{
+  }) async {
+    try {
       isLoading.value = true;
+
       final url = Uri.parse(AppUrl.profile);
       print('Sending request to: $url');
+
       final body = {
-        'firstname' : firstname,
-        'lastname' : lastname,
-        'email' : email,
-        'mobileno' : mobileno,
-        'change_password' : change_password,
-        'old_password' : old_password,
-        'password' : password,
-        'confirm_password' : confirm_password,
-      }..removeWhere((key,value) => value == null);
+        'firstname': firstname,
+        'lastname': lastname,
+        'email': email,
+        'mobileno': mobileno,
+        'change_password': change_password,
+        'old_password': old_password,
+        'password': password,
+        'confirm_password': confirm_password,
+      }..removeWhere((key, value) => value == null);
+
       print('Sending request to Profile Edit:- $body');
+
       final response = await http.post(
         url,
         body: body,
@@ -48,26 +52,39 @@ class ProfileEdit extends GetxController {
           ApiHeaders.authorization: tokans,
         },
       );
-      if(response.statusCode == 200 || response.statusCode == 201){
-        data.value = jsonDecode(response.body);
-        if (data.value['success'] == true && data.value['message'] != null) {
-          ToastificationSuccess.Success(data['message']);
+
+      final responseData = jsonDecode(response.body);
+      print('Profile Edit Raw Response: $responseData');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        data.value = responseData;
+        return responseData;
+      } else {
+        if (responseData.containsKey('errors')) {
+          final errors = responseData['errors'];
+          print('Validation Errors:');
+          errors.forEach((key, value) {
+            print('$key => ${value[0]}');
+          });
+        } else {
+          print('Error message: ${responseData['message']}');
         }
-        if (data.value['status'] == 'error') {
-          ToastificationError.Error(data['message']);
-        }
-        print('Profile Edit :-  $data');
-      }else{
-        throw{
-          'Profile Edit Error This :- ${response.statusCode}, ${response.body}',
-           print('Profile Edit Error This :- ${response.statusCode}, ${response.body}'),
-           handleHttpError(response.statusCode),
+
+        return {
+          'success': false,
+          'message': responseData['message'] ?? 'Something went wrong',
+          'errors': responseData['errors'] ?? {},
         };
       }
-    }catch(e){
-      print('Profile Edit Error This :- $e');
-    }finally{
-      isLoading.value =  false;
+    } catch (e) {
+      print('Profile Edit Exception :- $e');
+      return {
+        'success': false,
+        'message': 'Exception occurred',
+        'errors': {},
+      };
+    } finally {
+      isLoading.value = false;
     }
   }
 }

@@ -13,6 +13,7 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 
+import '../../../../view/utils/widget/pop.dart';
 
 class AccountController extends GetxController{
   final profileDetails = Get.put(ProfiledetailsController());
@@ -37,62 +38,85 @@ class AccountController extends GetxController{
     if(index == 3) Get.to(() => Addresses(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
 
     //Password Change
-    if(index == 4) ChagePasswprd().passwordchange(context);
+    if(index == 4) ChangePassword().passwordchange(context);
 
     //Logout
     if(index == 13) logoutUser();
   }
 }
 
-class ChagePasswprd{
+class ChangePassword {
   final profile = Get.put(ProfiledetailsController());
   final profileEdit = Get.put(ProfileEdit());
-   void passwordchange(context){
-     profile.profiledetailscall();
-     final oldpasssword = TextEditingController();
-     final newpasssword = TextEditingController();
-     final confirmpasssword = TextEditingController();
-    showDialog(context: context, builder: (BuildContext context) {
-      return AlertDialog(
-        elevation: 0,
-        backgroundColor: AppColor.white_color,
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(onTap: () => Get.back(),child: button(AppString.cancel)),
-              GestureDetector(
-                onTap: (){
-                  final info = profile.data['data'];
-                  profileEdit.profileedit(
-                    firstname: info['firstname'],
-                    lastname: info['lastname'],
-                    email: info['email'],
-                    mobileno: info['mobileno'],
-                    change_password: 'true',
-                    old_password: oldpasssword.text,
-                    password: newpasssword.text,
-                    confirm_password: newpasssword.text,
-                  );
-                },
-                child: button(AppString.submit),
-              ),
-            ],
-          )
-        ],
-        content: Container(
-          height: Get.height *0.3, width: Get.width,
-          decoration: BoxDecoration(color: AppColor.white_color),
-          child: Column(
-            children: [
-              SizedBox(height: Get.height / 20),
-              inputField(controller: oldpasssword,hintText: AppString.oldpassword),
-              inputField(controller: newpasssword, hintText: AppString.newpassword),
-              inputField(controller: confirmpasssword, hintText: AppString.confirmpassword),
-            ],
+
+  void passwordchange(BuildContext context) {
+    profile.profiledetailscall();
+    final oldPassword = TextEditingController();
+    final newPassword = TextEditingController();
+    final confirmPassword = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0,
+          backgroundColor: AppColor.white_color,
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(onTap: () => Get.back(), child: button(AppString.cancel)),
+                GestureDetector(
+                  onTap: () async {
+                    final info = profile.data['data'];
+                    final result = await profileEdit.profileedit(
+                      firstname: info['firstname'],
+                      lastname: info['lastname'],
+                      email: info['email'],
+                      mobileno: info['mobileno'],
+                      change_password: 'true',
+                      old_password: oldPassword.text,
+                      password: newPassword.text,
+                      confirm_password: confirmPassword.text,
+                    );
+
+                    if (result['success'] == true && result['message'] != null) {
+                      ToastificationSuccess.Success(result['message']);
+                      Get.back(); // Close dialog
+                    } else {
+                      if (result['errors'] != null) {
+                        final errors = result['errors'];
+                        if (errors.containsKey('old_password')) ToastificationError.Error(errors['old_password'][0]);
+                        if (errors.containsKey('password')) ToastificationError.Error(errors['password'][0]);
+                        if (errors.containsKey('confirm_password')) ToastificationError.Error(errors['confirm_password'][0]);
+                        if (errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
+                        if (errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
+                        if (errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
+                      } else {
+                        ToastificationError.Error(result['message'] ?? 'Unknown error occurred');
+                      }
+                    }
+                  },
+                  child: button(AppString.submit),
+                ),
+              ],
+            )
+          ],
+          content: Container(
+            height: Get.height * 0.3,
+            width: Get.width,
+            decoration: BoxDecoration(color: AppColor.white_color),
+            child: Column(
+              children: [
+                SizedBox(height: Get.height / 20),
+                inputField(controller: oldPassword, hintText: AppString.oldpassword),
+                inputField(controller: newPassword, hintText: AppString.newpassword),
+                inputField(controller: confirmPassword, hintText: AppString.confirmpassword),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
