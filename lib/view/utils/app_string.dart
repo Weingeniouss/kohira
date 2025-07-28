@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-
 class AppString {
   //Error
   static const fild = 'Please Fild All Error !';
@@ -62,7 +61,6 @@ class AppString {
      static const allJewellery = 'All Jewellery';
      static const Wishlist = 'Wishlist';
      static const Wallet = 'Wallet';
-     static const Addresses = 'Addresses';
      static const HelpCenter = 'HelpCenter';
      static const PrivacyPolicy = 'PrivacyPolicy';
      static const Logout = 'Logout';
@@ -121,9 +119,14 @@ class AppString {
           static const editprofile = 'Edit Profile';
           static const orderhistroy = 'Order Histroy';
           static const wallet = 'Wallet';
+          static const Addresses = 'Addresses';
+          static const editAddresses = 'Edit Addresses';
 
          //Password Change
           static const oldpassword =  'Old password';
           static const newpassword =  'New password';
           static const confirmpassword =  'Confirm Oldpassword';
+
+          //Address
+          static const setdefult = 'Set Defult';
 }

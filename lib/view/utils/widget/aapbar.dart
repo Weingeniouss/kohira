@@ -55,6 +55,7 @@ PreferredSizeWidget Appbar({
 
                 (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 500) : null,
 
+
                 (hedingname != null)
                     ? Row(
                         children: [
@@ -65,6 +66,7 @@ PreferredSizeWidget Appbar({
                     : null,
 
                 (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 10) : null,
+                (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 1000) : null,
 
                 Row(
                   children: <Widget?>[

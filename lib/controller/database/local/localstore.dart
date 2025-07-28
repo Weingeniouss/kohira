@@ -1,6 +1,12 @@
 // ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors
 
+import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
+import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/appconstants.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../../view/screen/credentials/login.dart' show Login;
 
 class localdatabase {
   void sinupstore({
@@ -98,4 +104,13 @@ class localdatabase {
       print('Error saving to wishlist: $e');
     }
   }
+}
+
+void logoutUser() async {
+  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+  await Future.delayed(Duration(seconds: 2));
+  Get.back();
+  localdatabase().logout();
+  await Future.delayed(Duration(milliseconds: 200));
+  Get.offAll(() => Login());
 }

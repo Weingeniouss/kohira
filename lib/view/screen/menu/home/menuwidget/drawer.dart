@@ -8,7 +8,6 @@ import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter
 import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
-import 'package:kohira/view/screen/credentials/login.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -275,21 +274,10 @@ class _DrawersState extends State<Drawers> {
                         drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
                         drawerIcon(icon: AppIcon.PrivacyPolicy, text: AppString.PrivacyPolicy),
                         drawerIcon(
-                            icon: AppIcon.Logout,
-                            text: AppString.Logout,
-                            onTap: () async {
-                              Get.dialog(
-                                Center(child: Lottie.asset(AppJson.loading2)),
-                                barrierDismissible: false,
-                              );
-
-                              await Future.delayed(const Duration(seconds: 2)); // Show loader for 2 seconds
-
-                              await localdatabase().logout(); // Clear app data
-
-                              Get.back(); // Close the dialog
-                              Get.off(() => Login()); // Navigate to Login screen
-                            }),
+                          icon: AppIcon.Logout,
+                          text: AppString.Logout,
+                          onTap: () => logoutUser(),
+                        ),
                         SizedBox(height: Get.height * 0.030),
                       ],
                     );

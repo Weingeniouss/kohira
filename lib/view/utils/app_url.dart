@@ -49,4 +49,7 @@ class AppUrl {
       static const profile = '$baseurl/profile';
       static const order = '$baseurl/order-list';
       static const wallet = '$baseurl/my-wallet-history';
+      static const addressesfeach = '$baseurl/my-address';
+      static const setdefault = '$baseurl/my-address-default';
+      static const deleteaddress = '$baseurl/my-address/delete';
 }

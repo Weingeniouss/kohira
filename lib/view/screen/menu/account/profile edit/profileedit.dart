@@ -75,12 +75,15 @@ class _ProfileeditState extends State<Profileedit> {
         ),
         bottomNavigationBar: Container(
           color: AppColor.white_color,
-          height: Get.height * 0.13,
+          height: Get.height * 0.10,
           child: horizontalpadding(
             child: SafeArea(
               child: Column(
                 children: [
-                  GestureDetector(onTap: editvalue, child: button(AppString.save)),
+                  GestureDetector(
+                    onTap: editvalue,
+                    child: button(AppString.save),
+                  ),
                   SizedBox(height: Get.height / 50),
                 ],
               ),

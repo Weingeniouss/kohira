@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/API/menu/account/profile.dart';
 import 'package:kohira/controller/API/menu/account/profiledetails.dart';
+import 'package:kohira/controller/database/local/localstore.dart';
+import 'package:kohira/view/screen/menu/account/addresses/addresses.dart';
 import 'package:kohira/view/screen/menu/account/order%20history/orderhistory.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/utils/app_String.dart';
@@ -10,8 +13,6 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 
-import '../../../../view/utils/app_constants.dart';
-import '../../../API/menu/account/profile.dart';
 
 class AccountController extends GetxController{
   final profileDetails = Get.put(ProfiledetailsController());
@@ -32,8 +33,14 @@ class AccountController extends GetxController{
     //Wallet
     if(index == 2) Get.to(() => Wallet(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
 
+    //Address
+    if(index == 3) Get.to(() => Addresses(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
     //Password Change
     if(index == 4) ChagePasswprd().passwordchange(context);
+
+    //Logout
+    if(index == 13) logoutUser();
   }
 }
 
