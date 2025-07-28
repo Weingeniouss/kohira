@@ -76,10 +76,28 @@ PreferredSizeWidget Appbar({
                   if(count.data.isEmpty && count.data == null) SizedBox();
                   return Stack(
                     children: [
+                      Row(
+                        children: <Widget?>[
+                          SizedBox(width: Get.width / 20), (suffixicon_1 != null)
+                              ? GestureDetector(
+                            onTap: () {},
+                            child: SvgPicture.asset(suffixicon_1),
+                          )
+                              : null,
+                          SizedBox(width: Get.width / 50), (suffixicon_2 != null) ? GestureDetector(
+                              onTap: () {
+                                Bottom();
+                                bottamSelect.indexThree();
+                                Get.back();
+                                Get.back();
+                              },
+                              child: SvgPicture.asset(suffixicon_2)) : null,
+                        ].whereType<Widget>().toList(),
+                      ),
                       (count.isLoading.value)
                           ? SizedBox()
                           : Positioned(
-                        right: 25,
+                        right: 10,
                         top: 0,
                         child: CircleAvatar(
                           radius: 8,
@@ -93,22 +111,6 @@ PreferredSizeWidget Appbar({
                             ),
                           ),
                         ),
-                      ),
-                      Row(
-                        children: <Widget?>[
-                          SizedBox(width: Get.width / 20), (suffixicon_1 != null)
-                              ? GestureDetector(
-                            onTap: () {
-                              Bottom();
-                              bottamSelect.indexThree();
-                              Get.back();
-                              Get.back();
-                            },
-                            child: SvgPicture.asset(suffixicon_1),
-                          )
-                              : null,
-                          SizedBox(width: Get.width / 50), (suffixicon_2 != null) ? SvgPicture.asset(suffixicon_2) : null,
-                        ].whereType<Widget>().toList(),
                       ),
                     ],
                   );
