@@ -1306,8 +1306,9 @@ class _ShowproductState extends State<Showproduct> {
                               SvgPicture.asset(AppIcon.mobileIcon,color: AppColor.graycolor,width: 28),
                               SizedBox(width: Get.width / 30),
                               SizedBox(
-                                  width: Get.width / 1.3,
-                                  child: Text('Call us at +917851005200 (9:30 AM to 8:00 PM)',style: TextStyle(fontSize: Get.width / 28))),
+                                width: Get.width / 1.3,
+                                child: Text('Call us at +917851005200 (9:30 AM to 8:00 PM)',style: TextStyle(fontSize: Get.width / 28)),
+                              ),
                             ],
                           ),
                           Row(
