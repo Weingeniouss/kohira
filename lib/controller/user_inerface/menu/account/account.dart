@@ -7,12 +7,18 @@ import 'package:kohira/controller/API/menu/account/profiledetails.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/view/screen/menu/account/addresses/addresses.dart';
 import 'package:kohira/view/screen/menu/account/order%20history/orderhistory.dart';
+import 'package:kohira/view/screen/menu/account/retray%20&%20refund%20policy/retray.dart';
+import 'package:kohira/view/screen/menu/account/returns%20&%20Exchanges/returns.dart';
+import 'package:kohira/view/screen/menu/account/shipping%20&%20delivery%20policy/shipping.dart';
+import 'package:kohira/view/screen/menu/account/terms%20&%20condition/terms.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
+import 'package:kohira/view/screen/menu/account/warranty%20&%20jewellery%20cleam/warranty.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
-
+import '../../../../view/screen/menu/account/compliance policy/compliance.dart';
+import '../../../../view/screen/menu/account/privacy policy/privacy.dart';
 import '../../../../view/utils/widget/pop.dart';
 
 class AccountController extends GetxController{
@@ -39,6 +45,27 @@ class AccountController extends GetxController{
 
     //Password Change
     if(index == 4) ChangePassword().passwordchange(context);
+
+    //Shipping & Delivery Policy
+    if(index == 6) Get.to(() => Shipping(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
+    //Retary & Refunad
+    if(index == 7) Get.to(() => Retray(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
+    //Privacy Policy
+    if(index == 8) Get.to(() => Privacy(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
+    //Terms & Condition
+    if(index == 9) Get.to(() => Terms(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
+    //Returns & Exchanges
+    if(index == 10) Get.to(() => Returns(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
+    //Warranty & Jewellery Cleam
+    if(index == 11) Get.to(() => Warranty(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
+
+    //Compliance policy
+    if(index == 12) Get.to(() => Compliance(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
 
     //Logout
     if(index == 13) logoutUser();

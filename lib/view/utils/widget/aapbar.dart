@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors, unused_import
+// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors, unused_import, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -99,7 +99,9 @@ PreferredSizeWidget Appbar({
                           : Positioned(
                         right: 10,
                         top: 0,
-                        child: CircleAvatar(
+                        child: (count.data['cart']['count'] == 0)
+                            ? SizedBox()
+                            : CircleAvatar(
                           radius: 8,
                           backgroundColor: AppColor.pink_color,
                           child: Center(

@@ -54,6 +54,8 @@ dependencies:
   video_player:
   shared_preferences: ^2.5.3
   intl:
+  flutter_html: ^3.0.0
+  url_launcher: ^6.1.7
 
 
 dev_dependencies:
