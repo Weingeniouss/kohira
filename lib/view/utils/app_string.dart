@@ -22,6 +22,7 @@ class AppString {
   static const home = 'Home';
   static const category = 'Category';
   static const cart = "My Cart";
+  static const store = "Over Store";
   static const find = 'Find Store';
   static const account = 'Account';
 
@@ -43,6 +44,9 @@ class AppString {
 
   //Forget password
   static const subHadingforgat = 'If You Forgot your password no worry Enter Your Email';
+
+  //Wishlist
+  static const wishlist = 'Wishlist';
 
   //Menu
    //home
@@ -90,6 +94,7 @@ class AppString {
     //Cart
     static const shoppingcart = 'Shopping Cart';
     static const CartTotal = 'Cart Total';
+    static const Over = 'Over Store';
     static const myCart = 'My Cart';
     static const subTotal = 'Sub Total';
     static const discount = 'Discount';
@@ -99,13 +104,13 @@ class AppString {
     //Account
     static const accounttitale = 'Visit our Strore';
 
-      //Order
+       //Order
        static const orderid = 'Orderid';
        static const orderDate = 'Order Date';
        static const orderTotal = 'Order Total';
        static const orderstatas = 'statas';
 
-      //Wallet
+       //Wallet
        static const points = 'KOHIRA Points';
        static const points1 = '1 Points = 1 Rupee';
        static const recent = 'Recent Transaction';
@@ -114,7 +119,7 @@ class AppString {
        static const credit = 'Credit';
        static const balance = 'Balance';
 
-         //Account Heders
+          //Account Heders
           static const product = 'Product';
           static const editprofile = 'Edit Profile';
           static const orderhistroy = 'Order Histroy';
@@ -122,7 +127,7 @@ class AppString {
           static const Addresses = 'Addresses';
           static const editAddresses = 'Edit Addresses';
 
-         //Password Change
+          //Password Change
           static const oldpassword =  'Old password';
           static const newpassword =  'New password';
           static const confirmpassword =  'Confirm Oldpassword';

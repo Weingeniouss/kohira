@@ -53,6 +53,8 @@ class Account extends StatelessWidget {
               }
             });
 
+            if(account.profileDetails.data['data'] == null) Center(child: Lottie.asset(AppJson.noData));
+
             final item = account.profileDetails.data['data'];
 
             return Column(

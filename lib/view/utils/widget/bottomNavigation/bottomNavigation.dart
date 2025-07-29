@@ -47,7 +47,7 @@ class Bottom extends StatelessWidget {
           ),
           child: horizontalpadding(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
                 //defult home Sccrren
@@ -74,15 +74,23 @@ class Bottom extends StatelessWidget {
                   condition: bottamSelect.selectindex.value == 2,
                 ),
 
+                //Over Store
+                bottamIcon(
+                  icon: AppIcon.house,
+                  name: AppString.Over,
+                  onTap: bottamSelect.indexFour,
+                  condition: bottamSelect.selectindex.value == 3,
+                ),
+
                 //Account
                 bottamIcon(
                   icon: AppIcon.account,
                   name: AppString.account,
-                  onTap: bottamSelect.indexFour,
-                  condition: bottamSelect.selectindex.value == 3,
-                ),
-              ],
-             ),
+                  onTap: bottamSelect.indexFive,
+                  condition: bottamSelect.selectindex.value == 4,
+                 ),
+                ],
+              ),
             ),
           ),
         ),body: bottamSelect.selectscreen(bottamSelect.selectindex.value),
@@ -91,13 +99,24 @@ class Bottom extends StatelessWidget {
   }
 }
 
-Widget bottamIcon({void Function()? onTap, required String icon, required String name, bool condition = false}) {
+Widget bottamIcon({
+  void Function()? onTap,
+  required String icon,
+  required String name,
+  bool condition = false,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(icon, color: condition ? AppColor.pink_color : null),
+        SvgPicture.asset(
+            icon,
+            color: condition
+                ? AppColor.pink_color
+                : AppColor.bottomColor,
+            width: 20,height: 20
+        ),
         SizedBox(height: Get.height / 200),
         Text(
           name,style: TextStyle(

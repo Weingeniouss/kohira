@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unused_local_variable, avoid_print
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unused_local_variable, avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
 import 'dart:developer';
@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
+import 'package:kohira/view/utils/appconstants.dart';
+import 'package:kohira/view/utils/errorcode.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 
@@ -60,18 +62,44 @@ class Wishlist extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         data.value = jsonDecode(response.body);
         log('Add to wishlist response :- $data');
-
-        /// ✅ Always show toast with the message (even if success is false)
         ToastificationSuccess.Success(data['message']);
       } else {
         throw 'Add to wishlist Error :- ${response.body}, ${response.statusCode}';
       }
     } catch (e) {
       print('Add to wishlist Error :- $e');
-      ToastificationSuccess.Success('$e'); // Consider using Error toast here
+      ToastificationSuccess.Success('$e');
     } finally {
-      isLoading.value = false; // ✅ Fixed to false (not true)
+      isLoading.value = false;
       if (Get.isDialogOpen == true) Get.back();
+    }
+  }
+}
+
+class FetchWishtlist extends GetxController{
+  var isLoading = false.obs;
+  var data = {}.obs;
+
+  Future fechwishlist()async{
+    try{
+      isLoading.value = true;
+      final url = Uri.parse(AppUrl.wishlist);
+      print("Sending Request To :- $url");
+      final responce = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
+
+      if(responce.statusCode == 200 || responce.statusCode == 201){
+        data.value = jsonDecode(responce.body);
+        log("Wishlist data :- ${data.value}");
+      }else{
+        throw{
+          'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
+          handleHttpError(responce.statusCode),
+        };
+      }
+    }catch(e){
+      print('Wishlist data Error :- $e');
+    }finally{
+      isLoading.value = false;
     }
   }
 }

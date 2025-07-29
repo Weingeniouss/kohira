@@ -7,6 +7,7 @@ import 'package:kohira/view/screen/menu/account/account.dart';
 import 'package:kohira/view/screen/menu/home/home.dart';
 import 'package:kohira/view/screen/menu/myCart/myCart.dart';
 import '../../../view/screen/menu/category/Category.dart';
+import '../../../view/screen/menu/over Store/overStore.dart';
 
 class Bottamnavigation extends GetxController {
   //index the Swich Screen
@@ -17,6 +18,7 @@ class Bottamnavigation extends GetxController {
     Home(),
     Categorys(),
     Mycart(),
+    Overstore(),
     Account(),
   ];
 
@@ -32,4 +34,5 @@ class Bottamnavigation extends GetxController {
   indexTwo() => selectindex.value = 1;
   indexThree() => selectindex.value = 2;
   indexFour() => selectindex.value = 3;
+  indexFive() => selectindex.value = 4;
 }

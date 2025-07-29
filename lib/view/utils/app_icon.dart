@@ -35,6 +35,7 @@ class AppIcon {
   static const category = 'asset/icon/bottomIcon/category.svg';
   static const find = 'asset/icon/bottomIcon/find.svg';
   static const home = 'asset/icon/bottomIcon/Home.svg';
+  static const house = 'asset/icon/bottomIcon/house.svg';
 
   //Drawer
   static const bracelet = 'asset/icon/drawericon/cat_bracelet.svg';

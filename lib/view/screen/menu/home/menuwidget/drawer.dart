@@ -8,6 +8,7 @@ import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter
 import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
+import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -16,6 +17,10 @@ import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_logo.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../account/addresses/addresses.dart';
+import '../../account/order history/orderhistory.dart';
+import '../../account/privacy policy/privacy.dart';
 
 class Drawers extends StatefulWidget {
   Drawers({super.key});
@@ -267,12 +272,28 @@ class _DrawersState extends State<Drawers> {
                           ) : SizedBox.shrink(),
                         ),
 
-                        drawerIcon(icon: AppIcon.Order, text: AppString.Order),
+                        drawerIcon(
+                          icon: AppIcon.Order,
+                          text: AppString.Order,
+                          onTap: () => Get.to(() => Orderhistory(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                        ),
                         drawerIcon(icon: AppIcon.Wishlist, text: AppString.Wishlist),
-                        drawerIcon(icon: AppIcon.Wallet, text: AppString.Wallet),
-                        drawerIcon(icon: AppIcon.Addresses, text: AppString.Addresses),
+                        drawerIcon(
+                          icon: AppIcon.Wallet,
+                          text: AppString.Wallet,
+                          onTap: () => Get.to(() => Wallet(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                        ),
+                        drawerIcon(
+                          icon: AppIcon.Addresses,
+                          text: AppString.Addresses,
+                          onTap: () => Get.to(() => Addresses(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                        ),
                         drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
-                        drawerIcon(icon: AppIcon.PrivacyPolicy, text: AppString.PrivacyPolicy),
+                        drawerIcon(
+                          icon: AppIcon.PrivacyPolicy,
+                          text: AppString.PrivacyPolicy,
+                          onTap: () => Get.to(() => Privacy(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                        ),
                         drawerIcon(
                           icon: AppIcon.Logout,
                           text: AppString.Logout,

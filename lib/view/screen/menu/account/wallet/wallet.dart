@@ -105,14 +105,16 @@ class _WalletState extends State<Wallet> {
                                 itemCount: wallet.data['userWalletHistory'].length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final history = wallet.data['userWalletHistory'][index];
+                                  final orderData = history['OrderData'];
+
                                   return Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(history['refunddate'].toString()),
-                                        Text(history['OrderData'][index]['grossamt'].toString()),
-                                        Text(history['OrderData'][index]['netamount'].toString()),
+                                        Text(orderData.isNotEmpty ? orderData[0]['grossamt'].toString() : '-'),
+                                        Text(orderData.isNotEmpty ? orderData[0]['netamount'].toString() : '-'),
                                         Text(history['balance'].toString()),
                                       ],
                                     ),

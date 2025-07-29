@@ -134,7 +134,7 @@ class _ShowproductState extends State<Showproduct> {
                           jewelryid: jewellery['id'].toString(),
                           ringsize: selectedRingSizeId.toString(),
                           tokan: tokans,
-                        ).then((_){
+                        ).then((_) {
                           setState(() {
                             count.counting();
                           });
@@ -689,6 +689,8 @@ class _ShowproductState extends State<Showproduct> {
                                 ],
                               ),
                               SizedBox(width: Get.width / 10),
+
+                              //Wishlist
                               GestureDetector(
                                 onTap: () async {
                                   if (wishlist.isLoading.value) {
@@ -704,7 +706,10 @@ class _ShowproductState extends State<Showproduct> {
                                     final String storageKey = jewellery['id'].toString();
                                     localdatabase().saveToWishlist(storageKey);
                                   }
-                                  setState(() {});
+                                  setState(() {
+                                    count.counting();
+                                  });
+                                  count.counting();
                                 },
                                 child: (isWishlisted)
                                     ? SvgPicture.asset(AppIcon.heart,width: 30,height: 30,color: AppColor.pink_color)
