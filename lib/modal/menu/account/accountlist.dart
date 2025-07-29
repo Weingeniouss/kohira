@@ -1,57 +1,59 @@
+import 'package:kohira/view/utils/app_icon.dart';
+
 List accountlist =[
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.Order,
     'name': 'Order History',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.like,
     'name': 'Wishlist',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.Wallet,
     'name': 'Wallet',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.Addresses,
     'name': 'Addresses',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.Addresses,
     'name': 'Change Password',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Help Center',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Shipping & Delivery Policy',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Retray & Refund Policy',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Privacy Policy',
   },{
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Terms & Condition',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Returns & Exchanges',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Warranty & jewellery Cleam',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.edit,
     'name': 'Compliance policy',
   },
   {
-    'image' : 'asset/icon/drawericon/cat_earrings.svg',
+    'image' : AppIcon.Logout,
     'name': 'Logout',
   },
 ];

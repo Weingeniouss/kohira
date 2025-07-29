@@ -20,6 +20,7 @@ class AppIcon {
   static const close = 'asset/icon/otherIcon/close.svg';
   static const editing = 'asset/icon/otherIcon/editing.svg';
   static const star = 'asset/icon/otherIcon/star.svg';
+  static const edit = 'asset/icon/otherIcon/edit.svg';
 
   //AppbarIcon
   static const shop = 'asset/icon/appbaricon/shop.svg';
