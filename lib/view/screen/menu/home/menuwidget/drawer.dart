@@ -10,6 +10,7 @@ import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
+import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -277,7 +278,11 @@ class _DrawersState extends State<Drawers> {
                           text: AppString.Order,
                           onTap: () => Get.to(() => Orderhistory(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
                         ),
-                        drawerIcon(icon: AppIcon.Wishlist, text: AppString.Wishlist),
+                        drawerIcon(
+                          icon: AppIcon.Wishlist,
+                          text: AppString.Wishlist,
+                          onTap: () => Get.to(() => WishlistScreen(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                        ),
                         drawerIcon(
                           icon: AppIcon.Wallet,
                           text: AppString.Wallet,

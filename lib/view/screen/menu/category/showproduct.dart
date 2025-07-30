@@ -350,25 +350,19 @@ class _ShowproductState extends State<Showproduct> {
             List<Map<String, dynamic>> getUniqueShapes(List variants, String diamondType) {
               List<Map<String, dynamic>> uniqueShapes = [];
               Set<int> shapeIds = {};
-
               for (var variant in variants) {
                 final diamonds = variant['jewelry_diamonds'];
                 if (diamonds is List) {
                   for (var diamond in diamonds) {
                     final typeMatches = (diamond['diamondtype']?.toLowerCase() ?? '') == diamondType.toLowerCase();
                     final shapeMap = diamond['shape'];
-
-                    if (typeMatches &&
-                        shapeMap is Map &&
-                        shapeMap['id'] is int &&
-                        !shapeIds.contains(shapeMap['id'])) {
+                    if (typeMatches && shapeMap is Map && shapeMap['id'] is int && !shapeIds.contains(shapeMap['id'])) {
                       shapeIds.add(shapeMap['id']);
                       uniqueShapes.add(Map<String, dynamic>.from(shapeMap)); // ✅ Cast explicitly here
                     }
                   }
                 }
               }
-
               return uniqueShapes;
             }
 
@@ -439,8 +433,7 @@ class _ShowproductState extends State<Showproduct> {
                   final diamonds = variant['jewelry_diamonds'];
                   if (diamonds is List) {
                     for (var diamond in diamonds) {
-                      if (diamond is Map<String, dynamic> &&
-                          (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase())) {
+                      if (diamond is Map<String, dynamic> && (diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase())) {
                         final carat = diamond['carat'];
                         if (carat is num && seen.add(carat.toDouble())) {
                           uniqueCarats.add(carat.toDouble());
@@ -482,8 +475,7 @@ class _ShowproductState extends State<Showproduct> {
                     final diamonds = variant['jewelry_diamonds'] as List?;
                     if (diamonds != null) {
                       for (var diamond in diamonds) {
-                        if (diamond is Map<String, dynamic> &&
-                            diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
+                        if (diamond is Map<String, dynamic> && diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
                           variantCarat = (diamond['carat'] as num?)?.toDouble();
                           break;
                         }
@@ -572,8 +564,7 @@ class _ShowproductState extends State<Showproduct> {
             }
 
             if (allRingSizes.isNotEmpty && selectedRingSizeParaname == null) {
-              final defaultRing = allRingSizes.firstWhere(
-                    (ring) => ring['paraname'].toString() == '18',
+              final defaultRing = allRingSizes.firstWhere((ring) => ring['paraname'].toString() == '18',
                 orElse: () => allRingSizes.first,
               );
 

@@ -13,6 +13,7 @@ import 'package:kohira/view/screen/menu/account/shipping%20&%20delivery%20policy
 import 'package:kohira/view/screen/menu/account/terms%20&%20condition/terms.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/screen/menu/account/warranty%20&%20jewellery%20cleam/warranty.dart';
+import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
@@ -35,7 +36,7 @@ class AccountController extends GetxController{
     if(index == 0) Get.to(() => Orderhistory(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
 
     //Wistlist
-    if(index == 1) print('Wishlist');
+    if(index == 1) Get.to(() => WishlistScreen(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
 
     //Wallet
     if(index == 2) Get.to(() => Wallet(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));

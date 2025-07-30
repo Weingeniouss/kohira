@@ -13,7 +13,9 @@ import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../view/utils/app_json.dart';
+import '../others/count.dart';
 
+//Add WishList
 class Wishlist extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
@@ -76,6 +78,7 @@ class Wishlist extends GetxController {
   }
 }
 
+//FetchWish List
 class FetchWishtlist extends GetxController{
   var isLoading = false.obs;
   var data = {}.obs;
@@ -100,6 +103,71 @@ class FetchWishtlist extends GetxController{
       print('Wishlist data Error :- $e');
     }finally{
       isLoading.value = false;
+    }
+  }
+}
+
+//Delet WishList
+class DeletWishtlist extends GetxController{
+  var isLoading = false.obs;
+  var data = {}.obs;
+
+  Future deletwishlist({required String id})async{
+    try{
+      isLoading.value = true;
+      final url = Uri.parse(AppUrl.wishlistdelete);
+      final body = {'id' : id};
+      print("Sending Request To :- $url");
+      print("Sending Request To delet Wishlist :- $body");
+      final responce = await http.post(url,body: body, headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
+      if(responce.statusCode == 200 || responce.statusCode == 201){
+        data.value = jsonDecode(responce.body);
+        log("Wishlist data :- ${data.value}");
+      }else{
+        throw{
+          'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
+          handleHttpError(responce.statusCode),
+        };
+      }
+    }catch(e){
+      print('Wishlist data Error :- $e');
+    }finally{
+      isLoading.value = false;
+    }
+  }
+}
+
+class WishlistController extends GetxController {
+  final fetchwishlist = Get.put(FetchWishtlist());
+  final deletWishtlist = Get.put(DeletWishtlist());
+  final count = Get.put(CountController());
+
+  var wishlistItems = [].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadWishlist();
+  }
+
+  Future<void> loadWishlist() async {
+    await fetchwishlist.fechwishlist();
+    wishlistItems.value = fetchwishlist.data['wishlists'] ?? [];
+  }
+
+  Future<void> deleteItem(String id) async {
+    await deletWishtlist.deletwishlist(id: id);
+
+    if (deletWishtlist.data['type'] == 'success') {
+      ToastificationSuccess.Success(deletWishtlist.data['message']);
+      wishlistItems.removeWhere((item) => item['id'].toString() == id);
+      await count.counting();
+      wishlistItems.refresh();
+    } else if (deletWishtlist.data['success'] == false) {
+      final errors = deletWishtlist.data['errors'];
+      if (errors != null && errors.containsKey('id')) {
+        ToastificationError.Error(errors['id'][0]);
+      }
     }
   }
 }
