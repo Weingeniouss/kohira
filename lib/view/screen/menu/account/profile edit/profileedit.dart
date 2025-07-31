@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/account/profile.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
+import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../controller/API/menu/account/profiledetails.dart';
 import '../../../../utils/app_String.dart';
@@ -54,6 +55,10 @@ class _ProfileeditState extends State<Profileedit> {
       mobileno: mobile!.text,
       change_password: 'false',
     );
+
+    if(profileEdit.data['success'] == true){
+      ToastificationSuccess.Success(profileEdit.data['message']);
+    }
   }
 
   @override
@@ -73,19 +78,22 @@ class _ProfileeditState extends State<Profileedit> {
           },
           hedingname: AppString.editprofile,
         ),
-        bottomNavigationBar: Container(
-          color: AppColor.white_color,
-          height: Get.height * 0.10,
-          child: horizontalpadding(
-            child: SafeArea(
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: editvalue,
-                    child: button(AppString.save),
-                  ),
-                  SizedBox(height: Get.height / 50),
-                ],
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            color: AppColor.white_color,
+            height: Get.height * 0.080,
+            child: horizontalpadding(
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: editvalue,
+                      child: button(AppString.save),
+                    ),
+                    SizedBox(height: Get.height / 50),
+                  ],
+                ),
               ),
             ),
           ),
