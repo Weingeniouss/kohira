@@ -83,7 +83,7 @@ class WishlistScreen extends StatelessWidget {
                                       if (fetch != null)
                                         Image(
                                           image: NetworkImage(fetch['default']['path']),
-                                          fit: BoxFit.cover, width: 100, height: 100,
+                                          fit: BoxFit.cover, width: 150, height: 150,
                                           errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                                         ),
                                     ],
