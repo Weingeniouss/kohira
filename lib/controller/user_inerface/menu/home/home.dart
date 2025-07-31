@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
+import '../../../API/menu/account/addresses.dart';
+import '../../../API/menu/account/wallet.dart';
 import '../../../API/menu/category/subcategrory/filtercategory.dart';
 import '../../../API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../API/menu/home/categories.dart';
@@ -13,12 +15,23 @@ import '../../../API/menu/home/slider.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 import '../../../API/menu/others/count.dart';
 import '../account/account.dart';
+import '../account/orderhistory.dart';
+import '../myCart/wishlist/wishlist.dart';
 
 class HomeController extends GetxController {
+  //HomeScreen APIs Calling
   final categories = Get.put(CategoriesCalling());
   final slider = Get.put(SliderCalling());
   final homecollction = Get.put(Homecollction());
+
+  //Wishlist
+  final WishlistController wish = Get.put(WishlistController());
+
+  //Account Scrren
   final account = Get.put(AccountController());
+  final order = Get.put(OrderhistoryControll());
+  final fech = Get.put(Fechaddresses());
+  final wallet = Get.put(WalletController());
 
   //count API Call
   final count = Get.put(CountController());
@@ -27,6 +40,7 @@ class HomeController extends GetxController {
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
 
+
   RxInt activeIndex = 0.obs;
 
   final pagecontroller = CarouselSliderController();
@@ -34,6 +48,8 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    //HomeScreen APIs Calling
     slider.slideruser();
     categories.categoriesuser();
 
@@ -41,7 +57,15 @@ class HomeController extends GetxController {
     jewellery.fetchJewelleryFilter();
     category.fetchFilter();
     count.counting();
+
+    //Wishlist
+    wish.onInit();
+
+    //Account Scrren
     account.onInit();
+    order.onInit();
+    wallet.wallet();
+    fech.fechaddresses();
 
     homecollction.homecollction(section_no: '2');
     homecollction.homecollction(section_no: '3');

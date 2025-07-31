@@ -26,13 +26,6 @@ class Addresses extends StatefulWidget {
 class _AddressesState extends State<Addresses> {
   final fech = Get.put(Fechaddresses());
   final delet = Get.put(DeletAddress());
-
-  @override
-  void initState() {
-    super.initState();
-    fech.fechaddresses();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

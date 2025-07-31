@@ -15,12 +15,9 @@ import '../../category/showproduct.dart';
 
 class WishlistScreen extends StatelessWidget {
   final WishlistController wish = Get.put(WishlistController());
-
   WishlistScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
-    wish.onInit();
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.wishlist),
       body: Container(
@@ -56,7 +53,9 @@ class WishlistScreen extends StatelessWidget {
               Expanded(
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.75),
-                    itemCount: wish.fetchwishlist.data['wishlists'].length,
+                    itemCount: (wish.fetchwishlist.data['wishlists'] != null)
+                        ? wish.fetchwishlist.data['wishlists'].length
+                        : 0,
                     itemBuilder: (BuildContext context, int index) {
                       final wishlistItem = wish.fetchwishlist.data['wishlists'][index];
                       final fetch = wishlistItem['WishlistJewelryData'];

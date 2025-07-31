@@ -12,22 +12,9 @@ import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 
-class Wallet extends StatefulWidget {
-  const Wallet({super.key});
-
-  @override
-  State<Wallet> createState() => _WalletState();
-}
-
-class _WalletState extends State<Wallet> {
+class Wallet extends StatelessWidget {
   final wallet = Get.put(WalletController());
-
-  @override
-  void initState() {
-    super.initState();
-    wallet.wallet();
-  }
-
+  Wallet({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +60,7 @@ class _WalletState extends State<Wallet> {
                       Text(AppString.points1, style: TextStyle(fontSize: Get.width / 22, color: AppColor.grey_color)),
                       SizedBox(height: Get.height / 50),
                       Divider(color: AppColor.dividercolor),
-              
+
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
