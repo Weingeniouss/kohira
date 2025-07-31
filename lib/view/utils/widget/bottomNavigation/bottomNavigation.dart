@@ -12,8 +12,8 @@ import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
 import '../horizontalpading.dart';
 
 class Bottom extends StatelessWidget {
-  final internetController = Get.put(InternetCheckerController());
-  final bottamSelect =  Get.put(Bottamnavigation());
+  final InternetCheckerController internetController = Get.find();
+  final Bottamnavigation bottamSelect = Get.find();
   Bottom({super.key});
   @override
   Widget build(BuildContext context) {

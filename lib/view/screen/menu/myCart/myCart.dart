@@ -20,7 +20,6 @@ class Mycart extends StatelessWidget {
   Mycart({super.key});
   @override
   Widget build(BuildContext context) {
-    myCart.onInit();
     return Scaffold(
       key: scaffoldKey,
       appBar: Appbar(prefixicon: AppIcon.menu, prefixonTap: () => scaffoldKey.currentState?.openDrawer(), hedingname: AppString.myCart),

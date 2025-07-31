@@ -11,7 +11,8 @@ import '../../../view/screen/menu/over Store/overStore.dart';
 
 class Bottamnavigation extends GetxController {
   //index the Swich Screen
-  var selectindex = 0.obs;
+
+  RxInt selectindex = 0.obs;
 
   //Add Screen
   List<Widget> scrren = [
@@ -22,17 +23,27 @@ class Bottamnavigation extends GetxController {
     Account(),
   ];
 
-  //Swich the Screen
+  void indexOne() => selectindex.value = 0;
+  void indexTwo() => selectindex.value = 1;
+  void indexThree() => selectindex.value = 2;
+  void indexFour() => selectindex.value = 3;
+  void indexFive() => selectindex.value = 4;
+
+  //Swich Screen
   Widget selectscreen(int index) {
-    return scrren[index];
+    switch (index) {
+      case 0:
+        return Home();
+      case 1:
+        return Categorys();
+      case 2:
+        return Mycart();
+      case 3:
+        return Overstore();
+      case 4:
+        return Account();
+      default:
+        return Home();
+    }
   }
-
-  Widget get indexThreeScreen => scrren[2];
-
-  //Button Fuction of selected of index
-  indexOne() => selectindex.value = 0;
-  indexTwo() => selectindex.value = 1;
-  indexThree() => selectindex.value = 2;
-  indexFour() => selectindex.value = 3;
-  indexFive() => selectindex.value = 4;
 }

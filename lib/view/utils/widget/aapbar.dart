@@ -28,9 +28,6 @@ PreferredSizeWidget Appbar(
   final appbarsize = Get.height * 0.06;
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
-
-  count.counting();
-
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(

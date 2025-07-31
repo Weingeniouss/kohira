@@ -11,11 +11,17 @@ import '../../../API/menu/home/categories.dart';
 import '../../../API/menu/home/homecollction.dart';
 import '../../../API/menu/home/slider.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
+import '../../../API/menu/others/count.dart';
+import '../account/account.dart';
 
 class HomeController extends GetxController {
   final categories = Get.put(CategoriesCalling());
   final slider = Get.put(SliderCalling());
   final homecollction = Get.put(Homecollction());
+  final account = Get.put(AccountController());
+
+  //count API Call
+  final count = Get.put(CountController());
 
   //Drawer Menu APIs Calling
   final jewellery = Get.put(Jewelleryfilter());
@@ -34,7 +40,8 @@ class HomeController extends GetxController {
     //Drawer Menu APIs Call
     jewellery.fetchJewelleryFilter();
     category.fetchFilter();
-
+    count.counting();
+    account.onInit();
 
     homecollction.homecollction(section_no: '2');
     homecollction.homecollction(section_no: '3');
@@ -47,8 +54,6 @@ class HomeController extends GetxController {
 
   final pageController = CarouselController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-
 
   void changeCarouselIndex(int index, dynamic reason) {
    activeIndex.value = index;

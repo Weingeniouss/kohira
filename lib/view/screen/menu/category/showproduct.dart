@@ -8,6 +8,7 @@ import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart' show J
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
+import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/appconstants.dart';
@@ -56,6 +57,7 @@ class _ShowproductState extends State<Showproduct> {
   final recommendedjewellerylist = Get.put(Recommendedjewellerylist());
   final wishlist = Get.put(Wishlist());
   final count = Get.put(CountController());
+  final myCart = Get.put(MyCartValueChange());
 
   List<String> savewishlist = [];
   bool isWishlisted = false;
@@ -137,6 +139,7 @@ class _ShowproductState extends State<Showproduct> {
                         ).then((_) {
                           setState(() {
                             count.counting();
+                            myCart.onInit();
                           });
                         });
                       }
