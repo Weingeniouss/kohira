@@ -80,7 +80,12 @@ class WishlistScreen extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.network(fetch['default']['path'], width: 150, height: 150,fit: BoxFit.cover),
+                                      if (fetch != null)
+                                        Image(
+                                          image: NetworkImage(fetch['default']['path']),
+                                          fit: BoxFit.cover, width: 100, height: 100,
+                                          errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                                        ),
                                     ],
                                   ),
                                   Positioned(

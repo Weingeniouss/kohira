@@ -23,16 +23,11 @@ class Mycart extends StatelessWidget {
     myCart.onInit();
     return Scaffold(
       key: scaffoldKey,
-      appBar: Appbar(
-        prefixicon: AppIcon.menu,
-        prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
-        hedingname: AppString.myCart,
-      ),
+      appBar: Appbar(prefixicon: AppIcon.menu, prefixonTap: () => scaffoldKey.currentState?.openDrawer(), hedingname: AppString.myCart),
       drawer: Drawers(),
       body: SafeArea(
         child: Container(
-          height: Get.height,
-          width: Get.width,
+          height: Get.height, width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
             if (myCart.fetchcart.isLoading.value) {
@@ -51,34 +46,21 @@ class Mycart extends StatelessWidget {
                   Get.back();
                 }
               });
-
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
               // Initialize item counts when data is loaded
               if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
                 myCart.initializeItemCounts();
               }
-
               final fetch = myCart.fetchcart.data['carts'] ?? [];
-
-              if (fetch.isEmpty) {
-                return Center(child: Lottie.asset(AppJson.noData));
-              }
+              if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
 
               return horizontalpadding(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: Get.height / 50),
-                    Text(
-                      AppString.shoppingcart,
-                      style: TextStyle(
-                        color: AppColor.pink_color,
-                        fontSize: Get.width / 18,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Lora',
-                      ),
-                    ),
+                    Text(AppString.shoppingcart, style: TextStyle(color: AppColor.pink_color, fontSize: Get.width / 18, fontWeight: FontWeight.w500, fontFamily: 'Lora')),
                     SizedBox(height: Get.height / 50),
 
                     // Add Cart List
@@ -90,15 +72,8 @@ class Mycart extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final item = fetch[index];
                           final fetchdata = item['CartJewelryData'];
-                          final fetchimage = (fetchdata['allImages'].isNotEmpty)
-                              ? fetchdata['allImages'][0]
-                              : null;
-
-                          // Ensure itemCounts is properly initialized for this index
-                          if (index >= myCart.itemCounts.length) {
-                            return Container(); // Or some loading/placeholder
-                          }
-
+                          final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
+                          if (index >= myCart.itemCounts.length) return Container();
                           return Container(
                             margin: EdgeInsets.symmetric(vertical: Get.height / 120),
                             child: Row(
@@ -109,8 +84,7 @@ class Mycart extends StatelessWidget {
                                     fit: BoxFit.cover,
                                     width: 100,
                                     height: 100,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        Icon(Icons.error),
+                                    errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                                   ),
                                 Expanded(
                                   child: Column(
@@ -148,10 +122,7 @@ class Mycart extends StatelessWidget {
                                                       color: AppColor.textfild_color,
                                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                                     ),
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 1,
-                                                    ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                                                     child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
                                                   ),
                                                 ),
@@ -180,15 +151,7 @@ class Mycart extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            AppString.CartTotal,
-                            style: TextStyle(
-                              fontSize: Get.width / 18,
-                              fontWeight: FontWeight.w500,
-                              color: AppColor.grey_color,
-                              fontFamily: 'Lora',
-                            ),
-                          ),
+                          Text(AppString.CartTotal, style: TextStyle(fontSize: Get.width / 18, fontWeight: FontWeight.w500, color: AppColor.grey_color, fontFamily: 'Lora')),
                           SizedBox(height: Get.height / 80),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
