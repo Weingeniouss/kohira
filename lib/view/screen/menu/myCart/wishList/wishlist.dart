@@ -3,21 +3,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/API/menu/category/wishlist.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
-import 'package:lottie/lottie.dart' show Lottie;
+import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:lottie/lottie.dart';
+import '../../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import '../../../../utils/app_json.dart';
 import '../../category/showproduct.dart';
 
 class WishlistScreen extends StatelessWidget {
-  final WishlistController controller = Get.put(WishlistController());
+  final WishlistController wish = Get.put(WishlistController());
+
   WishlistScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    controller.onInit();
+    wish.onInit();
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.wishlist),
       body: Container(
@@ -25,46 +28,43 @@ class WishlistScreen extends StatelessWidget {
         width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
-            if (controller.fetchwishlist.isLoading.value) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen != true) {
-                  Get.dialog(
-                    Center(child: Lottie.asset(AppJson.loading2)),
-                    barrierDismissible: false,
-                  );
-                }
-              });
-              return Scaffold(backgroundColor: Colors.transparent);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen == true) {
-                  Get.back();
-                }
-              });
-            }
+          if (wish.fetchwishlist.isLoading.value) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.isDialogOpen != true) {
+                Get.dialog(
+                  Center(child: Lottie.asset(AppJson.loading2)),
+                  barrierDismissible: false,
+                );
+              }
+            });
+            return Scaffold(backgroundColor: Colors.transparent);
+          } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Get.isDialogOpen == true) {
+                Get.back();
+              }
+            });
+          }
 
-            return Column(
-              children: [
-                SizedBox(height: Get.height / 50),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.75,
-                    ),
-                    itemCount: controller.fetchwishlist.data['wishlists'].length,
+          if (wish.fetchwishlist.data['wishlists'].isEmpty) {
+            return Center(child: Lottie.asset(AppJson.noData));
+          }
+
+          return Column(
+            children: [
+              SizedBox(height: Get.height / 50),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.75),
+                    itemCount: wish.fetchwishlist.data['wishlists'].length,
                     itemBuilder: (BuildContext context, int index) {
-                      final wishlistItem = controller.fetchwishlist.data['wishlists'][index];
+                      final wishlistItem = wish.fetchwishlist.data['wishlists'][index];
                       final fetch = wishlistItem['WishlistJewelryData'];
-                      final item = controller.wishlistItems[index];
-                      final id = item['id'].toString();
-
-                      // Safely extract price
+                      final id = wishlistItem['id'].toString();
                       String priceText = 'N/A';
                       if (fetch != null && fetch['jewelry_diamonds'] != null && fetch['jewelry_diamonds'] is List && fetch['jewelry_diamonds'].isNotEmpty) {
                         priceText = fetch['jewelry_diamonds'][0]['price'].toString();
                       }
-
                       return GestureDetector(
                         onTap: () {
                           print(fetch['slug']);
@@ -80,14 +80,21 @@ class WishlistScreen extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.network(fetch['default']['path'], width: 150, height: 150),
+                                      Image.network(fetch['default']['path'], width: 150, height: 150,fit: BoxFit.cover),
                                     ],
                                   ),
                                   Positioned(
-                                    right: 10,
+                                    right: 5,
                                     top: 5,
                                     child: GestureDetector(
-                                      onTap: () => controller.deleteItem(id),
+                                      onTap: () async {
+                                        wish.deleteItem(id).then((_) {
+                                          wish.onInit();
+                                          if (wish.deletWishtlist.data['success'] == true) {
+                                            ToastificationSuccess.Success('${fetch['itemcode']}, ${wish.deletWishtlist.data['message']}');
+                                          }},
+                                        );
+                                        },
                                       child: SvgPicture.asset(AppIcon.heart, width: 25, height: 25, color: AppColor.pink_color),
                                     ),
                                   ),
@@ -100,11 +107,11 @@ class WishlistScreen extends StatelessWidget {
                               (wishlistItem['ringsize'] == null)
                                   ? SizedBox()
                                   : Row(
-                                children: [
-                                  Text("Ring Size :- ", style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
-                                  Text(wishlistItem['ringsize'].toString(), style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
-                                ],
-                              ),
+                                      children: [
+                                        Text("Ring Size :- ", style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
+                                        Text(wishlistItem['ringsize'].toString(), style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
+                                      ],
+                                    ),
                             ],
                           ),
                         ),
