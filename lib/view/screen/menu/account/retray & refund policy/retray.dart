@@ -10,11 +10,14 @@ class Retray extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.htmlbackgroud,
       body: Container(
         width: Get.width, height: Get.height,
-        decoration: BoxDecoration(color: AppColor.white_color),
-        child: SingleChildScrollView(
-          child: Html(data: retray),
+        decoration: BoxDecoration(color: AppColor.htmlbackgroud),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Html(data: retray),
+          ),
         ),
       ),
     );

@@ -9,6 +9,9 @@ import '../../../API/menu/myCart/deletcart.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 
 class MyCartValueChange extends GetxController {
+  var hasDialogShownOnce = false.obs;
+  var isDialogVisible = false.obs;
+
   final fetchcart = Get.put(FetchcartCalling());
   final countcart = Get.put(CountCart());
   final deletcount = Get.put(Deletcart());
@@ -63,7 +66,7 @@ class MyCartValueChange extends GetxController {
   }
 
   //increment Value
-  void incrementValueOfCount(int index) {
+  Future<void> incrementValueOfCount(int index) async {
     if (index >= itemCounts.length) return;
 
     final item = fetchcart.data['carts'][index];
@@ -87,7 +90,7 @@ class MyCartValueChange extends GetxController {
   }
 
   //Decrement Value
-  void decrementValueOfCount(int index) {
+ Future<void> decrementValueOfCount(int index) async{
     if (index >= itemCounts.length || itemCounts[index] <= 1) return;
 
     final item = fetchcart.data['carts'][index];
@@ -111,7 +114,7 @@ class MyCartValueChange extends GetxController {
   }
 
   //Delet Value
-  void deletValueofcount(item, fetch, int index) async {
+  Future<void> deletValueofcount(item, fetch, int index) async {
     final deletid = item['id'].toString();
     final diamondid = item['diamondid'].toString();
     final jewelryid = item['jewelryid'].toString();

@@ -262,8 +262,10 @@ class Home extends StatelessWidget {
                                         SizedBox(
                                           width: Get.width * 0.25,
                                           child: Text(
+                                            categorieslist.name.toString().length > 25
+                                                ? '${categorieslist.name.toString().substring(0, 10)}...'
+                                                : categorieslist.name.toString(),
                                             textAlign: TextAlign.center,
-                                            categorieslist.name.toString(),
                                             style: TextStyle(
                                               fontSize: Get.width / 32,
                                               color: AppColor.hintColor,

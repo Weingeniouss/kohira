@@ -21,4 +21,5 @@ class AppColor {
   static Color graycolor = Color(0xffDCDCDC);
   static Color showcontainercolor = Color(0xffF6F4F2);
   static Color showcontainertextcolor = Color(0xff555353);
+  static Color htmlbackgroud = Color(0xfff9f9f9);
 }

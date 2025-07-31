@@ -21,10 +21,11 @@ class Terms extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.htmlbackgroud,
       body: Container(
         height: Get.height, width: Get.width,
-        decoration: BoxDecoration(color: AppColor.white_color),
-        child: SingleChildScrollView(child: Html(data: terms, onLinkTap: (url, attributes, element) => _launchURL(url))),
+        decoration: BoxDecoration(color: AppColor.htmlbackgroud),
+        child: SafeArea(child: SingleChildScrollView(child: Html(data: terms, onLinkTap: (url, attributes, element) => _launchURL(url)))),
       ),
     );
   }

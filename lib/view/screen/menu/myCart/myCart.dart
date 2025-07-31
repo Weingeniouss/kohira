@@ -109,14 +109,26 @@ class Mycart extends StatelessWidget {
                                             Row(
                                               children: [
                                                 GestureDetector(
-                                                  onTap: () => myCart.decrementValueOfCount(index),
+                                                  onTap: () {
+                                                     myCart.decrementValueOfCount(index).then((_){
+                                                       Future.delayed(Duration(seconds: 2), () {
+                                                         myCart.onInit();
+                                                       });
+                                                     });
+                                                    },
                                                   child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
                                                 ),
                                                 SizedBox(width: Get.width / 50),
                                                 Text(myCart.itemCounts[index].toString()),
                                                 SizedBox(width: Get.width / 50),
                                                 GestureDetector(
-                                                  onTap: () => myCart.incrementValueOfCount(index),
+                                                  onTap: () {
+                                                      myCart.incrementValueOfCount(index).then((_) {
+                                                        Future.delayed(Duration(seconds: 2), () {
+                                                          myCart.onInit();
+                                                        });
+                                                      });
+                                                    },
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       color: AppColor.textfild_color,
@@ -130,7 +142,13 @@ class Mycart extends StatelessWidget {
                                             ),
                                             GestureDetector(
                                               child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
-                                              onTap: () => myCart.deletValueofcount(item, fetch, index),
+                                              onTap: () {
+                                                   myCart.deletValueofcount(item, fetch, index).then((_){
+                                                     Future.delayed(Duration(seconds: 2), () {
+                                                      myCart.onInit();
+                                                    });
+                                                  });
+                                                },
                                             ),
                                           ],
                                         ),

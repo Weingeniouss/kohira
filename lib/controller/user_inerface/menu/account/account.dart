@@ -78,7 +78,6 @@ class ChangePassword {
   final profileEdit = Get.put(ProfileEdit());
 
   void passwordchange(BuildContext context) {
-    profile.profiledetailscall();
     final oldPassword = TextEditingController();
     final newPassword = TextEditingController();
     final confirmPassword = TextEditingController();

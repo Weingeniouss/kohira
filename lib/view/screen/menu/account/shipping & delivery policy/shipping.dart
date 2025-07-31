@@ -1,4 +1,4 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: curly_braces_in_flow_control_structures, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -21,10 +21,14 @@ class Shipping extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: Get.height, width: Get.width,
-        decoration: BoxDecoration(color: AppColor.white_color),
-        child: SingleChildScrollView(child: Html(data: shipping, onLinkTap: (url, attributes, element) => _launchURL(url))),
+      backgroundColor: AppColor.htmlbackgroud,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Html(
+            data: shipping,
+            onLinkTap: (url, attributes, element) => _launchURL(url),
+          ),
+        ),
       ),
     );
   }
