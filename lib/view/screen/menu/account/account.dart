@@ -61,36 +61,38 @@ class Account extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Get.to(() => Profileedit()),
-                        child: horizontalpadding(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: Get.height / 40),
-                                  Row(
-                                    children: [
-                                      Text(item['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
-                                      SizedBox(width: Get.width / 80),
-                                      Text(item['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
-                                    ],
-                                  ),
-                                  Text(item['email'], style: TextStyle(color: AppColor.grey_color)),
-                                  SizedBox(height: Get.height / 50),
-                                ],
-                              ),
-                              SvgPicture.asset(AppIcon.editing, width: 30, height: 30, color: AppColor.pink_color),
-                            ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () => Get.to(() => Profileedit()),
+                          child: horizontalpadding(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: Get.height / 40),
+                                    Row(
+                                      children: [
+                                        Text(item['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
+                                        SizedBox(width: Get.width / 80),
+                                        Text(item['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
+                                      ],
+                                    ),
+                                    Text(item['email'], style: TextStyle(color: AppColor.grey_color)),
+                                    SizedBox(height: Get.height / 50),
+                                  ],
+                                ),
+                                SvgPicture.asset(AppIcon.editing, width: 30, height: 30, color: AppColor.pink_color),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Divider(color: AppColor.dividercolor),
-                    ],
+                        Divider(color: AppColor.dividercolor),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(

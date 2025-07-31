@@ -136,9 +136,9 @@ class ChangePassword {
             child: Column(
               children: [
                 SizedBox(height: Get.height / 20),
-                inputField(controller: oldPassword, hintText: AppString.oldpassword),
-                inputField(controller: newPassword, hintText: AppString.newpassword),
-                inputField(controller: confirmPassword, hintText: AppString.confirmpassword),
+                inputField(controller: oldPassword, hintText: AppString.oldpassword,isVis: true),
+                inputField(controller: newPassword, hintText: AppString.newpassword,isVis: true),
+                inputField(controller: confirmPassword, hintText: AppString.confirmpassword,isVis: true),
               ],
             ),
           ),

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, file_names
+// ignore_for_file: prefer_const_constructors, file_names, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,41 +11,60 @@ Widget inputField({
   String? icon,
   TextEditingController? controller,
   bool empty = false,
+  bool isVis = false,
 }) {
-  return Column(
-    children: [
-      TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          prefixIcon: Padding(
-            padding: EdgeInsets.all(10),
-            child: SvgPicture.asset(icon ?? '', fit: BoxFit.cover),
+  return StatefulBuilder(
+    builder: (context, setState) {
+      bool _obscureText = isVis;
+      return Column(
+        children: [
+          Builder(
+            builder: (context) {
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return TextField(
+                    controller: controller,
+                    obscureText: isVis ? _obscureText : false,
+                    decoration: InputDecoration(
+                      prefixIcon: icon != null ? Padding(
+                        padding: const EdgeInsets.all(10),
+                        child:
+                        SvgPicture.asset(icon, fit: BoxFit.cover),
+                      ) : null,
+                      suffixIcon: isVis ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility,color: AppColor.grey_color),
+                      ) : null,
+                      hintText: hintText,
+                      hintStyle: TextStyle(color: AppColor.black_color),
+                      contentPadding:
+                      const EdgeInsets.symmetric(vertical: 11),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          width: empty ? 2 : 1,
+                          color: empty ? AppColor.pink_color : AppColor.textfild_color,
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          width: empty ? 2 : 1,
+                          color: empty ? AppColor.pink_color : AppColor.textfild_color,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
-          hintStyle: TextStyle(color: AppColor.black_color),
-          hintText: hintText,
-          contentPadding: EdgeInsets.symmetric(vertical: 11),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              width: (empty) ? 2 : 1,
-              color: (empty) ? AppColor.pink_color : AppColor.textfild_color,
-            ),
-          ),
-          disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              width: (empty) ? 2 : 1,
-              color: (empty) ? AppColor.pink_color : AppColor.textfild_color,
-            ),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              width: (empty) ? 2 : 1,
-              color: (empty) ? AppColor.pink_color : AppColor.textfild_color,
-            ),
-          ),
-        ),
-      ),
-      SizedBox(height: Get.height / 50),
-    ],
+          SizedBox(height: Get.height / 50),
+        ],
+      );
+    },
   );
 }
 

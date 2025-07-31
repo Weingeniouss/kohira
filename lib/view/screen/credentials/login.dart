@@ -95,7 +95,7 @@ class Login extends StatelessWidget {
                       child: Column(
                         children: [
                           inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
-                          inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
+                          inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value,isVis: true),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -146,7 +146,7 @@ class Login extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               Get.to(() => Signup(),
-                duration: Duration(milliseconds: 300),
+                duration: Duration(milliseconds: 800),
                 curve: Curves.easeInOut,
                 transition: Transition.rightToLeft,
               );

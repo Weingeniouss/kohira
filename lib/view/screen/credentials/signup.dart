@@ -125,6 +125,13 @@ class Signup extends StatelessWidget {
                                     SizedBox(width: Get.width / 50),
                                     Expanded(
                                       child: DropdownButton2<Data>(
+                                        iconStyleData: IconStyleData(
+                                          icon: Icon(Icons.keyboard_arrow_down),
+                                          iconSize: 20,
+                                          iconEnabledColor: AppColor.grey_color,
+                                          iconDisabledColor: AppColor.grey_color,
+                                          openMenuIcon: Icon(Icons.keyboard_arrow_up),
+                                        ),
                                         value: Country.selectedCountry.value,
                                         dropdownSearchData: DropdownSearchData(
                                           searchController: searchController,
@@ -161,8 +168,8 @@ class Signup extends StatelessWidget {
                               ),
                               SizedBox(height: Get.height / 50),
                               inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
-                              inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value),
-                              inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value),
+                              inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value,isVis: true),
+                              inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value,isVis: true),
                               Row(
                                 children: [
                                   Transform.scale(
