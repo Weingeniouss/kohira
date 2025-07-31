@@ -51,44 +51,59 @@ class Bottom extends StatelessWidget {
               children: [
 
                 //defult home Sccrren
-                bottamIcon(
-                  icon: AppIcon.home,
-                  name: AppString.home,
+                InkWell(
                   onTap: bottamSelect.indexOne,
-                  condition: bottamSelect.selectindex.value == 0,
+                  child: bottamIcon(
+                    icon: AppIcon.home,
+                    name: AppString.home,
+                    onTap: bottamSelect.indexOne,
+                    condition: bottamSelect.selectindex.value == 0,
+                  ),
                 ),
 
                 //Category Screen
-                bottamIcon(
-                  icon: AppIcon.category,
-                  name: AppString.category,
+                GestureDetector(
                   onTap: bottamSelect.indexTwo,
-                  condition: bottamSelect.selectindex.value == 1,
+                  child: bottamIcon(
+                    icon: AppIcon.category,
+                    name: AppString.category,
+                    onTap: bottamSelect.indexTwo,
+                    condition: bottamSelect.selectindex.value == 1,
+                  ),
                 ),
 
                 //Mycart Screen
-                bottamIcon(
-                  icon: AppIcon.cart,
-                  name: AppString.cart,
+                InkWell(
                   onTap: bottamSelect.indexThree,
-                  condition: bottamSelect.selectindex.value == 2,
+                  child: bottamIcon(
+                    icon: AppIcon.cart,
+                    name: AppString.cart,
+                    onTap: bottamSelect.indexThree,
+                    condition: bottamSelect.selectindex.value == 2,
+                  ),
                 ),
 
                 //Over Store
-                bottamIcon(
-                  icon: AppIcon.house,
-                  name: AppString.Over,
+                InkWell(
                   onTap: bottamSelect.indexFour,
-                  condition: bottamSelect.selectindex.value == 3,
+                  child: bottamIcon(
+                    icon: AppIcon.house,
+                    name: AppString.Over,
+                    onTap: bottamSelect.indexFour,
+                    condition: bottamSelect.selectindex.value == 3,
+                  ),
                 ),
 
                 //Account
-                bottamIcon(
-                  icon: AppIcon.account,
-                  name: AppString.account,
+                InkWell(
                   onTap: bottamSelect.indexFive,
-                  condition: bottamSelect.selectindex.value == 4,
-                 ),
+                  child: bottamIcon(
+                    icon: AppIcon.account,
+                    name: AppString.account,
+                    onTap: bottamSelect.indexFive,
+                    condition: bottamSelect.selectindex.value == 4,
+                   ),
+                ),
                 ],
               ),
             ),
