@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:kohira/controller/API/menu/account/profiledetails.dart';
 
 import '../../../API/menu/account/addresses.dart';
 import '../../../API/menu/account/wallet.dart';
@@ -28,6 +29,7 @@ class HomeController extends GetxController {
   final WishlistController wish = Get.put(WishlistController());
 
   //Account Scrren
+  final profileDetails = Get.put(ProfiledetailsController());
   final account = Get.put(AccountController());
   final order = Get.put(OrderhistoryControll());
   final fech = Get.put(Fechaddresses());
@@ -60,10 +62,14 @@ class HomeController extends GetxController {
 
     //Wishlist
     wish.onInit();
+    wish.fetchwishlist.fechwishlist();
 
     //Account Scrren
+    profileDetails.profiledetailscall();
     account.onInit();
+    account.profileDetails.profiledetailscall();
     order.onInit();
+    order.order.myOrder();
     wallet.wallet();
     fech.fechaddresses();
 

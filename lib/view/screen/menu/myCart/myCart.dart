@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, deprecated_member_use, avoid_print
+// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, deprecated_member_use, avoid_print, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,12 +17,17 @@ import '../../../utils/widget/aapbar.dart';
 class Mycart extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool show = false;
   Mycart({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: Appbar(prefixicon: AppIcon.menu, prefixonTap: () => scaffoldKey.currentState?.openDrawer(), hedingname: AppString.myCart),
+      appBar: Appbar(
+        prefixicon: AppIcon.menu,
+        prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
+        hedingname: AppString.myCart,
+      ),
       drawer: Drawers(),
       body: SafeArea(
         child: Container(

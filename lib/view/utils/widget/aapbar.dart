@@ -8,6 +8,7 @@ import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/view/screen/menu/myCart/myCart.dart';
 import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import '../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
+import '../../../controller/user_inerface/menu/home/home.dart';
 import '../app_color.dart';
 import 'bottomNavigation/bottomNavigation.dart';
 import 'horizontalpading.dart';
@@ -23,11 +24,10 @@ PreferredSizeWidget Appbar(
       String? suffixicon_2,
       void Function()? onTaplefticon
     })
-
 {
+  final count = Get.put(CountController());
   final appbarsize = Get.height * 0.06;
   final bottamSelect = Get.put(Bottamnavigation());
-  final count = Get.put(CountController());
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(
@@ -71,7 +71,14 @@ PreferredSizeWidget Appbar(
                     ? Row(
                         children: [
                           SizedBox(width: Get.width / 10),
-                          Text(hedingname, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color)),
+                          Text(
+                            hedingname,
+                            style: TextStyle(
+                              fontSize: Get.width / 23,
+                              fontWeight: FontWeight.w600,
+                              color: AppColor.pink_color,
+                            ),
+                          ),
                         ],
                       )
                     : null,
@@ -110,33 +117,29 @@ PreferredSizeWidget Appbar(
                         ].whereType<Widget>().toList(),
                       ),
 
-                      (count.isLoading.value)
+                      (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
-                              right: 13,
-                              top: 0,
-                              child: (count.data['cart']['count'] == 0)
+                              right: 13, top: 0,
+                              child: (count.data['cart']['count'] == null || count.data['cart']['count'] == 0)
                                   ? SizedBox()
                                   : CircleAvatar(
                                       radius: 8,
                                       backgroundColor: AppColor.pink_color,
                                       child: Center(
                                         child: Text(
-                                          (count.data['cart']['count'] == 0)
-                                              ? ''
-                                              : count.data['cart']['count'].toString(),
+                                          (count.data['cart']['count'] == 0) ? '' : count.data['cart']['count'].toString(),
                                           style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
                                         ),
                                       ),
                                     ),
                             ),
 
-                      (count.isLoading.value)
+                      (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
-                              right: 45,
-                              top: 0,
-                              child: (count.data['wishlist']['count'] == 0)
+                              right: 45, top: 0,
+                              child: (count.isLoading.value || count.data == null || count.data['cart'] == null)
                                   ? SizedBox()
                                   : CircleAvatar(
                                       radius: 8,

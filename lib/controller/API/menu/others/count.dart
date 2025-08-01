@@ -11,6 +11,12 @@ class CountController extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    counting();
+  }
+
   Future counting() async {
     try {
       isLoading.value = true;
