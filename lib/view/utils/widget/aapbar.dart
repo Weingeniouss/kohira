@@ -25,7 +25,6 @@ PreferredSizeWidget Appbar(
       void Function()? onTaplefticon
     })
 {
-  final count = Get.put(CountController());
   final appbarsize = Get.height * 0.06;
   final bottamSelect = Get.put(Bottamnavigation());
   return PreferredSize(
@@ -87,6 +86,7 @@ PreferredSizeWidget Appbar(
                 (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 1000) : null,
 
                 Obx(() {
+                  final count = Get.put(CountController());
                   if (count.isLoading.value) SizedBox();
                   if (count.data.isEmpty && count.data == null) SizedBox();
                   return Stack(

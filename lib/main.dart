@@ -13,11 +13,6 @@ import 'package:kohira/view/screen/splace/logo/logo.dart';
 import 'package:kohira/view/utils/appconstants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
-
-import 'controller/API/menu/account/profiledetails.dart';
-import 'controller/API/menu/others/count.dart';
-import 'controller/user_inerface/bottamNavigation/bottamNavigation.dart';
-import 'controller/user_inerface/checkinternet/checkinternet.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async{
@@ -46,9 +41,6 @@ Future<void> main() async{
   print('Is Login :- $islogin');
 
   print('tokans :- $tokans');
-
-  Get.put(InternetCheckerController());
-  Get.put(Bottamnavigation());
   runApp(const MyApp());
 }
 

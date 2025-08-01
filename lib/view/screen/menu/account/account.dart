@@ -59,7 +59,7 @@ class Account extends StatelessWidget {
 
             return Column(
               children: [
-                Expanded(
+                (account.profileDetails.data['data'] == null)  ? SizedBox() : Expanded(
                   flex: 1,
                   child: SingleChildScrollView(
                     child: Column(

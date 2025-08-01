@@ -59,7 +59,7 @@ class Home extends StatelessWidget {
             final section = home.homecollction.data['3']?['collection_section_3'];
 
             if (section == null) {
-              return const SizedBox();
+              return Center(child: Lottie.asset(AppJson.noData));
             }
             else {
               return SingleChildScrollView(
