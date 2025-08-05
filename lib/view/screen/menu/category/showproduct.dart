@@ -1377,47 +1377,54 @@ class _ShowproductState extends State<Showproduct> {
                       ),
                     ),
                     (list != null)? SizedBox(
-                      height: Get.height * 0.25, // Adjust overall height responsively
+                      height: Get.height * 0.25,
                       child: LayoutBuilder(
                         builder: (context, constraints) {
-                          double imageSize = constraints.maxHeight * 0.65; // 65% of available height
-                          double textHeight = constraints.maxHeight * 0.2;  // 20% for text spacing
+                          double imageSize = constraints.maxHeight * 0.65;
+                          double textHeight = constraints.maxHeight * 0.2;
                           double imageRadius = Get.width / 50;
-
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: list.length,
                             itemBuilder: (BuildContext context, int index) {
                               final recommended = list[index];
-                              return Container(
-                                margin: EdgeInsets.only(left: Get.width / 25, right: Get.width / 50),
-                                width: Get.width * 0.35, // Make each card take ~35% of width
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: imageSize,
-                                      width: imageSize,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(recommended['second_image']),
-                                          fit: BoxFit.cover,
+                              return GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  Get.back();
+                                  print(recommended['slug']);
+                                  Get.to(() => Showproduct(slug: recommended['slug']));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(left: Get.width / 25, right: Get.width / 50),
+                                  width: Get.width * 0.35,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: imageSize,
+                                        width: imageSize,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(recommended['second_image']),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.circular(imageRadius),
                                         ),
-                                        borderRadius: BorderRadius.circular(imageRadius),
                                       ),
-                                    ),
-                                    SizedBox(height: constraints.maxHeight * 0.05),
-                                    SizedBox(
-                                      height: textHeight,
-                                      child: Text(
-                                        recommended['title'],
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: AppColor.grey_color, fontSize: Get.width * 0.03),
+                                      SizedBox(height: constraints.maxHeight * 0.05),
+                                      SizedBox(
+                                        height: textHeight,
+                                        child: Text(
+                                          recommended['title'],
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: AppColor.grey_color, fontSize: Get.width * 0.03),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             },

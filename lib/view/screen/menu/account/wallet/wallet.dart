@@ -41,6 +41,10 @@ class Wallet extends StatelessWidget {
               }
             });
 
+            if(wallet.data.isEmpty){
+              return Center(child: Lottie.asset(AppJson.noData));
+            }
+
             return SafeArea(
               child: horizontalpadding(
                 child: SingleChildScrollView(

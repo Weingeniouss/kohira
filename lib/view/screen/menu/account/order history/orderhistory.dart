@@ -39,6 +39,11 @@ class Orderhistory extends StatelessWidget {
                   Get.back();
                 }
               });
+
+              if(order.order.data['orders'] == null){
+                return Center(child: Lottie.asset(AppJson.noData));
+              }
+
               return horizontalpadding(
                 child: Column(
                   children: [

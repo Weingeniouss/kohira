@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
+import 'package:lottie/lottie.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
@@ -42,6 +43,13 @@ class Categorys extends StatelessWidget {
         width: Get.width, height: Get.height,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
+
+          if (category.filterData.value?.data == null || category.filterData.value!.data.isEmpty) {
+            return Center(
+              child: Lottie.asset(AppJson.noData),
+            );
+          }
+
           return horizontalpadding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

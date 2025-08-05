@@ -43,7 +43,9 @@ class WishlistScreen extends StatelessWidget {
             });
           }
 
-          if (wish.fetchwishlist.data['wishlists'].isEmpty) {
+          final wishlists = wish.fetchwishlist.data['wishlists'];
+
+          if (wishlists == null || wishlists is! List || wishlists.isEmpty) {
             return Center(child: Lottie.asset(AppJson.noData));
           }
 

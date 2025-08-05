@@ -25,7 +25,7 @@ PreferredSizeWidget Appbar(
       void Function()? onTaplefticon
     })
 {
-  final appbarsize = Get.height * 0.06;
+  final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
