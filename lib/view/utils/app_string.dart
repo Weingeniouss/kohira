@@ -75,6 +75,7 @@ class AppString {
 
     //Product Details
     static const productdetails = 'Product Detailflutrer';
+    static const butnow = 'Buy Now';
 
     //Categorie
     static const categories = 'Categrory';

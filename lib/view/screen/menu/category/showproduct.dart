@@ -9,6 +9,7 @@ import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dar
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
+import 'package:kohira/view/screen/menu/category/buynow.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/appconstants.dart';
@@ -153,13 +154,18 @@ class _ShowproductState extends State<Showproduct> {
                       child: Text('Add To Cart', style: TextStyle(color: AppColor.white_color)),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Get.width / 50),
-                      color: Colors.black,
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(() => Buynow());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Get.width / 50),
+                        color: Colors.black,
+                      ),
+                      child: Text('Buy Now', style: TextStyle(color: AppColor.white_color)),
                     ),
-                    child: Text('Buy Now', style: TextStyle(color: AppColor.white_color)),
                   ),
                 ],
               ),
@@ -877,54 +883,64 @@ class _ShowproductState extends State<Showproduct> {
                               ),
                             ],
                           ),
-                          SizedBox(height:Get.height / 50),
+                          (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
+                              ? SizedBox(height: Get.height / 50)
+                              : SizedBox(),
 
-                          Row(
+                          //Carat Weight
+                          (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
+                              ? SizedBox()
+                              : Column(
                             children: [
-                              Text('Carat Weight : ', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                              SizedBox(width: Get.width / 50),
-                              Expanded(
-                                child: SizedBox(
-                                  height: Get.height / 20,
-                                  child: (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
-                                      ? Text('No carat available')
-                                      : ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    itemCount: getUniqueCarats(variants, diamondType: diamondType).length,
-                                    itemBuilder: (context, index) {
-                                      final carat = getUniqueCarats(variants, diamondType: diamondType)[index];
-                                      final isSelected = currentVariant?['total_carat'] == carat;
-                                
-                                      return Padding(
-                                        padding: EdgeInsets.only(right: 8),
-                                        child: ChoiceChip(
-                                          color: WidgetStatePropertyAll(Colors.amber.withOpacity(0.1)),
-                                          label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
-                                              style: TextStyle(color: Colors.amber)),
-                                          selected: isSelected,
-                                          onSelected: (selected) {
-                                            if (selected) {
-                                              filterVariantsByCarat(carat, diamondType: diamondType);
-                                            }
-                                          },
-                                          backgroundColor: Colors.amber.withOpacity(0.1),
-                                          selectedColor: Colors.amber.withOpacity(0.1),
-                                          shape: StadiumBorder(
-                                              side: BorderSide(
-                                                  color: isSelected ? Colors.amber : Colors.amber,
-                                                  width: 1.5
-                                              )
-                                          ),
-                                        ),
-                                      );
-                                    },
+                              SizedBox(height:Get.height / 50),
+                              Row(
+                                children: [
+                                  Text('Carat Weight : ', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                  SizedBox(width: Get.width / 50),
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: Get.height / 20,
+                                      child: (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
+                                          ? Text('No carat available')
+                                          : ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        shrinkWrap: true,
+                                        itemCount: getUniqueCarats(variants, diamondType: diamondType).length,
+                                        itemBuilder: (context, index) {
+                                          final carat = getUniqueCarats(variants, diamondType: diamondType)[index];
+                                          final isSelected = currentVariant?['total_carat'] == carat;
+
+                                          return Padding(
+                                            padding: EdgeInsets.only(right: 8),
+                                            child: ChoiceChip(
+                                              color: WidgetStatePropertyAll(Colors.amber.withOpacity(0.1)),
+                                              label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
+                                                  style: TextStyle(color: Colors.amber)),
+                                              selected: isSelected,
+                                              onSelected: (selected) {
+                                                if (selected) {
+                                                  filterVariantsByCarat(carat, diamondType: diamondType);
+                                                }
+                                              },
+                                              backgroundColor: Colors.amber.withOpacity(0.1),
+                                              selectedColor: Colors.amber.withOpacity(0.1),
+                                              shape: StadiumBorder(
+                                                  side: BorderSide(
+                                                      color: isSelected ? Colors.amber : Colors.amber,
+                                                      width: 1.5
+                                                  )
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
+                              SizedBox(height:Get.height / 50),
                             ],
                           ),
-                          SizedBox(height:Get.height / 50),
 
                           // Ring Size
                           (allRingSizes.isNotEmpty)
