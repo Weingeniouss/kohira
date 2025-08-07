@@ -21,7 +21,7 @@ class AppString {
   //Bottam
   static const home = 'Home';
   static const category = 'Category';
-  static const cart = "My Cart";
+  static const cart = "Cart";
   static const store = "Over Store";
   static const find = 'Find Store';
   static const account = 'Account';
@@ -95,7 +95,7 @@ class AppString {
     //Cart
     static const shoppingcart = 'Shopping Cart';
     static const CartTotal = 'Cart Total';
-    static const Over = 'Over Store';
+    static const Over = 'Store';
     static const myCart = 'My Cart';
     static const subTotal = 'Sub Total';
     static const discount = 'Discount';

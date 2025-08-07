@@ -1,9 +1,10 @@
 
-// ignore_for_file: file_names
+// ignore_for_file: file_names, prefer_const_constructors
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:kohira/view/utils/widget/pop.dart';
 import '../../../API/menu/myCart/countcart.dart';
 import '../../../API/menu/myCart/deletcart.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
@@ -20,7 +21,7 @@ class MyCartValueChange extends GetxController {
   var discount = 0.0.obs;
   var total = 0.0.obs;
 
-  List<int> itemCounts = [];
+  var itemCounts = <int>[].obs;
   Timer? _debounce;
 
   @override
@@ -38,6 +39,8 @@ class MyCartValueChange extends GetxController {
         final newItemCounts = fetchcart.data['carts'].map<int>((item) {
           return int.tryParse(item['qty'].toString()) ?? 1;
         }).toList();
+
+        itemCounts.value = newItemCounts;
 
         final newSubTotal = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;
         final newDiscount = double.tryParse(fetchcart.data['discount_price'].toString()) ?? 0.0;
@@ -58,12 +61,10 @@ class MyCartValueChange extends GetxController {
   //Viwe of Index
   void initializeItemCounts() {
     if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
-      itemCounts = List.generate(
-        fetchcart.data['carts'].length,
-        (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()),
-      );
+      itemCounts.value = List.generate(fetchcart.data['carts'].length, (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()));
     }
   }
+
 
   //increment Value
   Future<void> incrementValueOfCount(int index) async {
@@ -79,13 +80,14 @@ class MyCartValueChange extends GetxController {
     total.value = subTotal.value - discount.value;
 
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 800), () async {
+    _debounce = Timer(Duration(milliseconds: 800), () async {
       await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: updatedQty.toString(), type: 'mobile');
       if (!isClosed) {
         subTotal.value = double.parse(fetchcart.data['old_gross_total'].toString());
         discount.value = double.parse(fetchcart.data['discount_price'].toString());
         total.value = subTotal.value - discount.value;
       }
+      ToastificationSuccess.Success('Increment QTY Successfully');
     });
   }
 
@@ -103,13 +105,14 @@ class MyCartValueChange extends GetxController {
     total.value = subTotal.value - discount.value;
 
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 800), () async {
+    _debounce = Timer(Duration(milliseconds: 800), () async {
       await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: updatedQty.toString(), type: 'mobile');
       if (!isClosed) {
         subTotal.value = double.parse(fetchcart.data['old_gross_total'].toString());
         discount.value = double.parse(fetchcart.data['discount_price'].toString());
         total.value = subTotal.value - discount.value;
       }
+      ToastificationSuccess.Success('Decrement QTY Successfully');
     });
   }
 
@@ -120,10 +123,7 @@ class MyCartValueChange extends GetxController {
     final jewelryid = item['jewelryid'].toString();
 
     await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
-
-    if (index < itemCounts.length) {
-      itemCounts.removeAt(index);
-    }
+    if (index < itemCounts.length) itemCounts.removeAt(index);
 
     await fetchcart.fetchcartcall();
     subTotal.value = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;

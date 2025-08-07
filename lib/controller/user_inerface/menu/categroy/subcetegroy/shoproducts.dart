@@ -339,9 +339,7 @@ class JewelryConfigurationController {
         matchedVariant = variant;
       }
 
-      if (matchedVariant == null) {
-        matchedVariant = variant;
-      }
+      matchedVariant ??= variant;
     }
 
     // If no exact match, find closest

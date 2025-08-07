@@ -45,68 +45,71 @@ class Bottom extends StatelessWidget {
             border: Border(top: BorderSide(color: AppColor.textfild_color)),
             color: AppColor.white_color,
           ),
-          child: horizontalpadding(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
 
-                //defult home Sccrren
-                InkWell(
+              //defult home Sccrren
+              InkWell(
+                onTap: bottamSelect.indexOne,
+                child: bottamIcon(
+                  context: context,
+                  icon: AppIcon.home,
+                  name: AppString.home,
                   onTap: bottamSelect.indexOne,
-                  child: bottamIcon(
-                    icon: AppIcon.home,
-                    name: AppString.home,
-                    onTap: bottamSelect.indexOne,
-                    condition: bottamSelect.selectindex.value == 0,
-                  ),
+                  condition: bottamSelect.selectindex.value == 0,
                 ),
-
-                //Category Screen
-                GestureDetector(
-                  onTap: bottamSelect.indexTwo,
-                  child: bottamIcon(
-                    icon: AppIcon.category,
-                    name: AppString.category,
-                    onTap: bottamSelect.indexTwo,
-                    condition: bottamSelect.selectindex.value == 1,
-                  ),
-                ),
-
-                //Mycart Screen
-                InkWell(
-                  onTap: bottamSelect.indexThree,
-                  child: bottamIcon(
-                    icon: AppIcon.cart,
-                    name: AppString.cart,
-                    onTap: bottamSelect.indexThree,
-                    condition: bottamSelect.selectindex.value == 2,
-                  ),
-                ),
-
-                //Over Store
-                InkWell(
-                  onTap: bottamSelect.indexFour,
-                  child: bottamIcon(
-                    icon: AppIcon.house,
-                    name: AppString.Over,
-                    onTap: bottamSelect.indexFour,
-                    condition: bottamSelect.selectindex.value == 3,
-                  ),
-                ),
-
-                //Account
-                InkWell(
-                  onTap: bottamSelect.indexFive,
-                  child: bottamIcon(
-                    icon: AppIcon.account,
-                    name: AppString.account,
-                    onTap: bottamSelect.indexFive,
-                    condition: bottamSelect.selectindex.value == 4,
-                   ),
-                ),
-                ],
               ),
-            ),
+
+              //Category Screen
+              GestureDetector(
+                onTap: bottamSelect.indexTwo,
+                child: bottamIcon(
+                  context: context,
+                  icon: AppIcon.category,
+                  name: AppString.category,
+                  onTap: bottamSelect.indexTwo,
+                  condition: bottamSelect.selectindex.value == 1,
+                ),
+              ),
+
+              //Mycart Screen
+              InkWell(
+                onTap: bottamSelect.indexThree,
+                child: bottamIcon(
+                  context: context,
+                  icon: AppIcon.cart,
+                  name: AppString.cart,
+                  onTap: bottamSelect.indexThree,
+                  condition: bottamSelect.selectindex.value == 2,
+                ),
+              ),
+
+              //Over Store
+              InkWell(
+                onTap: bottamSelect.indexFour,
+                child: bottamIcon(
+                  context: context,
+                  icon: AppIcon.house,
+                  name: AppString.Over,
+                  onTap: bottamSelect.indexFour,
+                  condition: bottamSelect.selectindex.value == 3,
+                ),
+              ),
+
+              //Account
+              InkWell(
+                onTap: bottamSelect.indexFive,
+                child: bottamIcon(
+                  context: context,
+                  icon: AppIcon.account,
+                  name: AppString.account,
+                  onTap: bottamSelect.indexFive,
+                  condition: bottamSelect.selectindex.value == 4,
+                ),
+              ),
+            ],
+          ),
           ),
         ),body: bottamSelect.selectscreen(bottamSelect.selectindex.value),
       );
@@ -119,28 +122,30 @@ Widget bottamIcon({
   required String icon,
   required String name,
   bool condition = false,
+  context
 }) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-            icon,
-            color: condition
-                ? AppColor.pink_color
-                : AppColor.bottomColor,
-            width: 20,height: 20
-        ),
-        SizedBox(height: Get.height / 200),
-        Text(
-          name,style: TextStyle(
-          color: condition ? AppColor.pink_color : AppColor.bottomColor,
-          fontWeight: condition ? FontWeight.w500 : FontWeight.w400,
-          fontSize: Get.width / 30,
-         ),
-        ),
-      ],
+  return SizedBox(
+    width: Get.width / 5.5,
+    child: GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(icon, color: condition ? AppColor.pink_color : AppColor.bottomColor,
+            width: MediaQuery.of(context).size.width * 0.058,
+            height: MediaQuery.of(context).size.width * 0.058,
+          ),
+          SizedBox(height: Get.height / 200),
+          Text(
+            textAlign: TextAlign.center,
+            name,style: TextStyle(
+            color: condition ? AppColor.pink_color : AppColor.bottomColor,
+            fontWeight: condition ? FontWeight.w600 : FontWeight.w500,
+            fontSize: MediaQuery.of(context).size.width * 0.03,
+           ),
+          ),
+        ],
+      ),
     ),
   );
 }

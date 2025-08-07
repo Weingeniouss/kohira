@@ -1,5 +1,23 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, deprecated_member_use, avoid_print, must_be_immutable
 
+// if (myCart.fetchcart.isLoading.value) {
+//   WidgetsBinding.instance.addPostFrameCallback((_) {
+//     if (Get.isDialogOpen != true) {
+//       Get.dialog(
+//         Center(child: Lottie.asset(AppJson.loading2)),
+//         barrierDismissible: false,
+//       );
+//     }
+//   });
+//   return Scaffold(backgroundColor: Colors.transparent);
+// } else {
+//   WidgetsBinding.instance.addPostFrameCallback((_) {
+//     if (Get.isDialogOpen == true) {
+//       Get.back();
+//     }
+//   }); //Wdeget
+// }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -35,22 +53,6 @@ class Mycart extends StatelessWidget {
           height: Get.height, width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
-            if (myCart.fetchcart.isLoading.value) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen != true) {
-                  Get.dialog(
-                    Center(child: Lottie.asset(AppJson.loading2)),
-                    barrierDismissible: false,
-                  );
-                }
-              });
-              return Scaffold(backgroundColor: Colors.transparent);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen == true) {
-                  Get.back();
-                }
-              });
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
               // Initialize item counts when data is loaded
@@ -217,7 +219,7 @@ class Mycart extends StatelessWidget {
                 ),
               );
             }
-          }),
+          ),
         ),
       ),
     );
