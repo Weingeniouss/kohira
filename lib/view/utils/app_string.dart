@@ -12,6 +12,9 @@ class AppString {
   static const save = 'Save';
   static const change = 'Change';
   static const cancel = 'Cancel';
+  static const addtocart = 'Add To Cart';
+  static const buynow = 'Buy Now';
+  static const proceedcheckout = 'Proceed Checkout';
 
   //Heding
   static const signUp = 'Sign Up';

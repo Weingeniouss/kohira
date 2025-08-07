@@ -117,6 +117,7 @@ PreferredSizeWidget Appbar(
                         ].whereType<Widget>().toList(),
                       ),
 
+                      //Add to cart
                       (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
@@ -135,11 +136,12 @@ PreferredSizeWidget Appbar(
                                     ),
                             ),
 
+                      //Wishlist count
                       (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
                               right: 45, top: 0,
-                              child: (count.isLoading.value || count.data == null || count.data['cart'] == null)
+                              child: (count.data['wishlist']['count'] == null || count.data['wishlist']['count'] == 0)
                                   ? SizedBox()
                                   : CircleAvatar(
                                       radius: 8,

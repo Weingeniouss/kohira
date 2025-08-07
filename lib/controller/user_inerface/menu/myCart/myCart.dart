@@ -20,6 +20,7 @@ class MyCartValueChange extends GetxController {
   var subTotal = 0.0.obs;
   var discount = 0.0.obs;
   var total = 0.0.obs;
+  var tax = 0.0.obs;
 
   var itemCounts = <int>[].obs;
   Timer? _debounce;
@@ -39,17 +40,13 @@ class MyCartValueChange extends GetxController {
         final newItemCounts = fetchcart.data['carts'].map<int>((item) {
           return int.tryParse(item['qty'].toString()) ?? 1;
         }).toList();
-
         itemCounts.value = newItemCounts;
-
-        final newSubTotal = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;
-        final newDiscount = double.tryParse(fetchcart.data['discount_price'].toString()) ?? 0.0;
-        final newTotal = newSubTotal - newDiscount;
-
-        itemCounts = newItemCounts;
-        subTotal.value = newSubTotal;
-        discount.value = newDiscount;
-        total.value = newTotal;
+        subTotal.value = double.tryParse(fetchcart.data['cart_gross'].toString()) ?? 0.0;
+        discount.value = double.tryParse(fetchcart.data['discount'].toString()) ?? 0.0;
+        total.value = double.tryParse(fetchcart.data['net_amount'].toString()) ?? 0.0;
+        if (fetchcart.data['global_tax'] != null) {
+          tax.value = double.tryParse(fetchcart.data['global_tax']['globaltaxcharge'].toString()) ?? 0.0;
+        }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -58,76 +55,74 @@ class MyCartValueChange extends GetxController {
     }
   }
 
-  //Viwe of Index
+  // View of Index
   void initializeItemCounts() {
     if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
       itemCounts.value = List.generate(fetchcart.data['carts'].length, (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()));
     }
   }
 
+  // Helper method to update cart totals from API response
+  void updateCartTotals() {
+    if (fetchcart.data.isNotEmpty) {
+      subTotal.value = double.tryParse(fetchcart.data['cart_gross'].toString()) ?? subTotal.value;
+      discount.value = double.tryParse(fetchcart.data['discount'].toString()) ?? discount.value;
+      total.value = double.tryParse(fetchcart.data['net_amount'].toString()) ?? total.value;
+
+      if (fetchcart.data['global_tax'] != null) {
+        tax.value = double.tryParse(fetchcart.data['global_tax']['globaltaxcharge'].toString()) ?? tax.value;
+      }
+    }
+  }
 
   //increment Value
   Future<void> incrementValueOfCount(int index) async {
     if (index >= itemCounts.length) return;
-
     final item = fetchcart.data['carts'][index];
     final price = double.parse(item['CartJewelryData']['offerprice'].toString());
     final cartId = item['id'].toString();
     final updatedQty = itemCounts[index] + 1;
-
     itemCounts[index] = updatedQty;
     subTotal.value += price;
     total.value = subTotal.value - discount.value;
-
     _debounce?.cancel();
     _debounce = Timer(Duration(milliseconds: 800), () async {
       await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: updatedQty.toString(), type: 'mobile');
       if (!isClosed) {
-        subTotal.value = double.parse(fetchcart.data['old_gross_total'].toString());
-        discount.value = double.parse(fetchcart.data['discount_price'].toString());
-        total.value = subTotal.value - discount.value;
+        updateCartTotals();
       }
       ToastificationSuccess.Success('Increment QTY Successfully');
     });
   }
 
   //Decrement Value
- Future<void> decrementValueOfCount(int index) async{
+  Future<void> decrementValueOfCount(int index) async {
     if (index >= itemCounts.length || itemCounts[index] <= 1) return;
-
     final item = fetchcart.data['carts'][index];
     final price = double.parse(item['CartJewelryData']['offerprice'].toString());
     final cartId = item['id'].toString();
     final updatedQty = itemCounts[index] - 1;
-
     itemCounts[index] = updatedQty;
     subTotal.value -= price;
     total.value = subTotal.value - discount.value;
-
     _debounce?.cancel();
     _debounce = Timer(Duration(milliseconds: 800), () async {
       await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: updatedQty.toString(), type: 'mobile');
       if (!isClosed) {
-        subTotal.value = double.parse(fetchcart.data['old_gross_total'].toString());
-        discount.value = double.parse(fetchcart.data['discount_price'].toString());
-        total.value = subTotal.value - discount.value;
+        updateCartTotals();
       }
       ToastificationSuccess.Success('Decrement QTY Successfully');
     });
   }
 
-  //Delet Value
+  //Delete Value
   Future<void> deletValueofcount(item, fetch, int index) async {
     final deletid = item['id'].toString();
     final diamondid = item['diamondid'].toString();
     final jewelryid = item['jewelryid'].toString();
-
     await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
     if (index < itemCounts.length) itemCounts.removeAt(index);
-
     await fetchcart.fetchcartcall();
-    subTotal.value = double.tryParse(fetchcart.data['old_gross_total'].toString()) ?? 0.0;
-    discount.value = double.tryParse(fetchcart.data['discount_price'].toString()) ?? 0.0;
-    total.value = subTotal.value - discount.value;
+    updateCartTotals();
   }
 }

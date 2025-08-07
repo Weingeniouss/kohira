@@ -168,7 +168,7 @@ class Subcategorys extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
-                                    "₹ ${subcategrorys['offerprice']}.00",
+                                    "₹${double.parse(subcategrorys['discount'].toString()) > 0 ? subcategrorys['offer_price'] : subcategrorys['setting_price']}.00",
                                     style: TextStyle(
                                       fontSize: Get.height / 70,
                                       fontFamily: 'Lora', color: AppColor.pink_color,

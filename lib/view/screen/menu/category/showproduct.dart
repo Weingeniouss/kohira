@@ -9,7 +9,6 @@ import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dar
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
-import 'package:kohira/view/screen/menu/category/buynow.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/appconstants.dart';
@@ -18,9 +17,12 @@ import 'package:kohira/view/utils/widget/video.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
+import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
+import '../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/widget/aapbar.dart';
+import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 
 class Showproduct extends StatefulWidget {
   final String slug;
@@ -54,11 +56,15 @@ class _ShowproductState extends State<Showproduct> {
   bool sidediamondDetails = false;
   bool priceBreakup = false;
 
+  //Bottamsheet
+  final bottamSelect = Get.put(Bottamnavigation());
+
   final jewellerydetail = Get.put(JewellerydetailCall());
   final recommendedjewellerylist = Get.put(Recommendedjewellerylist());
   final wishlist = Get.put(Wishlist());
   final count = Get.put(CountController());
   final myCart = Get.put(MyCartValueChange());
+  final wish = Get.put(WishlistController());
 
   List<String> savewishlist = [];
   bool isWishlisted = false;
@@ -151,12 +157,30 @@ class _ShowproductState extends State<Showproduct> {
                         borderRadius: BorderRadius.circular(Get.width / 50),
                         color: Colors.black,
                       ),
-                      child: Text('Add To Cart', style: TextStyle(color: AppColor.white_color)),
+                      child: Text(AppString.addtocart, style: TextStyle(color: AppColor.white_color)),
                     ),
                   ),
                   GestureDetector(
                     onTap: (){
-                      Get.to(() => Buynow());
+                      if (Addtocart().isLoading.value) {
+                        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                      } else {
+                        Addtocart().addtocartservice(
+                          jewelryid: jewellery['id'].toString(),
+                          ringsize: selectedRingSizeId.toString(),
+                          tokan: tokans,
+                        ).then((_) {
+                          setState(() {
+                            count.counting();
+                            myCart.onInit();
+                          });
+                        });
+                      }
+                      Bottom();
+                      bottamSelect.indexThree();
+                      Get.back();
+                      Get.back();
+                      Get.back();
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
@@ -164,7 +188,7 @@ class _ShowproductState extends State<Showproduct> {
                         borderRadius: BorderRadius.circular(Get.width / 50),
                         color: Colors.black,
                       ),
-                      child: Text('Buy Now', style: TextStyle(color: AppColor.white_color)),
+                      child: Text(AppString.butnow, style: TextStyle(color: AppColor.white_color)),
                     ),
                   ),
                 ],
@@ -708,8 +732,10 @@ class _ShowproductState extends State<Showproduct> {
                                   }
                                   setState(() {
                                     count.counting();
+                                    wish.fetchwishlist.fechwishlist();
                                   });
                                   count.counting();
+                                  wish.fetchwishlist.fechwishlist();
                                 },
                                 child: (isWishlisted)
                                     ? SvgPicture.asset(AppIcon.heart,width: 30,height: 30,color: AppColor.pink_color)

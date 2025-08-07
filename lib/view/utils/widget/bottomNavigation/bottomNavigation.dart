@@ -9,7 +9,6 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
-import '../horizontalpading.dart';
 
 class Bottom extends StatelessWidget {
   final  internetController = Get.put(InternetCheckerController());

@@ -25,6 +25,7 @@ import 'package:intl/intl.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../controller/user_inerface/menu/myCart/myCart.dart';
@@ -104,7 +105,7 @@ class Mycart extends StatelessWidget {
                                           fetchdata['title'],
                                           style: TextStyle(fontSize: Get.width / 27),
                                         ),
-                                        subtitle: Text(indianFormat.format(fetchdata['offerprice']),
+                                        subtitle: Text(indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
                                           style: TextStyle(
                                             color: AppColor.pink_color,
                                             fontWeight: FontWeight.w600,
@@ -128,9 +129,9 @@ class Mycart extends StatelessWidget {
                                                     },
                                                   child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
                                                 ),
-                                                SizedBox(width: Get.width / 50),
+                                                SizedBox(width: Get.width / 20),
                                                 Text(myCart.itemCounts[index].toString()),
-                                                SizedBox(width: Get.width / 50),
+                                                SizedBox(width: Get.width / 20),
                                                 GestureDetector(
                                                   onTap: () {
                                                       myCart.incrementValueOfCount(index).then((_) {
@@ -215,6 +216,11 @@ class Mycart extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: Get.height / 50),
+
+                    //Buuton
+                    Expanded(flex: -1, child: button(AppString.proceedcheckout)),
+                    SizedBox(height: Get.height / 80),
                   ],
                 ),
               );
