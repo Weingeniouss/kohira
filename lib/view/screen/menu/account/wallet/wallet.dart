@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/account/wallet.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -45,6 +46,8 @@ class Wallet extends StatelessWidget {
               return Center(child: Lottie.asset(AppJson.noData));
             }
 
+            final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+
             return SafeArea(
               child: horizontalpadding(
                 child: SingleChildScrollView(
@@ -58,7 +61,7 @@ class Wallet extends StatelessWidget {
                         children: [
                           SvgPicture.asset(AppIcon.star,width: 22,height: 22),
                           SizedBox(width: Get.width / 50),
-                          Text(wallet.data['myWalletAmount'].toString(), style: TextStyle(fontSize: Get.width / 18, fontWeight: FontWeight.w600)),
+                          Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontSize: Get.width / 18, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       Text(AppString.points1, style: TextStyle(fontSize: Get.width / 22, color: AppColor.grey_color)),

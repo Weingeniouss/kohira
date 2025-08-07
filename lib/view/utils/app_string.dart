@@ -15,6 +15,7 @@ class AppString {
   static const addtocart = 'Add To Cart';
   static const buynow = 'Buy Now';
   static const proceedcheckout = 'Proceed Checkout';
+  static const Checkout = 'Checkout';
 
   //Heding
   static const signUp = 'Sign Up';
@@ -78,7 +79,6 @@ class AppString {
 
     //Product Details
     static const productdetails = 'Product Detailflutrer';
-    static const butnow = 'Buy Now';
 
     //Categorie
     static const categories = 'Categrory';
@@ -138,4 +138,13 @@ class AppString {
 
           //Address
           static const setdefult = 'Set Defult';
+
+          //Buy Now
+          static const pricedetails = 'Price Details';
+          static const totalprice = 'Total Price';
+          static const discountprice = 'Discount on Price';
+          static const shippingcharges = 'Shipping Charges';
+          static const tax = 'Tax 3 (%)';
+          static const totalwallet = 'Total Wallet';
+          static const items = 'Items';
 }

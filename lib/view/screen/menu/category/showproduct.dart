@@ -188,7 +188,7 @@ class _ShowproductState extends State<Showproduct> {
                         borderRadius: BorderRadius.circular(Get.width / 50),
                         color: Colors.black,
                       ),
-                      child: Text(AppString.butnow, style: TextStyle(color: AppColor.white_color)),
+                      child: Text(AppString.buynow, style: TextStyle(color: AppColor.white_color)),
                     ),
                   ),
                 ],
