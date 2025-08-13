@@ -14,8 +14,11 @@ class AppString {
   static const cancel = 'Cancel';
   static const addtocart = 'Add To Cart';
   static const buynow = 'Buy Now';
+  static const cheackout = 'Cheackout';
   static const proceedcheckout = 'Proceed Checkout';
   static const Checkout = 'Checkout';
+  static const paynow = 'Pay Now';
+  static const addnewAddress = 'Add New Address';
 
   //Heding
   static const signUp = 'Sign Up';
@@ -29,11 +32,13 @@ class AppString {
   static const store = "Over Store";
   static const find = 'Find Store';
   static const account = 'Account';
+  static const Apply = 'Apply';
 
   //credentials
   //Login
   static const subsignin = 'If you have a Kohira customer account please sign in';
   static const hintemail = 'Enter Your Email';
+  static const email = 'Email Address';
   static const hintpassword = 'Enter Your Password';
   static const forgetPassword = 'Forget Password?';
   static const donthaveanaccount = "Don't have an account?";
@@ -43,6 +48,8 @@ class AppString {
   static const hintmobile = 'Mobile Number';
   static const hintconfirmpassword = 'Enter Confirm Password';
   static const firstname = 'First Name';
+  static const city = 'City';
+  static const zipcode = 'Zip Code';
   static const lastname = 'Last Name';
   static const notarobot  = "I'm Not a Robot";
 
@@ -147,4 +154,13 @@ class AppString {
           static const tax = 'Tax 3 (%)';
           static const totalwallet = 'Total Wallet';
           static const items = 'Items';
+          static const usewallet = 'Use Wallet Amount';
+          static const couponcode = 'Coupon code';
+
+          //Cheakout
+          static const estimatedamount = 'Estimated Amount';
+          static const billing = 'Billing address same as Shipping ?';
+          static const shippingaddress = 'Shipping Address';
+          static const payments = 'Payments';
+          static const paymentstype = 'Cards, Wallet, Netbanking, UPI';
 }

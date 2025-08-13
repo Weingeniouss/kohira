@@ -58,13 +58,17 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async{
-        fech.fechaddresses();
+        Get.back();
+        await fech.fechaddresses();
         return true;
       },
       child: Scaffold(
         appBar: Appbar(
           lefticon: AppIcon.left,
-          onTaplefticon: () => fech.fechaddresses(),
+          onTaplefticon: ()async{
+             fech.fechaddresses();
+             Get.back();
+            },
           hedingname: 'Add New ${AppString.Addresses}',
         ),
         bottomNavigationBar: SafeArea(

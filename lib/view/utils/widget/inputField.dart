@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, file_names, no_leading_underscores_for_local_identifiers
+// ignore_for_file: prefer_const_constructors, file_names, no_leading_underscores_for_local_identifiers, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +9,7 @@ import '../app_color.dart';
 Widget inputField({
   String? hintText,
   String? icon,
+  Color? iconcolor,
   TextEditingController? controller,
   bool empty = false,
   bool isVis = false,
@@ -29,7 +30,7 @@ Widget inputField({
                       prefixIcon: icon != null ? Padding(
                         padding: const EdgeInsets.all(10),
                         child:
-                        SvgPicture.asset(icon, fit: BoxFit.cover),
+                        SvgPicture.asset(icon, fit: BoxFit.cover,color: iconcolor),
                       ) : null,
                       suffixIcon: isVis ? GestureDetector(
                         onTap: () {

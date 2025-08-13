@@ -22,7 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kohira/view/screen/menu/category/buynow.dart';
+import 'package:kohira/view/screen/menu/myCart/buynow.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
