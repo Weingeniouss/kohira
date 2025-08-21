@@ -112,6 +112,9 @@ class AppString {
     static const shipping = 'Shipping';
     static const total = 'Total';
 
+    //overStrore
+    static const allStores = 'All Stores';
+
     //Account
     static const accounttitale = 'Visit our Strore';
 

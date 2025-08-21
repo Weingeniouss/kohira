@@ -358,9 +358,7 @@ class _CheckoutState extends State<Checkout> {
                                             underline: SizedBox(),
                                             isExpanded: true,
                                             items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
-                                            onChanged: (newValue) {
-                                              Country.selectedCountry.value = newValue!;
-                                            },
+                                            onChanged: (newValue) => Country.selectedCountry.value = newValue!,
                                             dropdownStyleData: DropdownStyleData(
                                               offset: Offset(0, -10),
                                               maxHeight: Get.height / 3,
