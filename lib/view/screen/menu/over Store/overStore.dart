@@ -1,6 +1,8 @@
 
 // ignore_for_file: file_names, prefer_const_constructors, must_call_super
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -30,6 +32,14 @@ class _OverstoreState extends State<Overstore> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final store =  Get.put(Overstore_Controller());
   final citylist =  Get.put(Citylist());
+  Timer? debounce;
+
+  @override
+  void dispose() {
+    debounce?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +79,18 @@ class _OverstoreState extends State<Overstore> {
             return Column(
               children: [
                 SizedBox(height: Get.height / 50),
-                horizontalpadding(child: searchField(onChanged: (val) => ())),
+                horizontalpadding(
+                  child: searchField(
+                    onChanged: (val) {
+                      if (debounce?.isActive ?? false) debounce!.cancel();
+                      debounce = Timer(const Duration(seconds: 2), () {
+                        setState(() {
+                          store.overStore(search: val);
+                        });
+                      });
+                    },
+                  ),
+                ),
                 SizedBox(height: Get.height / 150),
                 SizedBox(
                   height: Get.height / 7,
