@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/user_inerface/menu/account/orderhistory.dart';
+import 'package:kohira/view/screen/menu/account/order%20history/orderdetails.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
@@ -19,8 +20,7 @@ class Orderhistory extends StatelessWidget {
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.orderhistroy),
       body: Container(
-        height: Get.height,
-        width: Get.width,
+        height: Get.height, width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
         child:  Obx(() {
             if (order.order.isLoading.value) {
@@ -70,14 +70,17 @@ class Orderhistory extends StatelessWidget {
                           final item = order.order.data['orders'][index];
                           return Column(
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(item['order_no'].toString()),
-                                  Text(item['order_date'].toString()),
-                                  Text(item['totalamount'].toString()),
-                                  Text(item['status'], style: TextStyle(color: AppColor.glodcolor)),
-                                ],
+                              GestureDetector(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(item['order_no'].toString()),
+                                    Text(item['order_date'].toString()),
+                                    Text(item['totalamount'].toString()),
+                                    Text(item['status'], style: TextStyle(color: AppColor.glodcolor)),
+                                  ],
+                                ),
+                                onTap: () => Get.to(() => Orderdetails(id: item['id'].toString())),
                               ),
                               Divider(color: AppColor.dividercolor),
                             ],

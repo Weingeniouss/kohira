@@ -139,6 +139,9 @@ class AppString {
           static const product = 'Product';
           static const editprofile = 'Edit Profile';
           static const orderhistroy = 'Order Histroy';
+          static const orderDetails = 'Order Details';
+          static const shippingAddress = 'Shipping Address';
+          static const orderitem = 'Order Item';
           static const wallet = 'Wallet';
           static const Addresses = 'Addresses';
           static const editAddresses = 'Edit Addresses';
