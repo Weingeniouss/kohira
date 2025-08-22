@@ -60,6 +60,7 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
       onWillPop: () async{
         Get.back();
         await fech.fechaddresses();
+        Get.back();
         return true;
       },
       child: Scaffold(
