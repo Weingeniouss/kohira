@@ -15,6 +15,8 @@ import '../../../API/menu/home/homecollction.dart';
 import '../../../API/menu/home/slider.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 import '../../../API/menu/others/count.dart';
+import '../../../API/menu/overstore/citylist.dart';
+import '../../../API/menu/overstore/overStore.dart';
 import '../account/account.dart';
 import '../account/orderhistory.dart';
 import '../myCart/wishlist/wishlist.dart';
@@ -42,6 +44,10 @@ class HomeController extends GetxController {
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
 
+  //OverStore
+  final store =  Get.put(Overstore_Controller());
+  final citylist =  Get.put(Citylist());
+
 
   RxInt activeIndex = 0.obs;
 
@@ -64,6 +70,10 @@ class HomeController extends GetxController {
     wish.onInit();
     wish.fetchwishlist.fechwishlist();
 
+    //OverStore Screen
+    citylist.citylist();
+    store.overStore();
+
     //Account Scrren
     profileDetails.profiledetailscall();
     account.onInit();
@@ -72,6 +82,7 @@ class HomeController extends GetxController {
     order.order.myOrder();
     wallet.wallet();
     fech.fechaddresses();
+
 
     homecollction.homecollction(section_no: '2');
     homecollction.homecollction(section_no: '3');

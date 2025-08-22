@@ -16,11 +16,13 @@ class Overstore_Controller extends GetxController {
     try {
       isLoading.value = true;
       final url = Uri.parse(AppUrl.store);
+      print('Sending request to: $url');
       final body = {
-        'page': page,
-        'search': search,
-        'store_city_id': store_city_id,
-      }..removeWhere((key, value) => value == null);
+        if (page != null)  'page': page,
+        if (search != null) 'search': search,
+        if (store_city_id != null) 'store_city_id': store_city_id,
+      }..removeWhere((key,value) => value == null);
+      print('Store body :- $body');
       final response = await http.post(
         url,
         body: body,
@@ -29,7 +31,7 @@ class Overstore_Controller extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         data.value = jsonDecode(response.body);
-        log('Over Store :- ${data.value}');
+        // log('Over Store :- ${data.value}');
       }
     } catch (e) {
       print('Over Store :- $e');

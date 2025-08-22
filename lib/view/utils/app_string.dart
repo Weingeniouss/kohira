@@ -114,6 +114,8 @@ class AppString {
 
     //overStrore
     static const allStores = 'All Stores';
+    static const contact = 'Contact :- ';
+    static const seelessinfo = 'See less info';
 
     //Account
     static const accounttitale = 'Visit our Strore';

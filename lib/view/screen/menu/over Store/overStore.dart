@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/overstore/citylist.dart';
 import 'package:kohira/controller/API/menu/overstore/overStore.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
+import 'package:kohira/view/screen/menu/over%20Store/direction.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -29,12 +30,6 @@ class _OverstoreState extends State<Overstore> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final store =  Get.put(Overstore_Controller());
   final citylist =  Get.put(Citylist());
-  @override
-  void initState() {
-    super.initState();
-    citylist.citylist();
-    store.overStore();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +70,7 @@ class _OverstoreState extends State<Overstore> {
               children: [
                 SizedBox(height: Get.height / 50),
                 horizontalpadding(child: searchField(onChanged: (val) => ())),
-                SizedBox(height: Get.height / 50),
+                SizedBox(height: Get.height / 150),
                 SizedBox(
                   height: Get.height / 7,
                   child: ListView.builder(
@@ -83,24 +78,33 @@ class _OverstoreState extends State<Overstore> {
                     itemCount: city.length + 1,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
-                        return Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(AppIcon.allstore, fit: BoxFit.cover, height: 60),
-                              Text(AppString.allStores),
-                            ],
+                        return GestureDetector(
+                          onTap: () => store.overStore(),
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(AppIcon.allstore, fit: BoxFit.cover, height: 60),
+                                Text(AppString.allStores),
+                              ],
+                            ),
                           ),
                         );
                       } else {
                         final name = city[index - 1];
-                        return Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              SvgPicture.network(name['city_image'], fit: BoxFit.cover, height: 60),
-                              Text(name['name']),
-                            ],
+                        return GestureDetector(
+                          onTap: () {
+                              store.overStore();
+                              store.overStore(store_city_id: stores['allstoreList'][index - 1]['store_city_id'].toString());
+                            },
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                SvgPicture.network(name['city_image'], fit: BoxFit.cover, height: 60),
+                                Text(name['name']),
+                              ],
+                            ),
                           ),
                         );
                       }},
@@ -109,7 +113,7 @@ class _OverstoreState extends State<Overstore> {
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: stores.length,
+                    itemCount: stores['allstoreList']?.length ?? 0,
                     itemBuilder: (BuildContext context, int index) {
                       final details =  stores['allstoreList'][index];
                       final cityname = details['store_city']['cityname'];
@@ -124,7 +128,7 @@ class _OverstoreState extends State<Overstore> {
                                   children: [
                                     Container(width: 80, height: 1, color: AppColor.pink_color),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
                                       child: Text(cityname['name'], style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600)),
                                     ),
                                     Container(width: 80, height: 1, color: AppColor.pink_color),
@@ -151,12 +155,12 @@ class _OverstoreState extends State<Overstore> {
                                             Text(details['store_name']),
                                             Row(
                                               children: [
-                                                Text('Contact :- '),
+                                                Text(AppString.contact),
                                                 Text(details['contact_number']),
                                               ],
                                             ),
                                             SizedBox(height: Get.height / 50),
-                                            Text('See less info',style: TextStyle(color: AppColor.pink_color)),
+                                            Text(AppString.seelessinfo,style: TextStyle(color: AppColor.pink_color)),
                                             SizedBox(height: Get.height / 180),
                                             Text(details['address']),
                                             SizedBox(height: Get.height / 50),
@@ -175,9 +179,12 @@ class _OverstoreState extends State<Overstore> {
                                           ],
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.all(15),
-                                        child: button('Get Directions'),
+                                      GestureDetector(
+                                        onTap: () => Get.to(() => Directions(data: details['store_direction_step'])),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(15),
+                                          child: button('Get Directions'),
+                                        ),
                                       ),
                                     ],
                                   ),
