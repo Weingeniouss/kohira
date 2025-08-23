@@ -13,8 +13,7 @@ import '../app_color.dart';
 import 'bottomNavigation/bottomNavigation.dart';
 import 'horizontalpading.dart';
 
-PreferredSizeWidget Appbar(
-    {
+PreferredSizeWidget Appbar({
       String? prefixicon,
       String? logo,
       void Function()? prefixonTap,
@@ -23,7 +22,7 @@ PreferredSizeWidget Appbar(
       String? suffixicon_1,
       String? suffixicon_2,
       void Function()? onTaplefticon
-    })
+})
 {
   final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
