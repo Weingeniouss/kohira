@@ -118,7 +118,7 @@ class AppString {
     static const seelessinfo = 'See less info';
 
     //Account
-    static const accounttitale = 'Visit our Strore';
+    static const accounttitale = 'Account';
 
        //Order
        static const orderid = 'Orderid';

@@ -40,7 +40,11 @@ PreferredSizeWidget Appbar(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget?>[
                 (prefixicon != null && prefixonTap != null)
-                    ? GestureDetector(onTap: prefixonTap, child: SvgPicture.asset(prefixicon))
+                    ? GestureDetector(onTap: prefixonTap, child: Container(
+                  color: AppColor.Appbercolor,
+                    padding: EdgeInsets.only(right: 50,bottom: 28,top: 25),
+                    child: SvgPicture.asset(prefixicon)),
+                )
                     : null,
                 (lefticon != null)
                     ? GestureDetector(
@@ -54,17 +58,12 @@ PreferredSizeWidget Appbar(
                         },
                         child: Container(
                           color: AppColor.Appbercolor,
-                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25),
-                            child: SvgPicture.asset(lefticon)),
+                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25), child: SvgPicture.asset(lefticon)),
                       )
                     : SizedBox.shrink(),
+
                 (logo != null)
-                    ? Row(
-                        children: [
-                          SizedBox(width: Get.width / 8),
-                          Image.asset(logo, scale: 15),
-                        ],
-                      )
+                    ? Image.asset(logo, scale: 15)
                     : null,
 
                 (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 500) : null,
@@ -86,7 +85,7 @@ PreferredSizeWidget Appbar(
                     : null,
 
                 (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 8) : null,
-                (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 1000) : null,
+                (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 10) : null :SizedBox(),
 
                 Obx(() {
                   final count = Get.put(CountController());
@@ -97,15 +96,22 @@ PreferredSizeWidget Appbar(
                       Row(
                         children: <Widget?>[
                           SizedBox(width: Get.width / 20),
+
+                          //Add to cart
                           (suffixicon_1 != null)
                               ? GestureDetector(
                                   onTap: () {
                                     Get.to(() => WishlistScreen());
                                   },
-                                  child: SvgPicture.asset(suffixicon_1),
+                                  child: Container(
+                                      color: AppColor.Appbercolor,
+                                    padding: EdgeInsets.only(bottom: 20,top: 20,left: 8,right: 5),
+                                      child: SvgPicture.asset(suffixicon_1),
+                                  ),
                                 )
                               : null,
-                          SizedBox(width: Get.width / 30),
+                          SizedBox(width: Get.width / 120),
+                          //Wishlist
                           (suffixicon_2 != null)
                               ? GestureDetector(
                                   onTap: () {
@@ -114,50 +120,67 @@ PreferredSizeWidget Appbar(
                                     Get.back();
                                     Get.back();
                                   },
-                                  child: SvgPicture.asset(suffixicon_2),
+                                  child: Container(
+                                      color: AppColor.Appbercolor,
+                                      padding: EdgeInsets.only(bottom: 20,top: 20,left: 10),
+                                      child: SvgPicture.asset(suffixicon_2),
+                                  ),
                           )
                               : null,
                         ].whereType<Widget>().toList(),
                       ),
 
-                      //Add to cart
+                      //Add to cart count
                       (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
-                              right: 13, top: 0,
+                              right: 16, top: 18,
                               child: (count.data['cart']['count'] == null || count.data['cart']['count'] == 0)
                                   ? SizedBox()
-                                  : CircleAvatar(
-                                      radius: 8,
-                                      backgroundColor: AppColor.pink_color,
-                                      child: Center(
-                                        child: Text(
-                                          (count.data['cart']['count'] == 0) ? '' : count.data['cart']['count'].toString(),
-                                          style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
+                                  : GestureDetector(
+                                    child: CircleAvatar(
+                                        radius: 8,
+                                        backgroundColor: AppColor.pink_color,
+                                        child: Center(
+                                          child: Text(
+                                            (count.data['cart']['count'] == 0) ? '' : count.data['cart']['count'].toString(),
+                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                onTap: () {
+                                  Bottom();
+                                  bottamSelect.indexThree();
+                                  Get.back();
+                                  Get.back();
+                                },
+                                  ),
                             ),
 
                       //Wishlist count
                       (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
-                              right: 45, top: 0,
+                              right: 53, top: 18,
                               child: (count.data['wishlist']['count'] == null || count.data['wishlist']['count'] == 0)
                                   ? SizedBox()
-                                  : CircleAvatar(
-                                      radius: 8,
-                                      backgroundColor: AppColor.pink_color,
-                                      child: Center(
-                                        child: Text(
-                                          (count.data['wishlist']['count'] == 0)
-                                              ? ''
-                                              : count.data['wishlist']['count'].toString(),
-                                          style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
+                                  : GestureDetector(
+                                    child: CircleAvatar(
+                                        radius: 8,
+                                        backgroundColor: AppColor.pink_color,
+                                        child: Center(
+                                          child: Text(
+                                            (count.data['wishlist']['count'] == 0)
+                                                ? ''
+                                                : count.data['wishlist']['count'].toString(),
+                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                onTap: () {
+                                  Get.to(() => WishlistScreen());
+                                },
+                                  ),
                             ),
                     ],
                   );
