@@ -47,9 +47,7 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fech.fechaddresses();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => fech.fechaddresses());
   }
 
   bool isChecked = false;

@@ -84,7 +84,7 @@ PreferredSizeWidget Appbar({
                       )
                     : null,
 
-                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 6) : null,
+                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 7) : null,
                 (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 15) : null :SizedBox(),
 
                 Obx(() {
