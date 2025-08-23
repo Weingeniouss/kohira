@@ -124,7 +124,8 @@ Widget bottamIcon({
   bool condition = false,
   context
 }) {
-  return SizedBox(
+  return Container(
+    color: AppColor.white_color,
     width: Get.width / 5.5,
     child: GestureDetector(
       onTap: onTap,
