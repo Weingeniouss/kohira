@@ -56,6 +56,22 @@ class _ProfileeditState extends State<Profileedit> {
       change_password: 'false',
     );
 
+    if (profileEdit.data['status'] == 'error') {
+      final errors = profileEdit.data['errors'];
+      if (errors != null && errors.containsKey('zip')) ToastificationError.Error(errors['zip'][0]);
+      if (errors != null && errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
+      if (errors != null && errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
+      if (errors != null && errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
+      if (errors != null && errors.containsKey('address')) ToastificationError.Error(errors['address'][0]);
+      if (errors != null && errors.containsKey('city')) ToastificationError.Error(errors['city'][0]);
+      if (errors != null && errors.containsKey('state')) ToastificationError.Error(errors['state'][0]);
+      if (errors != null && errors.containsKey('country')) ToastificationError.Error(errors['country'][0]);
+      if (errors != null && errors.containsKey('countrycode')) ToastificationError.Error(errors['countrycode'][0]);
+      if (errors != null && errors.containsKey('mobileno')) ToastificationError.Error(errors['mobileno'][0]);
+      if (errors != null && errors.containsKey('id')) ToastificationError.Error(errors['mobileno'][0]);
+      if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
+    }
+
     if(profileEdit.data['success'] == true){
       ToastificationSuccess.Success(profileEdit.data['message']);
     }

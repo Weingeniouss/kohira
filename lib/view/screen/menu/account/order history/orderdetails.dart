@@ -225,15 +225,15 @@ class _OrderdetailsState extends State<Orderdetails> {
                                       SizedBox(height: Get.height / 180),
                                       (order == 'Order Placed') ? Row(
                                         children: [
-                                          Text(textAlign: TextAlign.center,'Order\nConfirm',style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
-                                          SizedBox(width: Get.width / 20),
+                                          Text(textAlign: TextAlign.center,'Order Confirm',style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500,fontSize: Get.width / 32)),
+                                          SizedBox(width: Get.width / 40),
                                           Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(Get.width / 50),
+                                              borderRadius: BorderRadius.circular(Get.width / 80),
                                               color: Colors.red
                                             ),
                                             padding: EdgeInsets.symmetric(horizontal: Get.width / 30,vertical: Get.height / 150),
-                                            child: Text(textAlign: TextAlign.center, 'Cancel\nOrder',style: TextStyle(color: AppColor.white_color)),
+                                            child: Text(textAlign: TextAlign.center, 'Cancel Order',style: TextStyle(color: AppColor.white_color,fontSize: Get.width / 32)),
                                           ),
                                         ],
                                       ) : SizedBox(),

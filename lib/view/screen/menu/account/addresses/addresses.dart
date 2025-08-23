@@ -74,9 +74,9 @@ class _AddressesState extends State<Addresses> {
                 }
               });
 
-              if (fech.data['userAdddress'] == null) {
-                Center(child: Lottie.asset(AppJson.noData));
-              }
+              final addresses = fech.data['userAdddress'] ?? [];
+              if (fech.data['userAdddress'] == null) Center(child: Lottie.asset(AppJson.noData));
+              if (addresses.isEmpty) Center(child: Lottie.asset(AppJson.noData));
 
               return Column(
                 children: [
@@ -84,7 +84,7 @@ class _AddressesState extends State<Addresses> {
                   Expanded(
                     child: horizontalpadding(
                       child: ListView.builder(
-                        itemCount: fech.data['userAdddress'].length,
+                        itemCount: addresses.length,
                         itemBuilder: (BuildContext context, int index) {
                           final fechs = fech.data['userAdddress'][index];
                           return Container(

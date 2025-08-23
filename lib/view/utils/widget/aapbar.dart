@@ -73,6 +73,7 @@ PreferredSizeWidget Appbar(
                         children: [
                           SizedBox(width: Get.width / 10),
                           Text(
+                            textAlign: TextAlign.center,
                             hedingname,
                             style: TextStyle(
                               fontSize: Get.width / 23,
@@ -84,8 +85,8 @@ PreferredSizeWidget Appbar(
                       )
                     : null,
 
-                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 8) : null,
-                (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 10) : null :SizedBox(),
+                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 6) : null,
+                (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 15) : null :SizedBox(),
 
                 Obx(() {
                   final count = Get.put(CountController());
@@ -105,12 +106,12 @@ PreferredSizeWidget Appbar(
                                   },
                                   child: Container(
                                       color: AppColor.Appbercolor,
-                                    padding: EdgeInsets.only(bottom: 20,top: 20,left: 8,right: 5),
+                                    padding: EdgeInsets.only(bottom: 20,top: 20,left: 10,right: 5),
                                       child: SvgPicture.asset(suffixicon_1),
                                   ),
                                 )
                               : null,
-                          SizedBox(width: Get.width / 120),
+                          SizedBox(width: Get.width / 250),
                           //Wishlist
                           (suffixicon_2 != null)
                               ? GestureDetector(
@@ -122,7 +123,7 @@ PreferredSizeWidget Appbar(
                                   },
                                   child: Container(
                                       color: AppColor.Appbercolor,
-                                      padding: EdgeInsets.only(bottom: 20,top: 20,left: 10),
+                                      padding: EdgeInsets.only(bottom: 20,top: 20,left: 13),
                                       child: SvgPicture.asset(suffixicon_2),
                                   ),
                           )
@@ -134,17 +135,17 @@ PreferredSizeWidget Appbar(
                       (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
-                              right: 16, top: 18,
+                              right: 16, top: 14,
                               child: (count.data['cart']['count'] == null || count.data['cart']['count'] == 0)
                                   ? SizedBox()
                                   : GestureDetector(
                                     child: CircleAvatar(
-                                        radius: 8,
+                                        radius: 10,
                                         backgroundColor: AppColor.pink_color,
                                         child: Center(
                                           child: Text(
                                             (count.data['cart']['count'] == 0) ? '' : count.data['cart']['count'].toString(),
-                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
+                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
                                           ),
                                         ),
                                       ),
@@ -161,19 +162,19 @@ PreferredSizeWidget Appbar(
                       (count.isLoading.value || count.data == null || count.data['cart'] == null)
                           ? SizedBox()
                           : Positioned(
-                              right: 53, top: 18,
+                              right: 55, top: 14,
                               child: (count.data['wishlist']['count'] == null || count.data['wishlist']['count'] == 0)
                                   ? SizedBox()
                                   : GestureDetector(
                                     child: CircleAvatar(
-                                        radius: 8,
+                                        radius: 10,
                                         backgroundColor: AppColor.pink_color,
                                         child: Center(
                                           child: Text(
                                             (count.data['wishlist']['count'] == 0)
                                                 ? ''
                                                 : count.data['wishlist']['count'].toString(),
-                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 40),
+                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
                                           ),
                                         ),
                                       ),

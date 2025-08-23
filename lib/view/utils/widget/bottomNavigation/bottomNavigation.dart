@@ -23,13 +23,14 @@ class Bottom extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.wifi_off, size: 80, color: Colors.grey),
-                const SizedBox(height: 20),
-                Text("No Internet Connection", style: TextStyle(fontSize: 18)),
-                const SizedBox(height: 20),
+                Icon(Icons.wifi_off, size: 80, color: AppColor.pink_color),
+                SizedBox(height: Get.height / 50),
+                Text("No Internet Connection", style: TextStyle(fontSize: Get.width / 20,color: AppColor.pink_color)),
+                SizedBox(height: Get.height / 50),
                 ElevatedButton(
                   onPressed: () => internetController.retryConnection(),
-                  child: Text("Retry"),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColor.pink_color),
+                  child: Text("Retry", style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
