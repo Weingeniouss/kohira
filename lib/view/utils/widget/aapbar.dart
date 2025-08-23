@@ -85,7 +85,7 @@ PreferredSizeWidget Appbar(
                       )
                     : null,
 
-                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 10) : null,
+                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 8) : null,
                 (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 1000) : null,
 
                 Obx(() {
