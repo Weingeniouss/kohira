@@ -52,7 +52,10 @@ PreferredSizeWidget Appbar(
                             Get.back();
                           }
                         },
-                        child: SvgPicture.asset(lefticon),
+                        child: Container(
+                          color: AppColor.Appbercolor,
+                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25),
+                            child: SvgPicture.asset(lefticon)),
                       )
                     : SizedBox.shrink(),
                 (logo != null)
