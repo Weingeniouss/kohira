@@ -39,9 +39,7 @@ class Mycart extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool show = false;
-
   Mycart({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +158,8 @@ class Mycart extends StatelessWidget {
                                             child: Container(
                                               padding: EdgeInsets.all(18),
                                               color: AppColor.white_color,
-                                                child: SvgPicture.asset(AppIcon.close, width: 10, height: 10)),
+                                              child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
+                                            ),
                                             onTap: () {
                                               myCart.deletValueofcount(item, fetch, index).then((_) {
                                                 Future.delayed(Duration(seconds: 2), () {

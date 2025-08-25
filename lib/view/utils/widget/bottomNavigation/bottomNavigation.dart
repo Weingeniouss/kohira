@@ -11,8 +11,8 @@ import 'package:kohira/view/utils/app_string.dart';
 import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
 
 class Bottom extends StatelessWidget {
-  final  internetController = Get.put(InternetCheckerController());
-  final  bottamSelect = Get.put(Bottamnavigation());
+  final internetController = Get.put(InternetCheckerController());
+  final bottamSelect = Get.put(Bottamnavigation());
   Bottom({super.key});
   @override
   Widget build(BuildContext context) {
