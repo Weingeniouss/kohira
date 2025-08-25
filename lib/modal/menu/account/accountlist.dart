@@ -31,7 +31,7 @@ List accountlist =[
   },
   {
     'image' : AppIcon.edit,
-    'name': 'Retray & Refund Policy',
+    'name': 'Retry & Refund Policy',
   },
   {
     'image' : AppIcon.edit,
@@ -46,7 +46,7 @@ List accountlist =[
   },
   {
     'image' : AppIcon.edit,
-    'name': 'Warranty & jewellery Cleam',
+    'name': 'Warranty & jewellery claim',
   },
   {
     'image' : AppIcon.edit,

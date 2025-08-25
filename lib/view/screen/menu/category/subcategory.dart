@@ -222,7 +222,7 @@ class Storebay {
                 topRight: Radius.circular(Get.width / 20),
               ),
             ),
-            height: Get.height * 0.25,
+            height: Get.height * 0.35,
             width: Get.width,
             child: Column(
               children: [
@@ -260,7 +260,7 @@ class Storebay {
                           child: Container(
                             padding: EdgeInsets.only(right: 220,top: 10,bottom: 10),
                             color: AppColor.white_color,
-                            child: Text('Price(Low To High)', style: TextStyle(fontSize: Get.width / 26)),
+                            child: Text('Price\n(Low To High)', style: TextStyle(fontSize: Get.width / 26)),
                           ),
                         ),
                         Divider(color: AppColor.textfild_color),
@@ -278,7 +278,7 @@ class Storebay {
                           child: Container(
                             padding: EdgeInsets.only(right: 220,top: 10,bottom: 10),
                             color: AppColor.white_color,
-                            child: Text('Price(High To Low)', style: TextStyle(fontSize: Get.width / 26)),
+                            child: Text('Price\n(High To Low)', style: TextStyle(fontSize: Get.width / 26)),
                           ),
                         ),
                         Divider(color: AppColor.textfild_color),

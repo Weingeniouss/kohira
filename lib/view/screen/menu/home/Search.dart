@@ -88,7 +88,7 @@ class _SearchState extends State<Search> {
                           child: ListTile(
                             leading: Image.network(item['default_image']),
                             title: Text(item['title'] ?? 'No Title'),
-                            subtitle: Text('₹ ${item['offerprice'].toString()} /-',style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500),),
+                            subtitle: Text('₹ ${item['setting_price'].toString()} /-',style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500),),
                           ),
                         ),
                       ),

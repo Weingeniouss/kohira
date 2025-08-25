@@ -87,8 +87,7 @@ class Mycart extends StatelessWidget {
                         final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
                         if (index >= myCart.itemCounts.length) return Container();
                         return Container(
-                          margin:
-                              EdgeInsets.symmetric(vertical: Get.height / 120),
+                          color: AppColor.white_color,
                           child: Row(
                             children: [
                               if (fetchimage != null)
@@ -158,7 +157,10 @@ class Mycart extends StatelessWidget {
                                             ],
                                           ),
                                           GestureDetector(
-                                            child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
+                                            child: Container(
+                                              padding: EdgeInsets.all(18),
+                                              color: AppColor.white_color,
+                                                child: SvgPicture.asset(AppIcon.close, width: 10, height: 10)),
                                             onTap: () {
                                               myCart.deletValueofcount(item, fetch, index).then((_) {
                                                 Future.delayed(Duration(seconds: 2), () {

@@ -113,7 +113,7 @@ class _OverstoreState extends State<Overstore> {
                             child: Column(
                               children: [
                                 SvgPicture.asset(AppIcon.allstore, fit: BoxFit.cover, height: 60),
-                                SizedBox(height: 4),
+
                                 Text(AppString.allStores),
                               ],
                             ),
@@ -145,7 +145,6 @@ class _OverstoreState extends State<Overstore> {
                                   ),
                                 ) : Container(height: 60, width: 60, color: Colors.grey[300], child: const Icon(Icons.location_city),
                                 ),
-                                SizedBox(height: Get.height / 150),
                                 Text(cityName, maxLines: 1, overflow: TextOverflow.ellipsis),
                               ],
                             ),
