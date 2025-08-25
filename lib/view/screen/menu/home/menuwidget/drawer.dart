@@ -84,7 +84,8 @@ class _DrawersState extends State<Drawers> {
                                 children: [
                                   GestureDetector(
                                     onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
-                                    child: SizedBox(
+                                    child: Container(
+                                      color: AppColor.white_color,
                                       child: Row(
                                         children: [
                                           Container(
@@ -117,17 +118,20 @@ class _DrawersState extends State<Drawers> {
                                                  ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600),
                                                 );
                                               },
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                child: Row(
-                                                  children: [
-                                                    Text("*"),
-                                                    SizedBox(width: Get.width * 0.015),
-                                                    SizedBox(
-                                                      width: Get.width / 3,
-                                                      child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
-                                                    ),
-                                                  ],
+                                              child: Container(
+                                                color: AppColor.white_color,
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                  child: Row(
+                                                    children: [
+                                                      Text("*"),
+                                                      SizedBox(width: Get.width * 0.015),
+                                                      SizedBox(
+                                                        width: Get.width / 3,
+                                                        child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             );
@@ -172,10 +176,15 @@ class _DrawersState extends State<Drawers> {
                         // drawerIcon(icon: AppIcon.custom, text: AppString.custom, color: AppColor.white_color),
                         // drawerIcon(icon: AppIcon.dummy, text: AppString.dummy, color: AppColor.white_color),
 
-                        drawerIcon(
-                          icon: AppIcon.Order,
-                          text: AppString.allJewellery,
+                        GestureDetector(
                           onTap: drawer.selectedJewellery,
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: drawerIcon(
+                              icon: AppIcon.Order,
+                              text: AppString.allJewellery,
+                            ),
+                          ),
                         ),
                         AnimatedSize(
                           curve: Curves.easeInOut,
@@ -193,7 +202,8 @@ class _DrawersState extends State<Drawers> {
                                     children: [
                                       GestureDetector(
                                         onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
-                                        child: SizedBox(
+                                        child: Container(
+                                          color: AppColor.white_color,
                                           child: Row(
                                             children: [
                                               Container(
@@ -225,17 +235,20 @@ class _DrawersState extends State<Drawers> {
                                                       subcategrorysname: AppString.product,
                                                     ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                                   },
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                    child: Row(
-                                                      children: [
-                                                        Text("*"),
-                                                        SizedBox(width: Get.width * 0.015),
-                                                        SizedBox(
-                                                          width: Get.width / 3,
-                                                          child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
-                                                        ),
-                                                      ],
+                                                  child: Container(
+                                                    color: AppColor.white_color,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                      child: Row(
+                                                        children: [
+                                                          Text("*"),
+                                                          SizedBox(width: Get.width * 0.015),
+                                                          SizedBox(
+                                                            width: Get.width / 3,
+                                                            child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 );

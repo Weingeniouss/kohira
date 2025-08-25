@@ -71,9 +71,11 @@ Widget inputField({
 
 Widget searchField({
   void Function(String)? onChanged,
+  void Function(String)? onSubmitted,
   void Function()? onTap,
   bool? readOnly,
-  FocusNode? focusNode
+  FocusNode? focusNode,
+  TextInputAction? textInputAction
 }){
   return Container(
     decoration: BoxDecoration(
@@ -82,10 +84,12 @@ Widget searchField({
     ),
     child: Center(
       child: TextField(
+        textInputAction: textInputAction,
         focusNode: focusNode,
         readOnly: readOnly ?? false,
         onTap: onTap,
         onChanged: onChanged,
+        onSubmitted: onSubmitted,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: Get.height / 60),
           prefixIcon: Icon(Icons.search, color: AppColor.hintColor),

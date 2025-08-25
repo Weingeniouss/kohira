@@ -85,7 +85,7 @@ class AppString {
 
 
     //Product Details
-    static const productdetails = 'Product\nDetailflutrer';
+    static const productdetails = 'Product Detail';
 
     //Categorie
     static const categories = 'Categrory';

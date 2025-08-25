@@ -83,12 +83,19 @@ class _OverstoreState extends State<Overstore> {
                   child: searchField(
                     onChanged: (val) {
                       if (debounce?.isActive ?? false) debounce!.cancel();
-                      debounce = Timer(const Duration(seconds: 2), () {
+                      debounce = Timer(const Duration(seconds: 6), () {
                         setState(() {
                           store.overStore(search: val);
                         });
                       });
                     },
+                    onSubmitted: (val) {
+                      if (debounce?.isActive ?? false) debounce!.cancel();
+                      setState(() {
+                        store.overStore(search: val);
+                      });
+                    },
+                    textInputAction: TextInputAction.search,
                   ),
                 ),
                 SizedBox(height: Get.height / 150),
@@ -102,33 +109,50 @@ class _OverstoreState extends State<Overstore> {
                         return GestureDetector(
                           onTap: () => store.overStore(),
                           child: Padding(
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             child: Column(
                               children: [
                                 SvgPicture.asset(AppIcon.allstore, fit: BoxFit.cover, height: 60),
+                                SizedBox(height: 4),
                                 Text(AppString.allStores),
                               ],
                             ),
                           ),
                         );
                       } else {
-                        final name = city[index - 1];
+                        final cityIndex = index - 1;
+                        if (cityIndex >= city.length) return const SizedBox.shrink();
+                        final cityData = city[cityIndex];
+                        final cityName = cityData['name']?.toString() ?? 'Unknown City';
+                        final cityImage = cityData['city_image_path']?.toString() ?? cityData['city_image']?.toString() ?? '';
+                        final cityId = cityData['id']?.toString();
                         return GestureDetector(
                           onTap: () {
-                              store.overStore();
-                              store.overStore(store_city_id: stores['allstoreList'][index - 1]['store_city_id'].toString());
-                            },
+                            if (cityId != null) {
+                              store.overStore(store_city_id: cityId);
+                            }
+                          },
                           child: Padding(
                             padding: EdgeInsets.all(15),
                             child: Column(
                               children: [
-                                SvgPicture.network(name['city_image'], fit: BoxFit.cover, height: 60),
-                                Text(name['name']),
+                                cityImage.isNotEmpty ? SvgPicture.network(cityImage, fit: BoxFit.cover, height: 60,
+                                  placeholderBuilder: (context) => Container(
+                                    height: 60,
+                                    width: 60,
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.location_city),
+                                  ),
+                                ) : Container(height: 60, width: 60, color: Colors.grey[300], child: const Icon(Icons.location_city),
+                                ),
+                                SizedBox(height: Get.height / 150),
+                                Text(cityName, maxLines: 1, overflow: TextOverflow.ellipsis),
                               ],
                             ),
                           ),
                         );
-                      }},
+                      }
+                    },
                   ),
                 ),
                 Expanded(

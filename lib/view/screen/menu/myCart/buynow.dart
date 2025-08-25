@@ -106,14 +106,15 @@ class _BuynowState extends State<Buynow> {
             final fetch = myCart.fetchcart.data['carts'] ?? [];
             if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
 
-            return horizontalpadding(
-              child: Column(
-                children: [
-                  //Items
-                  Expanded(
-                    flex: 2,
-                    child: ListView.builder(
+            return SingleChildScrollView(
+              child: horizontalpadding(
+                child: Column(
+                  children: [
+                    //Items
+                    ListView.builder(
+                      padding: EdgeInsets.zero,
                       shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemCount: fetch.length,
                       itemBuilder: (context, index) {
@@ -196,178 +197,173 @@ class _BuynowState extends State<Buynow> {
                         );
                       },
                     ),
-                  ),
 
-                  //Infromation
-                  Expanded(
-                    flex: 2,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(height: Get.height / 50),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.puzzle, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'Ethical Sourcing',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: Get.width / 20),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.warranty, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'Lifetime Warranty',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.social, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'IGI Certified Diamonds',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: Get.width / 20),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.diamond, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'BIS Hallmark',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                      
-                          SizedBox(height: Get.height / 50),
-                      
-                          //Price Details
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(Get.width / 100),
-                              boxShadow: kElevationToShadow[1],
-                              color: AppColor.white_color,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    //Infromation
+                    Column(
+                      children: [
+                        SizedBox(height: Get.height / 50),
+                        Row(
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                                    SizedBox(width: Get.width / 80),
-                                    Text('(${myCart.fetchcart.data['count']} ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                                  ],
+                                SvgPicture.asset(AppIcon.puzzle, color: AppColor.graycolor, width: 30),
+                                SizedBox(width: Get.width / 80),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  'Ethical Sourcing',
+                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
                                 ),
-                                SizedBox(height: Get.height / 80),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppString.totalprice),
-                                    Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.textfild_color),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppString.discountprice),
-                                    Text(indianFormat.format((myCart.discount.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.textfild_color),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppString.shippingcharges),
-                                    Text('FREE', style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.textfild_color),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppString.tax),
-                                    Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.textfild_color),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(AppString.totalwallet),
-                                    Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.textfild_color),
                               ],
                             ),
-                          ),
-                      
-                          SizedBox(height: Get.height / 50),
-                      
-                          Row(
-                            children: [
-                              Transform.scale(
-                                scale: 1.3,
-                                child: Checkbox(
-                                  value: ischeack,
-                                  overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                  side: BorderSide(color: AppColor.grey_color, width: 2),
-                                  checkColor: AppColor.white_color,
-                                  activeColor: AppColor.grey_color,
-                                  onChanged: (bool? value) => ischack(),
+                            SizedBox(width: Get.width / 20),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppIcon.warranty, color: AppColor.graycolor, width: 30),
+                                SizedBox(width: Get.width / 80),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  'Lifetime Warranty',
+                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
                                 ),
-                              ),
-                              Text(AppString.usewallet, style: TextStyle(color: AppColor.grey_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
-                            ],
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppIcon.social, color: AppColor.graycolor, width: 30),
+                                SizedBox(width: Get.width / 80),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  'IGI Certified Diamonds',
+                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: Get.width / 20),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppIcon.diamond, color: AppColor.graycolor, width: 30),
+                                SizedBox(width: Get.width / 80),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  'BIS Hallmark',
+                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: Get.height / 50),
+
+                        //Price Details
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Get.width / 100),
+                            boxShadow: kElevationToShadow[1],
+                            color: AppColor.white_color,
                           ),
-
-                          SizedBox(height: Get.height / 50),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
-                                  SvgPicture.asset(AppIcon.cart),
-                                  SizedBox(width: Get.width / 50),
-                                  Text(AppString.couponcode,style: TextStyle(color: AppColor.grey_color,fontWeight: FontWeight.w500)),
+                                  Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                  SizedBox(width: Get.width / 80),
+                                  Text('(${myCart.fetchcart.data['count']} ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
                                 ],
                               ),
-                              button(AppString.Apply),
+                              SizedBox(height: Get.height / 80),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.totalprice),
+                                  Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                ],
+                              ),
+                              Divider(color: AppColor.textfild_color),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.discountprice),
+                                  Text(indianFormat.format((myCart.discount.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                ],
+                              ),
+                              Divider(color: AppColor.textfild_color),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.shippingcharges),
+                                  Text('FREE', style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                ],
+                              ),
+                              Divider(color: AppColor.textfild_color),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.tax),
+                                  Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                ],
+                              ),
+                              Divider(color: AppColor.textfild_color),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.totalwallet),
+                                  Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                ],
+                              ),
+                              Divider(color: AppColor.textfild_color),
                             ],
                           ),
+                        ),
 
-                          SizedBox(height: Get.height / 50),
-                        ],
-                      ),
+                        SizedBox(height: Get.height / 50),
+
+                        Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.3,
+                              child: Checkbox(
+                                value: ischeack,
+                                overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                side: BorderSide(color: AppColor.grey_color, width: 2),
+                                checkColor: AppColor.white_color,
+                                activeColor: AppColor.grey_color,
+                                onChanged: (bool? value) => ischack(),
+                              ),
+                            ),
+                            Text(AppString.usewallet, style: TextStyle(color: AppColor.grey_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
+                          ],
+                        ),
+
+                        SizedBox(height: Get.height / 50),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppIcon.cart),
+                                SizedBox(width: Get.width / 50),
+                                Text(AppString.couponcode,style: TextStyle(color: AppColor.grey_color,fontWeight: FontWeight.w500)),
+                              ],
+                            ),
+                            button(AppString.Apply),
+                          ],
+                        ),
+
+                        SizedBox(height: Get.height / 50),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }),

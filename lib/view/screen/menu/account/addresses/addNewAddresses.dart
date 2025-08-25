@@ -153,10 +153,10 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                 child: Column(
                   children: [
                     SizedBox(height: Get.height / 50),
-                    inputField(icon: AppIcon.parson, hintText: 'Frist Name',controller: fristname),
+                    inputField(icon: AppIcon.parson, hintText: 'First Name',controller: fristname),
                     inputField(icon: AppIcon.parson, hintText: 'Last Name',controller: lastname),
                     inputField(icon: AppIcon.parson, hintText: 'Address',controller: address),
-                    inputField(icon: AppIcon.parson, hintText: 'country',controller: country),
+                    inputField(icon: AppIcon.parson, hintText: 'Country',controller: country),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
@@ -200,7 +200,7 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                     ),
                     SizedBox(height: Get.height / 50),
                     inputField(icon: AppIcon.parson, hintText: 'Selected State',controller: state),
-                    inputField(icon: AppIcon.parson, hintText: 'city',controller: city),
+                    inputField(icon: AppIcon.parson, hintText: 'City',controller: city),
                     inputField(icon: AppIcon.parson, hintText: 'Zipcode',controller: zip),
                     inputField(icon: AppIcon.parson, hintText: 'Email',controller: mail),
                     inputField(icon: AppIcon.parson, hintText: 'Phone Numbers',controller: mobile),
