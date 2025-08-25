@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, file_names, avoid_print
+// ignore_for_file: prefer_const_constructors, file_names, avoid_print, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,88 +29,93 @@ class Categorys extends StatelessWidget {
         }
       });
     });
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: Appbar(
-        prefixicon: AppIcon.menu,
-        prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
-        hedingname: AppString.categories,
-        suffixicon_1: AppIcon.like,
-        suffixicon_2: AppIcon.shop,
-      ),
-      drawer: Drawers(),
-      body: Container(
-        width: Get.width, height: Get.height,
-        decoration: BoxDecoration(color: AppColor.white_color),
-        child: Obx(() {
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: Appbar(
+          prefixicon: AppIcon.menu,
+          prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
+          hedingname: AppString.categories,
+          suffixicon_1: AppIcon.like,
+          suffixicon_2: AppIcon.shop,
+        ),
+        drawer: Drawers(),
+        body: Container(
+          width: Get.width, height: Get.height,
+          decoration: BoxDecoration(color: AppColor.white_color),
+          child: Obx(() {
 
-          if (category.filterData.value?.data == null || category.filterData.value!.data.isEmpty) {
-            return Center(
-              child: Lottie.asset(AppJson.noData),
-            );
-          }
+            if (category.filterData.value?.data == null || category.filterData.value!.data.isEmpty) {
+              return Center(
+                child: Lottie.asset(AppJson.noData),
+              );
+            }
 
-          return horizontalpadding(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Get.height / 50),
-                Text(AppString.categories, style: TextStyle(fontFamily: 'Zapf', fontSize: Get.width / 20)),
-                SizedBox(height: Get.height / 50),
+            return horizontalpadding(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Get.height / 50),
+                  Text(AppString.categories, style: TextStyle(fontFamily: 'Zapf', fontSize: Get.width / 20)),
+                  SizedBox(height: Get.height / 50),
 
-                // Use Expanded properly for GridView
-                Expanded(
-                  child: GridView.builder(
-                    itemCount: category.filterData.value!.data.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: Get.height / 50,
-                      crossAxisSpacing: Get.width / 50,
-                      childAspectRatio: 0.8,
-                    ),
-                    itemBuilder: (context, index) {
-                      final categorieslist = category.filterData.value!.data[index];
-                      return GestureDetector(
-                        onTap: () {
-                           categorieslist.slug;
-                           categorieslist.name;
-                           print("categorieslist :- ${categorieslist.slug}");
-                           Get.to(() => Subcategorys(
-                             subcategrorys: categorieslist.slug.toString(),
-                             subcategrorysname: categorieslist.name.toString(),
-                            ),
-                           );
-                          },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 1,
-                              child: GestureDetector(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(image: NetworkImage(categorieslist.image.toString()), fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(12),
+                  // Use Expanded properly for GridView
+                  Expanded(
+                    child: GridView.builder(
+                      itemCount: category.filterData.value!.data.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: Get.height / 50,
+                        crossAxisSpacing: Get.width / 50,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemBuilder: (context, index) {
+                        final categorieslist = category.filterData.value!.data[index];
+                        return GestureDetector(
+                          onTap: () {
+                             categorieslist.slug;
+                             categorieslist.name;
+                             print("categorieslist :- ${categorieslist.slug}");
+                             Get.to(() => Subcategorys(
+                               subcategrorys: categorieslist.slug.toString(),
+                               subcategrorysname: categorieslist.name.toString(),
+                              ),
+                             );
+                            },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AspectRatio(
+                                aspectRatio: 1,
+                                child: GestureDetector(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(image: NetworkImage(categorieslist.image.toString()), fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: Get.height / 150),
-                            Text(
-                              categorieslist.name.toString(),
-                              style: TextStyle(fontSize: Get.height / 65, fontFamily: 'Lora'),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                              SizedBox(height: Get.height / 150),
+                              Text(
+                                categorieslist.name.toString(),
+                                style: TextStyle(fontSize: Get.height / 65, fontFamily: 'Lora'),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
