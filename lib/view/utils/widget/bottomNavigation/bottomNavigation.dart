@@ -11,9 +11,10 @@ import 'package:kohira/view/utils/app_string.dart';
 import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
 
 class Bottom extends StatelessWidget {
+  final void Function()? onTap;
   final internetController = Get.put(InternetCheckerController());
   final bottamSelect = Get.put(Bottamnavigation());
-  Bottom({super.key});
+  Bottom({super.key, this.onTap});
   @override
   Widget build(BuildContext context) {
     return Obx((){
@@ -51,7 +52,7 @@ class Bottom extends StatelessWidget {
 
               //defult home Sccrren
               InkWell(
-                onTap: bottamSelect.indexOne,
+                onTap: onTap ?? bottamSelect.indexOne,
                 child: bottamIcon(
                   context: context,
                   icon: AppIcon.home,
@@ -90,7 +91,7 @@ class Bottom extends StatelessWidget {
                 onTap: bottamSelect.indexFour,
                 child: bottamIcon(
                   context: context,
-                  icon: AppIcon.house,
+                  icon: AppIcon.location,
                   name: AppString.Over,
                   onTap: bottamSelect.indexFour,
                   condition: bottamSelect.selectindex.value == 3,

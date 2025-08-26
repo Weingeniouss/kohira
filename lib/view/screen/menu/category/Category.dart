@@ -7,10 +7,12 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
+import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
+import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../../../utils/widget/lodingstate.dart';
 import '../home/menuwidget/drawer.dart';
 
@@ -29,9 +31,13 @@ class Categorys extends StatelessWidget {
         }
       });
     });
-    return WillPopScope(
-      onWillPop: () async{
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final Bottamnavigation bottomSelectController = Get.find<Bottamnavigation>();
+        Bottom();
+        bottomSelectController.indexOne();
       },
       child: Scaffold(
         key: scaffoldKey,

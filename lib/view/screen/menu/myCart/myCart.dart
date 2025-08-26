@@ -29,10 +29,12 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../../controller/user_inerface/menu/myCart/myCart.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
+import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../category/showproduct.dart';
 
 class Mycart extends StatelessWidget {
@@ -42,9 +44,13 @@ class Mycart extends StatelessWidget {
   Mycart({super.key});
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async{
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final Bottamnavigation bottomSelectController = Get.find<Bottamnavigation>();
+        Bottom();
+        bottomSelectController.indexOne();
       },
       child: Scaffold(
         key: scaffoldKey,
