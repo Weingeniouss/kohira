@@ -110,6 +110,8 @@ class _BuynowState extends State<Buynow> {
               child: horizontalpadding(
                 child: Column(
                   children: [
+                    SizedBox(height: Get.height / 80),
+
                     //Items
                     ListView.builder(
                       padding: EdgeInsets.zero,
@@ -123,7 +125,6 @@ class _BuynowState extends State<Buynow> {
                         final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
                         if (index >= myCart.itemCounts.length) return Container();
                         return Container(
-                          margin: EdgeInsets.symmetric(vertical: Get.height / 120),
                           child: Row(
                             children: [
                               if (fetchimage != null)
@@ -150,41 +151,43 @@ class _BuynowState extends State<Buynow> {
                                     SizedBox(height: Get.height / 300),
                                     horizontalpadding(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  myCart.decrementValueOfCount(index).then((_) {
-                                                    Future.delayed(Duration(seconds: 2), () {
-                                                      myCart.onInit();
-                                                    });
-                                                  });
-                                                },
-                                                child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
+                                          GestureDetector(
+                                            onTap: () {
+                                              myCart.decrementValueOfCount(index).then((_) {
+                                                Future.delayed(Duration(seconds: 2), () {
+                                                  myCart.onInit();
+                                                });
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: AppColor.textfild_color,
+                                                borderRadius: BorderRadius.circular(Get.width / 50),
                                               ),
-                                              SizedBox(width: Get.width / 20),
-                                              Text(myCart.itemCounts[index].toString()),
-                                              SizedBox(width: Get.width / 20),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  myCart.incrementValueOfCount(index).then((_) {
-                                                    Future.delayed(Duration(seconds: 2), () {
-                                                      myCart.onInit();
-                                                    });
-                                                  });
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: AppColor.textfild_color,
-                                                    borderRadius: BorderRadius.circular(Get.width / 50),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                                  child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
-                                                ),
+                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                              child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
+                                            ),
+                                          ),
+                                          SizedBox(width: Get.width / 20),
+                                          Text(myCart.itemCounts[index].toString()),
+                                          SizedBox(width: Get.width / 20),
+                                          GestureDetector(
+                                            onTap: () {
+                                              myCart.incrementValueOfCount(index).then((_) {
+                                                Future.delayed(Duration(seconds: 2), () {
+                                                  myCart.onInit();
+                                                });
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: AppColor.textfild_color,
+                                                borderRadius: BorderRadius.circular(Get.width / 50),
                                               ),
-                                            ],
+                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                              child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -204,55 +207,66 @@ class _BuynowState extends State<Buynow> {
                         SizedBox(height: Get.height / 50),
                         Row(
                           children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppIcon.puzzle, color: AppColor.graycolor, width: 30),
-                                SizedBox(width: Get.width / 80),
-                                Text(
-                                  textAlign: TextAlign.center,
-                                  'Ethical Sourcing',
-                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                ),
-                              ],
+                            SizedBox(
+                              width: Get.width / 2.5,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppIcon.puzzle, color: AppColor.graycolor, width: 30),
+                                  SizedBox(width: Get.width / 80),
+                                  Text(
+                                    textAlign: TextAlign.center,
+                                    'Ethical Sourcing',
+                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(width: Get.width / 20),
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppIcon.warranty, color: AppColor.graycolor, width: 30),
-                                SizedBox(width: Get.width / 80),
-                                Text(
-                                  textAlign: TextAlign.center,
-                                  'Lifetime Warranty',
-                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                ),
-                              ],
+                            SizedBox(
+                              width: Get.width / 2.5,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppIcon.warranty, color: AppColor.graycolor, width: 30),
+                                  SizedBox(width: Get.width / 80),
+                                  Text(
+                                    textAlign: TextAlign.center,
+                                    'Lifetime Warranty',
+                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
+                        SizedBox(height: Get.height / 180),
                         Row(
                           children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppIcon.social, color: AppColor.graycolor, width: 30),
-                                SizedBox(width: Get.width / 80),
-                                Text(
-                                  textAlign: TextAlign.center,
-                                  'IGI Certified Diamonds',
-                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                ),
-                              ],
+                            SizedBox(
+                              width: Get.width / 2.5,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppIcon.social, color: AppColor.graycolor, width: 30),
+                                  SizedBox(width: Get.width / 80),
+                                  Text(
+                                    textAlign: TextAlign.start,
+                                    'IGI Certified\nDiamonds',
+                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(width: Get.width / 20),
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppIcon.diamond, color: AppColor.graycolor, width: 30),
-                                SizedBox(width: Get.width / 80),
-                                Text(
-                                  textAlign: TextAlign.center,
-                                  'BIS Hallmark',
-                                  style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                ),
-                              ],
+                            SizedBox(
+                              width: Get.width / 2.5,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppIcon.diamond, color: AppColor.graycolor, width: 30),
+                                  SizedBox(width: Get.width / 80),
+                                  Text(
+                                    textAlign: TextAlign.center,
+                                    'BIS Hallmark',
+                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

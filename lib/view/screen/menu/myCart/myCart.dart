@@ -22,19 +22,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kohira/controller/user_inerface/bottamNavigation/bottamNavigation.dart';
+import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/screen/menu/myCart/buynow.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/app_json.dart';
+import 'package:kohira/view/utils/widget/aapbar.dart';
+import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
-import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
-import '../../../../controller/user_inerface/menu/myCart/myCart.dart';
-import '../../../utils/app_icon.dart';
-import '../../../utils/app_json.dart';
-import '../../../utils/widget/aapbar.dart';
-import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../category/showproduct.dart';
 
 class Mycart extends StatelessWidget {
@@ -128,61 +128,66 @@ class Mycart extends StatelessWidget {
                                       SizedBox(height: Get.height / 300),
                                       horizontalpadding(
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    myCart.decrementValueOfCount(index).then((_) {
-                                                      Future.delayed(Duration(seconds: 2), () {
-                                                        myCart.onInit();
-                                                      });
-                                                    });
-                                                  },
-                                                  child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
-                                                ),
-                                                SizedBox(width: Get.width / 20),
-                                                Text(myCart.itemCounts[index].toString()),
-                                                SizedBox(width: Get.width / 20),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    myCart.incrementValueOfCount(index).then((_) {
-                                                      Future.delayed(Duration(seconds: 2), () {
-                                                        myCart.onInit();
-                                                      });
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: AppColor.textfild_color,
-                                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                                    ),
-                                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                                    child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
                                             GestureDetector(
-                                              child: Container(
-                                                padding: EdgeInsets.all(18),
-                                                color: AppColor.white_color,
-                                                child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
-                                              ),
                                               onTap: () {
-                                                myCart.deletValueofcount(item, fetch, index).then((_) {
+                                                myCart.decrementValueOfCount(index).then((_) {
                                                   Future.delayed(Duration(seconds: 2), () {
                                                     myCart.onInit();
                                                   });
                                                 });
                                               },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.textfild_color,
+                                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                                ),
+                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                                child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
+                                              ),
+                                            ),
+                                            SizedBox(width: Get.width / 20),
+                                            Text(myCart.itemCounts[index].toString()),
+                                            SizedBox(width: Get.width / 20),
+                                            GestureDetector(
+                                              onTap: () {
+                                                myCart.incrementValueOfCount(index).then((_) {
+                                                  Future.delayed(Duration(seconds: 2), () {
+                                                    myCart.onInit();
+                                                  });
+                                                });
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.textfild_color,
+                                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                                ),
+                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                                child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
+                                              ),
                                             ),
                                           ],
                                         ),
                                       )
                                     ],
                                   ),
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColor.white_color,
+                                      borderRadius: BorderRadius.circular(Get.width / 50),
+                                    ),
+                                    padding: EdgeInsets.only(left: 22,top: 38,bottom: 38),
+                                    child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
+                                  ),
+                                  onTap: () {
+                                    myCart.deletValueofcount(item, fetch, index).then((_) {
+                                      Future.delayed(Duration(seconds: 2), () {
+                                        myCart.onInit();
+                                      });
+                                    });
+                                  },
                                 ),
                               ],
                             ),

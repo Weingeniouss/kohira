@@ -113,25 +113,28 @@ class Account extends StatelessWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () => account.listButton(index,context),
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                                  decoration: BoxDecoration(
-                                    color: AppColor.pink_color,
-                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                            child: Container(
+                              color: AppColor.white_color,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+                                    decoration: BoxDecoration(
+                                      color: AppColor.pink_color,
+                                      borderRadius: BorderRadius.circular(Get.width / 50),
+                                    ),
+                                    padding: EdgeInsets.all(15),
+                                    child: SvgPicture.asset(
+                                      accountlist[index]['image'],
+                                      width: Get.width * 0.025,
+                                      height: Get.height * 0.025,
+                                      color: AppColor.white_color,
+                                    ),
                                   ),
-                                  padding: EdgeInsets.all(15),
-                                  child: SvgPicture.asset(
-                                    accountlist[index]['image'],
-                                    width: Get.width * 0.025,
-                                    height: Get.height * 0.025,
-                                    color: AppColor.white_color,
-                                  ),
-                                ),
-                                SizedBox(width: Get.width / 30),
-                                Text(accountlist[index]['name'],style: TextStyle(fontSize: Get.width / 25)),
-                              ],
+                                  SizedBox(width: Get.width / 30),
+                                  Text(accountlist[index]['name'],style: TextStyle(fontSize: Get.width / 25)),
+                                ],
+                              ),
                             ),
                           );
                         },

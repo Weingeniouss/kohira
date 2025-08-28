@@ -47,6 +47,7 @@ class AppUrl {
       static const cart = '$baseurl/cart';
       static const countcart = '$baseurl/cart';
       static const deletcart = '$baseurl/cart-delete-particular';
+      static const payment = '$baseurl/process-payment';
 
       //Over Store
       static const store = '$baseurl/storeassetsList';

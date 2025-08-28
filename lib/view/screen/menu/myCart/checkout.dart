@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/account/addresses.dart';
 import 'package:kohira/controller/API/menu/account/wallet.dart';
+import 'package:kohira/controller/API/menu/myCart/process-payment.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
@@ -33,6 +34,7 @@ class _CheckoutState extends State<Checkout> {
   final myCart = Get.put(MyCartValueChange());
   final wallet = Get.put(WalletController());
   final Country = Get.put(CountryCalling());
+  final processpayment = Get.put(Processpayment());
 
   final scroll = ScrollController();
   bool get shouldScroll => !billing || !shipping.value || !shippingtype;
@@ -76,7 +78,10 @@ class _CheckoutState extends State<Checkout> {
                                 shipping.value = true;
                               });
                             },
-                            child: SvgPicture.asset(AppIcon.close),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 50),
+                              decoration: BoxDecoration(color: AppColor.white_color),
+                                child: SvgPicture.asset(AppIcon.close)),
                           ),
                         ],
                       ),
@@ -224,23 +229,44 @@ class _CheckoutState extends State<Checkout> {
         return false;
       },
       child: Scaffold(
-        appBar: Appbar(
-          lefticon: AppIcon.left,
-          hedingname: AppString.cheackout,
-        ),
-        bottomNavigationBar: ValueListenableBuilder(valueListenable: shipping, builder: (BuildContext context, bool value, Widget? child) {
-          return (!shipping.value) ? SizedBox() : Container(
-            color: AppColor.white_color,
-            height: Get.height * 0.080,
-            child: horizontalpadding(
-              child: Column(
-                children: [
-                  button(AppString.paynow),
-                ],
-              ),
-            ),
-          );
-        },),
+        appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.cheackout),
+        bottomNavigationBar: ValueListenableBuilder(
+            valueListenable: shipping,
+            builder: (BuildContext context, bool value, Widget? child) {
+              return (!shipping.value) ? SizedBox() : Container(
+                color: AppColor.white_color,
+                height: Get.height * 0.080,
+                child: horizontalpadding(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                      onTap: (){
+                         processpayment.processpayment(
+                           firstname: 'Sagar Patil',
+                           lastname: 'Patil',
+                           email: 'vats.mehta01@gmail.com',
+                           companyname: 'Companyname',
+                           address: '101',
+                           city: 'Dfg',
+                           state: '1',
+                           state_name: 'Badakhakan',
+                           country: '103',
+                           countrycode: '+91',
+                           zip: '123456',
+                           mobileno: '1234567890',
+                           samebilling: 'true',
+                           totalamount: '3577',
+                           walletAmount: '0',
+                           remainingAmount: '110',
+                         );
+                         },
+                        child: button(AppString.paynow),
+                      ),
+                    ]
+                  ),
+                ),
+              );
+            }),
         body: SafeArea(
           child: SingleChildScrollView(
             controller: scroll,

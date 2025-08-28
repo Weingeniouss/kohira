@@ -1,5 +1,14 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use, prefer_const_constructors_in_immutables
 
+// drawerIcon(icon: AppIcon.bracelet, text: AppString.bracelet, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.collection, text: AppString.collection, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.earrings, text: AppString.earrings, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.mangalsutra, text: AppString.mangalsutra, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.necklace, text: AppString.necklace, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.ring, text: AppString.ring, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.custom, text: AppString.custom, color: AppColor.white_color),
+// drawerIcon(icon: AppIcon.dummy, text: AppString.dummy, color: AppColor.white_color),
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -80,7 +89,7 @@ class _DrawersState extends State<Drawers> {
                             itemCount: filteredCategories.length,
                             itemBuilder: (BuildContext context, int index) {
                               final categoryItem = filteredCategories[index];
-                              return Column(
+                              return (categoryItem.subcategory.isEmpty) ? null : Column(
                                 children: [
                                   GestureDetector(
                                     onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
@@ -146,12 +155,20 @@ class _DrawersState extends State<Drawers> {
                                               },
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                child: Row(
-                                                  children: [
-                                                    Text("*"),
-                                                    SizedBox(width: Get.width * 0.015),
-                                                    Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
-                                                  ],
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                                    color: AppColor.black_color,
+                                                  ),
+                                                  padding: EdgeInsets.all(5),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text("*"),
+                                                      SizedBox(width: Get.width * 0.015),
+                                                      Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w500, color: AppColor.white_color)),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -166,15 +183,6 @@ class _DrawersState extends State<Drawers> {
                             },
                           ),
                         ),
-
-                        // drawerIcon(icon: AppIcon.bracelet, text: AppString.bracelet, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.collection, text: AppString.collection, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.earrings, text: AppString.earrings, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.mangalsutra, text: AppString.mangalsutra, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.necklace, text: AppString.necklace, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.ring, text: AppString.ring, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.custom, text: AppString.custom, color: AppColor.white_color),
-                        // drawerIcon(icon: AppIcon.dummy, text: AppString.dummy, color: AppColor.white_color),
 
                         GestureDetector(
                           onTap: drawer.selectedJewellery,
@@ -198,7 +206,7 @@ class _DrawersState extends State<Drawers> {
                                 itemCount: filteredCategories2.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final categoryItem = filteredCategories2[index];
-                                  return Column(
+                                  return ((categoryItem.subcategory.isEmpty)) ? null : Column(
                                     children: [
                                       GestureDetector(
                                         onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
@@ -222,7 +230,7 @@ class _DrawersState extends State<Drawers> {
                                       AnimatedCrossFade(
                                         duration: Duration(milliseconds: 600),
                                         firstChild: SizedBox.shrink(),
-                                        secondChild: categoryItem.subcategory.isNotEmpty ? Padding(
+                                        secondChild: (categoryItem.subcategory.isNotEmpty) ? Padding(
                                           padding: EdgeInsets.only(left: Get.width * 0.08),
                                           child: Column(
                                             children: [
