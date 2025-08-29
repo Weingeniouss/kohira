@@ -37,14 +37,14 @@ class FilterController extends GetxController {
   void setDiamondType(String id) => diamondtype.value = id;
 
   //Select Color
-  void setMetalType(String? id) {
-    if (selectedMetalType.value == id) {
-      selectedMetalType.value = null.toString();
+  void setMetalType(String? slug) {
+    if (selectedMetalType.value == slug) {
+      selectedMetalType.value; // real null, not "null"
     } else {
-      selectedMetalType.value = id!;
+      selectedMetalType.value = slug!;
     }
 
-    print('Selected metal type: $selectedMetalType');
+    print('Selected metal type: ${selectedMetalType.value}');
   }
 
   //Select Weight

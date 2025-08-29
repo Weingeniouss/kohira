@@ -55,12 +55,16 @@ class Subcategorys extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () => Storebay().storebay(context, subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString()),
-                      child: Row(
-                        children: [
-                          Icon(Icons.sort,color: AppColor.glodcolor),
-                          SizedBox(width: Get.width / 60),
-                          Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                        ],
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        color: AppColor.white_color,
+                        child: Row(
+                          children: [
+                            Icon(Icons.sort,color: AppColor.glodcolor),
+                            SizedBox(width: Get.width / 60),
+                            Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
+                          ],
+                        ),
                       ),
                     ),
                     Text("|",style: TextStyle(color: AppColor.graycolor)),
@@ -71,12 +75,16 @@ class Subcategorys extends StatelessWidget {
                            subcategrorys: subcategory_slug.toString(),
                           );
                         },
-                      child: Row(
-                        children: [
-                          Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
-                          SizedBox(width: Get.width / 60),
-                          Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                        ],
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        color: AppColor.white_color,
+                        child: Row(
+                          children: [
+                            Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
+                            SizedBox(width: Get.width / 60),
+                            Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -168,7 +176,7 @@ class Subcategorys extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
-                                    "₹${double.parse(subcategrorys['discount'].toString()) > 0 ? subcategrorys['offer_price'] : subcategrorys['setting_price']}.00",
+                                    "₹${double.parse(subcategrorys['discount']?.toString() ?? '0') > 0 ? subcategrorys['offer_price'] : subcategrorys['setting_price']}.00",
                                     style: TextStyle(
                                       fontSize: Get.height / 70,
                                       fontFamily: 'Lora', color: AppColor.pink_color,
@@ -371,27 +379,31 @@ class ShowBottam {
               );
             }
 
-            Color hexToColor(String colorString) {
-              // Handle named colors or slugs
-              final predefined = {
-                'white-gold': Color(0xFFD8D8D8),
-                'yellow-gold': Color(0xFFFFD700),
-                'rose-gold': Color(0xFFB76E79),
-                'silver': Color(0xFFC0C0C0),
-                'platinum': Color(0xFFE5E4E2),
-              };
-
-              if (predefined.containsKey(colorString.toLowerCase())) {
-                return predefined[colorString.toLowerCase()]!;
+            Color hexToColor(String? colorString) {
+              if (colorString == null || colorString.isEmpty) {
+                return Colors.transparent; // fallback color
               }
 
-              // Handle hex values like "#FFCC00"
+              // Handle named colors or slugs
+              final predefined = {
+                'white-gold': const Color(0xFFD8D8D8),
+                'yellow-gold': const Color(0xFFFFD700),
+                'rose-gold': const Color(0xFFB76E79),
+                'silver': const Color(0xFFC0C0C0),
+                'platinum': const Color(0xFFE5E4E2),
+              };
+
+              if (predefined.containsKey(colorString)) {
+                return predefined[colorString]!;
+              }
+
               try {
-                colorString = colorString.replaceAll('#', '');
-                if (colorString.length == 6) colorString = 'FF$colorString';
-                return Color(int.parse(colorString, radix: 16));
-              } catch (_) {
-                return Colors.grey; // fallback color
+                // Handle hex string like "#FFFFFF" or "FFFFFF"
+                String hex = colorString.replaceAll("#", "");
+                if (hex.length == 6) hex = "FF$hex"; // add alpha if missing
+                return Color(int.parse(hex, radix: 16));
+              } catch (e) {
+                return Colors.transparent; // fallback if parsing fails
               }
             }
 
@@ -477,23 +489,18 @@ class ShowBottam {
                                       spacing: 8,
                                       runSpacing: 8,
                                       children: filter.metalType.map((item) {
-                                        final isSelected = filtertab.selectedMetalType.value == item.id.toString();
+                                        final isSelected = filtertab.selectedMetalType.value == item.slug;
                                         return GestureDetector(
-                                          onTap: () => filtertab.setMetalType(item.id.toString()),
+                                          onTap: () => filtertab.setMetalType(item.slug),
                                           child: Container(
                                             width: 30,
                                             height: 30,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: hexToColor(item.slug),
-                                              border: Border.all(
-                                                color: isSelected ? AppColor.glodcolor : Colors.transparent,
-                                                width: 2,
-                                              ),
+                                              border: Border.all(color: isSelected ? AppColor.glodcolor : Colors.transparent, width: 2),
                                             ),
-                                            child: isSelected
-                                                ? const Icon(Icons.check, color: Colors.white, size: 16)
-                                                : null,
+                                            child: isSelected ? Icon(Icons.check, color: Colors.white, size: 16) : null,
                                           ),
                                         );
                                       }).toList(),
