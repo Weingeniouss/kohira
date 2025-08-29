@@ -208,89 +208,119 @@ class Subcategorys extends StatelessWidget {
   }
 }
 
+class SelectedSort extends GetxController {
+  var selectedSort = ''.obs;
+}
+
 class Storebay {
   final subcategrory = Get.put(Subcategrory());
+  final selected = Get.put(SelectedSort());
+
   storebay(context, {required String subcategrorys, required String subcategory_slug}) {
     showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            decoration: BoxDecoration(
-              color: AppColor.white_color,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(Get.width / 20),
-                topRight: Radius.circular(Get.width / 20),
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(Get.width / 20),
+              topRight: Radius.circular(Get.width / 20),
             ),
-            height: Get.height * 0.35,
-            width: Get.width,
-            child: Column(
-              children: [
-                SizedBox(height: Get.height / 80),
-                SizedBox(
-                  width: Get.width / 1.1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(),
-                      Text(AppString.filter, style: TextStyle(fontSize: Get.width / 22)),
-                      GestureDetector(onTap: () => Get.back(), child: Icon(Icons.cancel_outlined, color: AppColor.graycolor)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: Get.height / 80),
-                Divider(color: AppColor.graycolor),
-                SizedBox(height: Get.height / 80),
-                Align(
-                  alignment: Alignment.center,
-                  child: horizontalpadding(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            subcategrory.subcategroryuser(
-                              sort: 'asc',
-                              order_column: 'setting_price',
-                              category_slug: subcategrorys,
-                              subcategory_slug: subcategory_slug,
-                            );
-                            Get.back();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(right: 220,top: 10,bottom: 10),
-                            color: AppColor.white_color,
-                            child: Text('Price\n(Low To High)', style: TextStyle(fontSize: Get.width / 26)),
-                          ),
-                        ),
-                        Divider(color: AppColor.textfild_color),
-                        SizedBox(height: Get.height / 80),
-                        GestureDetector(
-                          onTap: (){
-                            subcategrory.subcategroryuser(
-                              sort: 'desc',
-                              order_column: 'setting_price',
-                              category_slug: subcategrorys,
-                              subcategory_slug: subcategory_slug,
-                            );
-                            Get.back();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(right: 220,top: 10,bottom: 10),
-                            color: AppColor.white_color,
-                            child: Text('Price\n(High To Low)', style: TextStyle(fontSize: Get.width / 26)),
-                          ),
-                        ),
-                        Divider(color: AppColor.textfild_color),
-                      ],
+          ),
+          height: Get.height * 0.25,
+          width: Get.width,
+          child: Column(
+            children: [
+              SizedBox(height: Get.height / 80),
+              SizedBox(
+                width: Get.width / 1.1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(width: Get.width / 50),
+                    Container(color: AppColor.white_color),
+                    Text(AppString.filter, style: TextStyle(fontSize: Get.width / 22)),
+                    GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        color: AppColor.white_color,
+                        padding: EdgeInsets.only(left: 50),
+                        child: Icon(Icons.cancel_outlined, color: AppColor.graycolor),
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-     );
+                  ],
+                ),
+              ),
+              SizedBox(height: Get.height / 80),
+              Divider(color: AppColor.graycolor),
+              SizedBox(height: Get.height / 80),
+
+              /// filter options
+              horizontalpadding(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    /// Low To High
+                    GestureDetector(
+                      onTap: () {
+                        selected.selectedSort.value = 'asc';
+                        subcategrory.subcategroryuser(
+                          sort: 'asc',
+                          order_column: 'setting_price',
+                          category_slug: subcategrorys,
+                          subcategory_slug: subcategory_slug,
+                        );
+                        Get.back(); // keep open if you want to see highlight
+                      },
+                      child: Obx(() => Container(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                          child: Text(
+                            'Price (Low To High)',
+                            style: TextStyle(
+                              fontSize: Get.width / 26,
+                              color: selected.selectedSort.value == 'asc' ? AppColor.pink_color : AppColor.black_color,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Divider(color: AppColor.textfild_color),
+
+                    /// High To Low
+                    GestureDetector(
+                      onTap: () {
+                        selected.selectedSort.value = 'desc';
+                        subcategrory.subcategroryuser(
+                          sort: 'desc',
+                          order_column: 'setting_price',
+                          category_slug: subcategrorys,
+                          subcategory_slug: subcategory_slug,
+                        );
+                        Get.back();
+                      },
+                      child: Obx(() => Container(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                          child: Text(
+                            'Price (High To Low)',
+                            style: TextStyle(
+                              fontSize: Get.width / 26,
+                              color: selected.selectedSort.value == 'desc' ? AppColor.pink_color : AppColor.black_color,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(color: AppColor.textfild_color),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

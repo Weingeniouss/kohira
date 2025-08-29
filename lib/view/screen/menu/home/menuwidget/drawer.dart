@@ -343,25 +343,28 @@ Widget drawerIcon({required String icon, required String text, void Function()? 
   return horizontalpadding(
     child: GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                decoration: BoxDecoration(
-                  color: AppColor.pink_color,
-                  borderRadius: BorderRadius.circular(Get.width / 50),
+      child: Container(
+        color: AppColor.white_color,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+                  decoration: BoxDecoration(
+                    color: AppColor.pink_color,
+                    borderRadius: BorderRadius.circular(Get.width / 50),
+                  ),
+                  padding: EdgeInsets.all(10),
+                  child: SvgPicture.asset(icon, width: Get.width * 0.018, height: Get.height * 0.018, color: color),
                 ),
-                padding: EdgeInsets.all(10),
-                child: SvgPicture.asset(icon, width: Get.width * 0.018, height: Get.height * 0.018, color: color),
-              ),
-              SizedBox(width: Get.width / 30),
-              Text(text, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
-            ],
-          ),
-          Divider(color: AppColor.textfild_color, height: 1),
-        ],
+                SizedBox(width: Get.width / 30),
+                Text(text, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
+              ],
+            ),
+            Divider(color: AppColor.textfild_color, height: 1),
+          ],
+        ),
       ),
     ),
   );
