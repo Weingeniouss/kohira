@@ -460,9 +460,9 @@ class ShowBottam {
                                       spacing: 8,
                                       runSpacing: 8,
                                       children: filter.metalStamp.map((item) {
-                                        final isSelected = filtertab.metalstapid.value == item.id.toString();
+                                        final isSelected = filtertab.metalstapid.value == item.slug.toString();
                                         return GestureDetector(
-                                          onTap: () => filtertab.setMetalStamp(item.id.toString()),
+                                          onTap: () => filtertab.setMetalStamp(item.slug.toString()),
                                           child: Container(
                                             padding: EdgeInsets.all(10),
                                             decoration: BoxDecoration(
@@ -515,9 +515,13 @@ class ShowBottam {
                                         scrollDirection: Axis.horizontal,
                                         child: Row(
                                           children: filter.shape.map((item) {
-                                            final isSelected = filtertab.diamondtype.value == item.id.toString();
+                                            final isSelected = filtertab.diamondtype.value == item.slug;
                                             return GestureDetector(
-                                              onTap: () => filtertab.setDiamondType(item.id.toString()),
+                                              onTap: () {
+                                                 setState((){
+                                                   filtertab.setDiamondType(item.slug);
+                                                  });
+                                                },
                                               child: Container(
                                                 margin: EdgeInsets.only(right: 8),
                                                 width: 50,
@@ -627,26 +631,17 @@ class ShowBottam {
                                           return Obx(() {
                                             final isSelected = filtertab.selectedPrice.value == filtertab.price[index];
                                             return GestureDetector(
-                                              onTap: () {
-                                                filtertab.setPrice(filtertab.price[index]); // cleaner with method
-                                              },
+                                              onTap: () => filtertab.setPrice(filtertab.price[index]),
                                               child: Center(
                                                 child: Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                  margin: EdgeInsets.symmetric(horizontal: 5),
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: isSelected ? AppColor.pink_color : AppColor.textfild_color,
-                                                    ),
+                                                    border: Border.all(color: isSelected ? AppColor.pink_color : AppColor.textfild_color),
                                                     color: isSelected ? AppColor.pink_color.withOpacity(0.1) : AppColor.white_color,
                                                     borderRadius: BorderRadius.circular(Get.width / 50),
                                                   ),
-                                                  child: Text(
-                                                    filtertab.price[index],
-                                                    style: TextStyle(
-                                                      color: isSelected ? AppColor.pink_color : Colors.black,
-                                                    ),
-                                                  ),
+                                                  child: Text(filtertab.price[index], style: TextStyle(color: isSelected ? AppColor.pink_color : Colors.black)),
                                                 ),
                                               ),
                                             );
@@ -689,27 +684,29 @@ class ShowBottam {
                                   //Save
                                   GestureDetector(
                                     onTap: () {
-                                      print('Filter values before API call:');
+                                      setState((){
+                                        print('Filter values before API call:');
 
-                                      print('subcategory_slug :- $subcategrorys');
-                                      print('category_slug :- $category_slug');
-                                      print('metal_stamp: ${filtertab.metalstapid.value}');
-                                      print('diamondtype: ${filtertab.diamondtype.value}');
-                                      print('priceMin: ${filtertab.priceMin.value}, priceMax: ${filtertab.priceMax.value}');
-                                      print('weightMin: ${filtertab.weightMin.value}, weightMax: ${filtertab.weightMax.value}');
-                                      print('metal_type: ${filtertab.selectedMetalType.value}');
+                                        print('subcategory_slug :- $subcategrorys');
+                                        print('category_slug :- $category_slug');
+                                        print('metal_stamp: ${filtertab.metalstapid.value}');
+                                        print('diamondtype: ${filtertab.diamondtype.value}');
+                                        print('priceMin: ${filtertab.priceMin.value}, priceMax: ${filtertab.priceMax.value}');
+                                        print('weightMin: ${filtertab.weightMin.value}, weightMax: ${filtertab.weightMax.value}');
+                                        print('metal_type: ${filtertab.selectedMetalType.value}');
 
-                                      subcategrory.subcategroryuser(
-                                        subcategory_slug: (subcategrorys != null) ? subcategrorys : null,
-                                        category_slug: (category_slug != null) ? category_slug : null,
-                                        metal_stamp: filtertab.metalstapid.value.isNotEmpty ? filtertab.metalstapid.value : null,
-                                        center_stone_shape: filtertab.diamondtype.value.isNotEmpty ? filtertab.diamondtype.value : null,
-                                        price_min: filtertab.priceMin.value?.toString(),
-                                        price_max: filtertab.priceMax.value?.toString(),
-                                        weight_min: (filtertab.weightMin.value != null) ? filtertab.weightMin.value.toString() : null,
-                                        weight_max: (filtertab.weightMax.value != null) ? filtertab.weightMax.value?.toString() : null,
-                                        metal_type: filtertab.selectedMetalType.value,
-                                      );
+                                        subcategrory.subcategroryuser(
+                                          subcategory_slug: (subcategrorys.isNotEmpty) ? subcategrorys : null,
+                                          category_slug: (category_slug.isNotEmpty) ? category_slug : null,
+                                          metal_stamp: filtertab.metalstapid.value.isNotEmpty ? filtertab.metalstapid.value : null,
+                                          center_stone_shape: filtertab.diamondtype.value.isNotEmpty ? filtertab.diamondtype.value : null,
+                                          price_min: filtertab.priceMin.value?.toString(),
+                                          price_max: filtertab.priceMax.value?.toString(),
+                                          weight_min: (filtertab.weightMin.value != null) ? filtertab.weightMin.value.toString() : null,
+                                          weight_max: (filtertab.weightMax.value != null) ? filtertab.weightMax.value?.toString() : null,
+                                          metal_type: (filtertab.selectedMetalType.value.isNotEmpty) ? filtertab.selectedMetalType.value : null,
+                                        );
+                                      });
                                       Get.back();
                                     },
                                     child: Container(

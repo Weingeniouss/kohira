@@ -31,10 +31,10 @@ class FilterController extends GetxController {
 
 
   //Select 14k  or 18K
-  void setMetalStamp(String id) => metalstapid.value = id;
+  void setMetalStamp(String slug) => metalstapid.value = slug;
 
   //Select Diamond Shap
-  void setDiamondType(String id) => diamondtype.value = id;
+  void setDiamondType(String slug) => diamondtype.value = slug;
 
   //Select Color
   void setMetalType(String? slug) {

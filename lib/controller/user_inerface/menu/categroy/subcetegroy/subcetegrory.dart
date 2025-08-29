@@ -17,10 +17,7 @@ class SubcetegroryShow extends  GetxController{
 
     scrollController.addListener(() {
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 && !subcategrory.isLoading.value && subcategrory.hasMore.value) {
-        subcategrory.subcategroryuser(
-          category_slug: subcategrorys,
-          isLoadMore: true,
-        );
+        subcategrory.subcategroryuser(category_slug: subcategrorys, isLoadMore: true);
       }
     });
   }
