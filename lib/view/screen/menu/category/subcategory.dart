@@ -286,6 +286,7 @@ class Storebay {
                         Get.back(); // keep open if you want to see highlight
                       },
                       child: Obx(() => Container(
+                        color: AppColor.white_color,
                           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                           child: Text(
                             'Price (Low To High)',
@@ -313,6 +314,7 @@ class Storebay {
                         Get.back();
                       },
                       child: Obx(() => Container(
+                        color: AppColor.white_color,
                           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                           child: Text(
                             'Price (High To Low)',
