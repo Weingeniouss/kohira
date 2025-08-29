@@ -7,10 +7,10 @@ class AppUrl {
   // static const baseurl = 'http://192.168.1.101:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
 
   //staging
-  static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  // static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
 
   //Live
-  // static const baseurl = 'https://kdvkpanel.kohira.com/lmda-ctrl-zeta-layer';
+  static const baseurl = 'https://kdvkpanel.kohira.com/lmda-ctrl-zeta-layer';
 
   //credentials
   static const login = '$baseurl/login';
