@@ -14,14 +14,14 @@ import 'bottomNavigation/bottomNavigation.dart';
 import 'horizontalpading.dart';
 
 PreferredSizeWidget Appbar({
-      String? prefixicon,
-      String? logo,
-      void Function()? prefixonTap,
-      String? lefticon,
-      String? hedingname,
-      String? suffixicon_1,
-      String? suffixicon_2,
-      void Function()? onTaplefticon
+  String? prefixicon,
+  String? logo,
+  void Function()? prefixonTap,
+  String? lefticon,
+  String? hedingname,
+  String? suffixicon_1,
+  String? suffixicon_2,
+  void Function()? onTaplefticon,
 })
 {
   final appbarsize = Get.height * 0.09;
@@ -38,11 +38,13 @@ PreferredSizeWidget Appbar({
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget?>[
-                (prefixicon != null && prefixonTap != null)
-                    ? GestureDetector(onTap: prefixonTap, child: Container(
+                (prefixicon != null && prefixonTap != null) ? GestureDetector(
+                  onTap: prefixonTap,
+                  child: Container(
                   color: AppColor.Appbercolor,
                     padding: EdgeInsets.only(right: 50,bottom: 28,top: 25),
-                    child: SvgPicture.asset(prefixicon)),
+                    child: SvgPicture.asset(prefixicon),
+                  ),
                 )
                     : null,
                 (lefticon != null)
@@ -57,13 +59,14 @@ PreferredSizeWidget Appbar({
                         },
                         child: Container(
                           color: AppColor.Appbercolor,
-                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25), child: SvgPicture.asset(lefticon)),
+                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25), child: SvgPicture.asset(lefticon),
+                        ),
                       )
                     : SizedBox.shrink(),
 
-                (logo != null)
-                    ? Image.asset(logo, scale: 15)
-                    : null,
+                (logo != null) ? SizedBox(width: Get.width / 30) : null,
+
+                (logo != null) ? Image.asset(logo, scale: 15) : null,
 
                 (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 500) : null,
 
@@ -84,7 +87,7 @@ PreferredSizeWidget Appbar({
                       )
                     : null,
 
-                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 7) : null,
+                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 5) : null,
                 (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 15) : null :SizedBox(),
 
                 Obx(() {
@@ -104,13 +107,14 @@ PreferredSizeWidget Appbar({
                                     Get.to(() => WishlistScreen());
                                   },
                                   child: Container(
-                                      color: AppColor.Appbercolor,
+                                    color: AppColor.Appbercolor,
                                     padding: EdgeInsets.only(bottom: 20,top: 20,left: 10,right: 5),
-                                      child: SvgPicture.asset(suffixicon_1),
+                                    child: SvgPicture.asset(suffixicon_1),
                                   ),
                                 )
                               : null,
                           SizedBox(width: Get.width / 250),
+
                           //Wishlist
                           (suffixicon_2 != null)
                               ? GestureDetector(

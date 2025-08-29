@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print, unused_import, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, body_might_complete_normally_nullable, deprecated_member_use, non_constant_identifier_names, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
@@ -46,7 +47,7 @@ class Subcategorys extends StatelessWidget {
         return SafeArea(
           child: Container(
             decoration: BoxDecoration(color: AppColor.white_color),
-            height: Get.height * 0.05,
+            height: Get.height * 0.07,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -56,7 +57,7 @@ class Subcategorys extends StatelessWidget {
                     GestureDetector(
                       onTap: () => Storebay().storebay(context, subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString()),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: 40,vertical: 10),
                         color: AppColor.white_color,
                         child: Row(
                           children: [
@@ -76,7 +77,7 @@ class Subcategorys extends StatelessWidget {
                           );
                         },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
                         color: AppColor.white_color,
                         child: Row(
                           children: [
@@ -134,13 +135,16 @@ class Subcategorys extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: Get.height / 50),
+
+                    //Search Start
                     searchField(onChanged: (val) => show.subcategrory.filterSearch(val)),
+                    //Search End
+
                     SizedBox(height: Get.height / 50),
                     Expanded(
                       child: GridView.builder(
                         controller: show.scrollController,
-                        gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: Get.height / 50,
                           crossAxisSpacing: Get.width / 50,
@@ -434,11 +438,16 @@ class ShowBottam {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(),
+                                  SizedBox(width: Get.width / 25),
+                                  Container(padding: EdgeInsets.only(left: 20),color: AppColor.white_color),
                                   Text(AppString.filter, style: TextStyle(fontSize: Get.width / 22)),
                                   GestureDetector(
                                     onTap: () => Get.back(),
-                                    child: Icon(Icons.cancel_outlined, color: AppColor.graycolor),
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 80,top: 10,bottom: 10),
+                                      color: AppColor.white_color,
+                                      child: SvgPicture.asset(AppIcon.close),
+                                    ),
                                   ),
                                 ],
                               ),
