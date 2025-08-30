@@ -47,12 +47,20 @@ class _DrawersState extends State<Drawers> {
 
   String getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'bracelet' :return AppIcon.bracelet;
-      case 'collection':return AppIcon.collection;
-      case 'earrings':return AppIcon.earrings;
-      case 'mangalsutra':return AppIcon.mangalsutra;
-      case 'necklace' :return AppIcon.necklace;
-      case 'rings': return AppIcon.ring;
+      case 'engagement rings':
+        return AppIcon.ring;
+      case 'bracelet' :
+        return AppIcon.bracelet;
+      case 'collection':
+        return AppIcon.collection;
+      case 'earrings':
+        return AppIcon.earrings;
+      case 'mangalsutra':
+        return AppIcon.mangalsutra;
+      case 'necklace' :
+        return AppIcon.necklace;
+      case 'rings':
+        return AppIcon.ring;
       default: return 'asset/icon/drawericon/default_icon.svg'; // fallback
     }
   }
@@ -111,7 +119,7 @@ class _DrawersState extends State<Drawers> {
                                     ),
                                   ),
                                   AnimatedCrossFade(
-                                    duration: Duration(milliseconds: 600),
+                                    duration: Duration(milliseconds: 200),
                                     firstChild: SizedBox.shrink(),
                                     secondChild: categoryItem.subcategory.isNotEmpty ? Padding(
                                       padding: EdgeInsets.only(left: Get.width * 0.08),
@@ -228,7 +236,7 @@ class _DrawersState extends State<Drawers> {
                                         ),
                                       ),
                                       AnimatedCrossFade(
-                                        duration: Duration(milliseconds: 600),
+                                        duration: Duration(milliseconds: 200),
                                         firstChild: SizedBox.shrink(),
                                         secondChild: (categoryItem.subcategory.isNotEmpty) ? Padding(
                                           padding: EdgeInsets.only(left: Get.width * 0.08),

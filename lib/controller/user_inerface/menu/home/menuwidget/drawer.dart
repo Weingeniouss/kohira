@@ -4,8 +4,9 @@ class DrawerInterface extends GetxController{
   var allJewellery = false.obs;
 
 
-  void selectcategoryitem(item) {
-    item.isExpanded.toggle(); // if RxBool
+  void selectcategoryitem(categoryItem) {
+    categoryItem.isExpanded = !(categoryItem.isExpanded);
+    update();
   }
 
   void selectedJewellery(){

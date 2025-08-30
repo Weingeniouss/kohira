@@ -1,6 +1,7 @@
 
 // ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use, avoid_print
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -18,10 +19,16 @@ import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.d
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 
-class Overstore extends StatelessWidget {
+class Overstore extends StatefulWidget {
+  const Overstore({super.key});
+
+  @override
+  State<Overstore> createState() => _OverstoreState();
+}
+
+class _OverstoreState extends State<Overstore> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final over = Get.put(Overstore_Conteroller());
-  Overstore({super.key});
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -69,13 +76,7 @@ class Overstore extends StatelessWidget {
               return Column(
                 children: [
                   SizedBox(height: Get.height / 50),
-                  horizontalpadding(
-                    child: searchField(
-                      onChanged: (val) => over.sarchVal(val),
-                      onSubmitted: (val) => over.submitval(val),
-                      textInputAction: TextInputAction.search,
-                    ),
-                  ),
+                  horizontalpadding(child: searchField(onSubmitted: (val) => over.submitval(val),textInputAction: TextInputAction.search)),
                   SizedBox(height: Get.height / 150),
                   SizedBox(
                     height: Get.height / 7,

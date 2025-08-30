@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/account/wallet.dart';
+import 'package:kohira/controller/user_inerface/menu/myCart/buynow.dart';
 import 'package:kohira/view/screen/menu/category/showproduct.dart';
 import 'package:kohira/view/screen/menu/myCart/checkout.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -17,24 +18,11 @@ import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/horizontalpading.dart';
 
-class Buynow extends StatefulWidget {
-  const Buynow({super.key});
-
-  @override
-  State<Buynow> createState() => _BuynowState();
-}
-
-class _BuynowState extends State<Buynow> {
+class Buynow extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
   final wallet = Get.put(WalletController());
-  bool ischeack = false;
-
-  void ischack(){
-    setState(() {
-      ischeack =! ischeack;
-    });
-  }
-
+  final buynowUI = Get.put(BuynowController());
+  Buynow({super.key});
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -345,12 +333,12 @@ class _BuynowState extends State<Buynow> {
                             Transform.scale(
                               scale: 1.3,
                               child: Checkbox(
-                                value: ischeack,
+                                value: buynowUI.ischeack.value,
                                 overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
                                 side: BorderSide(color: AppColor.grey_color, width: 2),
                                 checkColor: AppColor.white_color,
                                 activeColor: AppColor.grey_color,
-                                onChanged: (bool? value) => ischack(),
+                                onChanged: (bool? value) => buynowUI.ischack(),
                               ),
                             ),
                             Text(AppString.usewallet, style: TextStyle(color: AppColor.grey_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
