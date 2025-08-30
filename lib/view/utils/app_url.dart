@@ -2,6 +2,11 @@
 
 import 'package:kohira/view/screen/menu/home/Search.dart';
 
+class GoogleUrl{
+    static const googlebase = 'https://www.google.com';
+    static const googlesarch = '$googlebase/maps/search/';
+}
+
 class AppUrl {
   //local
   static const baseurl = 'http://192.168.1.101:8888/kohira-next-lara/lmda-ctrl-zeta-layer';

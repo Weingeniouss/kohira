@@ -1,13 +1,10 @@
 
 // ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use, avoid_print
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/API/menu/overstore/citylist.dart';
-import 'package:kohira/controller/API/menu/overstore/overStore.dart';
+import 'package:kohira/controller/user_inerface/menu/overStore/overStore.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -17,42 +14,14 @@ import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 
-class Overstore extends StatefulWidget {
-  const Overstore({super.key});
-
-  @override
-  State<Overstore> createState() => _OverstoreState();
-}
-
-class _OverstoreState extends State<Overstore> {
+class Overstore extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final store =  Get.put(Overstore_Controller());
-  final citylist =  Get.put(Citylist());
-
-  // Function to open Google Maps with directions
-  Future<void> _openMapDirections(double lat, double lng, String label) async {
-    final String url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query_place_id=$label';
-
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Timer? debounce;
-
-  @override
-  void dispose() {
-    debounce?.cancel();
-    super.dispose();
-  }
-
+  final over = Get.put(Overstore_Conteroller());
+  Overstore({super.key});
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -77,7 +46,7 @@ class _OverstoreState extends State<Overstore> {
           height: Get.height, width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
-            if(store.isLoading.value){
+            if(over.store.isLoading.value){
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (Get.isDialogOpen != true) {
                   Get.dialog(
@@ -94,28 +63,16 @@ class _OverstoreState extends State<Overstore> {
                 }
               });
 
-              final city = citylist.data['data'];
-              final stores = store.data['data'];
+              final city = over.citylist.data['data'];
+              final stores = over.store.data['data'];
 
               return Column(
                 children: [
                   SizedBox(height: Get.height / 50),
                   horizontalpadding(
                     child: searchField(
-                      onChanged: (val) {
-                        if (debounce?.isActive ?? false) debounce!.cancel();
-                        debounce = Timer(const Duration(seconds: 6), () {
-                          setState(() {
-                            store.overStore(search: val);
-                          });
-                        });
-                      },
-                      onSubmitted: (val) {
-                        if (debounce?.isActive ?? false) debounce!.cancel();
-                        setState(() {
-                          store.overStore(search: val);
-                        });
-                      },
+                      onChanged: (val) => over.sarchVal(val),
+                      onSubmitted: (val) => over.submitval(val),
                       textInputAction: TextInputAction.search,
                     ),
                   ),
@@ -128,13 +85,12 @@ class _OverstoreState extends State<Overstore> {
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 0) {
                           return GestureDetector(
-                            onTap: () => store.overStore(),
+                            onTap: () => over.store.overStore(),
                             child: Padding(
                               padding: const EdgeInsets.all(15),
                               child: Column(
                                 children: [
                                   SvgPicture.asset(AppIcon.allstore, fit: BoxFit.cover, height: 60),
-
                                   Text(AppString.allStores),
                                 ],
                               ),
@@ -150,7 +106,7 @@ class _OverstoreState extends State<Overstore> {
                           return GestureDetector(
                             onTap: () {
                               if (cityId != null) {
-                                store.overStore(store_city_id: cityId);
+                                over.store.overStore(store_city_id: cityId);
                               }
                             },
                             child: Padding(
@@ -184,11 +140,15 @@ class _OverstoreState extends State<Overstore> {
                         final cityname = details['store_city']['cityname'];
                         final image =  details['store_image_path'];
 
-
                         // Extract latitude and longitude from your data
                         // You'll need to adjust these based on your API response structure
                         final double lat = double.tryParse(details['latitude']?.toString() ?? '0') ?? 0;
                         final double lng = double.tryParse(details['longitude']?.toString() ?? '0') ?? 0;
+
+                        // Safety: if seePeraList is not long enough, expand it
+                        if (over.seePeraList.length < stores['allstoreList'].length) {
+                          over.seePeraList = List.filled(stores['allstoreList'].length, false);
+                        }
 
                         return horizontalpadding(
                           child: Column(
@@ -232,34 +192,50 @@ class _OverstoreState extends State<Overstore> {
                                                 ],
                                               ),
                                               SizedBox(height: Get.height / 50),
-                                              Text(AppString.seelessinfo,style: TextStyle(color: AppColor.pink_color)),
-                                              SizedBox(height: Get.height / 180),
-                                              Text(details['address']),
-                                              SizedBox(height: Get.height / 50),
-                                              Row(
-                                                children: [
-                                                  Text('Timaing :- '),
-                                                  Row(
+                                              GetBuilder<Overstore_Conteroller>(
+                                                builder: (over) {
+                                                  return Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Text(details['opening_hours']), SizedBox(width: Get.width / 50),
-                                                      Text("To"),
-                                                      SizedBox(width: Get.width / 50), Text(details['closing_hours']),
+                                                      GestureDetector(
+                                                        onTap: () => over.persee(index),
+                                                        child: Text(over.seePeraList[index]
+                                                            ? "See Less Info"
+                                                            : "See More Info",style: TextStyle(color: AppColor.pink_color),
+                                                        ),
+                                                      ),
+                                                      Visibility(
+                                                        visible: over.seePeraList[index],
+                                                        child: Column(
+                                                          children: [
+                                                            SizedBox(height: Get.height / 180),
+                                                            Text(details['address']),
+                                                            SizedBox(height: Get.height / 50),
+                                                            Row(
+                                                              children: [
+                                                                Text('Timaing :- '),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(details['opening_hours']), SizedBox(width: Get.width / 50),
+                                                                    Text("To"),
+                                                                    SizedBox(width: Get.width / 50), Text(details['closing_hours']),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ],
-                                                  ),
-                                                ],
+                                                  );
+                                                },
                                               ),
                                             ],
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: () {
-                                            _openMapDirections(lat, lng, details['store_name']);
-                                            print("Google map");
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: button('Get Directions'),
-                                          ),
+                                          onTap: () => over.openMapDirections(lat, lng, details['store_name']),
+                                          child: Padding(padding: EdgeInsets.all(15), child: button('Get Directions')),
                                         ),
                                       ],
                                     ),
