@@ -1,16 +1,14 @@
 
-// ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use
+// ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use, avoid_print
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kohira/controller/API/menu/overstore/citylist.dart';
 import 'package:kohira/controller/API/menu/overstore/overStore.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
-import 'package:kohira/view/screen/menu/over%20Store/direction.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -20,7 +18,6 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
