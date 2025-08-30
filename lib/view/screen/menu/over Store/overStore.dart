@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kohira/controller/API/menu/overstore/citylist.dart';
 import 'package:kohira/controller/API/menu/overstore/overStore.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
@@ -18,6 +19,7 @@ import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
@@ -34,6 +36,18 @@ class _OverstoreState extends State<Overstore> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final store =  Get.put(Overstore_Controller());
   final citylist =  Get.put(Citylist());
+
+  // Function to open Google Maps with directions
+  Future<void> _openMapDirections(double lat, double lng, String label) async {
+    final String url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query_place_id=$label';
+
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   Timer? debounce;
 
   @override
@@ -172,6 +186,13 @@ class _OverstoreState extends State<Overstore> {
                         final details =  stores['allstoreList'][index];
                         final cityname = details['store_city']['cityname'];
                         final image =  details['store_image_path'];
+
+
+                        // Extract latitude and longitude from your data
+                        // You'll need to adjust these based on your API response structure
+                        final double lat = double.tryParse(details['latitude']?.toString() ?? '0') ?? 0;
+                        final double lng = double.tryParse(details['longitude']?.toString() ?? '0') ?? 0;
+
                         return horizontalpadding(
                           child: Column(
                             children: [
@@ -234,7 +255,10 @@ class _OverstoreState extends State<Overstore> {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: () => Get.to(() => Directions(data: details['store_direction_step'])),
+                                          onTap: () {
+                                            _openMapDirections(lat, lng, details['store_name']);
+                                            print("Google map");
+                                          },
                                           child: Padding(
                                             padding: EdgeInsets.all(15),
                                             child: button('Get Directions'),
