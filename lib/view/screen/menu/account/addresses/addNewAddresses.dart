@@ -2,6 +2,7 @@
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/credentials/country.dart';
 import 'package:kohira/controller/API/menu/account/addresses.dart';
@@ -15,7 +16,6 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../modal/credentials/country.dart';
-import '../../../../utils/app_gif.dart';
 import '../../../../utils/app_string.dart';
 
 class AddNewAddresses extends StatefulWidget {
@@ -29,7 +29,11 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
   final fech = Get.put(Fechaddresses());
   final add = Get.put(Addaddresses());
   final Country = Get.put(CountryCalling());
+  final State = Get.put(StateCalling());
   final setDeflut = Get.put(SetDeflutAddress());
+
+  String selectedState = 'Selected State';
+  String selectedCountry = 'Selected Country';
 
   final TextEditingController searchController = TextEditingController();
 
@@ -50,7 +54,15 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
     WidgetsBinding.instance.addPostFrameCallback((_) => fech.fechaddresses());
   }
 
+  String? countryLabal;
+  String? countryValue;
+  String? stateLabel;
+  String? stateId;
+
   bool isChecked = false;
+  bool isDefault = false;
+
+  String get isDefaultValue => isChecked ? '1' : '0';
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +76,9 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
       child: Scaffold(
         appBar: Appbar(
           lefticon: AppIcon.left,
-          onTaplefticon: ()async{
-             fech.fechaddresses();
-             Get.back();
+          onTaplefticon: () async {
+              fech.fechaddresses();
+              Get.back();
             },
           hedingname: 'Add New ${AppString.Addresses}',
         ),
@@ -79,7 +91,6 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
 
               return horizontalpadding(
                 child: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
                   child: Column(
                     children: [
                       GestureDetector(
@@ -89,12 +100,12 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                             lastname: lastname.text,
                             mobileno: mobile.text,
                             address: address.text,
-                            countrycode: Country.selectedCountry.value.toString(),
-                            state: state.text,
+                            state: stateId.toString(),
                             email: mail.text,
                             city: city.text,
                             zip: zip.text,
-                            country: country.text,
+                            country: countryValue.toString(),
+                            isdefault: isDefaultValue,
                           );
 
                           if(add.data['type'] == 'success') ToastificationSuccess.Success(add.data['message']);
@@ -155,55 +166,158 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                     SizedBox(height: Get.height / 50),
                     inputField(icon: AppIcon.parson, hintText: 'First Name',controller: fristname),
                     inputField(icon: AppIcon.parson, hintText: 'Last Name',controller: lastname),
-                    inputField(icon: AppIcon.parson, hintText: 'Address',controller: address),
-                    inputField(icon: AppIcon.parson, hintText: 'Country',controller: country),
+                    inputField(icon: AppIcon.location, hintText: 'Address',controller: address,iconcolor: AppColor.pink_color),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                       child: Row(
                         children: [
-                          Image.asset(AppGif.earth, scale: 1.5),
-                          SizedBox(width: Get.width / 50),
+                          SizedBox(width: Get.width / 150),
+                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
+
+                          //Country
                           Expanded(
-                            child: DropdownButton2<Data>(
-                              value: Country.selectedCountry.value,
-                              dropdownSearchData: DropdownSearchData(
-                                searchController: searchController,
-                                searchInnerWidgetHeight: 40,
-                                searchInnerWidget: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: TextField(
-                                    controller: searchController,
-                                    decoration: InputDecoration(
-                                      hintText: 'Search...',
-                                      border: OutlineInputBorder(),
-                                    ),
+                            child: Obx(() {
+                              return DropdownButton2<Data>(
+                                value: Country.selectedCountry.value,
+                                hint: Text(
+                                  'Select Country',
+                                  style: TextStyle(
+                                    color: AppColor.black_color,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                                searchMatchFn: (item, searchValue) {
-                                  return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
+                                isExpanded: true,
+                                underline: SizedBox(),
+                                items: Country.countries.map((item) {
+                                  return DropdownMenuItem<Data>(
+                                    value: item,
+                                    child: Text(item.label.toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  Country.selectedCountry.value = newValue!;
+                                  State.stateList(newValue.id.toString());
+
+                                  /// ✅ here you can extract id & label
+                                  countryValue = newValue.id.toString();      // <-- this is your `countryid`
+                                  countryLabal = newValue.label;   // <-- this is label
+
+                                  print("Country ID: $countryValue");
+                                  print("Country Label: $countryLabal");
+
+                                  /// ✅ Now call your state API using countryid
+                                  Get.find<StateCalling>().stateList(countryValue!);
                                 },
-                              ),
-                              underline: SizedBox(),
-                              isExpanded: true,
-                              items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
-                              onChanged: (newValue) => Country.selectedCountry.value = newValue!,
-                              dropdownStyleData: DropdownStyleData(
-                                offset: Offset(0, -10),
-                                maxHeight: Get.height / 3,
-                                decoration: BoxDecoration(color: AppColor.white_color),
-                              ),
-                            ),
+                                dropdownStyleData: DropdownStyleData(
+                                  offset: Offset(0, -10),
+                                  maxHeight: Get.height / 3,
+                                  decoration: BoxDecoration(color: AppColor.white_color),
+                                ),
+                                iconStyleData: IconStyleData(
+                                  icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor),
+                                  iconSize: 24,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: searchController,
+                                  searchInnerWidgetHeight: 40,
+                                  searchInnerWidget: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: TextField(
+                                      controller: searchController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Search Country...',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  searchMatchFn: (item, searchValue) {
+                                    return item.value?.label
+                                        ?.toLowerCase()
+                                        .contains(searchValue.toLowerCase()) ??
+                                        false;
+                                  },
+                                ),
+                              );
+                            }),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: Get.height / 50),
-                    inputField(icon: AppIcon.parson, hintText: 'Selected State',controller: state),
-                    inputField(icon: AppIcon.parson, hintText: 'City',controller: city),
-                    inputField(icon: AppIcon.parson, hintText: 'Zipcode',controller: zip),
-                    inputField(icon: AppIcon.parson, hintText: 'Email',controller: mail),
-                    inputField(icon: AppIcon.parson, hintText: 'Phone Numbers',controller: mobile),
+                    SizedBox(height: Get.height / 80),
+                    // inputField(icon: AppIcon.location, hintText: 'Selected State',controller: state,iconcolor: AppColor.pink_color),
+
+                    //State
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
+                    child: Row(
+                        children: [
+                    SizedBox(width: Get.width / 150),
+                    SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
+                     Expanded(
+                      child: DropdownButton2<Map<String, dynamic>>(
+                        value: State.selectedState.value,
+                        hint: Text(
+                          'Select State',
+                          style: TextStyle(
+                            color: AppColor.black_color,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        isExpanded: true,
+                        underline: SizedBox(),
+                        items: State.states.map((item) {
+                          return DropdownMenuItem<Map<String, dynamic>>(
+                            value: item,
+                            child: Text(item["label"]),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          State.selectedState.value = newValue;
+
+                          /// ✅ Access id & label
+                          stateId = newValue?["id"].toString();
+                          stateLabel = newValue?["label"];
+                          print("Selected State ID: $stateId, Label: $stateLabel");
+                        },
+                        dropdownStyleData: DropdownStyleData(
+                          offset: Offset(0, -10),
+                          maxHeight: Get.height / 3,
+                          decoration: BoxDecoration(color: AppColor.white_color),
+                        ),
+                        iconStyleData: IconStyleData(
+                          icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor),
+                          iconSize: 24,
+                        ),
+                        dropdownSearchData: DropdownSearchData(
+                          searchController: searchController,
+                          searchInnerWidgetHeight: 40,
+                          searchInnerWidget: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: TextField(
+                              controller: searchController,
+                              decoration: InputDecoration(
+                                hintText: 'Search State...',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          searchMatchFn: (item, searchValue) {
+                            final map = item.value as Map<String, dynamic>;
+                            return map["label"]
+                                .toLowerCase()
+                                .contains(searchValue.toLowerCase());
+                          },
+                        ),
+                      ),
+                    ),
+          ])),
+                    SizedBox(height: Get.height / 80),
+                    inputField(icon: AppIcon.location, hintText: 'City',controller: city,iconcolor: AppColor.pink_color),
+                    inputField(icon: AppIcon.earth, hintText: 'Zipcode',controller: zip,iconwidth: 20,iconheight: 20,iconcolor: AppColor.pink_color),
+                    inputField(icon: AppIcon.mail, hintText: 'Email',controller: mail),
+                    inputField(icon: AppIcon.mobile, hintText: 'Phone Numbers',controller: mobile),
                     Row(
                       children: [
                         Checkbox(
@@ -212,9 +326,23 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                           value: isChecked,
                           onChanged: (bool? value) {
                             setState(() {
-                              isChecked = value!;
-                              if (isChecked ==  true) setDeflut.setDefult(id: fech.data['userAdddress'][0]['id'].toString());
-                              print(fech.data['userAdddress'][0]['id'].toString());
+                              isChecked = value ?? false;
+
+                              if (isChecked) {
+                                final userAddresses = fech.data['userAdddress'];
+
+                                if (userAddresses != null && userAddresses.isNotEmpty) {
+                                  final id = userAddresses[0]['id']?.toString();
+                                  if (id != null) {
+                                    setDeflut.setDefult(id: id);
+                                    print(id);
+                                  } else {
+                                    print("⚠️ ID is null");
+                                  }
+                                } else {
+                                  print("⚠️ userAdddress list is empty or null");
+                                }
+                              }
                             });
                           },
                         ),

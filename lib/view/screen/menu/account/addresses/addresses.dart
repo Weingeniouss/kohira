@@ -75,8 +75,12 @@ class _AddressesState extends State<Addresses> {
               });
 
               final addresses = fech.data['userAdddress'] ?? [];
-              if (fech.data['userAdddress'] == null) Center(child: Lottie.asset(AppJson.noData));
-              if (addresses.isEmpty) Center(child: Lottie.asset(AppJson.noData));
+
+              if (addresses == null || (addresses is List && addresses.isEmpty)) {
+                return Scaffold(
+                  body: Center(child: Lottie.asset(AppJson.noData)),
+                );
+              }
 
               return Column(
                 children: [
@@ -132,7 +136,7 @@ class _AddressesState extends State<Addresses> {
                                       },
                                       itemBuilder: (BuildContext context) => [
                                         PopupMenuItem(value: 'edit', child: Text('Change Billing State')),
-                                        PopupMenuItem(value: 'delete', child: Text('Delete')),
+                                        if(fechs['isdefault'] == 0) PopupMenuItem(value: 'delete', child: Text('Delete')),
                                       ],
                                     ),
                                   ],
@@ -153,6 +157,18 @@ class _AddressesState extends State<Addresses> {
                                     Text(fechs['mobileno']),
                                   ],
                                 ),
+                                SizedBox(height: Get.height / 50),
+                                (fechs['isdefault'] == 0) ? GestureDetector(
+                                  onTap: () async{
+                                     DeletAddress().deletaddress(id: fechs['id'].toString());
+                                     await fech.fechaddresses();
+                                    },
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                                    child: Text('Delet Accout',style: TextStyle(color: Colors.red,fontWeight: FontWeight.w500)),
+                                  ),
+                                ) : SizedBox(),
                               ],
                             ),
                           );

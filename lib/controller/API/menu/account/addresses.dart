@@ -135,8 +135,8 @@ class SetDeflutAddress extends GetxController{
     try{
       isLoading.value = true;
       final url = Uri.parse('${AppUrl.setdefault}/$id');
+      print("Sending to Url :- $url");
       final responce = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
-
       if(responce.statusCode == 200 || responce.statusCode == 201){
         data.value = jsonDecode(responce.body);
         log('SetDefult data :- ${data.value}');

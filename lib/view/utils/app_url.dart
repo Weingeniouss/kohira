@@ -22,6 +22,7 @@ class AppUrl {
   static const sinup = '$baseurl/signup';
   static const forgetpassword = '$baseurl/forgot-password';
   static const country = '$baseurl/country';
+  static const state = '$baseurl/state';
 
   //Counting
   static const count = '$baseurl/count-wish-cart';

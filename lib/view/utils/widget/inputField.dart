@@ -10,6 +10,8 @@ Widget inputField({
   String? hintText,
   String? icon,
   Color? iconcolor,
+  double? iconwidth,
+  double? iconheight,
   TextEditingController? controller,
   bool empty = false,
   bool isVis = false,
@@ -28,9 +30,13 @@ Widget inputField({
                     obscureText: isVis ? _obscureText : false,
                     decoration: InputDecoration(
                       prefixIcon: icon != null ? Padding(
-                        padding: const EdgeInsets.all(10),
-                        child:
-                        SvgPicture.asset(icon, fit: BoxFit.cover,color: iconcolor),
+                        padding: EdgeInsets.all(10),
+                        child: SvgPicture.asset(
+                          icon, fit: BoxFit.cover,
+                          color: iconcolor,
+                          width: iconwidth,
+                          height: iconheight,
+                        ),
                       ) : null,
                       suffixIcon: isVis ? GestureDetector(
                         onTap: () {
@@ -42,8 +48,7 @@ Widget inputField({
                       ) : null,
                       hintText: hintText,
                       hintStyle: TextStyle(color: AppColor.black_color),
-                      contentPadding:
-                      const EdgeInsets.symmetric(vertical: 11),
+                      contentPadding: EdgeInsets.symmetric(vertical: 11),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           width: empty ? 2 : 1,

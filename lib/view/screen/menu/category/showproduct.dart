@@ -909,14 +909,10 @@ class _ShowproductState extends State<Showproduct> {
                               ),
                             ],
                           ),
-                          (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
-                              ? SizedBox(height: Get.height / 50)
-                              : SizedBox(),
+                          (getUniqueCarats(variants, diamondType: diamondType).isEmpty) ? SizedBox(height: Get.height / 50) : SizedBox(),
 
                           //Carat Weight
-                          (getUniqueCarats(variants, diamondType: diamondType).isEmpty)
-                              ? SizedBox()
-                              : Column(
+                          (getUniqueCarats(variants, diamondType: diamondType).isEmpty) ? SizedBox() : Column(
                             children: [
                               SizedBox(height:Get.height / 50),
                               Row(
@@ -1078,6 +1074,7 @@ class _ShowproductState extends State<Showproduct> {
                                       Text(productdetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                     ],
                                   ),
+                                  Divider(color: AppColor.dividercolor),
                                   AnimatedCrossFade(
                                     firstChild: SizedBox.shrink(),
                                     secondChild: Column(
@@ -1141,6 +1138,7 @@ class _ShowproductState extends State<Showproduct> {
                                       Text(sidediamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                     ],
                                   ),
+                                  Divider(color: AppColor.dividercolor),
                                   AnimatedCrossFade(
                                     firstChild: SizedBox.shrink(),
                                     secondChild: Column(
@@ -1211,6 +1209,7 @@ class _ShowproductState extends State<Showproduct> {
                                       Text(centerdiamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                     ],
                                   ),
+                                  Divider(color: AppColor.dividercolor),
                                   AnimatedCrossFade(
                                     firstChild: SizedBox.shrink(),
                                     secondChild: Column(
@@ -1326,12 +1325,11 @@ class _ShowproductState extends State<Showproduct> {
                                     crossFadeState: priceBreakup ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                                     duration: Duration(milliseconds: 300),
                                   ),
+                                  Divider(color: AppColor.textfild_color),
                                 ],
                               ),
                             ),
                           ),
-                          SizedBox(height: Get.height / 50),
-                          Divider(color: AppColor.textfild_color),
                           SizedBox(height: Get.height / 50),
 
                           Row(

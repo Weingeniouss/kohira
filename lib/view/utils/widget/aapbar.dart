@@ -65,10 +65,7 @@ PreferredSizeWidget Appbar({
                     : SizedBox.shrink(),
 
                 (logo != null) ? SizedBox(width: Get.width / 30) : null,
-
                 (logo != null) ? Image.asset(logo, scale: 15) : null,
-
-                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 500) : null,
 
                 (hedingname != null)
                     ? Row(
@@ -98,7 +95,7 @@ PreferredSizeWidget Appbar({
                     children: [
                       Row(
                         children: <Widget?>[
-                          SizedBox(width: Get.width / 20),
+                          (suffixicon_1 != null && suffixicon_2 != null) ? SizedBox(width: Get.width / 20) : null,
 
                           //Add to cart
                           (suffixicon_1 != null)
@@ -113,7 +110,7 @@ PreferredSizeWidget Appbar({
                                   ),
                                 )
                               : null,
-                          SizedBox(width: Get.width / 250),
+                          (suffixicon_1 != null && suffixicon_2 != null) ? SizedBox(width: Get.width / 250) : null,
 
                           //Wishlist
                           (suffixicon_2 != null)
@@ -158,7 +155,7 @@ PreferredSizeWidget Appbar({
                                   Get.back();
                                   Get.back();
                                 },
-                                  ),
+                              ),
                             ),
 
                       //Wishlist count
@@ -184,7 +181,7 @@ PreferredSizeWidget Appbar({
                                 onTap: () {
                                   Get.to(() => WishlistScreen());
                                 },
-                                  ),
+                              ),
                             ),
                     ],
                   );

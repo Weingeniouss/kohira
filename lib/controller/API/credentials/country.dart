@@ -1,9 +1,15 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/API_headers.dart';
+import 'package:kohira/view/utils/appconstants.dart';
 import '../../../modal/credentials/country.dart';
+import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/pop.dart';
 import '../../service/credentials/country.dart';
 
@@ -33,5 +39,51 @@ class CountryCalling extends GetxController {
 
   void selectCountry(Data? value) {
     selectedCountry.value = value;
+  }
+}
+
+
+class StateCalling extends GetxController {
+  var isLoading = false.obs;
+  var states = <dynamic>[].obs; // store list of states
+  var selectedState = Rxn();    // store selected state
+
+  Future<void> stateList(String countryid) async {
+    try {
+      isLoading.value = true;
+      final url = Uri.parse(AppUrl.state);
+      final body = {'countryid': countryid};
+
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          ApiHeaders.heading: ApiHeaders.peramitters,
+          ApiHeaders.authorization: tokans,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        log("Raw State API Response: $data");
+
+        if (data != null && data["states"] != null) {
+          states.value = List<Map<String, dynamic>>.from(data["states"]);
+        } else if (data != null && data["data"] != null) {
+          states.value = List<Map<String, dynamic>>.from(data["data"]);
+        } else {
+          states.clear();
+          log("No states found in response");
+        }
+
+        log("State List :- ${states.value}");
+      } else {
+        throw 'State Value Error :- ${response.statusCode}, ${response.body}';
+      }
+    } catch (e) {
+      print('State Value Error :- $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

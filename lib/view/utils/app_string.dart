@@ -152,7 +152,7 @@ class AppString {
           static const confirmpassword =  'Confirm Oldpassword';
 
           //Address
-          static const setdefult = 'Set Defult';
+          static const setdefult = 'Set as Defult Address';
 
           //Buy Now
           static const pricedetails = 'Price Details';
