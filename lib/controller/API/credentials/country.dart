@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
 import 'dart:developer';
@@ -45,8 +45,8 @@ class CountryCalling extends GetxController {
 
 class StateCalling extends GetxController {
   var isLoading = false.obs;
-  var states = <dynamic>[].obs; // store list of states
-  var selectedState = Rxn();    // store selected state
+  var states = <dynamic>[].obs;
+  var selectedState = Rxn();
 
   Future<void> stateList(String countryid) async {
     try {

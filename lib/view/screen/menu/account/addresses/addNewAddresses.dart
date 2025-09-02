@@ -36,6 +36,7 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
   String selectedCountry = 'Selected Country';
 
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController statesearchController = TextEditingController();
 
   TextEditingController fristname = TextEditingController();
   TextEditingController lastname = TextEditingController();
@@ -125,6 +126,8 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                             if (errors != null && errors.containsKey('id')) ToastificationError.Error(errors['mobileno'][0]);
                             if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
                           }
+                          Get.back();
+                          fech.fechaddresses();
                         },
                         child: button("${AppString.save} ${AppString.Addresses}"),
                       ),
@@ -198,15 +201,10 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                                 onChanged: (newValue) {
                                   Country.selectedCountry.value = newValue!;
                                   State.stateList(newValue.id.toString());
-
-                                  /// ✅ here you can extract id & label
-                                  countryValue = newValue.id.toString();      // <-- this is your `countryid`
-                                  countryLabal = newValue.label;   // <-- this is label
-
+                                  countryValue = newValue.id.toString();
+                                  countryLabal = newValue.label;
                                   print("Country ID: $countryValue");
                                   print("Country Label: $countryLabal");
-
-                                  /// ✅ Now call your state API using countryid
                                   Get.find<StateCalling>().stateList(countryValue!);
                                 },
                                 dropdownStyleData: DropdownStyleData(
@@ -251,8 +249,7 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
-                    child: Row(
-                        children: [
+                    child: Row(children: [
                     SizedBox(width: Get.width / 150),
                     SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
                      Expanded(
@@ -275,8 +272,6 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                         }).toList(),
                         onChanged: (newValue) {
                           State.selectedState.value = newValue;
-
-                          /// ✅ Access id & label
                           stateId = newValue?["id"].toString();
                           stateLabel = newValue?["label"];
                           print("Selected State ID: $stateId, Label: $stateLabel");
@@ -291,12 +286,12 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                           iconSize: 24,
                         ),
                         dropdownSearchData: DropdownSearchData(
-                          searchController: searchController,
+                          searchController: statesearchController,
                           searchInnerWidgetHeight: 40,
                           searchInnerWidget: Padding(
                             padding: EdgeInsets.all(8),
                             child: TextField(
-                              controller: searchController,
+                              controller: statesearchController,
                               decoration: InputDecoration(
                                 hintText: 'Search State...',
                                 border: OutlineInputBorder(),
@@ -312,12 +307,12 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                         ),
                       ),
                     ),
-          ])),
+                   ])),
                     SizedBox(height: Get.height / 80),
                     inputField(icon: AppIcon.location, hintText: 'City',controller: city,iconcolor: AppColor.pink_color),
-                    inputField(icon: AppIcon.earth, hintText: 'Zipcode',controller: zip,iconwidth: 20,iconheight: 20,iconcolor: AppColor.pink_color),
+                    inputField(icon: AppIcon.earth, hintText: 'Zipcode',controller: zip,iconwidth: 20,iconheight: 20,iconcolor: AppColor.pink_color,textInputType: TextInputType.number,maxLength: 6),
                     inputField(icon: AppIcon.mail, hintText: 'Email',controller: mail),
-                    inputField(icon: AppIcon.mobile, hintText: 'Phone Numbers',controller: mobile),
+                    inputField(icon: AppIcon.mobile, hintText: 'Phone Numbers',controller: mobile,maxLength: 10,textInputType: TextInputType.number),
                     Row(
                       children: [
                         Checkbox(
@@ -327,10 +322,8 @@ class _AddNewAddressesState extends State<AddNewAddresses> {
                           onChanged: (bool? value) {
                             setState(() {
                               isChecked = value ?? false;
-
                               if (isChecked) {
                                 final userAddresses = fech.data['userAdddress'];
-
                                 if (userAddresses != null && userAddresses.isNotEmpty) {
                                   final id = userAddresses[0]['id']?.toString();
                                   if (id != null) {

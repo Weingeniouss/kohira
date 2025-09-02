@@ -12,6 +12,8 @@ Widget inputField({
   Color? iconcolor,
   double? iconwidth,
   double? iconheight,
+  int? maxLength,
+  TextInputType? textInputType,
   TextEditingController? controller,
   bool empty = false,
   bool isVis = false,
@@ -26,9 +28,12 @@ Widget inputField({
               return StatefulBuilder(
                 builder: (context, setState) {
                   return TextField(
+                    keyboardType: textInputType,
+                    maxLength: maxLength,
                     controller: controller,
                     obscureText: isVis ? _obscureText : false,
                     decoration: InputDecoration(
+                      counterText: "",
                       prefixIcon: icon != null ? Padding(
                         padding: EdgeInsets.all(10),
                         child: SvgPicture.asset(
