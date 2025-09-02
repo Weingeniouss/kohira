@@ -177,7 +177,19 @@ class _OverstoreState extends State<Overstore> {
                                     width: Get.width,
                                     child: Column(
                                       children: [
-                                        Image.network(image),
+                                        // (image.isNotEmpty) ? Image.network(image): SizedBox(),
+                                        image != null && image.isNotEmpty ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(Get.width / 70),
+                                          child: Image.network(
+                                            image,
+                                            fit: BoxFit.cover,
+                                            width: Get.width,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return SizedBox();
+                                            },
+                                          ),
+                                        )
+                                            : Image.network(image),
                                         Container(
                                           padding: EdgeInsets.all(15),
                                           child: Column(

@@ -165,7 +165,7 @@ class _AddressesState extends State<Addresses> {
                                     },
                                   child: Container(
                                     padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                                    decoration: BoxDecoration(border: Border.all(color: Colors.red),borderRadius: BorderRadius.circular(Get.width / 50)),
                                     child: Text('Delet Accout',style: TextStyle(color: Colors.red,fontWeight: FontWeight.w500)),
                                   ),
                                 ) : SizedBox(),

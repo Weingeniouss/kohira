@@ -37,7 +37,7 @@ class Subcategorys extends StatelessWidget {
     show.onInit();
     show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString());
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.product),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname: subcategrorysname),
       bottomNavigationBar: Obx((){
 
         if(show.subcategrory.data.isEmpty){

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, avoid_print, unnecessary_null_comparison, deprecated_member_use
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, avoid_print, unnecessary_null_comparison, deprecated_member_use, non_constant_identifier_names
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +17,8 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
-import 'package:kohira/controller/API/credentials/country.dart';
-import '../../../../../modal/credentials/login.dart' hide Data;
+
+import '../../../../utils/appconstants.dart';
 
 class Editaddresses extends StatefulWidget {
   final String id;
@@ -79,21 +79,22 @@ class _EditaddressesState extends State<Editaddresses> {
   String? stateLabel;
   String? stateId;
 
+  String selectedState = 'Selected State';
+  String selectedCountry = 'Selected Country';
+
+  //Address defalt
   bool isChecked = false;
   bool isDefault = false;
   String get isDefaultValue => isChecked ? '1' : '0';
-
-  String selectedState = 'Selected State';
-  String selectedCountry = 'Selected Country';
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async{
-          Get.back();
-          await fech.fechaddresses();
-          Get.back();
-          return true;
+        Get.back();
+        await fech.fechaddresses();
+        Get.back();
+        return true;
       },
       child: Scaffold(
         appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.editAddresses),

@@ -2,8 +2,10 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+//SharedPreference
 SharedPreferences? pref;
 
+//Login & Sinup
 String Fristname = '';
 String Lastname = '';
 String Email = '';
@@ -11,6 +13,8 @@ String Countrycode = '';
 String Mobile = '';
 String Password = '';
 
+//Login True or flase
 bool islogin = false;
 
+//get Tokan
 String tokans =  '';

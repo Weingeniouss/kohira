@@ -67,22 +67,21 @@ PreferredSizeWidget Appbar({
                 (logo != null) ? SizedBox(width: Get.width / 30) : null,
                 (logo != null) ? Image.asset(logo, scale: 15) : null,
 
-                (hedingname != null)
-                    ? Row(
-                        children: [
-                          SizedBox(width: Get.width / 10),
-                          Text(
-                            textAlign: TextAlign.center,
-                            hedingname,
-                            style: TextStyle(
-                              fontSize: Get.width / 23,
-                              fontWeight: FontWeight.w600,
-                              color: AppColor.pink_color,
-                            ),
-                          ),
-                        ],
-                      )
-                    : null,
+                (hedingname != null) ? Row(
+                  children: [
+                    SizedBox(width: hedingname.length > 15 ? Get.width / 20 : Get.width / 10),
+                    Text(
+                      hedingname,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: Get.width / 23,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.pink_color,
+                      ),
+                    ),
+                  ],
+                )
+                    : const SizedBox.shrink(),
 
                 (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 5) : null,
                 (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 15) : null :SizedBox(),

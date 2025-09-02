@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, camel_case_types
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, camel_case_types, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,6 +8,7 @@ import '../../../../view/utils/app_String.dart';
 import '../../../../view/utils/app_color.dart';
 import '../../../../view/utils/app_gif.dart';
 import '../../../../view/utils/app_icon.dart';
+import '../../../../view/utils/appconstants.dart';
 import '../../../../view/utils/widget/button.dart';
 import '../../../../view/utils/widget/horizontalpading.dart';
 import '../../../API/menu/account/addresses.dart';
@@ -27,6 +28,7 @@ class Cheackout_Controller extends GetxController {
 
     if (!shipping.value) {
       final fech = Get.put(Fechaddresses());
+      final setDeflut = Get.put(SetDeflutAddress());
       fech.fechaddresses();
       showBottomSheet(
         context: ctx,
@@ -70,56 +72,67 @@ class Cheackout_Controller extends GetxController {
                           itemCount: fech.data['userAdddress'].length,
                           itemBuilder: (BuildContext context, int index) {
                             final fechs = fech.data['userAdddress'][index];
-                            return Container(
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColor.white_color,
-                                border: Border.all(color: Colors.orange),
-                                boxShadow: kElevationToShadow[1],
-                                borderRadius: BorderRadius.circular(Get.width / 50),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppIcon.parson, color: AppColor.grey_color),
-                                          SizedBox(width: Get.width / 50),
-                                          Row(
-                                            children: [
-                                              Text(fechs['firstname']),
-                                              SizedBox(width: Get.width / 100),
-                                              Text(fechs['lastname']),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: Get.height / 80),
-                                  Row(
-                                    children: [
-                                      Image.asset(AppGif.earth, scale: 1.9),
-                                      SizedBox(width: Get.width / 50),
-                                      SizedBox(
-                                        width: Get.width / 1.5,
-                                        child: Text(fechs['address']),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: Get.height / 50),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(AppIcon.mobile, color: AppColor.grey_color),
-                                      SizedBox(width: Get.width / 50),
-                                      Text(fechs['mobileno']),
-                                    ],
-                                  ),
-                                ],
+                            var defalut = fechs['isdefault'];
+                            var id = fechs['id'].toString();
+                            return GestureDetector(
+                              onTap: ()  async{
+                                setState((){});
+                                 await setDeflut.setDefult(id: id);
+                                 await fech.fechaddresses(); // refresh list
+                                 print('id :- $id');
+                                 setState((){});
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: AppColor.white_color,
+                                  border: Border.all(color: (defalut == 1) ? Colors.orange : Colors.transparent),
+                                  boxShadow: kElevationToShadow[1],
+                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(AppIcon.parson, color: AppColor.grey_color),
+                                            SizedBox(width: Get.width / 50),
+                                            Row(
+                                              children: [
+                                                Text(fechs['firstname']),
+                                                SizedBox(width: Get.width / 100),
+                                                Text(fechs['lastname']),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: Get.height / 80),
+                                    Row(
+                                      children: [
+                                        Image.asset(AppGif.earth, scale: 1.9),
+                                        SizedBox(width: Get.width / 50),
+                                        SizedBox(
+                                          width: Get.width / 1.5,
+                                          child: Text(fechs['address']),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: Get.height / 50),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(AppIcon.mobile, color: AppColor.grey_color),
+                                        SizedBox(width: Get.width / 50),
+                                        Text(fechs['mobileno']),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
