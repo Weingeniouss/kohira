@@ -49,7 +49,7 @@ class _DrawersState extends State<Drawers> {
     switch (category.toLowerCase()) {
       case 'engagement rings':
         return AppIcon.ring;
-      case 'bracelet' :
+      case 'bracelet':
         return AppIcon.bracelet;
       case 'collection':
         return AppIcon.collection;
@@ -57,11 +57,12 @@ class _DrawersState extends State<Drawers> {
         return AppIcon.earrings;
       case 'mangalsutra':
         return AppIcon.mangalsutra;
-      case 'necklace' :
+      case 'necklace':
         return AppIcon.necklace;
       case 'rings':
         return AppIcon.ring;
-      default: return 'asset/icon/drawericon/default_icon.svg'; // fallback
+      default:
+        return 'asset/icon/drawericon/dummy.svg'; // fallback
     }
   }
 
@@ -83,11 +84,11 @@ class _DrawersState extends State<Drawers> {
             SizedBox(height: Get.height * 0.030),
             Expanded(
               child: SingleChildScrollView(
-                child: Obx((){
+                child: Obx(() {
                   if (category.filterData.value == null) {
                     return Scaffold(body: Center(child: Lottie.asset(AppJson.noData)));
                   }
-                  return Obx((){
+                  return Obx(() {
                     return Column(
                       children: [
                         horizontalpadding(
@@ -97,101 +98,110 @@ class _DrawersState extends State<Drawers> {
                             itemCount: filteredCategories.length,
                             itemBuilder: (BuildContext context, int index) {
                               final categoryItem = filteredCategories[index];
-                              return (categoryItem.subcategory.isEmpty) ? null : Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
-                                    child: Container(
-                                      color: AppColor.white_color,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                                            decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
-                                            padding: EdgeInsets.all(10),
-                                            child: SvgPicture.asset(getCategoryIcon(categoryItem.name), width: Get.width * 0.018, height: Get.height * 0.018,color: AppColor.white_color),
-                                          ),
-                                          SizedBox(width: Get.width / 30),
-                                          SizedBox(width: Get.width / 3.5, child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500))),
-                                          Spacer(),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  AnimatedCrossFade(
-                                    duration: Duration(milliseconds: 200),
-                                    firstChild: SizedBox.shrink(),
-                                    secondChild: categoryItem.subcategory.isNotEmpty ? Padding(
-                                      padding: EdgeInsets.only(left: Get.width * 0.08),
-                                      child: Column(
-                                        children: [
-                                          ...categoryItem.subcategory.take(6).map((subItem) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                category.selectCategorySlug(subItem.slug);
-                                                Get.to(() => Subcategorys(
-                                                  subcategory_slug: subItem.slug,
-                                                  subcategrorysname: AppString.product,
-                                                 ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600),
-                                                );
-                                              },
-                                              child: Container(
-                                                color: AppColor.white_color,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                  child: Row(
-                                                    children: [
-                                                      Text("*"),
-                                                      SizedBox(width: Get.width * 0.015),
-                                                      SizedBox(
-                                                        width: Get.width / 3,
-                                                        child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
-                                                      ),
-                                                    ],
-                                                  ),
+                              return (categoryItem.subcategory.isEmpty)
+                                  ? null
+                                  : Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
+                                          child: Container(
+                                            color: AppColor.white_color,
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+                                                  decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
+                                                  padding: EdgeInsets.all(10),
+                                                  child: SvgPicture.asset(getCategoryIcon(categoryItem.name), width: Get.width * 0.018, height: Get.height * 0.018, color: AppColor.white_color),
                                                 ),
-                                              ),
-                                            );
-                                          }),
-                                          if (categoryItem.subcategory.length > 6)
-                                            GestureDetector(
-                                              onTap: () {
-                                                Get.to(() => Subcategorys(
-                                                  subcategrorys: categoryItem.slug,
-                                                  subcategrorysname: AppString.product,
-                                                ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(Get.width / 50),
-                                                    color: AppColor.black_color,
-                                                  ),
-                                                  padding: EdgeInsets.all(5),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Text("*"),
-                                                      SizedBox(width: Get.width * 0.015),
-                                                      Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w500, color: AppColor.white_color)),
-                                                    ],
-                                                  ),
+                                                SizedBox(width: Get.width / 30),
+                                                SizedBox(
+                                                  width: Get.width / 3.5,
+                                                  child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
                                                 ),
-                                              ),
+                                                Spacer(),
+                                              ],
                                             ),
-                                        ],
-                                      ),
-                                    ) : SizedBox.shrink(),
-                                    crossFadeState: categoryItem.isExpanded == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                  ),
-                                  Divider(color: AppColor.textfild_color, height: 1),
-                                ],
-                              );
+                                          ),
+                                        ),
+                                        AnimatedCrossFade(
+                                          duration: Duration(milliseconds: 200),
+                                          firstChild: SizedBox.shrink(),
+                                          secondChild:
+                                              categoryItem.subcategory.isNotEmpty
+                                                  ? Padding(
+                                                      padding: EdgeInsets.only(left: Get.width * 0.08),
+                                                      child: Column(
+                                                        children: [
+                                                          ...categoryItem.subcategory.take(6).map((subItem) {
+                                                            return GestureDetector(
+                                                              onTap: () {
+                                                                category.selectCategorySlug(subItem.slug);
+                                                                Get.to(() => Subcategorys(subcategory_slug: subItem.slug, subcategrorysname: AppString.product),
+                                                                  transition: Transition.rightToLeft,
+                                                                  duration: Duration(milliseconds: 600),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                color: AppColor.white_color,
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Text("*"),
+                                                                      SizedBox(width: Get.width * 0.015),
+                                                                      SizedBox(width: Get.width / 3, child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400))),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                          if (categoryItem.subcategory.length > 6)
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                Get.to(() => Subcategorys(subcategrorys: categoryItem.slug, subcategrorysname: AppString.product),
+                                                                  transition: Transition.rightToLeft,
+                                                                  duration: Duration(milliseconds: 600),
+                                                                );
+                                                              },
+                                                              child: Padding(
+                                                                padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                                                    color: AppColor.black_color,
+                                                                  ),
+                                                                  padding: EdgeInsets.all(5),
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    children: [
+                                                                      Text("*"),
+                                                                      SizedBox(width: Get.width * 0.015),
+                                                                      Text("View All (${categoryItem.subcategory.length})",
+                                                                        style: TextStyle(
+                                                                          fontSize: Get.width * 0.030,
+                                                                          fontWeight: FontWeight.w500,
+                                                                          color: AppColor.white_color,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : SizedBox.shrink(),
+                                          crossFadeState: categoryItem.isExpanded == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                        ),
+                                        Divider(color: AppColor.textfild_color, height: 1),
+                                      ],
+                                    );
                             },
                           ),
                         ),
-
                         GestureDetector(
                           onTap: drawer.selectedJewellery,
                           child: Container(
@@ -205,128 +215,137 @@ class _DrawersState extends State<Drawers> {
                         AnimatedSize(
                           curve: Curves.easeInOut,
                           duration: Duration(milliseconds: 600),
-                          child: (drawer.allJewellery.value) ? horizontalpadding(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: Get.width / 20),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: filteredCategories2.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final categoryItem = filteredCategories2[index];
-                                  return ((categoryItem.subcategory.isEmpty)) ? null : Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
-                                        child: Container(
-                                          color: AppColor.white_color,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                                                decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
-                                                padding: EdgeInsets.all(10),
-                                                child: SvgPicture.asset(AppIcon.Order, width: Get.width * 0.018, height: Get.height * 0.018),
-                                              ),
-                                              SizedBox(width: Get.width / 30),
-                                              SizedBox(width: Get.width / 3.5, child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500))),
-                                              Spacer(),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      AnimatedCrossFade(
-                                        duration: Duration(milliseconds: 200),
-                                        firstChild: SizedBox.shrink(),
-                                        secondChild: (categoryItem.subcategory.isNotEmpty) ? Padding(
-                                          padding: EdgeInsets.only(left: Get.width * 0.08),
-                                          child: Column(
-                                            children: [
-                                              ...categoryItem.subcategory.take(6).map((subItem) {
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    category.selectCategorySlug(subItem.slug);
-                                                    Get.to(() => Subcategorys(
-                                                      subcategory_slug: subItem.slug,
-                                                      subcategrorysname: AppString.product,
-                                                    ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
-                                                  },
-                                                  child: Container(
-                                                    color: AppColor.white_color,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                          child: (drawer.allJewellery.value)
+                              ? horizontalpadding(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: Get.width / 20),
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: filteredCategories2.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        final categoryItem = filteredCategories2[index];
+                                        return ((categoryItem.subcategory.isEmpty))
+                                            ? null
+                                            : Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
+                                                    child: Container(
+                                                      color: AppColor.white_color,
                                                       child: Row(
                                                         children: [
-                                                          Text("*"),
-                                                          SizedBox(width: Get.width * 0.015),
-                                                          SizedBox(
-                                                            width: Get.width / 3,
-                                                            child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                          Container(
+                                                            margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+                                                            decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
+                                                            padding: EdgeInsets.all(10),
+                                                            child: SvgPicture.asset(AppIcon.Order, width: Get.width * 0.018, height: Get.height * 0.018),
                                                           ),
+                                                          SizedBox(width: Get.width / 30),
+                                                          SizedBox(
+                                                            width: Get.width / 3.5,
+                                                            child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
+                                                          ),
+                                                          Spacer(),
                                                         ],
                                                       ),
                                                     ),
                                                   ),
-                                                );
-                                              }),
-                                              if (categoryItem.subcategory.length > 6)
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Get.to(() => Subcategorys(
-                                                      subcategrorys: categoryItem.slug,
-                                                      subcategrorysname: AppString.product,
-                                                    ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
-                                                  },
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                    child: Row(
-                                                      children: [
-                                                        Text("*"),
-                                                        SizedBox(width: Get.width * 0.015),
-                                                        Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
-                                                      ],
-                                                    ),
+                                                  AnimatedCrossFade(
+                                                    duration: Duration(milliseconds: 200),
+                                                    firstChild: SizedBox.shrink(),
+                                                    secondChild:
+                                                        (categoryItem.subcategory.isNotEmpty)
+                                                            ? Padding(
+                                                                padding: EdgeInsets.only(left: Get.width * 0.08),
+                                                                child: Column(
+                                                                  children: [
+                                                                    ...categoryItem.subcategory.take(6).map((subItem) {
+                                                                      return GestureDetector(
+                                                                        onTap: () {
+                                                                          category.selectCategorySlug(subItem.slug);
+                                                                          Get.to(() => Subcategorys(
+                                                                            subcategory_slug: subItem.slug,
+                                                                            subcategrorysname: AppString.product,
+                                                                          ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                                                        },
+                                                                        child: Container(
+                                                                          color: AppColor.white_color,
+                                                                          child: Padding(
+                                                                            padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                                            child: Row(
+                                                                              children: [
+                                                                                Text("*"),
+                                                                                SizedBox(width: Get.width * 0.015),
+                                                                                SizedBox(
+                                                                                  width: Get.width / 3,
+                                                                                  child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    }),
+                                                                    if (categoryItem.subcategory.length > 6)
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          Get.to(() => Subcategorys(
+                                                                            subcategrorys: categoryItem.slug,
+                                                                            subcategrorysname: AppString.product,
+                                                                          ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                                                        },
+                                                                        child: Padding(
+                                                                          padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                                                          child: Row(
+                                                                            children: [
+                                                                              Text("*"),
+                                                                              SizedBox(width: Get.width * 0.015),
+                                                                              Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            : SizedBox.shrink(),
+                                                    crossFadeState: categoryItem.isExpanded == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                                                   ),
-                                                ),
-                                            ],
-                                          ),
-                                        ) : SizedBox.shrink(),
-                                        crossFadeState: categoryItem.isExpanded == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                      ),
-                                      Divider(color: AppColor.textfild_color, height: 1),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ) : SizedBox.shrink(),
+                                                  Divider(color: AppColor.textfild_color, height: 1),
+                                                ],
+                                              );
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
                         ),
-
                         drawerIcon(
                           icon: AppIcon.Order,
                           text: AppString.Order,
-                          onTap: () => Get.to(() => Orderhistory(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                          onTap: () => Get.to(() => Orderhistory(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
                         drawerIcon(
                           icon: AppIcon.Wishlist,
                           text: AppString.Wishlist,
-                          onTap: () => Get.to(() => WishlistScreen(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                          onTap: () => Get.to(() => WishlistScreen(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
                         drawerIcon(
                           icon: AppIcon.Wallet,
                           text: AppString.Wallet,
-                          onTap: () => Get.to(() => Wallet(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                          onTap: () => Get.to(() => Wallet(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
                         drawerIcon(
                           icon: AppIcon.Addresses,
                           text: AppString.Addresses,
-                          onTap: () => Get.to(() => Addresses(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                          onTap: () => Get.to(() => Addresses(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
                         drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
                         drawerIcon(
                           icon: AppIcon.PrivacyPolicy,
                           text: AppString.PrivacyPolicy,
-                          onTap: () => Get.to(() => Privacy(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800)),
+                          onTap: () => Get.to(() => Privacy(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
                         drawerIcon(
                           icon: AppIcon.Logout,
@@ -347,7 +366,13 @@ class _DrawersState extends State<Drawers> {
   }
 }
 
-Widget drawerIcon({required String icon, required String text, void Function()? onTap, Color? color}) {
+Widget drawerIcon({
+  required String icon,
+  required String text,
+  void Function()? onTap,
+  Color? color
+})
+{
   return horizontalpadding(
     child: GestureDetector(
       onTap: onTap,

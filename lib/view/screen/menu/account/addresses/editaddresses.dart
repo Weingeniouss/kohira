@@ -18,7 +18,6 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../utils/appconstants.dart';
 
 class Editaddresses extends StatefulWidget {
   final String id;

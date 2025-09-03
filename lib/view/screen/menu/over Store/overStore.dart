@@ -18,6 +18,7 @@ import 'package:lottie/lottie.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
+import 'package:http/http.dart' as http;
 
 class Overstore extends StatefulWidget {
   const Overstore({super.key});
@@ -114,15 +115,7 @@ class _OverstoreState extends State<Overstore> {
                               padding: EdgeInsets.all(15),
                               child: Column(
                                 children: [
-                                  cityImage.isNotEmpty ? SvgPicture.network(cityImage, fit: BoxFit.cover, height: 60,
-                                    placeholderBuilder: (context) => Container(
-                                      height: 60,
-                                      width: 60,
-                                      color: Colors.grey[300],
-                                      child: const Icon(Icons.location_city),
-                                    ),
-                                  ) : Container(height: 60, width: 60, color: Colors.grey[300], child: const Icon(Icons.location_city),
-                                  ),
+                                  buildCityImage(cityImage),
                                   Text(cityName, maxLines: 1, overflow: TextOverflow.ellipsis),
                                 ],
                               ),
@@ -177,7 +170,6 @@ class _OverstoreState extends State<Overstore> {
                                     width: Get.width,
                                     child: Column(
                                       children: [
-                                        // (image.isNotEmpty) ? Image.network(image): SizedBox(),
                                         image != null && image.isNotEmpty ? ClipRRect(
                                           borderRadius: BorderRadius.circular(Get.width / 70),
                                           child: Image.network(
@@ -270,4 +262,64 @@ class _OverstoreState extends State<Overstore> {
       ),
     );
   }
+}
+
+Widget buildCityImage(String url) {
+  if (url.isEmpty) {
+    return _defaultCityIcon();
+  }
+
+  if (url.toLowerCase().endsWith(".svg")) {
+    // For SVG we validate before showing
+    return FutureBuilder<bool>(
+      future: _isValidSvg(url),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _defaultCityIcon(); // show placeholder while loading
+        }
+        if (snapshot.hasData && snapshot.data == true) {
+          return SvgPicture.network(
+            url,
+            height: 60,
+            fit: BoxFit.cover,
+            placeholderBuilder: (context) => _defaultCityIcon(),
+          );
+        } else {
+          return _defaultCityIcon(); // fallback if invalid
+        }
+      },
+    );
+  }
+
+  // Otherwise treat as normal image
+  return Image.network(
+    url,
+    height: 60,
+    fit: BoxFit.cover,
+    errorBuilder: (context, error, stackTrace) => _defaultCityIcon(),
+  );
+}
+
+Widget _defaultCityIcon() {
+  return Container(
+    height: 60,
+    width: 60,
+    color: Colors.grey[300],
+    child: const Icon(Icons.location_city),
+  );
+}
+
+/// check if given URL returns a valid SVG response
+Future<bool> _isValidSvg(String url) async {
+  try {
+    final res = await http.get(Uri.parse(url));
+    if (res.statusCode == 200) {
+      final body = res.body.toLowerCase();
+      // crude check: svg file should contain `<svg`
+      return body.contains("<svg");
+    }
+  } catch (e) {
+    return false;
+  }
+  return false;
 }
