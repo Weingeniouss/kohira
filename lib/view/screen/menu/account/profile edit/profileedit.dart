@@ -75,6 +75,8 @@ class _ProfileeditState extends State<Profileedit> {
     if(profileEdit.data['success'] == true){
       ToastificationSuccess.Success(profileEdit.data['message']);
     }
+    Get.back();
+   await profile.profiledetailscall();
   }
 
   @override
