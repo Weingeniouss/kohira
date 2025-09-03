@@ -78,35 +78,44 @@ class _ShowproductState extends State<Showproduct> {
   }
 
   Future<void> loadJewelleryDetails() async {
-    await jewellerydetail.jewellerydetailservices(slug: widget.slug);
-    await recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
+    try {
+      await jewellerydetail.jewellerydetailservices(slug: widget.slug);
+      await recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
 
-    final jewellery = jewellerydetail.data['data'];
-    if (jewellery != null) {
+      if (!mounted) return; // stop if widget already disposed
+
+      final jewellery = jewellerydetail.data['data'];
+      if (jewellery == null) {
+        print("Error: jewellerydetail.data['data'] is null");
+        return;
+      }
+
       final String storageKey = jewellery['id'].toString();
-      List<String> loadedList = pref!.getStringList(storageKey) ?? [];
+      final List<String> loadedList = pref?.getStringList(storageKey) ?? [];
 
       // Define allowed metal stamps
       final allowedStamps = ['9K', '10K', '14K', '18K'];
       final metalStamp = selectedMetalStamp?.toUpperCase();
+
+      if (!mounted) return; // check again before setState (in case async gap)
 
       setState(() {
         savewishlist = loadedList;
         isWishlisted = allowedStamps.contains(metalStamp) && loadedList.contains(storageKey);
       });
 
+      // Debug logs
       print('Loaded wishlist: $loadedList');
       print('Selected Metal Stamp: $selectedMetalStamp');
       print('Selected Metal Type: $selectedMetalType');
       print('Is Wishlisted: $isWishlisted');
-    } else {
-      print("Error: jewellerydetail.data['data'] is null");
+
+    } catch (e, stack) {
+      if (mounted) {
+        print("Error in loadJewelleryDetails: $e");
+        print(stack);
+      }
     }
-  }
-  void select(int index) {
-    setState(() {
-      selectindex = index;
-    });
   }
 
   @override
@@ -161,27 +170,30 @@ class _ShowproductState extends State<Showproduct> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){
-                      if (Addtocart().isLoading.value) {
-                        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                      } else {
-                        Addtocart().addtocartservice(
-                          jewelryid: jewellery['id'].toString(),
-                          ringsize: selectedRingSizeId.toString(),
-                          tokan: tokans,
-                        ).then((_) {
+                      onTap: () async {
+                        if (Addtocart().isLoading.value) {
+                          Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                        } else {
+                          await Addtocart().addtocartservice(
+                            jewelryid: jewellery['id'].toString(),
+                            ringsize: selectedRingSizeId.toString(),
+                            tokan: tokans,
+                          );
+
+                          if (!mounted) return;
+
                           setState(() {
                             count.counting();
                             myCart.onInit();
                           });
-                        });
-                      }
-                      Bottom();
-                      bottamSelect.indexThree();
-                      Get.back();
-                      Get.back();
-                      Get.back();
-                    },
+
+                          Bottom();
+                          bottamSelect.indexThree();
+                          Get.back();
+                          Get.back();
+                          Get.back();
+                        }
+                      },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
                       decoration: BoxDecoration(

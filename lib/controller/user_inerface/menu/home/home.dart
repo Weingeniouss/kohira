@@ -89,6 +89,41 @@ class HomeController extends GetxController {
     homecollction.homecollction(section_no: '4');
   }
 
+  @override
+  void dispose() {
+     //HomeScreen APIs Calling
+    slider.slideruser();
+    categories.categoriesuser();
+
+    //Drawer Menu APIs Call
+    jewellery.fetchJewelleryFilter();
+    category.fetchFilter();
+    count.counting();
+
+    //Wishlist
+    wish.onInit();
+    wish.fetchwishlist.fechwishlist();
+
+    //OverStore Screen
+    citylist.citylist();
+    store.overStore();
+
+    //Account Scrren
+    profileDetails.profiledetailscall();
+    account.onInit();
+    account.profileDetails.profiledetailscall();
+    order.onInit();
+    order.order.myOrder();
+    wallet.wallet();
+    fech.fechaddresses();
+
+
+    homecollction.homecollction(section_no: '2');
+    homecollction.homecollction(section_no: '3');
+    homecollction.homecollction(section_no: '4');
+    super.dispose();
+  }
+
 
   var kohiraDiamonds = false.obs;
   var dreemJewwlry = false.obs;

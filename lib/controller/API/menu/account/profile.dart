@@ -8,7 +8,6 @@ import 'package:kohira/view/utils/app_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/appconstants.dart';
 
-
 class ProfileEdit extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
@@ -42,14 +41,7 @@ class ProfileEdit extends GetxController {
 
       print('Sending request to Profile Edit:- $body');
 
-      final response = await http.post(
-        url,
-        body: body,
-        headers: {
-          ApiHeaders.heading: ApiHeaders.peramitters,
-          ApiHeaders.authorization: tokans,
-        },
-      );
+      final response = await http.post( url,body: body, headers: {ApiHeaders.heading: ApiHeaders.peramitters,ApiHeaders.authorization: tokans});
 
       final responseData = jsonDecode(response.body);
       print('Profile Edit Raw Response: $responseData');

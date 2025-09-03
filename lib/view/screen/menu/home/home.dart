@@ -436,9 +436,7 @@ class Home extends StatelessWidget {
                                           ),
                                         )
                                       ])),
-                              AspectRatio(
-                                  aspectRatio: 10 / 9,
-                                  child: VideoPlayerMenu(videoUrl: section['video'])),
+                              AspectRatio(aspectRatio: 10 / 9,child: VideoPlayerMenu(videoUrl: section['video'])),
                               SizedBox(height: Get.height / 40),
                             ],
                           ),

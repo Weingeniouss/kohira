@@ -13,24 +13,24 @@ class WalletController extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future wallet()async{
-    try{
+  Future wallet() async {
+    try {
       isLoading.value = true;
       final url = Uri.parse(AppUrl.wallet);
-      print("Sending Requset to :- $url");
+      print("Sending Request to :- $url");
 
-      final responce = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters,ApiHeaders.authorization : tokans});
+      final responce = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
 
-      if(responce.statusCode == 200 || responce.statusCode == 201){
+      if (responce.statusCode == 200 || responce.statusCode == 201) {
         data.value = jsonDecode(responce.body);
         log("Wallet :- ${data.value}");
-      }else{
+      } else {
         'Wallet Error this :- ${responce.statusCode}, ${responce.body}';
         handleHttpError(responce.statusCode);
       }
-    }catch(e){
+    } catch (e) {
       print("'Wallet Error this :- $e");
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }
