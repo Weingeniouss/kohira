@@ -32,7 +32,7 @@ class Deletcart extends GetxController{
       if (responses.statusCode == 200 || responses.statusCode == 201) {
         data.value = jsonDecode(responses.body);
         log('Deletcart data :- $data');
-        ToastificationSuccess.Success(data['message']);
+        // ToastificationSuccess.Success(data['message']);
       } else {
         throw {
           'Deletcart data Error This :- ${responses.statusCode}, ${responses.body}',

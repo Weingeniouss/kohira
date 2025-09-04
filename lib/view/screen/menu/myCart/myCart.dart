@@ -35,10 +35,12 @@ import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart'
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+import '../../../../controller/API/menu/others/count.dart';
 import '../category/showproduct.dart';
 
 class Mycart extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
+  final count = Get.put(CountController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool show = false;
   Mycart({super.key});
@@ -182,11 +184,8 @@ class Mycart extends StatelessWidget {
                                     child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
                                   ),
                                   onTap: () {
-                                    myCart.deletValueofcount(item, fetch, index).then((_) {
-                                      Future.delayed(Duration(seconds: 2), () {
-                                        myCart.onInit();
-                                      });
-                                    });
+                                    myCart.deletValueofcount(item, fetch, index);
+                                    count.counting();
                                   },
                                 ),
                               ],

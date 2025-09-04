@@ -129,14 +129,14 @@ class _EditaddressesState extends State<Editaddresses> {
                           onTap: () async{
                             await add.addfechaddresses(
                               id: widget.id,
-                              firstname: firstname!.text,
-                              lastname: lastname!.text,
-                              mobileno: mobile!.text,
-                              address: address!.text,
+                              firstname: (firstname != null) ? firstname!.text : firstname!.text,
+                              lastname: (lastname != null) ? lastname!.text : lastname!.text,
+                              mobileno: (mobile != null) ? mobile!.text : mobile!.text,
+                              address: (address != null) ? address!.text : address!.text,
                               state: (stateId != null) ? stateId.toString() : stateID!.text,
-                              email: mail!.text,
-                              city: city!.text,
-                              zip: zip!.text,
+                              email: (mail != null) ? mail!.text : mail!.text,
+                              city: (city != null) ? city!.text : city!.text,
+                              zip: (zip != null) ? zip!.text : zip!.text,
                               countrycode: (countryValue != null) ? countryValue : countrycode!.text,
                               country: (countryValue != null) ? countryValue : countrycode!.text,
                               isdefault: isDefaultValue,
@@ -275,10 +275,7 @@ class _EditaddressesState extends State<Editaddresses> {
                                   ),
                                 ),
                                 searchMatchFn: (item, searchValue) {
-                                  return item.value?.label
-                                      ?.toLowerCase()
-                                      .contains(searchValue.toLowerCase()) ??
-                                      false;
+                                  return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
                                 },
                               ),
                             );
@@ -357,7 +354,7 @@ class _EditaddressesState extends State<Editaddresses> {
                           Checkbox(
                             activeColor: AppColor.pink_color,
                             checkColor: Colors.white,
-                            value: isChecked,
+                            value: fechedit.data['userAdddress']['isdefault'] == 1 ? isChecked = true : isChecked = false,
                             onChanged: (bool? value) {
                               setState(() {
                                 isChecked = value ?? false;

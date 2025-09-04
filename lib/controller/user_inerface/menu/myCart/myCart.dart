@@ -120,7 +120,9 @@ class MyCartValueChange extends GetxController {
     final deletid = item['id'].toString();
     final diamondid = item['diamondid'].toString();
     final jewelryid = item['jewelryid'].toString();
+    final itemcode = item['CartJewelryData']['title'];
     await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
+    ToastificationSuccess.Success("$itemcode, ${deletcount.data['message'].replaceAll('Cart', '')}");
     if (index < itemCounts.length) itemCounts.removeAt(index);
     await fetchcart.fetchcartcall();
     updateCartTotals();

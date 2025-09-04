@@ -121,7 +121,7 @@ class Processpayment extends GetxController{
         if(order_item != null) 'order_item' : order_item,
         if(password != null) 'password' : password,
       }..removeWhere((key,value) => value == null);
-      final response = await http.post(url,body: jsonEncode(body),headers: {ApiHeaders.authorization : tokans});
+      final response = await http.post(url,body: body,headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
       print('Sending request to: $url');
       print('Paymant body :- $body');
       if (response.statusCode == 200 || response.statusCode == 201) {

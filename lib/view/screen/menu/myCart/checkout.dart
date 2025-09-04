@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unused_local_variable, unnecessary_null_comparison, unused_import
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/credentials/country.dart';
 import '../../../../modal/credentials/country.dart';
 import '../../../utils/app_String.dart';
@@ -28,9 +30,40 @@ class Checkout extends StatelessWidget {
   final processpayment = Get.put(Processpayment());
   final scroll = ScrollController();
   final cheackout = Get.put(Cheackout_Controller());
+
   Checkout({super.key});
+
   @override
   Widget build(BuildContext context) {
+    void paymentprosess() async {
+      await processpayment.processpayment(
+        firstname: 'Khemesh',
+        lastname: 'Soni',
+        email: 'guestuser@gmail.com',
+        companyname: 'Gram',
+        address: '181',
+        city: 'Dfgxzfb',
+        state: '85',
+        state_name: 'hzsdgvihbjsfvbbsfb',
+        country: '+852',
+        countrycode: '+852',
+        zip: '123456',
+        mobileno: '1234567890',
+        samebilling: 'true',
+        totalamount: '3577852',
+        walletAmount: '0',
+        remainingAmount: '110259',
+      );
+
+      // Check response
+      if (processpayment.data != null) {
+        final int code = processpayment.data['code'];
+        final String? gatewayUrl = processpayment.data['gatewayUrl'];
+        final Uri url = Uri.parse(gatewayUrl!);
+        launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+    }
+
     final TextEditingController searchController = TextEditingController();
     return WillPopScope(
       onWillPop: () async {
@@ -40,62 +73,43 @@ class Checkout extends StatelessWidget {
       },
       child: Scaffold(
         appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.cheackout),
-        bottomNavigationBar: ValueListenableBuilder(
+        bottomNavigationBar: SafeArea(
+          child: ValueListenableBuilder(
             valueListenable: cheackout.shipping,
             builder: (BuildContext context, bool value, Widget? child) {
-              return (!cheackout.shipping.value) ? SizedBox() : Container(
-                color: AppColor.white_color,
-                height: Get.height * 0.080,
-                child: horizontalpadding(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                      onTap: (){
-                         processpayment.processpayment(
-                           firstname: 'Khemesh',
-                           lastname: 'Soni',
-                           email: 'guestuser@gmail.com',
-                           companyname: 'Gram',
-                           address: '181',
-                           city: 'Dfgxzfb',
-                           state: '85',
-                           state_name: 'hzsdgvihbjsfvbbsfb',
-                           country: '+852',
-                           countrycode: '+852',
-                           zip: '123456',
-                           mobileno: '1234567890',
-                           samebilling: 'true',
-                           totalamount: '3577852',
-                           walletAmount: '0',
-                           remainingAmount: '110259',
-                         );
-                         },
-                        child: button(AppString.paynow),
+              return (!cheackout.shipping.value)
+                  ? SizedBox()
+                  : Container(
+                      color: AppColor.white_color,
+                      height: Get.height * 0.080,
+                      child: horizontalpadding(
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: paymentprosess,
+                              child: button(AppString.paynow),
+                            ),
+                          ],
+                        ),
                       ),
-                    ]
-                  ),
-                ),
-              );
-            }),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            controller: scroll,
-            physics: cheackout.shouldScroll ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
-            child: Container(
+                    );
+            },
+          ),
+        ),
+        body: SingleChildScrollView(
+          controller: scroll,
+          physics: cheackout.shouldScroll ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
+          child: Container(
               height: Get.height,
               width: Get.width,
               decoration: BoxDecoration(color: AppColor.white_color),
-              child: Obx((){
-
+              child: Obx(() {
                 final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-
-                // Initialize item counts when data is loaded
                 if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
                   myCart.initializeItemCounts();
                 }
                 final fetch = myCart.fetchcart.data['carts'] ?? [];
                 if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
-
                 return horizontalpadding(
                   child: Column(
                     children: [
@@ -111,18 +125,21 @@ class Checkout extends StatelessWidget {
                                 Text(AppString.shippingaddress, style: TextStyle(height: 1.0)),
                                 Builder(
                                   builder: (BuildContext innerContext) {
-                                    return ValueListenableBuilder(valueListenable: cheackout.shipping, builder: (BuildContext context, value, Widget? child) {
-                                      return Checkbox(
-                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        value: cheackout.shipping.value,
-                                        overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                        side: BorderSide(color: AppColor.grey_color, width: 2),
-                                        checkColor: AppColor.white_color,
-                                        activeColor: AppColor.grey_color,
-                                        onChanged: (bool? value) => cheackout.isshipping(innerContext),
-                                      );
-                                    },);
+                                    return ValueListenableBuilder(
+                                      valueListenable: cheackout.shipping,
+                                      builder: (BuildContext context, value, Widget? child) {
+                                        return Checkbox(
+                                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          value: cheackout.shipping.value,
+                                          overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                          side: BorderSide(color: AppColor.grey_color, width: 2),
+                                          checkColor: AppColor.white_color,
+                                          activeColor: AppColor.grey_color,
+                                          onChanged: (bool? value) => cheackout.isshipping(innerContext),
+                                        );
+                                      },
+                                    );
                                   },
                                 ),
                               ],
@@ -150,14 +167,14 @@ class Checkout extends StatelessWidget {
                           Visibility(
                             visible: !cheackout.billing.value,
                             child: SizedBox(
-                              height: Get.height /2,
+                              height: Get.height / 2,
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
                                     SizedBox(height: Get.height / 60),
-                                    inputField(hintText: AppString.firstname,icon: AppIcon.parson),
-                                    inputField(hintText: AppString.lastname,icon: AppIcon.parson),
-                                    inputField(hintText: AppString.Addresses,icon: AppIcon.Addresses,iconcolor: AppColor.pink_color),
+                                    inputField(hintText: AppString.firstname, icon: AppIcon.parson),
+                                    inputField(hintText: AppString.lastname, icon: AppIcon.parson),
+                                    inputField(hintText: AppString.Addresses, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
                                     Container(
                                       padding: EdgeInsets.symmetric(horizontal: 8),
                                       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
@@ -206,10 +223,10 @@ class Checkout extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    inputField(hintText: AppString.zipcode,icon: AppIcon.Addresses,iconcolor: AppColor.pink_color),
-                                    inputField(hintText: AppString.city,icon: AppIcon.Addresses,iconcolor: AppColor.pink_color),
-                                    inputField(hintText: AppString.email,icon: AppIcon.mail),
-                                    inputField(hintText: AppString.hintmobile,icon: AppIcon.mobile),
+                                    inputField(hintText: AppString.zipcode, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
+                                    inputField(hintText: AppString.city, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
+                                    inputField(hintText: AppString.email, icon: AppIcon.mail),
+                                    inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile),
                                   ],
                                 ),
                               ),
@@ -217,12 +234,11 @@ class Checkout extends StatelessWidget {
                           )
                         ],
                       ),
-
                       SizedBox(height: Get.height / 50),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(AppString.payments, style: TextStyle(fontSize: Get.width / 25,fontWeight: FontWeight.w600)),
+                          Text(AppString.payments, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(
@@ -245,7 +261,6 @@ class Checkout extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: Get.height / 50),
-
                       Expanded(
                         child: SizedBox(
                           width: Get.width,
@@ -285,8 +300,7 @@ class Checkout extends StatelessWidget {
                               ),
                               Divider(color: AppColor.textfild_color),
                               Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.tax),
                                   Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
@@ -316,9 +330,7 @@ class Checkout extends StatelessWidget {
                     ],
                   ),
                 );
-              })
-            ),
-          ),
+              })),
         ),
       ),
     );

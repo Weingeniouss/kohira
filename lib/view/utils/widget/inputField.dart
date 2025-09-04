@@ -88,6 +88,7 @@ Widget searchField({
   TextInputAction? textInputAction
 }){
   return Container(
+    height: Get.height * 0.05,
     decoration: BoxDecoration(
       border: Border.all(color: AppColor.textfild_color),
       borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
@@ -101,7 +102,7 @@ Widget searchField({
         onChanged: onChanged,
         onSubmitted: onSubmitted,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: Get.height / 60),
+          // contentPadding: EdgeInsets.symmetric(vertical: Get.height / 60),
           prefixIcon: Icon(Icons.search, color: AppColor.hintColor),
           hintText: AppString.Searchs,
           hintStyle: TextStyle(color: AppColor.hintColor),

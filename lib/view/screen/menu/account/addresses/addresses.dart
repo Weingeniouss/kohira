@@ -160,13 +160,18 @@ class _AddressesState extends State<Addresses> {
                                 SizedBox(height: Get.height / 50),
                                 (fechs['isdefault'] == 0) ? GestureDetector(
                                   onTap: () async{
-                                     DeletAddress().deletaddress(id: fechs['id'].toString());
-                                     await fech.fechaddresses();
+                                     DeletAddress().deletaddress(id: fechs['id'].toString()).then((_){
+                                       fech.fechaddresses().then((_){
+                                         if(mounted){
+                                           setState(() {});
+                                         }
+                                       });
+                                     });
                                     },
                                   child: Container(
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(border: Border.all(color: Colors.red),borderRadius: BorderRadius.circular(Get.width / 50)),
-                                    child: Text('Delet Accout',style: TextStyle(color: Colors.red,fontWeight: FontWeight.w500)),
+                                    child: Text('Delet Account',style: TextStyle(color: Colors.red,fontWeight: FontWeight.w500)),
                                   ),
                                 ) : SizedBox(),
                               ],
