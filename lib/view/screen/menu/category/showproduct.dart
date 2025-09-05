@@ -11,7 +11,7 @@ import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
-import 'package:kohira/view/utils/appconstants.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/video.dart';
 import 'package:lottie/lottie.dart';

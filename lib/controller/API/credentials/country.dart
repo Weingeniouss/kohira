@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
-import 'package:kohira/view/utils/appconstants.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 import '../../../modal/credentials/country.dart';
 import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/pop.dart';

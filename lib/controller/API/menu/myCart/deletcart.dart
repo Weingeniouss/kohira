@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../../view/utils/API_headers.dart';
 import '../../../../view/utils/app_url.dart';
-import '../../../../view/utils/appconstants.dart';
+import '../../../../view/utils/app_constants.dart';
 import '../../../../view/utils/widget/pop.dart';
 
 class Deletcart extends GetxController{

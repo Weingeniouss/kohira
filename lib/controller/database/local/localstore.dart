@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:kohira/view/utils/app_json.dart';
-import 'package:kohira/view/utils/appconstants.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../view/screen/credentials/login.dart' show Login;

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/appconstants.dart';
+import '../../../../view/utils/app_constants.dart';
 
 class Myorderdetails extends GetxController{
   var isLoading = false.obs;

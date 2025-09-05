@@ -3,7 +3,7 @@
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../../../../view/screen/credentials/login.dart';
-import '../../../../view/utils/appconstants.dart' show islogin;
+import '../../../../view/utils/app_constants.dart';
 
 class LogoController extends GetxController {
   bool navigated = false;

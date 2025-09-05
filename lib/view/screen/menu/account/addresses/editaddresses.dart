@@ -141,26 +141,26 @@ class _EditaddressesState extends State<Editaddresses> {
                               country: (countryValue != null) ? countryValue : countrycode!.text,
                               isdefault: isDefaultValue,
                             );
-                           if(add.data['type'] == 'success'){
-                             ToastificationSuccess.Success(add.data['message']);
-                           }
-                           if (add.data['success'] == false) {
-                             final errors = add.data['errors'];
-                             if (errors != null && errors.containsKey('zip')) ToastificationError.Error(errors['zip'][0]);
-                             if (errors != null && errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
-                             if (errors != null && errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
-                             if (errors != null && errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
-                             if (errors != null && errors.containsKey('address')) ToastificationError.Error(errors['address'][0]);
-                             if (errors != null && errors.containsKey('city')) ToastificationError.Error(errors['city'][0]);
-                             if (errors != null && errors.containsKey('state')) ToastificationError.Error(errors['state'][0]);
-                             if (errors != null && errors.containsKey('country')) ToastificationError.Error(errors['country'][0]);
-                             if (errors != null && errors.containsKey('countrycode')) ToastificationError.Error(errors['countrycode'][0]);
-                             if (errors != null && errors.containsKey('mobileno')) ToastificationError.Error(errors['mobileno'][0]);
-                             if (errors != null && errors.containsKey('id')) ToastificationError.Error(errors['mobileno'][0]);
-                             if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
-                           }
-                           Get.back();
-                           await fech.fechaddresses();
+                            if(add.data['type'] == 'success'){
+                              ToastificationSuccess.Success(add.data['message']);
+                            }
+                            if (add.data['success'] == false) {
+                              final errors = add.data['errors'];
+                              if (errors != null && errors.containsKey('zip')) ToastificationError.Error(errors['zip'][0]);
+                              if (errors != null && errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
+                              if (errors != null && errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
+                              if (errors != null && errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
+                              if (errors != null && errors.containsKey('address')) ToastificationError.Error(errors['address'][0]);
+                              if (errors != null && errors.containsKey('city')) ToastificationError.Error(errors['city'][0]);
+                              if (errors != null && errors.containsKey('state')) ToastificationError.Error(errors['state'][0]);
+                              if (errors != null && errors.containsKey('country')) ToastificationError.Error(errors['country'][0]);
+                              if (errors != null && errors.containsKey('countrycode')) ToastificationError.Error(errors['countrycode'][0]);
+                              if (errors != null && errors.containsKey('mobileno')) ToastificationError.Error(errors['mobileno'][0]);
+                              if (errors != null && errors.containsKey('id')) ToastificationError.Error(errors['mobileno'][0]);
+                              if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
+                            }
+                            Get.back();
+                            await fech.fechaddresses();
                           },
                           child: button("${AppString.save} ${AppString.Addresses}"),
                         ),
@@ -179,121 +179,57 @@ class _EditaddressesState extends State<Editaddresses> {
           height: Get.height,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
-              if (fechedit.isLoading.value) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (Get.isDialogOpen != true) {
-                    Get.dialog(
-                      Center(child: Lottie.asset(AppJson.loading2)),
-                      barrierDismissible: false,
-                    );
-                  }
-                });
-                return Scaffold(backgroundColor: Colors.transparent);
-              } else {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (Get.isDialogOpen == true) {
-                    Get.back();
-                  }
-                });
-              }
-              final userData = fechedit.data['userAdddress'];
-              if (userData != null && firstname == null) {
-                firstname = TextEditingController(text: userData['firstname'] ?? '');
-                lastname = TextEditingController(text: userData['lastname'] ?? '');
-                address = TextEditingController(text: userData['address'] ?? '');
-                country = TextEditingController(text: userData['country_data']?['name'] ?? '');
-                state = TextEditingController(text: userData['state_data']?['name'] ?? '');
-                stateID = TextEditingController(text: userData['state_data']?['id'].toString() ?? '');
-                city = TextEditingController(text: userData['city'] ?? '');
-                countrycode = TextEditingController(text: userData['country_data']?['countrycode'] ?? '');
-                mail = TextEditingController(text: userData['email'] ?? '');
-                mobile = TextEditingController(text: userData['mobileno'] ?? '');
-                zip = TextEditingController(text: userData['pincode'] ?? '');
-              }
-              return horizontalpadding(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: Get.height / 50),
-                      inputField(icon: AppIcon.parson, controller: firstname),
-                      inputField(icon: AppIcon.parson, controller: lastname),
-                      inputField(icon: AppIcon.location, controller: address,iconcolor: AppColor.pink_color),
-                      Container(
+            if (fechedit.isLoading.value) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (Get.isDialogOpen != true) {
+                  Get.dialog(
+                    Center(child: Lottie.asset(AppJson.loading2)),
+                    barrierDismissible: false,
+                  );
+                }
+              });
+              return Scaffold(backgroundColor: Colors.transparent);
+            } else {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (Get.isDialogOpen == true) {
+                  Get.back();
+                }
+              });
+            }
+            final userData = fechedit.data['userAdddress'];
+            if (userData != null && firstname == null) {
+              firstname = TextEditingController(text: userData['firstname'] ?? '');
+              lastname = TextEditingController(text: userData['lastname'] ?? '');
+              address = TextEditingController(text: userData['address'] ?? '');
+              country = TextEditingController(text: userData['country_data']?['name'] ?? '');
+              state = TextEditingController(text: userData['state_data']?['name'] ?? '');
+              stateID = TextEditingController(text: userData['state_data']?['id'].toString() ?? '');
+              city = TextEditingController(text: userData['city'] ?? '');
+              countrycode = TextEditingController(text: userData['country_data']?['countrycode'] ?? '');
+              mail = TextEditingController(text: userData['email'] ?? '');
+              mobile = TextEditingController(text: userData['mobileno'] ?? '');
+              zip = TextEditingController(text: userData['pincode'] ?? '');
+            }
+            return horizontalpadding(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: Get.height / 50),
+                    inputField(icon: AppIcon.parson, controller: firstname),
+                    inputField(icon: AppIcon.parson, controller: lastname),
+                    inputField(icon: AppIcon.location, controller: address,iconcolor: AppColor.pink_color),
+                    Container(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                         child: Row(children: [
-                        SizedBox(width: Get.width / 150),
-                        SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
-                        Expanded(
-                          child: Obx(() {
-                            return DropdownButton2<Data>(
-                              value: Country.selectedCountry.value,
-                              hint: Text(
-                                userData['country_data']?['name'] ?? '',
-                                style: TextStyle(
-                                  color: AppColor.black_color,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              isExpanded: true,
-                              underline: SizedBox(),
-                              items: Country.countries.map((item) {
-                                return DropdownMenuItem<Data>(
-                                  value: item,
-                                  child: Text(item.label.toString()),
-                                );
-                              }).toList(),
-                              onChanged: (newValue) {
-                                Country.selectedCountry.value = newValue!;
-                                State.stateList(newValue.id.toString());
-                                countryValue = newValue.id.toString();
-                                countryLabal = newValue.label;
-                                print("Country ID: $countryValue");
-                                print("Country Label: $countryLabal");
-                                Get.find<StateCalling>().stateList(countryValue!);
-                              },
-                              dropdownStyleData: DropdownStyleData(
-                                offset: Offset(0, -10),
-                                maxHeight: Get.height / 3,
-                                decoration: BoxDecoration(color: AppColor.white_color),
-                              ),
-                              iconStyleData: IconStyleData(
-                                icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor),
-                                iconSize: 24,
-                              ),
-                              dropdownSearchData: DropdownSearchData(
-                                searchController: searchController,
-                                searchInnerWidgetHeight: 40,
-                                searchInnerWidget: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: TextField(
-                                    controller: searchController,
-                                    decoration: InputDecoration(
-                                      hintText: 'Search Country...',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                                searchMatchFn: (item, searchValue) {
-                                  return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
-                                },
-                              ),
-                            );
-                          }),
-                        ),
-                      ])),
-                      SizedBox(height: Get.height / 80),
-                      Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
-                          child: Row(children: [
-                            SizedBox(width: Get.width / 150),
-                            SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
-                            Expanded(
-                              child: DropdownButton2<Map<String, dynamic>>(
-                                value: State.selectedState.value,
+                          SizedBox(width: Get.width / 150),
+                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
+                          Expanded(
+                            child: Obx(() {
+                              return DropdownButton2<Data>(
+                                value: Country.selectedCountry.value,
                                 hint: Text(
-                                  userData['state_data']?['name'] ?? '',
+                                  userData['country_data']?['name'] ?? '',
                                   style: TextStyle(
                                     color: AppColor.black_color,
                                     fontWeight: FontWeight.w400,
@@ -301,17 +237,20 @@ class _EditaddressesState extends State<Editaddresses> {
                                 ),
                                 isExpanded: true,
                                 underline: SizedBox(),
-                                items: State.states.map((item) {
-                                  return DropdownMenuItem<Map<String, dynamic>>(
+                                items: Country.countries.map((item) {
+                                  return DropdownMenuItem<Data>(
                                     value: item,
-                                    child: Text(item["label"]),
+                                    child: Text(item.label.toString()),
                                   );
                                 }).toList(),
                                 onChanged: (newValue) {
-                                  State.selectedState.value = newValue;
-                                  stateId = newValue?["id"].toString();
-                                  stateLabel = newValue?["label"];
-                                  print("Selected State ID: $stateId, Label: $stateLabel");
+                                  Country.selectedCountry.value = newValue!;
+                                  State.stateList(newValue.id.toString());
+                                  countryValue = newValue.id.toString();
+                                  countryLabal = newValue.label;
+                                  print("Country ID: $countryValue");
+                                  print("Country Label: $countryLabal");
+                                  Get.find<StateCalling>().stateList(countryValue!);
                                 },
                                 dropdownStyleData: DropdownStyleData(
                                   offset: Offset(0, -10),
@@ -323,65 +262,126 @@ class _EditaddressesState extends State<Editaddresses> {
                                   iconSize: 24,
                                 ),
                                 dropdownSearchData: DropdownSearchData(
-                                  searchController: statesearchController,
+                                  searchController: searchController,
                                   searchInnerWidgetHeight: 40,
                                   searchInnerWidget: Padding(
                                     padding: EdgeInsets.all(8),
                                     child: TextField(
-                                      controller: statesearchController,
+                                      controller: searchController,
                                       decoration: InputDecoration(
-                                        hintText: 'Search State...',
+                                        hintText: 'Search Country...',
                                         border: OutlineInputBorder(),
                                       ),
                                     ),
                                   ),
                                   searchMatchFn: (item, searchValue) {
-                                    final map = item.value as Map<String, dynamic>;
-                                    return map["label"].toLowerCase().contains(searchValue.toLowerCase());
+                                    return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
                                   },
                                 ),
+                              );
+                            }),
+                          ),
+                        ])),
+                    SizedBox(height: Get.height / 80),
+                    Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
+                        child: Row(children: [
+                          SizedBox(width: Get.width / 150),
+                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
+                          Expanded(
+                            child: DropdownButton2<Map<String, dynamic>>(
+                              value: State.selectedState.value,
+                              hint: Text(
+                                userData['state_data']?['name'] ?? '',
+                                style: TextStyle(
+                                  color: AppColor.black_color,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              isExpanded: true,
+                              underline: SizedBox(),
+                              items: State.states.map((item) {
+                                return DropdownMenuItem<Map<String, dynamic>>(
+                                  value: item,
+                                  child: Text(item["label"]),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                State.selectedState.value = newValue;
+                                stateId = newValue?["id"].toString();
+                                stateLabel = newValue?["label"];
+                                print("Selected State ID: $stateId, Label: $stateLabel");
+                              },
+                              dropdownStyleData: DropdownStyleData(
+                                offset: Offset(0, -10),
+                                maxHeight: Get.height / 3,
+                                decoration: BoxDecoration(color: AppColor.white_color),
+                              ),
+                              iconStyleData: IconStyleData(
+                                icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor),
+                                iconSize: 24,
+                              ),
+                              dropdownSearchData: DropdownSearchData(
+                                searchController: statesearchController,
+                                searchInnerWidgetHeight: 40,
+                                searchInnerWidget: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: TextField(
+                                    controller: statesearchController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Search State...',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                                searchMatchFn: (item, searchValue) {
+                                  final map = item.value as Map<String, dynamic>;
+                                  return map["label"].toLowerCase().contains(searchValue.toLowerCase());
+                                },
                               ),
                             ),
-                          ])),
-                      SizedBox(height: Get.height / 80),
-                      // inputField(icon: AppIcon.location, controller: state,iconcolor: AppColor.pink_color),
-                      inputField(icon: AppIcon.location,controller: city,iconcolor: AppColor.pink_color),
-                      inputField(icon: AppIcon.earth, controller: zip,iconheight: 20,iconcolor: AppColor.pink_color,textInputType: TextInputType.number,maxLength: 6),
-                      inputField(icon: AppIcon.mail, controller: mail),
-                      inputField(icon: AppIcon.mobile, controller: mobile,maxLength: 10,textInputType: TextInputType.number),
-                      Row(
-                        children: [
-                          Checkbox(
-                            activeColor: AppColor.pink_color,
-                            checkColor: Colors.white,
-                            value: fechedit.data['userAdddress']['isdefault'] == 1 ? isChecked = true : isChecked = false,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isChecked = value ?? false;
-                                final fech = Get.put(EditFechaddresses());
-                                if (isChecked) {
-                                  final userAddresses = fech.data['userAdddress'];
-                                  if (userAddresses != null && userAddresses.isNotEmpty) {
-                                    final id = widget.id.toString();
-                                    if (id != null) {
-                                      setDeflut.setDefult(id: id);
-                                      print("✅ Default set for ID: $id");
-                                    }
-                                  } else {
-                                    print("⚠️ No addresses available");
-                                  }
-                                }
-                              });
-                            },
                           ),
-                          Text(AppString.setdefult,style: TextStyle(fontSize: Get.width / 25)),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ])),
+                    SizedBox(height: Get.height / 80),
+                    // inputField(icon: AppIcon.location, controller: state,iconcolor: AppColor.pink_color),
+                    inputField(icon: AppIcon.location,controller: city,iconcolor: AppColor.pink_color),
+                    inputField(icon: AppIcon.earth, controller: zip,iconheight: 20,iconcolor: AppColor.pink_color,textInputType: TextInputType.number,maxLength: 6),
+                    inputField(icon: AppIcon.mail, controller: mail),
+                    inputField(icon: AppIcon.mobile, controller: mobile,maxLength: 10,textInputType: TextInputType.number),
+                    Row(
+                      children: [
+                        Checkbox(
+                          activeColor: AppColor.pink_color,
+                          checkColor: Colors.white,
+                          value: fechedit.data['userAdddress']['isdefault'] == 1 ? isChecked = true : isChecked = false,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value ?? false;
+                              final fech = Get.put(EditFechaddresses());
+                              if (isChecked) {
+                                final userAddresses = fech.data['userAdddress'];
+                                if (userAddresses != null && userAddresses.isNotEmpty) {
+                                  final id = widget.id.toString();
+                                  if (id != null) {
+                                    setDeflut.setDefult(id: id);
+                                    print("✅ Default set for ID: $id");
+                                  }
+                                } else {
+                                  print("⚠️ No addresses available");
+                                }
+                              }
+                            });
+                          },
+                        ),
+                        Text(AppString.setdefult,style: TextStyle(fontSize: Get.width / 25)),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            },
+              ),
+            );
+          },
           ),
         ),
       ),
