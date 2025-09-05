@@ -18,7 +18,6 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 
-
 class Editaddresses extends StatefulWidget {
   final String id;
 
@@ -35,6 +34,19 @@ class _EditaddressesState extends State<Editaddresses> {
   final Country = Get.put(CountryCalling());
   final State = Get.put(StateCalling());
   final setDeflut = Get.put(SetDeflutAddress());
+
+  String? countryLabal;
+  String? countryValue;
+  String? stateLabel;
+  String? stateId;
+
+  String selectedState = 'Selected State';
+  String selectedCountry = 'Selected Country';
+
+  //Address defalt
+  bool isChecked = false;
+  bool isDefault = false;
+  String get isDefaultValue => isChecked ? '1' : '0';
 
   TextEditingController? firstname;
   TextEditingController? lastname;
@@ -72,19 +84,6 @@ class _EditaddressesState extends State<Editaddresses> {
       }
     });
   }
-
-  String? countryLabal;
-  String? countryValue;
-  String? stateLabel;
-  String? stateId;
-
-  String selectedState = 'Selected State';
-  String selectedCountry = 'Selected Country';
-
-  //Address defalt
-  bool isChecked = false;
-  bool isDefault = false;
-  String get isDefaultValue => isChecked ? '1' : '0';
 
   @override
   Widget build(BuildContext context) {
@@ -349,12 +348,32 @@ class _EditaddressesState extends State<Editaddresses> {
                     inputField(icon: AppIcon.earth, controller: zip,iconheight: 20,iconcolor: AppColor.pink_color,textInputType: TextInputType.number,maxLength: 6),
                     inputField(icon: AppIcon.mail, controller: mail),
                     inputField(icon: AppIcon.mobile, controller: mobile,maxLength: 10,textInputType: TextInputType.number),
-                    Row(
+                    fechedit.data['userAdddress']['isdefault'] ==  1 ? Column(
+                      children: [
+                        SizedBox(height: Get.height / 80),
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(color: AppColor.pink_color),
+                                  child: Icon(Icons.check,size: 10),
+                                ),
+                                Text(AppString.setdefult,style: TextStyle(fontSize: Get.width / 25)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ) : SizedBox(),
+
+                    fechedit.data['userAdddress']['isdefault'] == 0 ?  Row(
                       children: [
                         Checkbox(
                           activeColor: AppColor.pink_color,
                           checkColor: Colors.white,
-                          value: fechedit.data['userAdddress']['isdefault'] == 1 ? isChecked = true : isChecked = false,
+                          value: isChecked,
                           onChanged: (bool? value) {
                             setState(() {
                               isChecked = value ?? false;
@@ -376,7 +395,7 @@ class _EditaddressesState extends State<Editaddresses> {
                         ),
                         Text(AppString.setdefult,style: TextStyle(fontSize: Get.width / 25)),
                       ],
-                    ),
+                    ) : SizedBox(),
                   ],
                 ),
               ),
