@@ -353,13 +353,15 @@ class _EditaddressesState extends State<Editaddresses> {
                         SizedBox(height: Get.height / 80),
                         Row(
                           children: [
+                            SizedBox(width: Get.width / 30),
                             Row(
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(color: AppColor.pink_color),
-                                  child: Icon(Icons.check,size: 10),
+                                  decoration: BoxDecoration(color: AppColor.pink_color,borderRadius: BorderRadius.circular(Get.width / 80)),
+                                  child: Icon(Icons.check,size: 13,color: AppColor.white_color),
                                 ),
+                                SizedBox(width: Get.width / 50),
                                 Text(AppString.setdefult,style: TextStyle(fontSize: Get.width / 25)),
                               ],
                             ),
