@@ -103,19 +103,11 @@ class Subcategrory extends GetxController {
         if (j_count != null) 'j_count': j_count,
         if (userid != null) 'userid': userid,
       }..removeWhere((key,value) => value == null);
-
-      print('Subcategrory BODY:- $body');
-
-      final response = await http.post(
-        url,
-        headers: {ApiHeaders.heading: ApiHeaders.peramitters},
-        body: body,
-      );
-
+      print('Subcategory BODY:- $body');
+      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters}, body: body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonData = jsonDecode(response.body);
         final newItems = jsonData['data'] ?? [];
-
         if (newItems.isEmpty) {
           hasMore.value = false;
         } else {
@@ -129,7 +121,6 @@ class Subcategrory extends GetxController {
           draw.value++;
           start.value += length.value;
         }
-
         log('Subcategrory Response: $jsonData');
       } else {
         ToastificationError.Error('Subcategrory Error: ${response.statusCode}, ${response.body}');
@@ -140,7 +131,6 @@ class Subcategrory extends GetxController {
       isLoading.value = false;
     }
   }
-
   void resetPagination() {
     draw.value = 1;
     start.value = 0;
@@ -148,7 +138,6 @@ class Subcategrory extends GetxController {
     data.clear();
     allData.clear(); // ✅ Reset both
   }
-
   void filterSearch(String query) {
     if (query.isEmpty) {
       data.value = allData;

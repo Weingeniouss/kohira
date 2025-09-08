@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, constant_identifier_names
 
 import 'package:kohira/view/screen/menu/home/Search.dart';
 
@@ -32,6 +32,10 @@ class AppUrl {
       static const categories = '$baseurl/home/categories';
       static const slider = '$baseurl/home/slider';
       static const homecollcation = '$baseurl/home/collections';
+
+      //drawer
+      static const collection = '$baseurl/collections';
+      static const jewellery_filter = '$baseurl/Jewellery-filter';
 
       //Categorie
       static const recommendedJewelleryList ='$baseurl/recommendedJewelleryList';

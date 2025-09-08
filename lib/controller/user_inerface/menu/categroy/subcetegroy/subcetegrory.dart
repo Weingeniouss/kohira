@@ -10,11 +10,11 @@ class SubcetegroryShow extends  GetxController{
   final ScrollController scrollController = ScrollController();
   var dataLoaded = false;
 
-  loadData({required String subcategrorys,required String subcategory_slug}){
+  loadData({String? subcategrorys,String? subcategory_slug, String? collection_id, String? metal_type}){
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if(!dataLoaded){
         subcategrory.resetPagination();
-        subcategrory.subcategroryuser(category_slug: subcategrorys,subcategory_slug: subcategory_slug);
+        subcategrory.subcategroryuser(category_slug: subcategrorys, subcategory_slug: subcategory_slug, collection_id: collection_id, metal_type: metal_type);
       }
     });
 

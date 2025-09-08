@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:kohira/controller/API/menu/account/profiledetails.dart';
+import 'package:kohira/controller/API/menu/others/drawer/collection.dart';
 
 import '../../../API/menu/account/addresses.dart';
 import '../../../API/menu/account/wallet.dart';
 import '../../../API/menu/category/subcategrory/filtercategory.dart';
 import '../../../API/menu/category/subcategrory/jewelleryfilter.dart';
+import '../../../API/menu/category/subcategrory/subCategrory.dart';
 import '../../../API/menu/home/categories.dart';
 import '../../../API/menu/home/homecollction.dart';
 import '../../../API/menu/home/slider.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 import '../../../API/menu/others/count.dart';
+import '../../../API/menu/others/drawer/Jewellery_list.dart';
 import '../../../API/menu/overstore/citylist.dart';
 import '../../../API/menu/overstore/overStore.dart';
 import '../account/account.dart';
@@ -43,11 +46,15 @@ class HomeController extends GetxController {
   //Drawer Menu APIs Calling
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
+  final jewelleryfilter = Get.put(JewelleryList());
 
   //OverStore
   final store =  Get.put(Overstore_Controller());
   final citylist =  Get.put(Citylist());
 
+  //Collection
+  final collection = Get.put(Collection());
+  final subcategrory = Get.put(Subcategrory());
 
   RxInt activeIndex = 0.obs;
 
@@ -64,6 +71,7 @@ class HomeController extends GetxController {
     //Drawer Menu APIs Call
     jewellery.fetchJewelleryFilter();
     category.fetchFilter();
+    jewelleryfilter.jewellerylist();
     count.counting();
 
     //Wishlist
@@ -83,6 +91,9 @@ class HomeController extends GetxController {
     wallet.wallet();
     fech.fechaddresses();
 
+    //Collection
+    collection.collectiondata();
+    subcategrory.subcategroryuser();
 
     homecollction.homecollction(section_no: '2');
     homecollction.homecollction(section_no: '3');

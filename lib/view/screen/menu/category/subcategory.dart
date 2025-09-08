@@ -24,26 +24,18 @@ class Subcategorys extends StatelessWidget {
   final show = Get.put(SubcetegroryShow());
   String? subcategrorys;
   String? subcategory_slug;
-  final String subcategrorysname;
-
-   Subcategorys({
-    super.key, this.subcategrorys,
-    required this.subcategrorysname,
-    this.subcategory_slug,
-  });
-
+  String? collection_id;
+  String? subcategrorysname;
+  String? metal_type;
+  Subcategorys({super.key, this.subcategrorys, this.subcategrorysname, this.subcategory_slug, this.collection_id,this.metal_type});
   @override
   Widget build(BuildContext context) {
     show.onInit();
-    show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString());
+    show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString(), collection_id: collection_id.toString(),metal_type: metal_type);
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: subcategrorysname),
       bottomNavigationBar: Obx((){
-
-        if(show.subcategrory.data.isEmpty){
-          return SizedBox();
-        }
-
+        if(show.subcategrory.data.isEmpty) return SizedBox();
         return SafeArea(
           child: Container(
             decoration: BoxDecoration(color: AppColor.white_color),
@@ -70,12 +62,7 @@ class Subcategorys extends StatelessWidget {
                     ),
                     Text("|",style: TextStyle(color: AppColor.graycolor)),
                     GestureDetector(
-                      onTap: () {
-                         ShowBottam().showbottam(
-                           context, category_slug: subcategrorys.toString(),
-                           subcategrorys: subcategory_slug.toString(),
-                          );
-                        },
+                      onTap: () => ShowBottam().showbottam(context, category_slug: subcategrorys.toString(), subcategrorys: subcategory_slug.toString()),
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
                         color: AppColor.white_color,
@@ -96,9 +83,7 @@ class Subcategorys extends StatelessWidget {
         );
       }),
       body: Container(
-        height: Get.height,
-        width: Get.width,
-        color: AppColor.white_color,
+        height: Get.height, width: Get.width, color: AppColor.white_color,
         child: Obx(() {
           if(show.subcategrory.isLoading.value && show.subcategrory.data.isEmpty){
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -117,11 +102,7 @@ class Subcategorys extends StatelessWidget {
               }
             });
           }
-
-          if(show.subcategrory.data.isEmpty){
-            return Center(child: Lottie.asset(AppJson.noData));
-          }
-
+          if(show.subcategrory.data.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
           return SafeArea(
             child: horizontalpadding(
               child: RefreshIndicator(
@@ -342,7 +323,6 @@ class ShowBottam {
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
   final subcategrory = Get.put(Subcategrory());
-
   final filtertab = Get.put(FilterController());
 
   showbottam(
@@ -412,7 +392,6 @@ class ShowBottam {
                 return Colors.transparent; // fallback if parsing fails
               }
             }
-
 
             return SafeArea(
               child: StatefulBuilder(

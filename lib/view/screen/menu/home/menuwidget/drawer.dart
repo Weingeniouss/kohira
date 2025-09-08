@@ -14,7 +14,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
-import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
@@ -27,7 +26,8 @@ import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_logo.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
-
+import '../../../../../controller/API/menu/others/drawer/Jewellery_list.dart';
+import '../../../../../controller/API/menu/others/drawer/collection.dart';
 import '../../account/addresses/addresses.dart';
 import '../../account/order history/orderhistory.dart';
 import '../../account/privacy policy/privacy.dart';
@@ -42,8 +42,9 @@ class Drawers extends StatefulWidget {
 class _DrawersState extends State<Drawers> {
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
-  final subcategrory = Get.put(Subcategrory());
   final drawer = Get.put(DrawerInterface());
+  final collection = Get.put(Collection());
+  final jewelleryfilter = Get.put(JewelleryList());
 
   String getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
@@ -91,6 +92,8 @@ class _DrawersState extends State<Drawers> {
                   return Obx(() {
                     return Column(
                       children: [
+
+                        //List of Categories
                         horizontalpadding(
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -117,7 +120,7 @@ class _DrawersState extends State<Drawers> {
                                                 SizedBox(width: Get.width / 30),
                                                 SizedBox(
                                                   width: Get.width / 3.5,
-                                                  child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
+                                                  child: Text(categoryItem.name.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
                                                 ),
                                                 Spacer(),
                                               ],
@@ -137,7 +140,7 @@ class _DrawersState extends State<Drawers> {
                                                             return GestureDetector(
                                                               onTap: () {
                                                                 category.selectCategorySlug(subItem.slug);
-                                                                Get.to(() => Subcategorys(subcategory_slug: subItem.slug, subcategrorysname: AppString.product),
+                                                                Get.to(() => Subcategorys(subcategory_slug: subItem.slug, subcategrorysname: subItem.name),
                                                                   transition: Transition.rightToLeft,
                                                                   duration: Duration(milliseconds: 600),
                                                                 );
@@ -150,7 +153,7 @@ class _DrawersState extends State<Drawers> {
                                                                     children: [
                                                                       Text("*"),
                                                                       SizedBox(width: Get.width * 0.015),
-                                                                      SizedBox(width: Get.width / 3, child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400))),
+                                                                      SizedBox(width: Get.width / 3, child: Text(subItem.name.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400))),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -160,7 +163,7 @@ class _DrawersState extends State<Drawers> {
                                                           if (categoryItem.subcategory.length > 6)
                                                             GestureDetector(
                                                               onTap: () {
-                                                                Get.to(() => Subcategorys(subcategrorys: categoryItem.slug, subcategrorysname: AppString.product),
+                                                                Get.to(() => Subcategorys(subcategrorys: categoryItem.slug, subcategrorysname: categoryItem.name),
                                                                   transition: Transition.rightToLeft,
                                                                   duration: Duration(milliseconds: 600),
                                                                 );
@@ -202,6 +205,8 @@ class _DrawersState extends State<Drawers> {
                             },
                           ),
                         ),
+
+                        // All Jewellery
                         GestureDetector(
                           onTap: drawer.selectedJewellery,
                           child: Container(
@@ -244,7 +249,7 @@ class _DrawersState extends State<Drawers> {
                                                           SizedBox(width: Get.width / 30),
                                                           SizedBox(
                                                             width: Get.width / 3.5,
-                                                            child: Text(categoryItem.name, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
+                                                            child: Text(categoryItem.name.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
                                                           ),
                                                           Spacer(),
                                                         ],
@@ -254,9 +259,8 @@ class _DrawersState extends State<Drawers> {
                                                   AnimatedCrossFade(
                                                     duration: Duration(milliseconds: 200),
                                                     firstChild: SizedBox.shrink(),
-                                                    secondChild:
-                                                        (categoryItem.subcategory.isNotEmpty)
-                                                            ? Padding(
+                                                    secondChild: (categoryItem.subcategory.isNotEmpty)
+                                                        ? Padding(
                                                                 padding: EdgeInsets.only(left: Get.width * 0.08),
                                                                 child: Column(
                                                                   children: [
@@ -266,7 +270,7 @@ class _DrawersState extends State<Drawers> {
                                                                           category.selectCategorySlug(subItem.slug);
                                                                           Get.to(() => Subcategorys(
                                                                             subcategory_slug: subItem.slug,
-                                                                            subcategrorysname: AppString.product,
+                                                                            subcategrorysname: subItem.name,
                                                                           ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                                                         },
                                                                         child: Container(
@@ -279,7 +283,7 @@ class _DrawersState extends State<Drawers> {
                                                                                 SizedBox(width: Get.width * 0.015),
                                                                                 SizedBox(
                                                                                   width: Get.width / 3,
-                                                                                  child: Text(subItem.name, style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                                                  child: Text(subItem.name.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
                                                                                 ),
                                                                               ],
                                                                             ),
@@ -292,7 +296,7 @@ class _DrawersState extends State<Drawers> {
                                                                         onTap: () {
                                                                           Get.to(() => Subcategorys(
                                                                             subcategrorys: categoryItem.slug,
-                                                                            subcategrorysname: AppString.product,
+                                                                            subcategrorysname: categoryItem.name,
                                                                           ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                                                         },
                                                                         child: Padding(
@@ -321,6 +325,189 @@ class _DrawersState extends State<Drawers> {
                                 )
                               : SizedBox.shrink(),
                         ),
+
+                        //Collection
+                        GestureDetector(
+                          onTap: drawer.collectionTab,
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: drawerIcon(
+                              icon: AppIcon.Order,
+                              text: AppString.collection,
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: drawer.collection.value,
+                          child: Column(
+                            children: [
+                               ListView.builder(
+                                  shrinkWrap: true, physics: NeverScrollableScrollPhysics(),
+                                  itemCount: collection.data['data'].length > 6 ? 6 : collection.data['data'].length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    final collctions = collection.data['data'][index];
+                                    return Padding(
+                                      padding: EdgeInsets.only(left: Get.width / 10),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Get.to(() => Subcategorys(
+                                            collection_id: collctions['slug'],
+                                            subcategrorysname: collctions['name'],
+                                          ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                        },
+                                        child: Container(
+                                          color: AppColor.white_color,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                            child: Row(
+                                              children: [
+                                                Text("o",style: TextStyle(color: AppColor.pink_color)),
+                                                SizedBox(width: Get.width * 0.015),
+                                                SizedBox(
+                                                  width: Get.width / 3,
+                                                  child: Text(collctions['name'].toUpperCase(), style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                }),
+                               Padding(
+                                  padding: EdgeInsets.only(left: Get.width / 10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Get.to(() => Subcategorys(
+                                        subcategrorys: collection.data['data'].toString(),
+                                        subcategrorysname: AppString.product,
+                                      ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                    },
+                                    child: horizontalpadding(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(Get.width / 50),
+                                            color: AppColor.black_color,
+                                          ),
+                                          padding: EdgeInsets.all(5),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text("*"),
+                                              SizedBox(width: Get.width * 0.015),
+                                              Text(
+                                                "View All (${collection.data['data'].length})",
+                                                style: TextStyle(
+                                                  fontSize: Get.width * 0.030,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColor.white_color,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                             ],
+                          ),
+                        ),
+
+                        //Metal Type
+                        GestureDetector(
+                          onTap: drawer.metaltypeTab,
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: drawerIcon(
+                              icon: AppIcon.Order,
+                              text: AppString.metaltyoe,
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: drawer.metaltype.value,
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: jewelleryfilter.data['data']['Metal_Type'].length > 6 ? 6 : jewelleryfilter.data['data']['Metal_Type'].length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final jewellery = jewelleryfilter.data['data']['Metal_Type'][index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(left: Get.width / 10),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                         Get.to(() => Subcategorys(
+                                           metal_type: jewellery['slug'],
+                                           subcategrorysname: jewellery['name'],
+                                          ));
+                                        },
+                                      child: Container(
+                                        color: AppColor.white_color,
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                (jewellery['image'] == null) ? Image.network(jewellery['image'], scale: 3) : SvgPicture.asset(AppIcon.diamond,width: 20,height: 20),
+                                                SizedBox(width: Get.width * 0.015),
+                                                SizedBox(width: Get.width / 3, child: Text(jewellery['name'].toUpperCase())),
+                                              ],
+                                            ),
+                                            SizedBox(height: Get.height * 0.015),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              if (jewelleryfilter.data['data']['Metal_Type'].length > 6)
+                                Padding(
+                                  padding: EdgeInsets.only(left: Get.width / 10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Get.to(() => Subcategorys(
+                                        subcategrorys: jewelleryfilter.data['data']['Metal_Type']['slug'].toString(),
+                                        subcategrorysname: AppString.product,
+                                      ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
+                                    },
+                                    child: horizontalpadding(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(Get.width / 50),
+                                            color: AppColor.black_color,
+                                          ),
+                                          padding: EdgeInsets.all(5),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text("*"),
+                                              SizedBox(width: Get.width * 0.015),
+                                              Text(
+                                                "View All (${jewelleryfilter.data['data']['Metal_Type'].length})",
+                                                style: TextStyle(
+                                                  fontSize: Get.width * 0.030,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColor.white_color,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+
                         drawerIcon(
                           icon: AppIcon.Order,
                           text: AppString.Order,
@@ -392,7 +579,7 @@ Widget drawerIcon({
                   child: SvgPicture.asset(icon, width: Get.width * 0.018, height: Get.height * 0.018, color: color),
                 ),
                 SizedBox(width: Get.width / 30),
-                Text(text, style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
+                Text(text.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
               ],
             ),
             Divider(color: AppColor.textfild_color, height: 1),

@@ -66,6 +66,7 @@ class AppString {
      //Drawer
      static const bracelet = 'Bracelet';
      static const collection = 'Collection';
+     static const metaltyoe = 'Metal Type';
      static const earrings = 'Earrings';
      static const mangalsutra = 'Mangalsutra';
      static const necklace = 'Necklace';

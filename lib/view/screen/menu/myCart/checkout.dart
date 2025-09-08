@@ -330,7 +330,8 @@ class Checkout extends StatelessWidget {
                     ],
                   ),
                 );
-              })),
+              }),
+          ),
         ),
       ),
     );
