@@ -46,6 +46,23 @@ class _DrawersState extends State<Drawers> {
   final collection = Get.put(Collection());
   final jewelleryfilter = Get.put(JewelleryList());
 
+  Color getJewelleryColor(String name) {
+    switch (name) {
+      case 'White Gold':
+        return AppColor.graycolor;
+      case 'Rose Gold':
+        return AppColor.rosegoldcolor;
+      case 'Yellow Gold':
+        return Colors.yellow;
+      case 'Yellow Gold And White Gold' :
+         return Colors.yellow;
+      case 'Rose Gold and White Gold' :
+        return Colors.yellow;
+      default:
+        return AppColor.white_color;
+    }
+  }
+
   String getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
       case 'engagement rings':
@@ -62,10 +79,17 @@ class _DrawersState extends State<Drawers> {
         return AppIcon.necklace;
       case 'rings':
         return AppIcon.ring;
-      default:
-        return 'asset/icon/drawericon/dummy.svg'; // fallback
+      default: return 'asset/icon/drawericon/dummy.svg';
     }
   }
+
+  List price = [
+    {'min' : '10000'},
+    {'min' : '10001', 'max' : '20001'},
+    {'min' : '30001', 'max' : '40001'},
+    {'min' : '40001', 'max' : '50001'},
+    {'max' : '50001'}
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -207,16 +231,7 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         // All Jewellery
-                        GestureDetector(
-                          onTap: drawer.selectedJewellery,
-                          child: Container(
-                            color: AppColor.white_color,
-                            child: drawerIcon(
-                              icon: AppIcon.Order,
-                              text: AppString.allJewellery,
-                            ),
-                          ),
-                        ),
+                        GestureDetector(onTap: drawer.selectedJewellery, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.allJewellery))),
                         AnimatedSize(
                           curve: Curves.easeInOut,
                           duration: Duration(milliseconds: 600),
@@ -327,16 +342,7 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //Collection
-                        GestureDetector(
-                          onTap: drawer.collectionTab,
-                          child: Container(
-                            color: AppColor.white_color,
-                            child: drawerIcon(
-                              icon: AppIcon.Order,
-                              text: AppString.collection,
-                            ),
-                          ),
-                        ),
+                        GestureDetector(onTap: drawer.collectionTab, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.collection))),
                         Visibility(
                           visible: drawer.collection.value,
                           child: Column(
@@ -417,42 +423,34 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //Metal Type
-                        GestureDetector(
-                          onTap: drawer.metaltypeTab,
-                          child: Container(
-                            color: AppColor.white_color,
-                            child: drawerIcon(
-                              icon: AppIcon.Order,
-                              text: AppString.metaltyoe,
-                            ),
-                          ),
-                        ),
+                        GestureDetector(onTap: drawer.metaltypeTab, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.metaltyoe))),
                         Visibility(
                           visible: drawer.metaltype.value,
                           child: Column(
                             children: [
+                              SizedBox(height: Get.height * 0.015),
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: jewelleryfilter.data['data']['Metal_Type'].length > 6 ? 6 : jewelleryfilter.data['data']['Metal_Type'].length,
+                                itemCount: jewelleryfilter.data['data']['Metal_Type'].length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final jewellery = jewelleryfilter.data['data']['Metal_Type'][index];
+                                  final String jewelleryName = jewellery['name'];
                                   return Padding(
                                     padding: EdgeInsets.only(left: Get.width / 10),
                                     child: GestureDetector(
-                                      onTap: () {
-                                         Get.to(() => Subcategorys(
-                                           metal_type: jewellery['slug'],
-                                           subcategrorysname: jewellery['name'],
-                                          ));
-                                        },
+                                      onTap: () => Get.to(() => Subcategorys(metal_type: jewellery['slug'], subcategrorysname: jewellery['name'])),
                                       child: Container(
                                         color: AppColor.white_color,
                                         child: Column(
                                           children: [
+                                            SizedBox(height: Get.height * 0.005),
                                             Row(
                                               children: [
-                                                (jewellery['image'] == null) ? Image.network(jewellery['image'], scale: 3) : SvgPicture.asset(AppIcon.diamond,width: 20,height: 20),
+                                                Container(
+                                                  decoration: BoxDecoration(color: getJewelleryColor(jewelleryName)),
+                                                  padding: EdgeInsets.all(10),
+                                                ),
                                                 SizedBox(width: Get.width * 0.015),
                                                 SizedBox(width: Get.width / 3, child: Text(jewellery['name'].toUpperCase())),
                                               ],
@@ -469,20 +467,12 @@ class _DrawersState extends State<Drawers> {
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width / 10),
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Get.to(() => Subcategorys(
-                                        subcategrorys: jewelleryfilter.data['data']['Metal_Type']['slug'].toString(),
-                                        subcategrorysname: AppString.product,
-                                      ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
-                                    },
+                                    onTap: () => Get.to(() => Subcategorys(subcategrorys: jewelleryfilter.data['data']['Metal_Type']['slug'].toString(), subcategrorysname: AppString.product),transition: Transition.rightToLeft, duration: Duration(milliseconds: 600)),
                                     child: horizontalpadding(
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
                                         child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(Get.width / 50),
-                                            color: AppColor.black_color,
-                                          ),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.black_color),
                                           padding: EdgeInsets.all(5),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -491,11 +481,7 @@ class _DrawersState extends State<Drawers> {
                                               SizedBox(width: Get.width * 0.015),
                                               Text(
                                                 "View All (${jewelleryfilter.data['data']['Metal_Type'].length})",
-                                                style: TextStyle(
-                                                  fontSize: Get.width * 0.030,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColor.white_color,
-                                                ),
+                                                style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w500, color: AppColor.white_color),
                                               ),
                                             ],
                                           ),
@@ -508,37 +494,91 @@ class _DrawersState extends State<Drawers> {
                           ),
                         ),
 
+                        //Buy Price Rang
+                        GestureDetector(onTap: drawer.priceTab, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.buypricerang))),
+                        Visibility(
+                          visible: drawer.price.value,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: price.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.only(left: Get.width / 10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => Subcategorys(
+                                      price_min: price[index]['min'].toString(),
+                                      price_max: price[index]['max'].toString(),
+                                      subcategrorysname: AppString.product,
+                                    ));
+                                  },
+                                  child: Container(
+                                    color: AppColor.white_color,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: Get.height * 0.015),
+                                        Row(
+                                          children: [
+                                            (price[index]['min'] != null) ? Text(price[index]['min'].toString()) : Text('About'),
+                                            (price[index]['min'] != null && price[index]['max'] != null) ? SizedBox(width: Get.width * 0.025) : SizedBox(),
+                                            (price[index]['min'] != null && price[index]['max'] != null) ? Text('To') : SizedBox(),
+                                            (price[index]['min'] != null && price[index]['max'] != null) ? SizedBox(width: Get.width * 0.025) : SizedBox(width: Get.width * 0.010),
+                                            (price[index]['max'] != null) ? Text(price[index]['max'].toString()) : Text('Below'),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height * 0.015),
+                                        Divider(color: AppColor.textfild_color, height: 1),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+                        //Order History
                         drawerIcon(
                           icon: AppIcon.Order,
                           text: AppString.Order,
                           onTap: () => Get.to(() => Orderhistory(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
+
+                        //Wishlist
                         drawerIcon(
                           icon: AppIcon.Wishlist,
                           text: AppString.Wishlist,
                           onTap: () => Get.to(() => WishlistScreen(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
+
+                        //Wallet
                         drawerIcon(
                           icon: AppIcon.Wallet,
                           text: AppString.Wallet,
                           onTap: () => Get.to(() => Wallet(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
+
+                        //Address
                         drawerIcon(
                           icon: AppIcon.Addresses,
                           text: AppString.Addresses,
                           onTap: () => Get.to(() => Addresses(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
+
+                        //Helpcenter
                         drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
+
+                        //Privacy Policy
                         drawerIcon(
                           icon: AppIcon.PrivacyPolicy,
                           text: AppString.PrivacyPolicy,
                           onTap: () => Get.to(() => Privacy(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
                         ),
-                        drawerIcon(
-                          icon: AppIcon.Logout,
-                          text: AppString.Logout,
-                          onTap: () => logoutUser(),
-                        ),
+
+                        //Logout
+                        drawerIcon(icon: AppIcon.Logout, text: AppString.Logout, onTap: () => logoutUser()),
                         SizedBox(height: Get.height * 0.030),
                       ],
                     );
@@ -553,12 +593,7 @@ class _DrawersState extends State<Drawers> {
   }
 }
 
-Widget drawerIcon({
-  required String icon,
-  required String text,
-  void Function()? onTap,
-  Color? color
-})
+Widget drawerIcon({required String icon, required String text, void Function()? onTap, Color? color})
 {
   return horizontalpadding(
     child: GestureDetector(
@@ -571,17 +606,14 @@ Widget drawerIcon({
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                  decoration: BoxDecoration(
-                    color: AppColor.pink_color,
-                    borderRadius: BorderRadius.circular(Get.width / 50),
-                  ),
+                  decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
                   padding: EdgeInsets.all(10),
                   child: SvgPicture.asset(icon, width: Get.width * 0.018, height: Get.height * 0.018, color: color),
                 ),
-                SizedBox(width: Get.width / 30),
-                Text(text.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
-              ],
-            ),
+                 SizedBox(width: Get.width / 30),
+                 Text(text.toUpperCase(), style: TextStyle(fontSize: Get.width * 0.032, fontWeight: FontWeight.w500)),
+               ],
+             ),
             Divider(color: AppColor.textfild_color, height: 1),
           ],
         ),

@@ -140,7 +140,7 @@ class Processpayment extends GetxController{
         };
       }
     }catch(e){
-      print('This Error of Paymanet Proress :- $e');
+      log('This Error of Paymanet Proress :- $e');
     }finally{
       isLoading.value = false;
     }

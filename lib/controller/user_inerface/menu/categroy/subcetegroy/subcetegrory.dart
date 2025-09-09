@@ -10,11 +10,11 @@ class SubcetegroryShow extends  GetxController{
   final ScrollController scrollController = ScrollController();
   var dataLoaded = false;
 
-  loadData({String? subcategrorys,String? subcategory_slug, String? collection_id, String? metal_type}){
+  loadData({String? subcategrorys,String? subcategory_slug, String? collection_id, String? metal_type, String? price_min, String? price_max}){
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if(!dataLoaded){
         subcategrory.resetPagination();
-        subcategrory.subcategroryuser(category_slug: subcategrorys, subcategory_slug: subcategory_slug, collection_id: collection_id, metal_type: metal_type);
+        subcategrory.subcategroryuser(category_slug: subcategrorys, subcategory_slug: subcategory_slug, collection_id: collection_id, metal_type: metal_type, price_min: price_min, price_max: price_max);
       }
     });
 

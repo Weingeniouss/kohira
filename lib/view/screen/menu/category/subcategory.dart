@@ -27,11 +27,13 @@ class Subcategorys extends StatelessWidget {
   String? collection_id;
   String? subcategrorysname;
   String? metal_type;
-  Subcategorys({super.key, this.subcategrorys, this.subcategrorysname, this.subcategory_slug, this.collection_id,this.metal_type});
+  String? price_min;
+  String? price_max;
+  Subcategorys({super.key, this.subcategrorys, this.subcategrorysname, this.subcategory_slug, this.collection_id,this.metal_type, this.price_min, this.price_max});
   @override
   Widget build(BuildContext context) {
     show.onInit();
-    show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString(), collection_id: collection_id.toString(),metal_type: metal_type);
+    show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString(), collection_id: collection_id.toString(),metal_type: metal_type,price_min: price_min, price_max: price_max);
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: subcategrorysname),
       bottomNavigationBar: Obx((){
@@ -180,14 +182,7 @@ class Subcategorys extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: Center(
-                        child: SizedBox(
-                          height: 30, width: 30,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.5,
-                            color: AppColor.pink_color,
-                            backgroundColor: Colors.grey.shade200,
-                          ),
-                        ),
+                        child: SizedBox(height: 30, width: 30, child: CircularProgressIndicator(strokeWidth: 3.5, color: AppColor.pink_color, backgroundColor: Colors.grey.shade200)),
                       ),
                     ) : SizedBox.shrink(),
                   ],
@@ -208,7 +203,6 @@ class SelectedSort extends GetxController {
 class Storebay {
   final subcategrory = Get.put(Subcategrory());
   final selected = Get.put(SelectedSort());
-
   storebay(context, {required String subcategrorys, required String subcategory_slug}) {
     showModalBottomSheet(
       context: context,
@@ -318,19 +312,12 @@ class Storebay {
     );
   }
 }
-
 class ShowBottam {
   final jewellery = Get.put(Jewelleryfilter());
   final category = Get.put(JewelleryFilterCategory());
   final subcategrory = Get.put(Subcategrory());
   final filtertab = Get.put(FilterController());
-
-  showbottam(
-      BuildContext context,
-      {
-        required String category_slug,
-        required String subcategrorys
-      })
+  showbottam(BuildContext context, {required String category_slug, required String subcategrorys})
    {
     showModalBottomSheet(
       elevation: 0,

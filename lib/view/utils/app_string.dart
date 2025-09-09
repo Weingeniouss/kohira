@@ -67,6 +67,7 @@ class AppString {
      static const bracelet = 'Bracelet';
      static const collection = 'Collection';
      static const metaltyoe = 'Metal Type';
+     static const buypricerang = 'Buy Price Rang';
      static const earrings = 'Earrings';
      static const mangalsutra = 'Mangalsutra';
      static const necklace = 'Necklace';
