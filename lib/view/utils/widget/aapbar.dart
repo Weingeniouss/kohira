@@ -19,6 +19,7 @@ PreferredSizeWidget Appbar({
   void Function()? prefixonTap,
   String? lefticon,
   String? hedingname,
+  String? hedingname_2,
   String? suffixicon_1,
   String? suffixicon_2,
   void Function()? onTaplefticon,
@@ -36,7 +37,7 @@ PreferredSizeWidget Appbar({
           decoration: BoxDecoration(color: AppColor.Appbercolor),
           child: horizontalpadding(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: (hedingname_2 != null && hedingname == null) ? MainAxisAlignment.spaceBetween : MainAxisAlignment.spaceBetween,
               children: <Widget?>[
                 (prefixicon != null && prefixonTap != null) ? GestureDetector(
                   onTap: prefixonTap,
@@ -59,7 +60,8 @@ PreferredSizeWidget Appbar({
                         },
                         child: Container(
                           color: AppColor.Appbercolor,
-                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25), child: SvgPicture.asset(lefticon),
+                          padding: EdgeInsets.only(right: 50,bottom: 28,top: 25),
+                          child: SvgPicture.asset(lefticon),
                         ),
                       )
                     : SizedBox.shrink(),
@@ -67,24 +69,35 @@ PreferredSizeWidget Appbar({
                 (logo != null) ? SizedBox(width: Get.width / 30) : null,
                 (logo != null) ? Image.asset(logo, scale: 15) : null,
 
+                //Middle
                 (hedingname != null) ? Row(
                   children: [
                     SizedBox(width: hedingname.length > 15 ? Get.width / 20 : Get.width / 10),
-                    Text(
-                      hedingname,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: Get.width / 23,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.pink_color,
-                      ),
-                    ),
+                    Text(hedingname, textAlign: TextAlign.center, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color)),
                   ],
                 )
                     : const SizedBox.shrink(),
 
-                (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 5) : null,
-                (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 15) : null :SizedBox(),
+                //in Middle
+                (hedingname_2 != null && hedingname == null)
+                    ? Text(hedingname_2, textAlign: TextAlign.center, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color)) : null,
+
+                (hedingname_2 != null && hedingname == null)
+                    ? null
+                    : (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 5) : null,
+                      (logo == null)
+                          ? (prefixicon != null && prefixonTap != null)
+                          ? SizedBox(width: Get.width / 15) : null : SizedBox(),
+
+                (hedingname_2 != null && hedingname_2.length > 20) ? SizedBox(width: Get.width / 20) : (hedingname_2 != null && hedingname == null) ? (lefticon != null)
+                    ? GestureDetector(
+                  child: Container(
+                    color: AppColor.Appbercolor,
+                    padding: EdgeInsets.only(right: 50,bottom: 28,top: 25),
+                    child: SvgPicture.asset(lefticon,color: AppColor.Appbercolor),
+                  ),
+                )
+                    : SizedBox.shrink() : SizedBox.shrink(),
 
                 Obx(() {
                   final count = Get.put(CountController());
@@ -99,9 +112,7 @@ PreferredSizeWidget Appbar({
                           //Add to cart
                           (suffixicon_1 != null)
                               ? GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => WishlistScreen());
-                                  },
+                                  onTap: () => Get.to(() => WishlistScreen()),
                                   child: Container(
                                     color: AppColor.Appbercolor,
                                     padding: EdgeInsets.only(bottom: 20,top: 20,left: 10,right: 5),
@@ -121,9 +132,9 @@ PreferredSizeWidget Appbar({
                                     Get.back();
                                   },
                                   child: Container(
-                                      color: AppColor.Appbercolor,
-                                      padding: EdgeInsets.only(bottom: 20,top: 20,left: 13),
-                                      child: SvgPicture.asset(suffixicon_2),
+                                    color: AppColor.Appbercolor,
+                                    padding: EdgeInsets.only(bottom: 20,top: 20,left: 13),
+                                    child: SvgPicture.asset(suffixicon_2),
                                   ),
                           )
                               : null,
@@ -166,15 +177,9 @@ PreferredSizeWidget Appbar({
                                   ? SizedBox()
                                   : GestureDetector(
                                     child: CircleAvatar(
-                                        radius: 10,
-                                        backgroundColor: AppColor.pink_color,
+                                        radius: 10, backgroundColor: AppColor.pink_color,
                                         child: Center(
-                                          child: Text(
-                                            (count.data['wishlist']['count'] == 0)
-                                                ? ''
-                                                : count.data['wishlist']['count'].toString(),
-                                            style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
-                                          ),
+                                          child: Text((count.data['wishlist']['count'] == 0) ? '' : count.data['wishlist']['count'].toString(), style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38)),
                                         ),
                                       ),
                                 onTap: () {

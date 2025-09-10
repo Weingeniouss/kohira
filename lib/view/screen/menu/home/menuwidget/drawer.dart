@@ -46,20 +46,20 @@ class _DrawersState extends State<Drawers> {
   final collection = Get.put(Collection());
   final jewelleryfilter = Get.put(JewelleryList());
 
-  Color getJewelleryColor(String name) {
+  Widget jewelleryColorContainer(String name){
     switch (name) {
       case 'White Gold':
-        return AppColor.graycolor;
+        return SinglContainer(size: 20, singlcolor: AppColor.graycolor);
       case 'Rose Gold':
-        return AppColor.rosegoldcolor;
+        return SinglContainer(size: 20, singlcolor: AppColor.rosegoldcolor);
       case 'Yellow Gold':
-        return Colors.yellow;
-      case 'Yellow Gold And White Gold' :
-         return Colors.yellow;
-      case 'Rose Gold and White Gold' :
-        return Colors.yellow;
+        return SinglContainer(size: 20, singlcolor: Colors.amber);
+      case 'Yellow Gold And White Gold':
+        return MyCustomContainer(size: 20, firstColor: Colors.amber, secondColor: AppColor.graycolor);
+      case 'Rose Gold and White Gold':
+        return MyCustomContainer(size: 20, firstColor: AppColor.rosegoldcolor, secondColor: AppColor.graycolor);
       default:
-        return AppColor.white_color;
+        return Container();
     }
   }
 
@@ -447,10 +447,8 @@ class _DrawersState extends State<Drawers> {
                                             SizedBox(height: Get.height * 0.005),
                                             Row(
                                               children: [
-                                                Container(
-                                                  decoration: BoxDecoration(color: getJewelleryColor(jewelleryName)),
-                                                  padding: EdgeInsets.all(10),
-                                                ),
+                                                jewelleryColorContainer(jewelleryName),
+                                                // Container(decoration: BoxDecoration(color: getJewelleryColor(jewelleryName)), padding: EdgeInsets.all(10)),
                                                 SizedBox(width: Get.width * 0.015),
                                                 SizedBox(width: Get.width / 3, child: Text(jewellery['name'].toUpperCase())),
                                               ],
@@ -620,4 +618,33 @@ Widget drawerIcon({required String icon, required String text, void Function()? 
       ),
     ),
   );
+}
+
+class MyCustomContainer extends StatelessWidget {
+  final Color? firstColor;
+  final Color? secondColor;
+  final double size;
+  const MyCustomContainer({this.firstColor, this.secondColor, required this.size, super.key,});
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: size, width: size,
+      child: Row(
+        children: [
+          Expanded(child: Container(color: firstColor)),
+          Expanded(child: Container(color: secondColor)),
+        ],
+      ),
+    );
+  }
+}
+
+class SinglContainer extends StatelessWidget {
+  final double size;
+  final Color? singlcolor;
+  const SinglContainer({super.key, required this.size, this.singlcolor});
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(height: size, width: size, child: Container(color: singlcolor));
+  }
 }

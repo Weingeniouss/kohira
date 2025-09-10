@@ -35,7 +35,7 @@ class Subcategorys extends StatelessWidget {
     show.onInit();
     show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString(), collection_id: collection_id.toString(),metal_type: metal_type,price_min: price_min, price_max: price_max);
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: subcategrorysname),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: subcategrorysname),
       bottomNavigationBar: Obx((){
         if(show.subcategrory.data.isEmpty) return SizedBox();
         return SafeArea(
