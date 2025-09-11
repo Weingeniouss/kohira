@@ -319,6 +319,8 @@ class ShowBottam {
   final subcategrory = Get.put(Subcategrory());
   final filtertab = Get.put(FilterController());
 
+  var isSelectedlatter;
+
   showbottam(BuildContext context, {required String category_slug, required String subcategrorys, required String subcategrorysname}) {
     showModalBottomSheet(
       elevation: 0,
@@ -676,10 +678,6 @@ class ShowBottam {
                                           weight_max: (filtertab.weightMax.value != null) ? filtertab.weightMax.value?.toString() : null,
                                           metal_type: (filtertab.selectedMetalType.value.isNotEmpty) ? filtertab.selectedMetalType.value : null,
                                         );
-
-                                        if(category_slug.isNotEmpty)
-                                         category.selectCategorySlug(item.slug);
-                                         subcategrory.subcategroryuser(category_slug: item.slug);
                                       });
                                       Get.back();
                                     },
