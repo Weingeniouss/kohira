@@ -65,6 +65,7 @@ class AppString {
 
      //Drawer
      static const bracelet = 'Bracelet';
+     static const collection_product = 'Collection Products';
      static const collection = 'Collection';
      static const metaltyoe = 'Metal Type';
      static const buypricerang = 'Buy Price Rang';

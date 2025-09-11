@@ -386,7 +386,7 @@ class _DrawersState extends State<Drawers> {
                                     onTap: () {
                                       Get.to(() => Subcategorys(
                                         subcategrorys: collection.data['data'].toString(),
-                                        subcategrorysname: AppString.product,
+                                        subcategrorysname: AppString.collection_product,
                                       ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                     },
                                     child: horizontalpadding(
@@ -591,8 +591,7 @@ class _DrawersState extends State<Drawers> {
   }
 }
 
-Widget drawerIcon({required String icon, required String text, void Function()? onTap, Color? color})
-{
+Widget drawerIcon({required String icon, required String text, void Function()? onTap, Color? color}) {
   return horizontalpadding(
     child: GestureDetector(
       onTap: onTap,
@@ -631,8 +630,30 @@ class MyCustomContainer extends StatelessWidget {
       height: size, width: size,
       child: Row(
         children: [
-          Expanded(child: Container(color: firstColor)),
-          Expanded(child: Container(color: secondColor)),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(color: firstColor),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: firstColor,
+                  border: Border.all(color: AppColor.white_color,width: 1),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(color: secondColor),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: secondColor,
+                  border: Border.all(color: AppColor.white_color,width: 1),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -645,6 +666,18 @@ class SinglContainer extends StatelessWidget {
   const SinglContainer({super.key, required this.size, this.singlcolor});
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: size, width: size, child: Container(color: singlcolor));
+    return SizedBox(
+      height: size, width: size,
+      child: Container(
+        padding: EdgeInsets.all(1),
+        decoration: BoxDecoration(color: singlcolor),
+        child: Container(
+          decoration: BoxDecoration(
+            color: singlcolor,
+            border: Border.all(color: AppColor.white_color,width: 2)
+          ),
+        ),
+      ),
+    );
   }
 }

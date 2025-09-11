@@ -80,7 +80,18 @@ PreferredSizeWidget Appbar({
 
                 //in Middle
                 (hedingname_2 != null && hedingname == null)
-                    ? Text(hedingname_2, textAlign: TextAlign.center, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color)) : null,
+                    ? Expanded(
+                      child: Text(
+                      hedingname_2,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: Get.width / 23,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.pink_color
+                      )),
+                    ) : null,
 
                 (hedingname_2 != null && hedingname == null)
                     ? null
@@ -89,7 +100,7 @@ PreferredSizeWidget Appbar({
                           ? (prefixicon != null && prefixonTap != null)
                           ? SizedBox(width: Get.width / 15) : null : SizedBox(),
 
-                (hedingname_2 != null && hedingname_2.length > 20) ? SizedBox(width: Get.width / 20) : (hedingname_2 != null && hedingname == null) ? (lefticon != null)
+                (hedingname_2 != null && hedingname_2.length > 20) ? SizedBox(width: Get.width / 10) : (hedingname_2 != null && hedingname == null) ? (lefticon != null)
                     ? GestureDetector(
                   child: Container(
                     color: AppColor.Appbercolor,
