@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
 import '../../../../API/menu/category/subcategrory/subCategrory.dart';
 
 class SubcetegroryShow extends  GetxController{
@@ -23,6 +22,8 @@ class SubcetegroryShow extends  GetxController{
         subcategrory.subcategroryuser(category_slug: subcategrorys, isLoadMore: true);
       }
     });
+
+
   }
 
   @override

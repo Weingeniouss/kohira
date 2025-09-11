@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors, unused_import, unnecessary_null_comparison
+// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors, unused_import, unnecessary_null_comparison, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

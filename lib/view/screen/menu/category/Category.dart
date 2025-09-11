@@ -88,8 +88,7 @@ class Categorys extends StatelessWidget {
                              Get.to(() => Subcategorys(
                                subcategrorys: categorieslist.slug.toString(),
                                subcategrorysname: categorieslist.name.toString(),
-                              ),
-                             );
+                             ));
                             },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,

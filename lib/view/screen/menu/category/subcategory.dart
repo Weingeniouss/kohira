@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print, unused_import, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, body_might_complete_normally_nullable, deprecated_member_use, non_constant_identifier_names, must_be_immutable
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print, unused_import, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, body_might_complete_normally_nullable, deprecated_member_use, non_constant_identifier_names, must_be_immutable, prefer_typing_uninitialized_variables
+
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +17,7 @@ import 'package:kohira/view/utils/widget/lodingstate.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../controller/user_inerface/menu/categroy/subcetegroy/filter.dart';
 import '../../../../controller/user_inerface/menu/categroy/subcetegroy/subcetegrory.dart';
+import '../../../utils/app_constants.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
@@ -64,7 +67,7 @@ class Subcategorys extends StatelessWidget {
                     ),
                     Text("|",style: TextStyle(color: AppColor.graycolor)),
                     GestureDetector(
-                      onTap: () => ShowBottam().showbottam(context, category_slug: subcategrorys.toString(), subcategrorys: subcategory_slug.toString()),
+                      onTap: () => ShowBottam().showbottam(context, category_slug: subcategrorys.toString(), subcategrorys: subcategory_slug.toString(), subcategrorysname: subcategrorysname.toString()),
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
                         color: AppColor.white_color,
@@ -195,11 +198,9 @@ class Subcategorys extends StatelessWidget {
     );
   }
 }
-
 class SelectedSort extends GetxController {
   var selectedSort = ''.obs;
 }
-
 class Storebay {
   final subcategrory = Get.put(Subcategrory());
   final selected = Get.put(SelectedSort());
@@ -317,39 +318,26 @@ class ShowBottam {
   final category = Get.put(JewelleryFilterCategory());
   final subcategrory = Get.put(Subcategrory());
   final filtertab = Get.put(FilterController());
-  showbottam(BuildContext context, {required String category_slug, required String subcategrorys})
-   {
+
+  showbottam(BuildContext context, {required String category_slug, required String subcategrorys, required String subcategrorysname}) {
     showModalBottomSheet(
       elevation: 0,
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(MediaQuery.of(context).size.width / 20),
-        ),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(MediaQuery.of(context).size.width / 20))),
       builder: (BuildContext context) {
         final height = MediaQuery.of(context).size.height;
-
         return Obx(() {
-            if (jewellery.isLoading.value) {
-              return Container(
-                height: height * 0.7,
-                color: AppColor.white_color,
-                child: Center(child: Lottie.asset(AppJson.loading2)),
-              );
-            }
 
+            if (jewellery.isLoading.value) {
+              return Container(height: height * 0.7, color: AppColor.white_color, child: Center(child: Lottie.asset(AppJson.loading2)));
+            }
             final filter = jewellery.data.value?.data;
             final categorydata = category.filterData.value;
 
             // Handle null cases more gracefully
             if (filter == null || categorydata == null) {
-              return Container(
-                height: height * 0.7,
-                color: AppColor.white_color,
-                child: Center(child: Text("No filter data found.")),
-              );
+              return Container(height: height * 0.7, color: AppColor.white_color, child: Center(child: Text("No filter data found.")));
             }
 
             Color hexToColor(String? colorString) {
@@ -431,7 +419,7 @@ class ShowBottam {
                                   children: [
 
                                     //Metal Stamps
-                                    Text(AppString.metalstamp, style: TextStyle(fontSize: Get.width / 25, color: AppColor.graycolor, fontWeight: FontWeight.w500)),
+                                    Text(AppString.metalstamp, style: TextStyle(fontSize: Get.width / 25, color: AppColor.grey_color, fontWeight: FontWeight.w500)),
                                     SizedBox(height: Get.height / 100),
                                     Obx(() => Wrap(
                                       spacing: 8,
@@ -460,7 +448,7 @@ class ShowBottam {
 
                                     //Metal Tyap
                                     SizedBox(height: Get.height / 50),
-                                    Text(AppString.metaltaype, style: TextStyle(fontSize: Get.width / 25, color: AppColor.graycolor, fontWeight: FontWeight.w500)),
+                                    Text(AppString.metaltaype, style: TextStyle(fontSize: Get.width / 25, color: AppColor.grey_color, fontWeight: FontWeight.w500)),
                                     SizedBox(height: Get.height / 100),
                                     Obx(() => Wrap(
                                       spacing: 8,
@@ -485,7 +473,7 @@ class ShowBottam {
 
                                     //Shape
                                     SizedBox(height: Get.height / 50),
-                                    Text(AppString.shape, style: TextStyle(fontSize: Get.width / 25, color: AppColor.graycolor, fontWeight: FontWeight.w500)),
+                                    Text(AppString.shape, style: TextStyle(fontSize: Get.width / 25, color: AppColor.grey_color, fontWeight: FontWeight.w500)),
                                     SizedBox(height: Get.height / 100),
                                     Obx((){
                                       return  SingleChildScrollView(
@@ -527,19 +515,24 @@ class ShowBottam {
 
                                     //Categories
                                     SizedBox(height: Get.height / 50),
-                                    Text(AppString.categories, style: TextStyle(fontSize: Get.width / 25, color: AppColor.graycolor, fontWeight: FontWeight.w500)),
+                                    Text(AppString.categories, style: TextStyle(fontSize: Get.width / 25, color: AppColor.grey_color, fontWeight: FontWeight.w500)),
                                     SizedBox(height: Get.height / 100),
                                     SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
                                         children: categorydata.data.map((item) {
-                                          // final isSelected = category.selectedSlug.value == item.slug;
+                                          // isSelectedlatter = category.selectedSlug.value == item.slug;
                                           final isSelected = category_slug == item.slug;
                                           return GestureDetector(
                                             onTap: () {
+                                                setState(() {
+                                                  category_slug = item.slug;
+                                                  isSelectedlatter = category.selectedSlug.value == item.slug;
+                                                  subcategrorysname = item.name;
+                                                });
                                               category.selectCategorySlug(item.slug);
                                               subcategrory.subcategroryuser(category_slug: item.slug);
-                                              Get.back();
+                                              // Get.back();
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -558,7 +551,7 @@ class ShowBottam {
 
                                     //Weight
                                     SizedBox(height: Get.height / 50),
-                                    Text(AppString.weight, style: TextStyle(fontSize: Get.width / 25, color: AppColor.graycolor, fontWeight: FontWeight.w500)),
+                                    Text(AppString.weight, style: TextStyle(fontSize: Get.width / 25, color: AppColor.grey_color, fontWeight: FontWeight.w500)),
                                     SizedBox(height: Get.height / 100),
                                     SizedBox(
                                       height: Get.height * 0.05,
@@ -597,7 +590,7 @@ class ShowBottam {
 
                                     //Price
                                     SizedBox(height: Get.height / 50),
-                                    Text(AppString.price, style: TextStyle(fontSize: Get.width / 25, color: AppColor.graycolor, fontWeight: FontWeight.w500)),
+                                    Text(AppString.price, style: TextStyle(fontSize: Get.width / 25, color: AppColor.grey_color, fontWeight: FontWeight.w500)),
                                     SizedBox(height: Get.height / 100),
                                     SizedBox(
                                       height: Get.height * 0.05,
@@ -683,6 +676,10 @@ class ShowBottam {
                                           weight_max: (filtertab.weightMax.value != null) ? filtertab.weightMax.value?.toString() : null,
                                           metal_type: (filtertab.selectedMetalType.value.isNotEmpty) ? filtertab.selectedMetalType.value : null,
                                         );
+
+                                        if(category_slug.isNotEmpty)
+                                         category.selectCategorySlug(item.slug);
+                                         subcategrory.subcategroryuser(category_slug: item.slug);
                                       });
                                       Get.back();
                                     },

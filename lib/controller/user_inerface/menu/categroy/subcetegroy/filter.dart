@@ -100,6 +100,7 @@ class FilterController extends GetxController {
     metalstapid.value = '';
     diamondtype.value = '';
     selectedWeight.value = '';
+    selectedMetalType.value = '';
     weightMin.value = null;
     weightMax.value = null;
     selectedPrice.value = '';

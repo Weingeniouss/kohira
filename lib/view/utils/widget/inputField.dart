@@ -17,7 +17,8 @@ Widget inputField({
   TextEditingController? controller,
   bool empty = false,
   bool isVis = false,
-}) {
+})
+{
   return StatefulBuilder(
     builder: (context, setState) {
       bool _obscureText = isVis;
@@ -46,7 +47,7 @@ Widget inputField({
                       suffixIcon: isVis ? GestureDetector(
                         onTap: () {
                           setState(() {
-                            _obscureText = !_obscureText;
+                            _obscureText =! _obscureText;
                           });
                         },
                         child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility,color: AppColor.grey_color),
@@ -86,7 +87,8 @@ Widget searchField({
   bool? readOnly,
   FocusNode? focusNode,
   TextInputAction? textInputAction
-}){
+})
+{
   return Container(
     height: Get.height * 0.05,
     decoration: BoxDecoration(
@@ -102,7 +104,7 @@ Widget searchField({
         onChanged: onChanged,
         onSubmitted: onSubmitted,
         decoration: InputDecoration(
-          // contentPadding: EdgeInsets.symmetric(vertical: Get.height / 60),
+          contentPadding: EdgeInsets.symmetric(vertical: Get.height / 80),
           prefixIcon: Icon(Icons.search, color: AppColor.hintColor),
           hintText: AppString.Searchs,
           hintStyle: TextStyle(color: AppColor.hintColor),
