@@ -22,4 +22,8 @@ class AppColor {
   static Color showcontainercolor = Color(0xffF6F4F2);
   static Color showcontainertextcolor = Color(0xff555353);
   static Color htmlbackgroud = Color(0xfff9f9f9);
+
+  //Loding State Color
+  static Color lodingcolor = Colors.grey.shade300;
+  static Color highlightColor = Colors.grey.shade100;
 }

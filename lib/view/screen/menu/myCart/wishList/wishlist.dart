@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -48,6 +49,8 @@ class WishlistScreen extends StatelessWidget {
           if (wishlists == null || wishlists is! List || wishlists.isEmpty) {
             return Center(child: Lottie.asset(AppJson.noData));
           }
+
+          final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
           return Column(
             children: [
@@ -105,8 +108,8 @@ class WishlistScreen extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(height: Get.height / 80),
-                              Text(fetch['itemcode'] ?? '', style: TextStyle(fontSize: Get.width / 27)),
-                              Text('₹ $priceText', style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600, fontSize: Get.width / 28)),
+                              Text(fetch['title'] ?? '', style: TextStyle(fontSize: Get.width / 30)),
+                              Text(indianFormat.format(double.parse(priceText)), style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600, fontSize: Get.width / 28)),
                               SizedBox(height: Get.height / 150),
                               (wishlistItem['ringsize'] == null)
                                   ? SizedBox()

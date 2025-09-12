@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, file_names, avoid_print, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, file_names, avoid_print, deprecated_member_use, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +6,7 @@ import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_String.dart';
@@ -22,15 +23,6 @@ class Categorys extends StatelessWidget {
   Categorys({super.key});
   @override
   Widget build(BuildContext context) {
-    ever(category.isLoading, (isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (isLoading) {
-          LoadingState.show(AppJson.loading2);
-        } else {
-          LoadingState.hide();
-        }
-      });
-    });
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
@@ -53,13 +45,32 @@ class Categorys extends StatelessWidget {
           width: Get.width, height: Get.height,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
-
-            if (category.filterData.value?.data == null || category.filterData.value!.data.isEmpty) {
-              return Center(
-                child: Lottie.asset(AppJson.noData),
+            if(category.isLoading.value) {
+              return GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 8,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: Get.height / 50,
+                  crossAxisSpacing: Get.width / 50,
+                  childAspectRatio: 1,
+                ),
+                itemBuilder: (context, index) {
+                  return Shimmer.fromColors(
+                    baseColor: AppColor.lodingcolor,
+                    highlightColor: AppColor.highlightColor,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColor.white_color,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  );
+                },
               );
             }
-
+            if (category.filterData.value?.data == null || category.filterData.value!.data.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
             return horizontalpadding(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

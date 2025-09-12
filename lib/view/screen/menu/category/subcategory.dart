@@ -15,6 +15,7 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/lodingstate.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/menu/categroy/subcetegroy/filter.dart';
 import '../../../../controller/user_inerface/menu/categroy/subcetegroy/subcetegrory.dart';
 import '../../../utils/app_constants.dart';
@@ -90,22 +91,52 @@ class Subcategorys extends StatelessWidget {
       body: Container(
         height: Get.height, width: Get.width, color: AppColor.white_color,
         child: Obx(() {
-          if(show.subcategrory.isLoading.value && show.subcategrory.data.isEmpty){
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (Get.isDialogOpen != true) {
-                Get.dialog(
-                  Center(child: Lottie.asset(AppJson.loading2)),
-                  barrierDismissible: false,
-                );
-              }
-            });
-            return Scaffold(backgroundColor: Colors.transparent);
-          } else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (Get.isDialogOpen == true) {
-                Get.back();
-              }
-            });
+          if (show.subcategrory.isLoading.value && show.subcategrory.data.isEmpty) {
+            return horizontalpadding(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: Get.height / 50),
+                    Shimmer.fromColors(
+                      baseColor: AppColor.lodingcolor,
+                      highlightColor: AppColor.highlightColor,
+                      child: Container(
+                        height: Get.height * 0.05,
+                        decoration: BoxDecoration(
+                          color: AppColor.white_color,
+                          border: Border.all(color: AppColor.textfild_color),
+                          borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: Get.height / 50),
+                    GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: 8,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: Get.height / 50,
+                        crossAxisSpacing: Get.width / 50,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          baseColor: AppColor.lodingcolor,
+                          highlightColor: AppColor.highlightColor,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColor.white_color,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
           if(show.subcategrory.data.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
           return SafeArea(
@@ -532,8 +563,8 @@ class ShowBottam {
                                                   isSelectedlatter = category.selectedSlug.value == item.slug;
                                                   subcategrorysname = item.name;
                                                 });
-                                              category.selectCategorySlug(item.slug);
-                                              subcategrory.subcategroryuser(category_slug: item.slug);
+                                              // category.selectCategorySlug(item.slug);
+                                              // subcategrory.subcategroryuser(category_slug: item.slug);
                                               // Get.back();
                                             },
                                             child: Container(
