@@ -57,9 +57,7 @@ class WishlistScreen extends StatelessWidget {
               SizedBox(height: Get.height / 50),
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, childAspectRatio: 0.68
-                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.68),
                     itemCount: (wish.fetchwishlist.data['wishlists'] != null) ? wish.fetchwishlist.data['wishlists'].length: 0,
                     itemBuilder: (BuildContext context, int index) {
                       final wishlistItem = wish.fetchwishlist.data['wishlists'][index];
@@ -110,8 +108,23 @@ class WishlistScreen extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(height: Get.height / 80),
-                              Text(fetch['title'] ?? '', style: TextStyle(fontSize: Get.width / 30)),
-                              Text(indianFormat.format(double.parse(priceText)), style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600, fontSize: Get.width / 28)),
+                              Flexible(
+                                child: Text(
+                                  fetch['title'] ?? '',
+                                  style: TextStyle(fontSize: Get.width / 30),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  indianFormat.format(double.parse(priceText)),
+                                  style: TextStyle(
+                                      color: AppColor.pink_color,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: Get.width / 28),
+                                ),
+                              ),
                               SizedBox(height: Get.height / 150),
                               (wishlistItem['ringsize'] == null)
                                   ? SizedBox()
