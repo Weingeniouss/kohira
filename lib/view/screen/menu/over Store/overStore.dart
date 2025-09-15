@@ -1,7 +1,6 @@
 
 // ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use, avoid_print
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -14,10 +13,8 @@ import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
-import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import 'package:http/http.dart' as http;
 
