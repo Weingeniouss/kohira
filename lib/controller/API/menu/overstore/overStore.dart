@@ -23,12 +23,7 @@ class Overstore_Controller extends GetxController {
         if (store_city_id != null) 'store_city_id': store_city_id,
       }..removeWhere((key,value) => value == null);
       print('Store body :- $body');
-      final response = await http.post(
-        url,
-        body: body,
-        headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans},
-      );
-
+      final response = await http.post(url, body: body, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
       if (response.statusCode == 200 || response.statusCode == 201) {
         data.value = jsonDecode(response.body);
         // log('Over Store :- ${data.value}');

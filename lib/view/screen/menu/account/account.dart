@@ -10,6 +10,7 @@ import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
@@ -47,26 +48,43 @@ class Account extends StatelessWidget {
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
             if (account.profileDetails.isLoading.value) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen != true) {
-                  Get.dialog(
-                    Center(child: Lottie.asset(AppJson.loading2)),
-                    barrierDismissible: false,
-                  );
-                }
-              });
-              return Scaffold(backgroundColor: Colors.transparent);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen == true) {
-                  Get.back();
-                }
-              });
-
-              if(account.profileDetails.data['data'] == null) Center(child: Lottie.asset(AppJson.noData));
-
-              final item = account.profileDetails.data['data'];
-
+              return Shimmer.fromColors(
+                baseColor: AppColor.lodingcolor,
+                highlightColor: AppColor.highlightColor,
+                child: horizontalpadding(
+                  child: ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.symmetric(vertical: Get.height * 0.010),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.white_color, width: 1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(6)),
+                            ),
+                          ),
+                          SizedBox(width: Get.width / 50),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: Get.width /5, vertical: Get.height /70),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColor.white_color,
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              );
+            }
+            if(account.profileDetails.data['data'] == null) Center(child: Lottie.asset(AppJson.noData));
+            final item = account.profileDetails.data['data'];
               return Column(
                 children: [
                   (account.profileDetails.data['data'] == null)  ? SizedBox() : Expanded(
@@ -143,7 +161,7 @@ class Account extends StatelessWidget {
                   )
                 ],
               );
-            }},
+            }
           ),
         ),
       ),

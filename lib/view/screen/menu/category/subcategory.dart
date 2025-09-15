@@ -125,9 +125,31 @@ class Subcategorys extends StatelessWidget {
                           baseColor: AppColor.lodingcolor,
                           highlightColor: AppColor.highlightColor,
                           child: Container(
+                            padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: AppColor.white_color,
                               borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColor.white_color),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(47),
+                                  decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                ),
+                                SizedBox(height: Get.height * 0.010),
+                                Container(
+                                  width: Get.width / 4,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                ),
+                                SizedBox(height: Get.height * 0.010),
+                                Container(
+                                  width: Get.width / 6,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ],
                             ),
                           ),
                         );

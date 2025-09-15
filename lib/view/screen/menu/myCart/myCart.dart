@@ -35,6 +35,7 @@ import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart'
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../controller/API/menu/others/count.dart';
 import '../category/showproduct.dart';
 
@@ -43,7 +44,9 @@ class Mycart extends StatelessWidget {
   final count = Get.put(CountController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool show = false;
+
   Mycart({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -68,6 +71,107 @@ class Mycart extends StatelessWidget {
             width: Get.width,
             decoration: BoxDecoration(color: AppColor.white_color),
             child: Obx(() {
+              if (myCart.fetchcart.isLoading.value) {
+                return horizontalpadding(
+                  child: Shimmer.fromColors(
+                    baseColor: AppColor.lodingcolor,
+                    highlightColor: AppColor.highlightColor,
+                    child: Column(
+                      children: [
+                        SizedBox(height: Get.height / 50),
+                        Expanded(
+                          child: ListView.builder(
+                            itemBuilder: (BuildContext context, int index) {
+                              return Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColor.Appbercolor),
+                                      borderRadius: BorderRadius.circular(Get.width / 80),
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.all(50),
+                                      width: Get.width / 3.5,
+                                      margin: EdgeInsets.symmetric(vertical: Get.height / 150),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                    ),
+                                  ),
+                                  SizedBox(width: Get.width / 30),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: Get.width / 2,
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                      ),
+                                      SizedBox(height: Get.height / 150),
+                                      Container(
+                                        width: Get.width / 3,
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                      ),
+                                      SizedBox(height: Get.height / 150),
+                                      Container(
+                                        width: Get.width / 4,
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                      ),
+                                      SizedBox(height: Get.height / 150),
+                                      Container(
+                                        width: Get.width / 6,
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                        Expanded(
+                          child: ListView.builder(
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: Get.width / 4,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.symmetric(vertical: Get.height / 150),
+                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
+                                      ),
+                                      Container(
+                                        width: Get.width / 1.6,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.symmetric(vertical: Get.height / 150),
+                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                        Container(
+                          padding: EdgeInsets.all(25),
+                          width: Get.width,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
               // Initialize item counts when data is loaded
@@ -115,10 +219,7 @@ class Mycart extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       ListTile(
-                                        title: Text(
-                                          fetchdata['title'],
-                                          style: TextStyle(fontSize: Get.width / 27),
-                                        ),
+                                        title: Text(fetchdata['title'], style: TextStyle(fontSize: Get.width / 27)),
                                         subtitle: Text(
                                           indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
                                           style: TextStyle(
@@ -180,7 +281,7 @@ class Mycart extends StatelessWidget {
                                       color: AppColor.white_color,
                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                     ),
-                                    padding: EdgeInsets.only(left: 22,top: 38,bottom: 38),
+                                    padding: EdgeInsets.only(left: 22, top: 38, bottom: 38),
                                     child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
                                   ),
                                   onTap: () {

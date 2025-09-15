@@ -20,7 +20,7 @@ class WishlistScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.wishlist),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.wishlist),
       body: Container(
         height: Get.height,
         width: Get.width,
@@ -57,7 +57,9 @@ class WishlistScreen extends StatelessWidget {
               SizedBox(height: Get.height / 50),
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.75),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, childAspectRatio: 0.68
+                  ),
                     itemCount: (wish.fetchwishlist.data['wishlists'] != null) ? wish.fetchwishlist.data['wishlists'].length: 0,
                     itemBuilder: (BuildContext context, int index) {
                       final wishlistItem = wish.fetchwishlist.data['wishlists'][index];

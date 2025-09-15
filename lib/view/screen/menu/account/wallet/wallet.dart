@@ -19,7 +19,7 @@ class Wallet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.wallet),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.wallet),
       body: Container(
         height: Get.height,
         width: Get.width,

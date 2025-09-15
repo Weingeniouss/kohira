@@ -46,28 +46,60 @@ class Categorys extends StatelessWidget {
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
             if(category.isLoading.value) {
-              return GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 8,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: Get.height / 50,
-                  crossAxisSpacing: Get.width / 50,
-                  childAspectRatio: 1,
-                ),
-                itemBuilder: (context, index) {
-                  return Shimmer.fromColors(
-                    baseColor: AppColor.lodingcolor,
-                    highlightColor: AppColor.highlightColor,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColor.white_color,
-                        borderRadius: BorderRadius.circular(12),
+              horizontalpadding(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: Get.height / 50),
+                      GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: 8,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: Get.height / 50,
+                          crossAxisSpacing: Get.width / 50,
+                          childAspectRatio: 1,
+                        ),
+                        itemBuilder: (context, index) {
+                          return Shimmer.fromColors(
+                            baseColor: AppColor.lodingcolor,
+                            highlightColor: AppColor.highlightColor,
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppColor.white_color),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(47),
+                                    decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                  ),
+                                  SizedBox(height: Get.height * 0.010),
+                                  Container(
+                                    width: Get.width / 4,
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                  ),
+                                  SizedBox(height: Get.height * 0.010),
+                                  Container(
+                                    width: Get.width / 6,
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  );
-                },
+                      SizedBox(height: Get.height / 50),
+                    ],
+                  ),
+                ),
               );
             }
             if (category.filterData.value?.data == null || category.filterData.value!.data.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
