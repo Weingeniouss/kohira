@@ -37,11 +37,10 @@ class Buynow extends StatelessWidget {
             myCart.fetchcart.fetchcartcall();
             Get.back();
           },
-          hedingname: AppString.buynow,
+          hedingname_2: AppString.buynow,
         ),
         bottomNavigationBar: SafeArea(
-            child:
-             Obx((){
+            child: Obx((){
                final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
                return Container(

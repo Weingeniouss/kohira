@@ -21,14 +21,14 @@ class JewellerydetailCall extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         data.value = jsonDecode(response.body);
-        log('Jewellerydetail :- $data');
+        log('Jewellery detail :- $data');
       } else {
-        'Jewellerydetail Error :- ${response.statusCode}, ${response.body}';
-        ToastificationError.Error("Jewellerydetail Error :- ${response.statusCode}, ${response.body}");
+        'Jewellery detail Error :- ${response.statusCode}, ${response.body}';
+        ToastificationError.Error("Jewellery detail Error :- ${response.statusCode}, ${response.body}");
       }
     } catch (e) {
-      ToastificationError.Error("Jewellerydetail Error :- $e");
-      print('Jewellerydetail Error :- $e');
+      ToastificationError.Error("Jewellery detail Error :- $e");
+      print('Jewellery detail Error :- $e');
     } finally {
       isLoading.value = false;
     }

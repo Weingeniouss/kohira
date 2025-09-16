@@ -80,20 +80,20 @@ class Mycart extends StatelessWidget {
                       children: [
                         SizedBox(height: Get.height / 50),
                         Expanded(
+                          flex: 2,
                           child: ListView.builder(
                             itemBuilder: (BuildContext context, int index) {
                               return Row(
                                 children: [
                                   Container(
                                     padding: EdgeInsets.all(5),
+                                    margin: EdgeInsets.symmetric(vertical: Get.height / 200),
                                     decoration: BoxDecoration(
                                       border: Border.all(color: AppColor.Appbercolor),
                                       borderRadius: BorderRadius.circular(Get.width / 80),
                                     ),
                                     child: Container(
                                       padding: EdgeInsets.all(50),
-                                      width: Get.width / 3.5,
-                                      margin: EdgeInsets.symmetric(vertical: Get.height / 150),
                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
                                     ),
                                   ),
@@ -102,27 +102,44 @@ class Mycart extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: Get.width / 2,
-                                        padding: EdgeInsets.all(12),
+                                        padding: EdgeInsets.symmetric(horizontal: 90,vertical: 5),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
                                       ),
                                       SizedBox(height: Get.height / 150),
                                       Container(
-                                        width: Get.width / 3,
-                                        padding: EdgeInsets.all(12),
+                                        padding: EdgeInsets.symmetric(horizontal: 70,vertical: 5),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
                                       ),
                                       SizedBox(height: Get.height / 150),
                                       Container(
-                                        width: Get.width / 4,
-                                        padding: EdgeInsets.all(12),
+                                        padding: EdgeInsets.symmetric(horizontal: 50,vertical: 5),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
                                       ),
                                       SizedBox(height: Get.height / 150),
                                       Container(
-                                        width: Get.width / 6,
-                                        padding: EdgeInsets.all(12),
+                                        padding: EdgeInsets.symmetric(horizontal: 30,vertical: 5),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                      ),
+                                      SizedBox(height: Get.height / 50),
+                                      SizedBox(
+                                        width: Get.width / 3.5,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 13,vertical: 13),
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 13,vertical: 13),
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -133,6 +150,7 @@ class Mycart extends StatelessWidget {
                         ),
                         SizedBox(height: Get.height / 50),
                         Expanded(
+                          flex: 1,
                           child: ListView.builder(
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
@@ -141,15 +159,13 @@ class Mycart extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        width: Get.width / 4,
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.symmetric(vertical: Get.height / 150),
+                                        padding: EdgeInsets.symmetric(horizontal: 35,vertical: 7),
+                                        margin: EdgeInsets.symmetric(vertical: Get.height / 200),
                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
                                       ),
                                       Container(
-                                        width: Get.width / 1.6,
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.symmetric(vertical: Get.height / 150),
+                                        padding: EdgeInsets.symmetric(horizontal: 115, vertical: 7),
+                                        margin: EdgeInsets.symmetric(vertical: Get.height / 200),
                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
                                       ),
                                     ],

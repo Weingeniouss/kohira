@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart'
-    show JewellerydetailCall;
+import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart' show JewellerydetailCall;
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
@@ -82,8 +81,7 @@ class _ShowproductState extends State<Showproduct> {
   Future<void> loadJewelleryDetails() async {
     try {
       await jewellerydetail.jewellerydetailservices(slug: widget.slug);
-      await recommendedjewellerylist.recommendedjewellerylistFuction(
-          slug: widget.slug);
+      await recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
 
       if (!mounted) return; // stop if widget already disposed
 
@@ -104,8 +102,7 @@ class _ShowproductState extends State<Showproduct> {
 
       setState(() {
         savewishlist = loadedList;
-        isWishlisted = allowedStamps.contains(metalStamp) &&
-            loadedList.contains(storageKey);
+        isWishlisted = allowedStamps.contains(metalStamp) && loadedList.contains(storageKey);
       });
 
       // Debug logs
@@ -150,16 +147,13 @@ class _ShowproductState extends State<Showproduct> {
                       GestureDetector(
                         onTap: () {
                           if (Addtocart().isLoading.value) {
-                            Get.dialog(
-                                Center(child: Lottie.asset(AppJson.loading2)));
+                            Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                           } else {
-                            Addtocart()
-                                .addtocartservice(
+                            Addtocart().addtocartservice(
                               jewelryid: jewellery['id'].toString(),
                               ringsize: selectedRingSizeId.toString(),
                               tokan: tokans,
-                            )
-                                .then((_) {
+                            ).then((_) {
                               setState(() {
                                 count.counting();
                                 myCart.onInit();
@@ -168,36 +162,29 @@ class _ShowproductState extends State<Showproduct> {
                           }
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Get.width * 0.105,
-                              vertical: Get.height * 0.015),
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.105, vertical: Get.height * 0.015),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Get.width / 50),
                             color: Colors.black,
                           ),
-                          child: Text(AppString.addtocart,
-                              style: TextStyle(color: AppColor.white_color)),
+                          child: Text(AppString.addtocart, style: TextStyle(color: AppColor.white_color)),
                         ),
                       ),
                       GestureDetector(
                         onTap: () async {
                           if (Addtocart().isLoading.value) {
-                            Get.dialog(
-                                Center(child: Lottie.asset(AppJson.loading2)));
+                            Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                           } else {
                             await Addtocart().addtocartservice(
                               jewelryid: jewellery['id'].toString(),
                               ringsize: selectedRingSizeId.toString(),
                               tokan: tokans,
                             );
-
                             if (!mounted) return;
-
                             setState(() {
                               count.counting();
                               myCart.onInit();
                             });
-
                             Bottom();
                             bottamSelect.indexThree();
                             Get.back();
@@ -206,15 +193,12 @@ class _ShowproductState extends State<Showproduct> {
                           }
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Get.width * 0.14,
-                              vertical: Get.height * 0.015),
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Get.width / 50),
                             color: Colors.black,
                           ),
-                          child: Text(AppString.buynow,
-                              style: TextStyle(color: AppColor.white_color)),
+                          child: Text(AppString.buynow, style: TextStyle(color: AppColor.white_color)),
                         ),
                       ),
                     ],
@@ -238,12 +222,14 @@ class _ShowproductState extends State<Showproduct> {
                     child: Column(
                       children: [
                         SizedBox(height: Get.height / 50),
-                        Shimmer.fromColors(
-                          baseColor: AppColor.lodingcolor,
-                          highlightColor: AppColor.highlightColor,
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Get.width / 50),
+                            border: Border.all(color: AppColor.white_color)
+                          ),
                           child: Container(
                             height: Get.height * 0.50,
-                            width: Get.width,
                             decoration: BoxDecoration(
                               color: AppColor.white_color,
                               borderRadius: BorderRadius.circular(Get.width / 50),
@@ -251,59 +237,203 @@ class _ShowproductState extends State<Showproduct> {
                           ),
                         ),
                         SizedBox(height: Get.height / 80),
-                        Shimmer.fromColors(
-                          baseColor: AppColor.lodingcolor,
-                          highlightColor: AppColor.highlightColor,
-                          child: SizedBox(
-                            height: Get.width / 3.5,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  height: Get.height / 4,
-                                  width: Get.width / 3.5,
-                                  margin: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.white_color),
+                        SizedBox(
+                          height: Get.height / 8.5,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 5,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: EdgeInsets.all(5),
+                                margin: EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                  border: Border.all(color: AppColor.white_color)
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 35,vertical: 10),
+                                   decoration: BoxDecoration(
+                                     borderRadius: BorderRadius.circular(Get.width / 50),
+                                     color: AppColor.white_color,
+                                    ),
+                                  ),
                                 );
                               },
                             ),
                           ),
-                        ),
-                        SizedBox(height: Get.height / 80),
-                        Shimmer.fromColors(
-                          baseColor: AppColor.lodingcolor,
-                          highlightColor: AppColor.highlightColor,
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: Get.height / 10,
-                                    width: Get.width / 2,
-                                    decoration: BoxDecoration(
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
+                        SizedBox(height: Get.height / 50),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 140,vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: Get.height / 80),
-                              Row(
-                                children: [
-                                  Container(
-                                    height: Get.height / 10,
-                                    width: Get.width / 1.5,
-                                    decoration: BoxDecoration(
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 130),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 120,vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 130),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 100,vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 130),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 80,vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 130),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 60,vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 50),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 25,vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 50),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 100),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 50),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 100),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 50),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 100),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 50),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 100),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 50),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 50),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 20),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.white_color,
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 100),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.white_color,
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 100),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.white_color,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height / 50),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 60,vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 20),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 35,vertical: 25),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.white_color,
+                                    borderRadius: BorderRadius.circular(Get.width / 50),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
+                        SizedBox(height: Get.height / 50),
                       ],
                     ),
                   ),
@@ -434,9 +564,7 @@ class _ShowproductState extends State<Showproduct> {
           });
 
           if (!diamondQualityInitialized && diamondQualities.isNotEmpty) {
-            selectedDiamondQuality = diamondQualities.contains('FG VVS')
-                ? 'FG VVS'
-                : diamondQualities.first;
+            selectedDiamondQuality = diamondQualities.contains('FG VVS') ? 'FG VVS' : diamondQualities.first;
             diamondQualityInitialized = true;
           }
 
@@ -483,7 +611,7 @@ class _ShowproductState extends State<Showproduct> {
                   final shapeMap = diamond['shape'];
                   if (typeMatches && shapeMap is Map && shapeMap['id'] is int && !shapeIds.contains(shapeMap['id'])) {
                     shapeIds.add(shapeMap['id']);
-                    uniqueShapes.add(Map<String, dynamic>.from(shapeMap)); // ✅ Cast explicitly here
+                    uniqueShapes.add(Map<String, dynamic>.from(shapeMap));
                   }
                 }
               }
@@ -833,7 +961,6 @@ class _ShowproductState extends State<Showproduct> {
                                   ? SvgPicture.asset(AppIcon.heart,width: 30,height: 30,color: AppColor.pink_color)
                                   : SvgPicture.asset(AppIcon.like,width: 30,height: 30),
                             ),
-                            SizedBox(width: Get.width / 80),
                           ],
                         ),
 
@@ -1028,8 +1155,7 @@ class _ShowproductState extends State<Showproduct> {
                                           padding: EdgeInsets.only(right: 8),
                                           child: ChoiceChip(
                                             color: WidgetStatePropertyAll(Colors.amber.withOpacity(0.1)),
-                                            label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
-                                                style: TextStyle(color: Colors.amber)),
+                                            label: Text('${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct', style: TextStyle(color: Colors.amber)),
                                             selected: isSelected,
                                             onSelected: (selected) {
                                               if (selected) {
@@ -1038,12 +1164,7 @@ class _ShowproductState extends State<Showproduct> {
                                             },
                                             backgroundColor: Colors.amber.withOpacity(0.1),
                                             selectedColor: Colors.amber.withOpacity(0.1),
-                                            shape: StadiumBorder(
-                                                side: BorderSide(
-                                                    color: isSelected ? Colors.amber : Colors.amber,
-                                                    width: 1.5
-                                                )
-                                            ),
+                                            shape: StadiumBorder(side: BorderSide(color: isSelected ? Colors.amber : Colors.amber, width: 1.5)),
                                           ),
                                         );
                                       },
@@ -1102,7 +1223,7 @@ class _ShowproductState extends State<Showproduct> {
                         )
                             : SizedBox(),
 
-                        SizedBox(height: Get.height / 50),
+                        (allRingSizes.isNotEmpty) ? SizedBox(height: Get.height / 50) : SizedBox(),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

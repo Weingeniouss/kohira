@@ -94,7 +94,7 @@ class _ProfileeditState extends State<Profileedit> {
             Get.back();
             profile.profiledetailscall();
           },
-          hedingname: AppString.editprofile,
+          hedingname_2: AppString.editprofile,
         ),
         bottomNavigationBar: SafeArea(
           child: Container(

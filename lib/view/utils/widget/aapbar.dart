@@ -28,7 +28,6 @@ PreferredSizeWidget Appbar({
   final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
-
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(
@@ -43,10 +42,18 @@ PreferredSizeWidget Appbar({
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget?>[
+
                     // Prefix Icon
                     (prefixicon != null && prefixonTap != null) ? GestureDetector(
                       onTap: prefixonTap,
-                      child: Container(color: AppColor.Appbercolor, padding: EdgeInsets.only(right: 50, bottom: 28, top: 25), child: SvgPicture.asset(prefixicon)),
+                      child: Container(
+                        color: AppColor.Appbercolor,
+                        padding: EdgeInsets.only(
+                          right: (suffixicon_1 == null && suffixicon_2 == null) ? 70 : 50,
+                          bottom: 28,
+                          top: 25,
+                        ), child: SvgPicture.asset(prefixicon),
+                      ),
                     ) : null,
 
                     // Left Icon
@@ -55,7 +62,11 @@ PreferredSizeWidget Appbar({
                         if (onTaplefticon != null) {onTaplefticon();}
                         else {Get.back();}
                       },
-                      child: Container(color: AppColor.Appbercolor, padding: EdgeInsets.only(right: 50, bottom: 28, top: 28), child: SvgPicture.asset(lefticon)),
+                      child: Container(
+                        color: AppColor.Appbercolor,
+                        padding: EdgeInsets.only(right: 50, bottom: 28, top: 28),
+                        child: SvgPicture.asset(lefticon),
+                      ),
                     ) : SizedBox.shrink(),
 
                     (logo != null) ? SizedBox(width: Get.width / 30) : null,
@@ -111,7 +122,10 @@ PreferredSizeWidget Appbar({
                                   child: CircleAvatar(
                                     radius: 10,
                                     backgroundColor: AppColor.pink_color,
-                                    child: Text(count.data['wishlist']['count'].toString(), style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38)),
+                                    child: Text(
+                                      count.data['wishlist']['count'].toString(),
+                                      style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
+                                    ),
                                   ),
                                 );
                               }),
@@ -155,7 +169,10 @@ PreferredSizeWidget Appbar({
                                     child: CircleAvatar(
                                       radius: 10,
                                       backgroundColor: AppColor.pink_color,
-                                      child: Text(count.data['cart']['count'].toString(), style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38)),
+                                      child: Text(
+                                        count.data['cart']['count'].toString(),
+                                        style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
+                                      ),
                                     ),
                                   ),
                                 );
