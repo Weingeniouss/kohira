@@ -98,7 +98,7 @@ class WishlistScreen extends StatelessWidget {
                                         wish.deleteItem(id).then((_) {
                                           wish.onInit();
                                           if (wish.deletWishtlist.data['success'] == true) {
-                                            ToastificationSuccess.Success('${fetch['itemcode']}, ${wish.deletWishtlist.data['message']}');
+                                            ToastificationSuccess.Success('${fetch['title']}, ${wish.deletWishtlist.data['message'].replaceAll('Item', '')}');
                                           }},
                                         );
                                         },

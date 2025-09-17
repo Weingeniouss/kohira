@@ -42,7 +42,6 @@ class Buynow extends StatelessWidget {
         bottomNavigationBar: SafeArea(
             child: Obx((){
                final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-
                return Container(
                  height: Get.height * 0.070,
                  color: AppColor.white_color,
@@ -59,7 +58,7 @@ class Buynow extends StatelessWidget {
                              borderRadius: BorderRadius.circular(Get.width / 50),
                              color: AppColor.white_color,
                            ),
-                           child: Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(color: AppColor.grey_color,fontWeight: FontWeight.w600)),
+                           child: Text(indianFormat.format((buynowUI.useWallet.value)), style: TextStyle(color: AppColor.grey_color,fontWeight: FontWeight.w600)),
                          ),
                        ),
                        GestureDetector(
@@ -68,7 +67,7 @@ class Buynow extends StatelessWidget {
                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
                            decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(Get.width / 50),
-                             color: Colors.black,
+                             color: AppColor.black_color,
                            ),
                            child: Text(AppString.Checkout, style: TextStyle(color: AppColor.white_color)),
                          ),
@@ -188,74 +187,112 @@ class Buynow extends StatelessWidget {
                       },
                     ),
 
+                    SizedBox(height: Get.height / 50),
+
                     //Infromation
                     Column(
                       children: [
-                        SizedBox(height: Get.height / 50),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: Get.width / 2.5,
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.puzzle, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'Ethical Sourcing',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Get.width / 100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1), // shadow color
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                                offset: Offset(0, 0),
                               ),
-                            ),
-                            SizedBox(
-                              width: Get.width / 2.5,
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.warranty, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'Lifetime Warranty',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
+                            ],
+                            color: AppColor.white_color,
+                          ),
+                          child: Column(
+                            children: [
+                              IntrinsicHeight(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width / 2.5,
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(AppIcon.puzzle, color: AppColor.grey_color, width: 30),
+                                          SizedBox(width: Get.width / 80),
+                                          Text(
+                                            textAlign: TextAlign.center,
+                                            'Ethical Sourcing',
+                                            style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    VerticalDivider(
+                                      color: AppColor.textfild_color,
+                                      thickness: 1,
+                                      width: 20, // space taken by divider
+                                    ),
+                                    SizedBox(
+                                      width: Get.width / 2.5,
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(AppIcon.warranty, color: AppColor.grey_color, width: 30),
+                                          SizedBox(width: Get.width / 80),
+                                          Text(
+                                            textAlign: TextAlign.center,
+                                            'Lifetime Warranty',
+                                            style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: Get.height / 180),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: Get.width / 2.5,
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.social, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.start,
-                                    'IGI Certified\nDiamonds',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
+                              SizedBox(height: Get.height / 150),
+                              Divider(color: AppColor.textfild_color),
+                              SizedBox(height: Get.height / 150),
+                              IntrinsicHeight(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width / 2.5,
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(AppIcon.social, color: AppColor.grey_color, width: 30),
+                                          SizedBox(width: Get.width / 80),
+                                          Text(
+                                            textAlign: TextAlign.start,
+                                            'IGI Certified\nDiamonds',
+                                            style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    VerticalDivider(
+                                      color: AppColor.textfild_color,
+                                      thickness: 1,
+                                      width: 20, // space taken by divider
+                                    ),
+                                    SizedBox(
+                                      width: Get.width / 2.5,
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(AppIcon.diamond, color: AppColor.grey_color, width: 30),
+                                          SizedBox(width: Get.width / 80),
+                                          Text(
+                                            textAlign: TextAlign.center,
+                                            'BIS Hallmark',
+                                            style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: Get.width / 2.5,
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppIcon.diamond, color: AppColor.graycolor, width: 30),
-                                  SizedBox(width: Get.width / 80),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    'BIS Hallmark',
-                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.grey_color),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
 
                         SizedBox(height: Get.height / 50),
@@ -263,10 +300,16 @@ class Buynow extends StatelessWidget {
                         //Price Details
                         Container(
                           padding: EdgeInsets.all(10),
-                          width: Get.width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Get.width / 100),
-                            boxShadow: kElevationToShadow[1],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
                             color: AppColor.white_color,
                           ),
                           child: Column(
@@ -359,7 +402,6 @@ class Buynow extends StatelessWidget {
                             button(AppString.Apply),
                           ],
                         ),
-
                         SizedBox(height: Get.height / 50),
                       ],
                     ),

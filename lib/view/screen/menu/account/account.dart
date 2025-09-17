@@ -52,33 +52,87 @@ class Account extends StatelessWidget {
                 baseColor: AppColor.lodingcolor,
                 highlightColor: AppColor.highlightColor,
                 child: horizontalpadding(
-                  child: ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.symmetric(vertical: Get.height * 0.010),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColor.white_color, width: 1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(20),
-                              decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(6)),
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: Get.height / 50),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                width: Get.width / 3,
+                                decoration: BoxDecoration(
+                                  color: AppColor.white_color,
+                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                ),
+                              ),
+                              SizedBox(height: Get.height / 80),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                width: Get.width / 1.4,
+                                decoration: BoxDecoration(
+                                  color: AppColor.white_color,
+                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                ),
+                              ),
+                              SizedBox(height: Get.height / 80),
+                            ],
                           ),
-                          SizedBox(width: Get.width / 50),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: Get.width /5, vertical: Get.height /70),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: AppColor.white_color,
-                            ),
-                          )
+                          Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                margin: EdgeInsets.symmetric(vertical: Get.height * 0.010),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColor.white_color, width: 1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(6)),
+                                ),
+                              ),
+                              SizedBox(height: Get.height / 150),
+                            ],
+                          ),
                         ],
-                      );
-                    },
+                      ),
+                      Divider(color: AppColor.dividercolor),
+                      Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (BuildContext context, int index) {
+                            return Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  margin: EdgeInsets.symmetric(vertical: Get.height * 0.010),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColor.white_color, width: 1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(6)),
+                                  ),
+                                ),
+                                SizedBox(width: Get.width / 50),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: Get.width /5, vertical: Get.height /70),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColor.white_color,
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -104,15 +158,15 @@ class Account extends StatelessWidget {
                                       SizedBox(height: Get.height / 40),
                                       Row(
                                         children: [
-                                          Text(item['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
-                                          SizedBox(width: Get.width / 80),
-                                          Text(item['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
-                                        ],
-                                      ),
+                                           Text(item['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
+                                           SizedBox(width: Get.width / 80),
+                                           Text(item['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
+                                         ],
+                                        ),
                                       Text(item['email'], style: TextStyle(color: AppColor.grey_color)),
                                       SizedBox(height: Get.height / 50),
                                     ],
-                                  ),
+                                   ),
                                   SvgPicture.asset(AppIcon.editing, width: 30, height: 30, color: AppColor.pink_color),
                                 ],
                               ),

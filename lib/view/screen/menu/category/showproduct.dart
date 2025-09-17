@@ -15,6 +15,7 @@ import 'package:kohira/view/utils/app_constants.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/video.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
@@ -24,6 +25,7 @@ import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
+import '../../../utils/widget/pop.dart';
 
 class Showproduct extends StatefulWidget {
   final String slug;
@@ -144,21 +146,27 @@ class _ShowproductState extends State<Showproduct> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+
+                      //Addd to cart
                       GestureDetector(
                         onTap: () {
-                          if (Addtocart().isLoading.value) {
-                            Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                          } else {
-                            Addtocart().addtocartservice(
-                              jewelryid: jewellery['id'].toString(),
-                              ringsize: selectedRingSizeId.toString(),
-                              tokan: tokans,
-                            ).then((_) {
-                              setState(() {
-                                count.counting();
-                                myCart.onInit();
+                          if(selectedRingSizeId == null && selectedRingSizeParaname == null){
+                           ToastificationError.Error('Please select ring size');
+                          } else{
+                            if (Addtocart().isLoading.value) {
+                              Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                            } else {
+                              Addtocart().addtocartservice(
+                                jewelryid: jewellery['id'].toString(),
+                                ringsize: selectedRingSizeId.toString(),
+                                tokan: tokans,
+                              ).then((_) {
+                                setState(() {
+                                  count.counting();
+                                  myCart.onInit();
+                                });
                               });
-                            });
+                            }
                           }
                         },
                         child: Container(
@@ -170,26 +178,32 @@ class _ShowproductState extends State<Showproduct> {
                           child: Text(AppString.addtocart, style: TextStyle(color: AppColor.white_color)),
                         ),
                       ),
+
+                      //Buy Now
                       GestureDetector(
                         onTap: () async {
-                          if (Addtocart().isLoading.value) {
-                            Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                          } else {
-                            await Addtocart().addtocartservice(
-                              jewelryid: jewellery['id'].toString(),
-                              ringsize: selectedRingSizeId.toString(),
-                              tokan: tokans,
-                            );
-                            if (!mounted) return;
-                            setState(() {
-                              count.counting();
-                              myCart.onInit();
-                            });
-                            Bottom();
-                            bottamSelect.indexThree();
-                            Get.back();
-                            Get.back();
-                            Get.back();
+                          if(selectedRingSizeId == null && selectedRingSizeParaname == null){
+                            ToastificationError.Error('Please select ring size');
+                          }else{
+                            if (Addtocart().isLoading.value) {
+                              Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                            } else {
+                              await Addtocart().addtocartservice(
+                                jewelryid: jewellery['id'].toString(),
+                                ringsize: selectedRingSizeId.toString(),
+                                tokan: tokans,
+                              );
+                              if (!mounted) return;
+                              setState(() {
+                                count.counting();
+                                myCart.onInit();
+                              });
+                              Bottom();
+                              bottamSelect.indexThree();
+                              Get.back();
+                              Get.back();
+                              Get.back();
+                            }
                           }
                         },
                         child: Container(
@@ -523,8 +537,11 @@ class _ShowproductState extends State<Showproduct> {
             }
           }
 
-          final totaldiamonds =  currentVariant?['jewelry_diamonds']?[0]?['totaldiamonds'].toString();
-          final totalweight = currentVariant?['jewelry_diamonds']?[0]?['totalweight'].toString();
+          final totaldiamondsCenter =  currentVariant?['jewelry_diamonds']?[0]?['totaldiamonds'].toString();
+          final totalweightCenter = currentVariant?['jewelry_diamonds']?[0]?['totalweight'].toString();
+
+          final totaldiamondsSide =  currentVariant?['jewelry_diamonds']?[1]?['totaldiamonds'].toString();
+          final totalweightSide = currentVariant?['jewelry_diamonds']?[1]?['totalweight'].toString();
 
           // Custom sorting for diamond qualities
           List<String> diamondQualities = diamondQualitySet.toList();
@@ -816,14 +833,14 @@ class _ShowproductState extends State<Showproduct> {
             });
           }
 
-          if (allRingSizes.isNotEmpty && selectedRingSizeParaname == null) {
-            final defaultRing = allRingSizes.firstWhere((ring) => ring['paraname'].toString() == '18',
-              orElse: () => allRingSizes.first,
-            );
-
-            selectedRingSizeParaname = defaultRing['paraname'].toString();
-            selectedRingSizeId = defaultRing['id'].toString();
-          }
+          // if (allRingSizes.isNotEmpty && selectedRingSizeParaname == null) {
+          //   final defaultRing = allRingSizes.firstWhere((ring) => ring['paraname'].toString() == '18',
+          //     orElse: () => allRingSizes.first,
+          //   );
+          //
+          //   selectedRingSizeParaname = defaultRing['paraname'].toString();
+          //   selectedRingSizeId = defaultRing['id'].toString();
+          // }
 
           // Get values and safely parse them to double
           final double goldPrice = double.tryParse(currentVariant?['sync_metal_price']?.toString() ?? '0') ?? 0.0;
@@ -859,6 +876,19 @@ class _ShowproductState extends State<Showproduct> {
                   SizedBox(height: Get.height / 80),
 
                   // Image Gallery Section
+                  // horizontalpadding(
+                  //   child: Container(
+                  //     height: video.isNotEmpty ? Get.height / 2 : null,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
+                  //       border: Border.all(color: AppColor.textfild_color),
+                  //     ),
+                  //     child: selectindex < allImages.length
+                  //         ? Image.network(allImages[selectindex]['feature'], fit: BoxFit.cover)
+                  //         : (video.isNotEmpty ? horizontalpadding(child: VideoPlayerMenuContainer(videoUrl: video[0]['path']))
+                  //         : Placeholder()),
+                  //   ),
+                  // ),
                   horizontalpadding(
                     child: Container(
                       height: video.isNotEmpty ? Get.height / 2 : null,
@@ -867,9 +897,20 @@ class _ShowproductState extends State<Showproduct> {
                         border: Border.all(color: AppColor.textfild_color),
                       ),
                       child: selectindex < allImages.length
-                          ? Image.network(allImages[selectindex]['feature'], fit: BoxFit.cover)
-                          : (video.isNotEmpty ? horizontalpadding(child: VideoPlayerMenuContainer(videoUrl: video[0]['path']))
-                          : Placeholder()),
+                          ? ClipRRect(
+                        borderRadius: BorderRadius.circular(Get.width / 50),
+                        child: PhotoView(
+                          imageProvider: NetworkImage(allImages[selectindex]['feature']),
+                          backgroundDecoration: BoxDecoration(color: Colors.transparent),
+                          minScale: PhotoViewComputedScale.contained,
+                          maxScale: PhotoViewComputedScale.covered * 4,
+                          initialScale: PhotoViewComputedScale.covered,
+                          enableRotation: false,
+                        ),
+                      ) : (
+                          video.isNotEmpty
+                              ? horizontalpadding(child: VideoPlayerMenuContainer(videoUrl: video[0]['path']))
+                              : Placeholder()),
                     ),
                   ),
                   SizedBox(height: Get.height / 80),
@@ -905,7 +946,7 @@ class _ShowproductState extends State<Showproduct> {
                                 borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                 border: Border.all(color: AppColor.textfild_color),
                               ),
-                              child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                              // child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
                             ),
                           );
                         }
@@ -937,18 +978,22 @@ class _ShowproductState extends State<Showproduct> {
                             //Wishlist
                             GestureDetector(
                               onTap: () async {
-                                if (wishlist.isLoading.value) {
-                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
-                                } else {
-                                  await wishlist.wishlistservice(
-                                    ringsize: selectedRingSize,
-                                    jewelryid: jewellery['id'].toString(),
-                                    metal_stamp: selectedMetalStamp,
-                                    metal_type: selectedMetalType,
-                                    tokan: tokans,
-                                  );
-                                  final String storageKey = jewellery['id'].toString();
-                                  localdatabase().saveToWishlist(storageKey);
+                                if(selectedRingSizeId == null && selectedRingSizeParaname == null){
+                                  ToastificationError.Error('Please select ring size');
+                                }else{
+                                  if (wishlist.isLoading.value) {
+                                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+                                  } else {
+                                    await wishlist.wishlistservice(
+                                      ringsize: selectedRingSizeParaname,
+                                      jewelryid: jewellery['id'].toString(),
+                                      metal_stamp: selectedMetalStamp,
+                                      metal_type: selectedMetalType,
+                                      tokan: tokans,
+                                    );
+                                    final String storageKey = jewellery['id'].toString();
+                                    localdatabase().saveToWishlist(storageKey);
+                                  }
                                 }
                                 setState(() {
                                   count.counting();
@@ -1181,13 +1226,7 @@ class _ShowproductState extends State<Showproduct> {
                         (allRingSizes.isNotEmpty)
                             ? Row(
                           children: [
-                            Text(
-                              'Ring Size:',
-                              style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                             SizedBox(width: Get.width / 50),
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 12),
@@ -1196,6 +1235,7 @@ class _ShowproductState extends State<Showproduct> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: DropdownButton<String>(
+                                hint: Text(""),
                                 menuMaxHeight: Get.height / 5,
                                 borderRadius: BorderRadius.circular(Get.width / 50),
                                 value: selectedRingSizeParaname,
@@ -1203,9 +1243,7 @@ class _ShowproductState extends State<Showproduct> {
                                   return DropdownMenuItem<String>(
                                     value: ring['paraname'].toString(),
                                     child: Text(ring['paraname'].toString()),
-                                    onTap: () {
-                                      selectedRingSizeId = ring['id'].toString();
-                                    },
+                                    onTap: () => selectedRingSizeId = ring['id'].toString(),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -1382,14 +1420,14 @@ class _ShowproductState extends State<Showproduct> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totaldiamonds!,style: TextStyle(color: AppColor.grey_color)),
+                                          Text(totaldiamondsSide!,style: TextStyle(color: AppColor.grey_color)),
                                         ],
                                       ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totalweight!,style: TextStyle(color: AppColor.grey_color)),
+                                          Text(totalweightSide!,style: TextStyle(color: AppColor.grey_color)),
                                         ],
                                       ),
                                     ],
@@ -1454,14 +1492,14 @@ class _ShowproductState extends State<Showproduct> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totaldiamonds,style: TextStyle(color: AppColor.grey_color)),
+                                          Text(totaldiamondsCenter!,style: TextStyle(color: AppColor.grey_color)),
                                         ],
                                       ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totalweight,style: TextStyle(color: AppColor.grey_color)),
+                                          Text(totalweightCenter!,style: TextStyle(color: AppColor.grey_color)),
                                         ],
                                       ),
                                     ],

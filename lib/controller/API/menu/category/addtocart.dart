@@ -50,6 +50,7 @@ class Addtocart extends GetxController{
       if(responcse.statusCode == 200 || responcse.statusCode == 201){
         data.value = jsonDecode(responcse.body);
         print('Addtocart to cart data :-  $data');
+        print('Request body: $body');
         ToastificationSuccess.Success(data.value['message']);
 
         if(data.value['success'] == false){

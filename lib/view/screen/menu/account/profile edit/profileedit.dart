@@ -6,11 +6,10 @@ import 'package:kohira/controller/API/menu/account/profile.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
-import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../../controller/API/menu/account/profiledetails.dart';
 import '../../../../utils/app_String.dart';
 import '../../../../utils/app_icon.dart';
-import '../../../../utils/app_json.dart';
 import '../../../../utils/widget/aapbar.dart';
 import '../../../../utils/widget/button.dart';
 import '../../../../utils/widget/inputField.dart';
@@ -72,17 +71,17 @@ class _ProfileeditState extends State<Profileedit> {
       if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
     }
 
-    if(profileEdit.data['success'] == true){
+    if (profileEdit.data['success'] == true) {
       ToastificationSuccess.Success(profileEdit.data['message']);
     }
     Get.back();
-   await profile.profiledetailscall();
+    await profile.profiledetailscall();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         profile.profiledetailscall();
         return true;
       },
@@ -90,54 +89,84 @@ class _ProfileeditState extends State<Profileedit> {
         key: scaffoldKey,
         appBar: Appbar(
           lefticon: AppIcon.left,
-          onTaplefticon: (){
+          onTaplefticon: () {
             Get.back();
             profile.profiledetailscall();
           },
           hedingname_2: AppString.editprofile,
         ),
         bottomNavigationBar: SafeArea(
-          child: Container(
-            color: AppColor.white_color,
-            height: Get.height * 0.080,
-            child: horizontalpadding(
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: editvalue,
-                      child: button(AppString.save),
+          child: Obx((){
+            if(profile.isLoading.value){
+              return SizedBox();
+            }else{
+             return Container(
+                color: AppColor.white_color,
+                height: Get.height * 0.080,
+                child: horizontalpadding(
+                  child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: editvalue,
+                          child: button(AppString.save),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                      ],
                     ),
-                    SizedBox(height: Get.height / 50),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
+              );
+            }
+          }),
         ),
         body: Container(
           width: Get.width,
           height: Get.height,
           decoration: BoxDecoration(color: AppColor.white_color),
-          child: horizontalpadding(child: Obx(() {
-            if (profile.isLoading.value) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen != true) {
-                  Get.dialog(
-                    Center(child: Lottie.asset(AppJson.loading2)),
-                    barrierDismissible: false,
-                  );
-                }
-              });
-              return Scaffold(backgroundColor: Colors.transparent);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen == true) {
-                  Get.back();
-                }
-              });
-
+          child: horizontalpadding(
+            child: Obx(() {
+              if (profile.isLoading.value) {
+                return Column(
+                  children: [
+                    Expanded(
+                      flex: 12,
+                      child: Shimmer.fromColors(
+                        baseColor: AppColor.lodingcolor,
+                        highlightColor: AppColor.highlightColor,
+                        child: ListView.builder(
+                          itemCount: 4,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: AppColor.white_color,
+                                borderRadius: BorderRadius.circular(Get.width / 80),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 20,horizontal: Get.width),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Shimmer.fromColors(
+                        baseColor: AppColor.lodingcolor,
+                        highlightColor: AppColor.highlightColor,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          decoration: BoxDecoration(
+                            color: AppColor.white_color,
+                            borderRadius: BorderRadius.circular(Get.width / 50),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: Get.height / 80),
+                  ],
+                );
+              }
               return Column(
                 children: [
                   SizedBox(height: Get.height / 50),
@@ -147,8 +176,8 @@ class _ProfileeditState extends State<Profileedit> {
                   inputField(icon: AppIcon.mobile, controller: mobile),
                 ],
               );
-            }
-          })),
+            }),
+          ),
         ),
       ),
     );

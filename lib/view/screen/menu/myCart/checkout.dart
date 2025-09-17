@@ -16,6 +16,7 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/credentials/country.dart';
+import '../../../../controller/user_inerface/menu/myCart/buynow.dart';
 import '../../../../modal/credentials/country.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_gif.dart';
@@ -30,6 +31,7 @@ class Checkout extends StatelessWidget {
   final processpayment = Get.put(Processpayment());
   final scroll = ScrollController();
   final cheackout = Get.put(Cheackout_Controller());
+  final buynowUI = Get.put(BuynowController());
 
   Checkout({super.key});
 
@@ -72,7 +74,7 @@ class Checkout extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.cheackout),
+        appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.cheackout),
         bottomNavigationBar: SafeArea(
           child: ValueListenableBuilder(
             valueListenable: cheackout.shipping,
@@ -319,7 +321,7 @@ class Checkout extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.estimatedamount),
-                                  Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  Text(indianFormat.format(buynowUI.useWallet.value), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                 ],
                               ),
                               Divider(color: AppColor.textfild_color),

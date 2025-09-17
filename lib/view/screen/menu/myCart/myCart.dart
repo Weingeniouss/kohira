@@ -350,7 +350,10 @@ class Mycart extends StatelessWidget {
                               Text(AppString.total),
                               Text(
                                 indianFormat.format((myCart.total.value)),
-                                style: TextStyle(fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  color: AppColor.pink_color,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),

@@ -58,6 +58,7 @@ dependencies:
   url_launcher: ^6.1.7
   google_maps_flutter: ^2.12.3
   shimmer:
+  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:
