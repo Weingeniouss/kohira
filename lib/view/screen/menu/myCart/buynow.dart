@@ -49,9 +49,7 @@ class Buynow extends StatelessWidget {
                    child: Row(
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
-                       GestureDetector(
-                         onTap: () {},
-                         child: Container(
+                         Container(
                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.065, vertical: Get.height * 0.015),
                            decoration: BoxDecoration(
                              border: Border.all(color: AppColor.grey_color),
@@ -60,7 +58,6 @@ class Buynow extends StatelessWidget {
                            ),
                            child: Text(indianFormat.format((buynowUI.useWallet.value)), style: TextStyle(color: AppColor.grey_color,fontWeight: FontWeight.w600)),
                          ),
-                       ),
                        GestureDetector(
                          onTap: () => Get.to(() => Checkout()),
                          child: Container(

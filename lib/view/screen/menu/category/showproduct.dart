@@ -896,8 +896,7 @@ class _ShowproductState extends State<Showproduct> {
                         borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                         border: Border.all(color: AppColor.textfild_color),
                       ),
-                      child: selectindex < allImages.length
-                          ? ClipRRect(
+                      child: selectindex < allImages.length ? ClipRRect(
                         borderRadius: BorderRadius.circular(Get.width / 50),
                         child: PhotoView(
                           imageProvider: NetworkImage(allImages[selectindex]['feature']),
@@ -1223,8 +1222,7 @@ class _ShowproductState extends State<Showproduct> {
                         ),
 
                         // Ring Size
-                        (allRingSizes.isNotEmpty)
-                            ? Row(
+                        (allRingSizes.isNotEmpty) ? Row(
                           children: [
                             Text('Ring Size:', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                             SizedBox(width: Get.width / 50),
@@ -1258,8 +1256,7 @@ class _ShowproductState extends State<Showproduct> {
                             SizedBox(width: Get.width / 50),
                             Text('Find Ring Size'),
                           ],
-                        )
-                            : SizedBox(),
+                        ) : SizedBox(),
 
                         (allRingSizes.isNotEmpty) ? SizedBox(height: Get.height / 50) : SizedBox(),
 

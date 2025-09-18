@@ -35,7 +35,6 @@ import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart'
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../../controller/API/menu/others/count.dart';
 import '../category/showproduct.dart';
 
@@ -71,122 +70,122 @@ class Mycart extends StatelessWidget {
             width: Get.width,
             decoration: BoxDecoration(color: AppColor.white_color),
             child: Obx(() {
-              if (myCart.fetchcart.isLoading.value) {
-                return horizontalpadding(
-                  child: Shimmer.fromColors(
-                    baseColor: AppColor.lodingcolor,
-                    highlightColor: AppColor.highlightColor,
-                    child: Column(
-                      children: [
-                        SizedBox(height: Get.height / 50),
-                        Expanded(
-                          flex: 2,
-                          child: ListView.builder(
-                            itemBuilder: (BuildContext context, int index) {
-                              return Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(5),
-                                    margin: EdgeInsets.symmetric(vertical: Get.height / 200),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColor.Appbercolor),
-                                      borderRadius: BorderRadius.circular(Get.width / 80),
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.all(50),
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                    ),
-                                  ),
-                                  SizedBox(width: Get.width / 30),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 90,vertical: 5),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                      ),
-                                      SizedBox(height: Get.height / 150),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 70,vertical: 5),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                      ),
-                                      SizedBox(height: Get.height / 150),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 50,vertical: 5),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                      ),
-                                      SizedBox(height: Get.height / 150),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 30,vertical: 5),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                      ),
-                                      SizedBox(height: Get.height / 50),
-                                      SizedBox(
-                                        width: Get.width / 3.5,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 13,vertical: 13),
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 13,vertical: 13),
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(height: Get.height / 50),
-                        Expanded(
-                          flex: 1,
-                          child: ListView.builder(
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 35,vertical: 7),
-                                        margin: EdgeInsets.symmetric(vertical: Get.height / 200),
-                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 115, vertical: 7),
-                                        margin: EdgeInsets.symmetric(vertical: Get.height / 200),
-                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(height: Get.height / 50),
-                        Container(
-                          padding: EdgeInsets.all(25),
-                          width: Get.width,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
-                        ),
-                        SizedBox(height: Get.height / 50),
-                      ],
-                    ),
-                  ),
-                );
-              }
+              // if (myCart.fetchcart.isLoading.value) {
+              //   return horizontalpadding(
+              //     child: Shimmer.fromColors(
+              //       baseColor: AppColor.lodingcolor,
+              //       highlightColor: AppColor.highlightColor,
+              //       child: Column(
+              //         children: [
+              //           SizedBox(height: Get.height / 50),
+              //           Expanded(
+              //             flex: 2,
+              //             child: ListView.builder(
+              //               itemBuilder: (BuildContext context, int index) {
+              //                 return Row(
+              //                   children: [
+              //                     Container(
+              //                       padding: EdgeInsets.all(5),
+              //                       margin: EdgeInsets.symmetric(vertical: Get.height / 200),
+              //                       decoration: BoxDecoration(
+              //                         border: Border.all(color: AppColor.Appbercolor),
+              //                         borderRadius: BorderRadius.circular(Get.width / 80),
+              //                       ),
+              //                       child: Container(
+              //                         padding: EdgeInsets.all(50),
+              //                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                       ),
+              //                     ),
+              //                     SizedBox(width: Get.width / 30),
+              //                     Column(
+              //                       crossAxisAlignment: CrossAxisAlignment.start,
+              //                       children: [
+              //                         Container(
+              //                           padding: EdgeInsets.symmetric(horizontal: 90,vertical: 5),
+              //                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                         ),
+              //                         SizedBox(height: Get.height / 150),
+              //                         Container(
+              //                           padding: EdgeInsets.symmetric(horizontal: 70,vertical: 5),
+              //                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                         ),
+              //                         SizedBox(height: Get.height / 150),
+              //                         Container(
+              //                           padding: EdgeInsets.symmetric(horizontal: 50,vertical: 5),
+              //                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                         ),
+              //                         SizedBox(height: Get.height / 150),
+              //                         Container(
+              //                           padding: EdgeInsets.symmetric(horizontal: 30,vertical: 5),
+              //                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                         ),
+              //                         SizedBox(height: Get.height / 50),
+              //                         SizedBox(
+              //                           width: Get.width / 3.5,
+              //                           child: Row(
+              //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                             children: [
+              //                               Container(
+              //                                 padding: EdgeInsets.symmetric(horizontal: 13,vertical: 13),
+              //                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                               ),
+              //                               Container(
+              //                                 padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+              //                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                               ),
+              //                               Container(
+              //                                 padding: EdgeInsets.symmetric(horizontal: 13,vertical: 13),
+              //                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //                               ),
+              //                             ],
+              //                           ),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ],
+              //                 );
+              //               },
+              //             ),
+              //           ),
+              //           SizedBox(height: Get.height / 50),
+              //           Expanded(
+              //             flex: 1,
+              //             child: ListView.builder(
+              //               itemBuilder: (BuildContext context, int index) {
+              //                 return Column(
+              //                   children: [
+              //                     Row(
+              //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                       children: [
+              //                         Container(
+              //                           padding: EdgeInsets.symmetric(horizontal: 35,vertical: 7),
+              //                           margin: EdgeInsets.symmetric(vertical: Get.height / 200),
+              //                           decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
+              //                         ),
+              //                         Container(
+              //                           padding: EdgeInsets.symmetric(horizontal: 115, vertical: 7),
+              //                           margin: EdgeInsets.symmetric(vertical: Get.height / 200),
+              //                           decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(Get.width / 80)),
+              //                         ),
+              //                       ],
+              //                     )
+              //                   ],
+              //                 );
+              //               },
+              //             ),
+              //           ),
+              //           SizedBox(height: Get.height / 50),
+              //           Container(
+              //             padding: EdgeInsets.all(25),
+              //             width: Get.width,
+              //             decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 80), color: AppColor.white_color),
+              //           ),
+              //           SizedBox(height: Get.height / 50),
+              //         ],
+              //       ),
+              //     ),
+              //   );
+              // }
 
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
