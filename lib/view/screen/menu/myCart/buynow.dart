@@ -16,6 +16,7 @@ import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
+import '../../../utils/widget/containershadow.dart';
 import '../../../utils/widget/horizontalpading.dart';
 
 class Buynow extends StatelessWidget {
@@ -189,20 +190,7 @@ class Buynow extends StatelessWidget {
                     //Infromation
                     Column(
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Get.width / 100),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1), // shadow color
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                                offset: Offset(0, 0),
-                              ),
-                            ],
-                            color: AppColor.white_color,
-                          ),
+                        containershadow(
                           child: Column(
                             children: [
                               IntrinsicHeight(
@@ -295,20 +283,7 @@ class Buynow extends StatelessWidget {
                         SizedBox(height: Get.height / 50),
 
                         //Price Details
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Get.width / 100),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                                offset: Offset(0, 0),
-                              ),
-                            ],
-                            color: AppColor.white_color,
-                          ),
+                        containershadow(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -345,8 +320,7 @@ class Buynow extends StatelessWidget {
                               ),
                               Divider(color: AppColor.textfild_color),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.tax),
                                   Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),

@@ -56,6 +56,9 @@ class HomeController extends GetxController {
   final collection = Get.put(Collection());
   final subcategrory = Get.put(Subcategrory());
 
+  // //setDefalt
+  // final setDeflut = Get.put(SetDeflutAddress());
+
   RxInt activeIndex = 0.obs;
 
   final pagecontroller = CarouselSliderController();

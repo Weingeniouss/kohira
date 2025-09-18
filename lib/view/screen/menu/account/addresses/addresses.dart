@@ -29,7 +29,7 @@ class _AddressesState extends State<Addresses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.Addresses),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.Addresses),
       bottomNavigationBar: SafeArea(
         child: Container(
           color: AppColor.white_color,

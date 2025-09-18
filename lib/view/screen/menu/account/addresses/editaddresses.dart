@@ -95,7 +95,7 @@ class _EditaddressesState extends State<Editaddresses> {
         return true;
       },
       child: Scaffold(
-        appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.editAddresses),
+        appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.editAddresses),
         bottomNavigationBar:Obx((){
           if(fechedit.isLoading.value){
             return SizedBox();

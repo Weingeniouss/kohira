@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unused_local_variable, unnecessary_null_comparison, unused_import
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unused_local_variable, unnecessary_null_comparison, unused_import, prefer_const_literals_to_create_immutables
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kohira/controller/API/menu/account/addresses.dart';
 import 'package:kohira/controller/API/menu/account/wallet.dart';
 import 'package:kohira/controller/API/menu/myCart/process-payment.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/cheackout.dart';
@@ -23,6 +24,8 @@ import '../../../utils/app_gif.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
+import '../../../utils/widget/containershadow.dart';
+import '../account/addresses/addresses.dart';
 
 class Checkout extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
@@ -32,6 +35,8 @@ class Checkout extends StatelessWidget {
   final scroll = ScrollController();
   final cheackout = Get.put(Cheackout_Controller());
   final buynowUI = Get.put(BuynowController());
+  final fech = Get.put(Fechaddresses());
+  // final setDeflut = Get.put(SetDeflutAddress());
 
   Checkout({super.key});
 
@@ -98,21 +103,21 @@ class Checkout extends StatelessWidget {
             },
           ),
         ),
-        body: SingleChildScrollView(
-          controller: scroll,
-          physics: cheackout.shouldScroll ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
-          child: Container(
-              height: Get.height,
-              width: Get.width,
-              decoration: BoxDecoration(color: AppColor.white_color),
-              child: Obx(() {
-                final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-                if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
-                  myCart.initializeItemCounts();
-                }
-                final fetch = myCart.fetchcart.data['carts'] ?? [];
-                if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
-                return horizontalpadding(
+        body: Container(
+            height: Get.height,
+            width: Get.width,
+            decoration: BoxDecoration(color: AppColor.white_color),
+            child: Obx(() {
+              final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+              if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
+                myCart.initializeItemCounts();
+              }
+              final fetch = myCart.fetchcart.data['carts'] ?? [];
+              if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
+              return horizontalpadding(
+                child: SingleChildScrollView(
+                  // controller: scroll,
+                  // physics: cheackout.shouldScroll ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
                   child: Column(
                     children: [
                       SizedBox(height: Get.height / 50),
@@ -120,220 +125,328 @@ class Checkout extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(
-                            height: 30,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(AppString.shippingaddress, style: TextStyle(height: 1.0)),
-                                Builder(
-                                  builder: (BuildContext innerContext) {
-                                    return ValueListenableBuilder(
-                                      valueListenable: cheackout.shipping,
-                                      builder: (BuildContext context, value, Widget? child) {
-                                        return Checkbox(
-                                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          value: cheackout.shipping.value,
-                                          overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                          side: BorderSide(color: AppColor.grey_color, width: 2),
-                                          checkColor: AppColor.white_color,
-                                          activeColor: AppColor.grey_color,
-                                          onChanged: (bool? value) => cheackout.isshipping(innerContext),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(AppString.billing, style: TextStyle(height: 1.0)),
-                                Checkbox(
-                                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  value: cheackout.billing.value,
-                                  overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                  side: BorderSide(color: AppColor.grey_color, width: 2),
-                                  checkColor: AppColor.white_color,
-                                  activeColor: AppColor.grey_color,
-                                  onChanged: (bool? value) => cheackout.isbilling(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Visibility(
-                            visible: !cheackout.billing.value,
-                            child: SizedBox(
-                              height: Get.height / 2,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: Get.height / 60),
-                                    inputField(hintText: AppString.firstname, icon: AppIcon.parson),
-                                    inputField(hintText: AppString.lastname, icon: AppIcon.parson),
-                                    inputField(hintText: AppString.Addresses, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8),
-                                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(AppGif.earth, scale: 1.5),
-                                          SizedBox(width: Get.width / 50),
-                                          Expanded(
-                                            child: DropdownButton2<Data>(
-                                              iconStyleData: IconStyleData(
-                                                icon: Icon(Icons.keyboard_arrow_down),
-                                                iconSize: 20,
-                                                iconEnabledColor: AppColor.grey_color,
-                                                iconDisabledColor: AppColor.grey_color,
-                                                openMenuIcon: Icon(Icons.keyboard_arrow_up),
+                            child: containershadow(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(AppString.shippingaddress, style: TextStyle(height: 1.0,fontWeight: FontWeight.w500)),
+                                      SizedBox(
+                                        child: GestureDetector(
+                                          onTap: () => Get.to(() => Addresses()),
+                                          child: Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: AppColor.pink_color,
+                                              borderRadius: BorderRadius.circular(Get.width / 70),
+                                            ),
+                                            child: Text('Change Address', style: TextStyle(color: AppColor.white_color, fontWeight: FontWeight.w500)),
+                                          ),
+                                        ),
+                                      ),
+                                      // Builder(
+                                      //   builder: (BuildContext innerContext) {
+                                      //     return ValueListenableBuilder(
+                                      //       valueListenable: cheackout.shipping,
+                                      //       builder: (BuildContext context, value, Widget? child) {
+                                      //         return Checkbox(
+                                      //           visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                      //           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      //           value: cheackout.shipping.value,
+                                      //           overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                      //           side: BorderSide(color: AppColor.grey_color, width: 2),
+                                      //           checkColor: AppColor.white_color,
+                                      //           activeColor: AppColor.grey_color,
+                                      //           onChanged: (bool? value) => cheackout.isshipping(innerContext),
+                                      //         );
+                                      //       },
+                                      //     );
+                                      //   },
+                                      // ),
+                                    ],
+                                  ),
+                                  SizedBox(height: Get.height / 80),
+                                  containershadow(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: fech.data['userAdddress'].length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        final userData = fech.data['userAdddress'][index];
+                                        if (userData['isdefault'] == 1) {
+                                          return Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: Get.width / 5, child: Text('Name :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                  Row(
+                                                    children: [
+                                                      Text(userData['firstname']),
+                                                      SizedBox(width: Get.width / 50),
+                                                      Text(userData['lastname']),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
-                                              value: Country.selectedCountry.value,
-                                              dropdownSearchData: DropdownSearchData(
-                                                searchController: searchController,
-                                                searchInnerWidgetHeight: 40,
-                                                searchInnerWidget: Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: TextField(
-                                                    controller: searchController,
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Search...',
-                                                      border: OutlineInputBorder(),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: Get.width / 5,child: Text('Email :',style: TextStyle(fontWeight: FontWeight.w500))),
+
+                                                  Text(userData['email']),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: Get.width / 5,child: Text('Country :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                  Text(userData['countryName']),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: Get.width / 5,child: Text('State :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                  Text(userData['stateName']),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: Get.width / 5,child: Text('City :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                  Text(userData['city']),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: Get.width / 5,child: Text('Mobile :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                  Text(userData['mobileno']),
+                                                ],
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                        return SizedBox.shrink();
+                                      },
+                                    ),
+                                  ),
+                                  // Expanded(
+                                  //   child: ListView.builder(
+                                  //       itemCount: fech.data['userAdddress'].length,
+                                  //       itemBuilder: (BuildContext context, int index) {
+                                  //         final userData = fech.data['userAdddress'][index];
+                                  //         if(userData['isdefault'] == 1){
+                                  //           return Text(userData['firstname']);
+                                  //         }
+                                  //         return null;
+                                  //       }),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: Get.height / 50),
+
+                          //Billing Statemants
+                          containershadow(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 30,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(AppString.billing, style: TextStyle(height: 1.0,fontWeight: FontWeight.w500)),
+                                      Checkbox(
+                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        value: cheackout.billing.value,
+                                        overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                        side: BorderSide(color: AppColor.grey_color, width: 2),
+                                        checkColor: AppColor.white_color,
+                                        activeColor: AppColor.grey_color,
+                                        onChanged: (bool? value) => cheackout.isbilling(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: !cheackout.billing.value,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: Get.height / 60),
+                                      inputField(hintText: AppString.firstname, icon: AppIcon.parson),
+                                      inputField(hintText: AppString.lastname, icon: AppIcon.parson),
+                                      inputField(hintText: AppString.Addresses, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 8),
+                                        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
+                                        child: Row(
+                                          children: [
+                                            Image.asset(AppGif.earth, scale: 1.5),
+                                            SizedBox(width: Get.width / 50),
+                                            Expanded(
+                                              child: DropdownButton2<Data>(
+                                                iconStyleData: IconStyleData(
+                                                  icon: Icon(Icons.keyboard_arrow_down),
+                                                  iconSize: 20,
+                                                  iconEnabledColor: AppColor.grey_color,
+                                                  iconDisabledColor: AppColor.grey_color,
+                                                  openMenuIcon: Icon(Icons.keyboard_arrow_up),
+                                                ),
+                                                value: Country.selectedCountry.value,
+                                                dropdownSearchData: DropdownSearchData(
+                                                  searchController: searchController,
+                                                  searchInnerWidgetHeight: 40,
+                                                  searchInnerWidget: Padding(
+                                                    padding: EdgeInsets.all(8),
+                                                    child: TextField(
+                                                      controller: searchController,
+                                                      decoration: InputDecoration(
+                                                        hintText: 'Search...',
+                                                        border: OutlineInputBorder(),
+                                                      ),
                                                     ),
                                                   ),
+                                                  searchMatchFn: (item, searchValue) {
+                                                    return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
+                                                  },
                                                 ),
-                                                searchMatchFn: (item, searchValue) {
-                                                  return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
-                                                },
-                                              ),
-                                              underline: SizedBox(),
-                                              isExpanded: true,
-                                              items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
-                                              onChanged: (newValue) => Country.selectedCountry.value = newValue!,
-                                              dropdownStyleData: DropdownStyleData(
-                                                offset: Offset(0, -10),
-                                                maxHeight: Get.height / 3,
-                                                decoration: BoxDecoration(color: AppColor.white_color),
+                                                underline: SizedBox(),
+                                                isExpanded: true,
+                                                items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
+                                                onChanged: (newValue) => Country.selectedCountry.value = newValue!,
+                                                dropdownStyleData: DropdownStyleData(
+                                                  offset: Offset(0, -10),
+                                                  maxHeight: Get.height / 3,
+                                                  decoration: BoxDecoration(color: AppColor.white_color),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    inputField(hintText: AppString.zipcode, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
-                                    inputField(hintText: AppString.city, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
-                                    inputField(hintText: AppString.email, icon: AppIcon.mail),
-                                    inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile),
-                                  ],
-                                ),
-                              ),
+                                      inputField(hintText: AppString.zipcode, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
+                                      inputField(hintText: AppString.city, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
+                                      inputField(hintText: AppString.email, icon: AppIcon.mail),
+                                      inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           )
                         ],
                       ),
                       SizedBox(height: Get.height / 50),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(AppString.payments, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                     //Paymant type
+                      containershadow(
+                        child: Column(
                           children: [
-                            Text(AppString.paymentstype, style: TextStyle(height: 1.0)),
-                            Checkbox(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              value: cheackout.shippingtype.value,
-                              overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                              side: BorderSide(color: AppColor.grey_color, width: 2),
-                              checkColor: AppColor.white_color,
-                              activeColor: AppColor.grey_color,
-                              onChanged: (bool? value) => cheackout.isshippingtype(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(AppString.payments, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 30,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.paymentstype, style: TextStyle(height: 1.0)),
+                                  Checkbox(
+                                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    value: cheackout.shippingtype.value,
+                                    overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                    side: BorderSide(color: AppColor.grey_color, width: 2),
+                                    checkColor: AppColor.white_color,
+                                    activeColor: AppColor.grey_color,
+                                    onChanged: (bool? value) => cheackout.isshippingtype(),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
                       SizedBox(height: Get.height / 50),
-                      Expanded(
-                        child: SizedBox(
-                          width: Get.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                                  SizedBox(width: Get.width / 80),
-                                  Text('(${myCart.fetchcart.data['count']} ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                                ],
-                              ),
-                              SizedBox(height: Get.height / 80),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.totalprice),
-                                  Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.discountprice),
-                                  Text(indianFormat.format((myCart.discount.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.shippingcharges),
-                                  Text('FREE', style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.tax),
-                                  Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.totalwallet),
-                                  Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.estimatedamount),
-                                  Text(indianFormat.format(buynowUI.useWallet.value), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                            ],
+
+
+                      containershadow(
+                        child: Expanded(
+                          child: SizedBox(
+                            width: Get.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                    SizedBox(width: Get.width / 80),
+                                    Text('(${myCart.fetchcart.data['count']} ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                                SizedBox(height: Get.height / 80),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.totalprice),
+                                    Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.discountprice),
+                                    Text(indianFormat.format((myCart.discount.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.shippingcharges),
+                                    Text('FREE', style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.tax),
+                                    Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.totalwallet),
+                                    Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.estimatedamount),
+                                    Text(indianFormat.format(buynowUI.useWallet.value), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                              ],
+                            ),
                           ),
                         ),
                       ),
+                      SizedBox(height: Get.height / 50),
                     ],
                   ),
-                );
-              }),
-          ),
+                ),
+              );
+            }),
         ),
       ),
     );

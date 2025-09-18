@@ -35,7 +35,7 @@ class AddNewAddresses extends StatelessWidget {
             await AddAddress.fech.fechaddresses();
             Get.back();
           },
-          hedingname: 'Add New ${AppString.Addresses}',
+          hedingname_2: 'Add New ${AppString.Addresses}',
         ),
         bottomNavigationBar: SafeArea(
           child: Container(
