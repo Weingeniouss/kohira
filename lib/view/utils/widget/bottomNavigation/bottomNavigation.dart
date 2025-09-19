@@ -50,7 +50,7 @@ class Bottom extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              //defult home Sccrren
+              //Defult home Sccrren
               InkWell(
                 onTap: onTap ?? bottamSelect.indexOne,
                 child: bottamIcon(

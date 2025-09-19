@@ -30,13 +30,14 @@ Widget inputField({
                 builder: (context, setState) {
                   return TextField(
                     keyboardType: textInputType,
+                    textAlign: TextAlign.center,
                     maxLength: maxLength,
                     controller: controller,
                     obscureText: isVis ? _obscureText : false,
                     decoration: InputDecoration(
                       counterText: "",
                       prefixIcon: icon != null ? Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(15),
                         child: SvgPicture.asset(
                           icon, fit: BoxFit.cover,
                           color: iconcolor,
@@ -53,7 +54,7 @@ Widget inputField({
                         child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility,color: AppColor.grey_color),
                       ) : null,
                       hintText: hintText,
-                      hintStyle: TextStyle(color: AppColor.black_color),
+                      hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
                       contentPadding: EdgeInsets.symmetric(vertical: 11),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(

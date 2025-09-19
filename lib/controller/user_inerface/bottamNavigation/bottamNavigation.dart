@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/screen/menu/account/account.dart';
 import 'package:kohira/view/screen/menu/home/home.dart';
-import 'package:kohira/view/screen/menu/myCart/myCart.dart';
+import 'package:kohira/view/screen/menu/myCart/buynow.dart';
 import '../../../view/screen/menu/category/Category.dart';
 import '../../../view/screen/menu/over Store/overStore.dart';
 
@@ -18,7 +18,7 @@ class Bottamnavigation extends GetxController {
   List<Widget> scrren = [
     Home(),
     Categorys(),
-    Mycart(),
+    Buynow(),
     Overstore(),
     Account(),
   ];
@@ -32,18 +32,12 @@ class Bottamnavigation extends GetxController {
   //Swich Screen
   Widget selectscreen(int index) {
     switch (index) {
-      case 0:
-        return Home();
-      case 1:
-        return Categorys();
-      case 2:
-        return Mycart();
-      case 3:
-        return Overstore();
-      case 4:
-        return Account();
-      default:
-        return Home();
+      case 0: return Home();
+      case 1: return Categorys();
+      case 2: return Buynow();
+      case 3: return Overstore();
+      case 4: return Account();
+      default: return Home();
     }
   }
 }

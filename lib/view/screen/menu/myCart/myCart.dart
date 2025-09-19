@@ -19,12 +19,10 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
-import 'package:kohira/view/screen/menu/myCart/buynow.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -41,27 +39,28 @@ import '../category/showproduct.dart';
 class Mycart extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
   final count = Get.put(CountController());
+  final bottamSelect = Get.put(Bottamnavigation());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool show = false;
-
   Mycart({super.key});
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        final Bottamnavigation bottomSelectController = Get.find<Bottamnavigation>();
-        Bottom();
-        bottomSelectController.indexOne();
+        // final Bottamnavigation bottomSelectController = Get.find<Bottamnavigation>();
+        // Bottom();
+        // bottomSelectController.indexOne();
+        Get.back();
       },
       child: Scaffold(
         key: scaffoldKey,
         appBar: Appbar(
-          prefixicon: AppIcon.menu,
-          prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
-          hedingname: AppString.myCart,
+          // prefixicon: AppIcon.menu,
+          // prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
+          lefticon: AppIcon.left,
+          hedingname_2: AppString.myCart,
         ),
         drawer: Drawers(),
         body: SafeArea(
@@ -297,7 +296,7 @@ class Mycart extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                     ),
                                     padding: EdgeInsets.only(left: 22, top: 38, bottom: 38),
-                                    child: SvgPicture.asset(AppIcon.close, width: 10, height: 10),
+                                    child: Icon(Icons.delete_outline_outlined, color: AppColor.pink_color,size: 20),
                                   ),
                                   onTap: () {
                                     myCart.deletValueofcount(item, fetch, index);
@@ -365,7 +364,11 @@ class Mycart extends StatelessWidget {
                     Expanded(
                       flex: -1,
                       child: GestureDetector(
-                        onTap: () => Get.to(() => Buynow()),
+                        onTap: () {
+                            Bottom();
+                            bottamSelect.indexThree();
+                            Get.back();
+                            },
                         child: button(AppString.proceedcheckout),
                       ),
                     ),

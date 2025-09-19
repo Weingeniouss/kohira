@@ -141,10 +141,11 @@ PreferredSizeWidget Appbar({
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Bottom();
-                                  bottamSelect.indexThree();
-                                  Get.back();
-                                  Get.back();
+                                  // Bottom();
+                                  // bottamSelect.indexThree();
+                                  // Get.back();
+                                  // Get.back();
+                                  Get.to(() => Mycart());
                                 },
                                 child: Container(
                                   color: AppColor.Appbercolor,

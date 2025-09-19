@@ -3,11 +3,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/account/addresses.dart';
 import 'package:kohira/controller/API/menu/account/wallet.dart';
 import 'package:kohira/controller/API/menu/myCart/process-payment.dart';
+import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/cheackout.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -26,6 +28,7 @@ import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/containershadow.dart';
 import '../account/addresses/addresses.dart';
+import '../category/showproduct.dart';
 
 class Checkout extends StatelessWidget {
   final myCart = Get.put(MyCartValueChange());
@@ -36,7 +39,6 @@ class Checkout extends StatelessWidget {
   final cheackout = Get.put(Cheackout_Controller());
   final buynowUI = Get.put(BuynowController());
   final fech = Get.put(Fechaddresses());
-  // final setDeflut = Get.put(SetDeflutAddress());
 
   Checkout({super.key});
 
@@ -80,167 +82,242 @@ class Checkout extends StatelessWidget {
       },
       child: Scaffold(
         appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.cheackout),
-        bottomNavigationBar: SafeArea(
-          child: ValueListenableBuilder(
-            valueListenable: cheackout.shipping,
-            builder: (BuildContext context, bool value, Widget? child) {
-              return (!cheackout.shipping.value)
-                  ? SizedBox()
-                  : Container(
-                      color: AppColor.white_color,
-                      height: Get.height * 0.080,
-                      child: horizontalpadding(
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: paymentprosess,
-                              child: button(AppString.paynow),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-            },
-          ),
-        ),
-        body: Container(
-            height: Get.height,
-            width: Get.width,
-            decoration: BoxDecoration(color: AppColor.white_color),
-            child: Obx(() {
-              final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-              if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
-                myCart.initializeItemCounts();
-              }
-              final fetch = myCart.fetchcart.data['carts'] ?? [];
-              if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
-              return horizontalpadding(
-                child: SingleChildScrollView(
-                  // controller: scroll,
-                  // physics: cheackout.shouldScroll ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      SizedBox(height: Get.height / 50),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
+        // bottomNavigationBar: SafeArea(
+        //   child: ValueListenableBuilder(
+        //     valueListenable: cheackout.shipping,
+        //     builder: (BuildContext context, bool value, Widget? child) {
+        //       return (!cheackout.shipping.value)
+        //           ? SizedBox()
+        //           : Container(
+        //               color: AppColor.white_color,
+        //               height: Get.height * 0.080,
+        //               child: horizontalpadding(
+        //                 child: Column(
+        //                   children: [
+        //                     GestureDetector(
+        //                       onTap: paymentprosess,
+        //                       child: button(AppString.paynow),
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             );
+        //     },
+        //   ),
+        // ),
+        body: SafeArea(
+          child: Container(
+              height: Get.height,
+              width: Get.width,
+              decoration: BoxDecoration(color: AppColor.white_color),
+              child: Obx(() {
+                final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+                if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
+                  myCart.initializeItemCounts();
+                }
+                final fetch = myCart.fetchcart.data['carts'] ?? [];
+                if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
+                return SingleChildScrollView(
+                  child: Expanded(
+                    child: horizontalpadding(
+                      child: Column(
                         children: [
-                          SizedBox(
-                            child: containershadow(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          SizedBox(height: Get.height / 50),
+
+                          containershadow(
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: fetch.length,
+                              itemBuilder: (context, index) {
+                                final item = fetch[index];
+                                final fetchdata = item['CartJewelryData'];
+                                final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
+                                if (index >= myCart.itemCounts.length) return Container();
+                                return Container(
+                                  child: Row(
                                     children: [
-                                      Text(AppString.shippingaddress, style: TextStyle(height: 1.0,fontWeight: FontWeight.w500)),
-                                      SizedBox(
-                                        child: GestureDetector(
-                                          onTap: () => Get.to(() => Addresses()),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: AppColor.pink_color,
-                                              borderRadius: BorderRadius.circular(Get.width / 70),
-                                            ),
-                                            child: Text('Change Address', style: TextStyle(color: AppColor.white_color, fontWeight: FontWeight.w500)),
-                                          ),
+                                      if (fetchimage != null)
+                                        GestureDetector(
+                                          onTap: () => Get.to(() => Showproduct(slug: fetchdata['slug'])),
+                                          child: Image(image: NetworkImage(fetchimage['thumb']), fit: BoxFit.cover, width: 100, height: 100, errorBuilder: (context, error, stackTrace) => Icon(Icons.error)),
                                         ),
-                                      ),
-                                      // Builder(
-                                      //   builder: (BuildContext innerContext) {
-                                      //     return ValueListenableBuilder(
-                                      //       valueListenable: cheackout.shipping,
-                                      //       builder: (BuildContext context, value, Widget? child) {
-                                      //         return Checkbox(
-                                      //           visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                      //           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      //           value: cheackout.shipping.value,
-                                      //           overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                      //           side: BorderSide(color: AppColor.grey_color, width: 2),
-                                      //           checkColor: AppColor.white_color,
-                                      //           activeColor: AppColor.grey_color,
-                                      //           onChanged: (bool? value) => cheackout.isshipping(innerContext),
-                                      //         );
-                                      //       },
-                                      //     );
-                                      //   },
-                                      // ),
-                                    ],
-                                  ),
-                                  SizedBox(height: Get.height / 80),
-                                  containershadow(
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: fech.data['userAdddress'].length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        final userData = fech.data['userAdddress'][index];
-                                        if (userData['isdefault'] == 1) {
-                                          return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              title: Text(
+                                                fetchdata['title'],
+                                                style: TextStyle(fontSize: Get.width / 27),
+                                              ),
+                                              subtitle: Text(
+                                                indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
+                                                style: TextStyle(
+                                                  color: AppColor.pink_color,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: Get.height / 300),
+                                            horizontalpadding(
+                                              child: Row(
                                                 children: [
-                                                  SizedBox(width: Get.width / 5, child: Text('Name :',style: TextStyle(fontWeight: FontWeight.w500))),
-                                                  Row(
-                                                    children: [
-                                                      Text(userData['firstname']),
-                                                      SizedBox(width: Get.width / 50),
-                                                      Text(userData['lastname']),
-                                                    ],
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      myCart.decrementValueOfCount(index).then((_) {
+                                                        Future.delayed(Duration(seconds: 2), () {
+                                                          myCart.onInit();
+                                                        });
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: AppColor.textfild_color,
+                                                        borderRadius: BorderRadius.circular(Get.width / 50),
+                                                      ),
+                                                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                                      child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: Get.width / 20),
+                                                  Text(myCart.itemCounts[index].toString()),
+                                                  SizedBox(width: Get.width / 20),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      myCart.incrementValueOfCount(index).then((_) {
+                                                        Future.delayed(Duration(seconds: 2), () {
+                                                          myCart.onInit();
+                                                        });
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: AppColor.textfild_color,
+                                                        borderRadius: BorderRadius.circular(Get.width / 50),
+                                                      ),
+                                                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                                      child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(width: Get.width / 5,child: Text('Email :',style: TextStyle(fontWeight: FontWeight.w500))),
-
-                                                  Text(userData['email']),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(width: Get.width / 5,child: Text('Country :',style: TextStyle(fontWeight: FontWeight.w500))),
-                                                  Text(userData['countryName']),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(width: Get.width / 5,child: Text('State :',style: TextStyle(fontWeight: FontWeight.w500))),
-                                                  Text(userData['stateName']),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(width: Get.width / 5,child: Text('City :',style: TextStyle(fontWeight: FontWeight.w500))),
-                                                  Text(userData['city']),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(width: Get.width / 5,child: Text('Mobile :',style: TextStyle(fontWeight: FontWeight.w500))),
-                                                  Text(userData['mobileno']),
-                                                ],
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                        return SizedBox.shrink();
-                                      },
-                                    ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  // Expanded(
-                                  //   child: ListView.builder(
-                                  //       itemCount: fech.data['userAdddress'].length,
-                                  //       itemBuilder: (BuildContext context, int index) {
-                                  //         final userData = fech.data['userAdddress'][index];
-                                  //         if(userData['isdefault'] == 1){
-                                  //           return Text(userData['firstname']);
-                                  //         }
-                                  //         return null;
-                                  //       }),
-                                  // ),
-                                ],
-                              ),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(height: Get.height / 50),
+
+                          //Shiping Address
+                          containershadow(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.shippingaddress, style: TextStyle(height: 1.0,fontWeight: FontWeight.w500)),
+                                    SizedBox(
+                                      child: GestureDetector(
+                                        onTap: () => Get.to(() => Addresses()),
+                                        child: Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.pink_color,
+                                            borderRadius: BorderRadius.circular(Get.width / 70),
+                                          ),
+                                          child: Text('Change Address', style: TextStyle(color: AppColor.white_color, fontWeight: FontWeight.w500)),
+                                        ),
+                                      ),
+                                    ),
+                                    // Builder(
+                                    //   builder: (BuildContext innerContext) {
+                                    //     return ValueListenableBuilder(
+                                    //       valueListenable: cheackout.shipping,
+                                    //       builder: (BuildContext context, value, Widget? child) {
+                                    //         return Checkbox(
+                                    //           visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                    //           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    //           value: cheackout.shipping.value,
+                                    //           overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                    //           side: BorderSide(color: AppColor.grey_color, width: 2),
+                                    //           checkColor: AppColor.white_color,
+                                    //           activeColor: AppColor.grey_color,
+                                    //           onChanged: (bool? value) => cheackout.isshipping(innerContext),
+                                    //         );
+                                    //       },
+                                    //     );
+                                    //   },
+                                    // ),
+                                  ],
+                                ),
+                                SizedBox(height: Get.height / 80),
+                                SizedBox(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: fech.data['userAdddress'].length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final userData = fech.data['userAdddress'][index];
+                                      if (userData['isdefault'] == 1) {
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                // SizedBox(width: Get.width / 5, child: Text('Name :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                Row(
+                                                  children: [
+                                                    Text(userData['firstname']),
+                                                    SizedBox(width: Get.width / 50),
+                                                    Text(userData['lastname']),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                // SizedBox(width: Get.width / 5,child: Text('Email :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                SizedBox(width: Get.width / 1.2,child: Text(userData['email'])),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                // SizedBox(width: Get.width / 5,child: Text('Country :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                SizedBox(width: Get.width / 1.2,child: Text(userData['countryName'])),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                // SizedBox(width: Get.width / 5,child: Text('State :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                SizedBox(width: Get.width / 1.2,child: Text(userData['stateName'])),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                // SizedBox(width: Get.width / 5,child: Text('City :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                SizedBox(width: Get.width / 1.2,child: Text(userData['city'])),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                // SizedBox(width: Get.width / 5,child: Text('Mobile :',style: TextStyle(fontWeight: FontWeight.w500))),
+                                                SizedBox(width: Get.width / 1.2,child: Text(userData['mobileno'])),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return SizedBox.shrink();
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(height: Get.height / 50),
@@ -249,39 +326,40 @@ class Checkout extends StatelessWidget {
                           containershadow(
                             child: Column(
                               children: [
-                                SizedBox(
-                                  height: 30,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(AppString.billing, style: TextStyle(height: 1.0,fontWeight: FontWeight.w500)),
-                                      Checkbox(
-                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        value: cheackout.billing.value,
-                                        overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                        side: BorderSide(color: AppColor.grey_color, width: 2),
-                                        checkColor: AppColor.white_color,
-                                        activeColor: AppColor.grey_color,
-                                        onChanged: (bool? value) => cheackout.isbilling(),
-                                      ),
-                                    ],
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.billing, style: TextStyle(height: 1.0, fontWeight: FontWeight.w500)),
+                                    Checkbox(
+                                      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      value: cheackout.billing.value,
+                                      overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
+                                      side: BorderSide(color: AppColor.pink_color, width: 2),
+                                      checkColor: AppColor.white_color,
+                                      activeColor: AppColor.pink_color,
+                                      onChanged: (bool? value) => cheackout.isbilling(),
+                                    ),
+                                  ],
                                 ),
-                                Visibility(
-                                  visible: !cheackout.billing.value,
-                                  child: Column(
+
+                                AnimatedSize(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                  child: cheackout.billing.value
+                                      ? SizedBox.shrink()
+                                      : Column(
                                     children: [
                                       SizedBox(height: Get.height / 60),
                                       inputField(hintText: AppString.firstname, icon: AppIcon.parson),
                                       inputField(hintText: AppString.lastname, icon: AppIcon.parson),
                                       inputField(hintText: AppString.Addresses, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8),
+                                        padding: EdgeInsets.symmetric(horizontal: 12),
                                         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                                         child: Row(
                                           children: [
-                                            Image.asset(AppGif.earth, scale: 1.5),
+                                            SvgPicture.asset(AppIcon.earth, fit: BoxFit.cover, color: AppColor.pink_color, width: 25, height: 25),
                                             SizedBox(width: Get.width / 50),
                                             Expanded(
                                               child: DropdownButton2<Data>(
@@ -312,71 +390,70 @@ class Checkout extends StatelessWidget {
                                                 ),
                                                 underline: SizedBox(),
                                                 isExpanded: true,
-                                                items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
-                                                onChanged: (newValue) => Country.selectedCountry.value = newValue!,
+                                                items: Country.countries.map((item) => DropdownMenuItem(
+                                                  value: item,
+                                                  child: Text("${item.label} (${item.countrycode})"),
+                                                )).toList(),
+                                                onChanged: (newValue) =>
+                                                Country.selectedCountry.value = newValue!,
                                                 dropdownStyleData: DropdownStyleData(
                                                   offset: Offset(0, -10),
                                                   maxHeight: Get.height / 3,
-                                                  decoration: BoxDecoration(color: AppColor.white_color),
+                                                  decoration:
+                                                  BoxDecoration(color: AppColor.white_color),
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
+                                      SizedBox(height: Get.height / 60),
                                       inputField(hintText: AppString.zipcode, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
                                       inputField(hintText: AppString.city, icon: AppIcon.Addresses, iconcolor: AppColor.pink_color),
                                       inputField(hintText: AppString.email, icon: AppIcon.mail),
                                       inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile),
                                     ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: Get.height / 50),
+                          ),
 
-                     //Paymant type
-                      containershadow(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                          SizedBox(height: Get.height / 50),
+
+                          //Paymant type
+                          containershadow(
+                            child: Column(
                               children: [
-                                Text(AppString.payments, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(AppString.payments, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.paymentstype, style: TextStyle(height: 1.0)),
+                                    Checkbox(
+                                      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      value: cheackout.shippingtype.value,
+                                      overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
+                                      side: BorderSide(color: AppColor.pink_color, width: 2),
+                                      checkColor: AppColor.white_color,
+                                      activeColor: AppColor.pink_color,
+                                      onChanged: (bool? value) => cheackout.isshippingtype(),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                            SizedBox(
-                              height: 30,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.paymentstype, style: TextStyle(height: 1.0)),
-                                  Checkbox(
-                                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    value: cheackout.shippingtype.value,
-                                    overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                    side: BorderSide(color: AppColor.grey_color, width: 2),
-                                    checkColor: AppColor.white_color,
-                                    activeColor: AppColor.grey_color,
-                                    onChanged: (bool? value) => cheackout.isshippingtype(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: Get.height / 50),
+                          ),
+                          SizedBox(height: Get.height / 50),
 
-
-                      containershadow(
-                        child: Expanded(
-                          child: SizedBox(
-                            width: Get.width,
+                          //Price Details
+                          containershadow(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -439,14 +516,37 @@ class Checkout extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ),
+
+                          SizedBox(height: Get.height / 50),
+
+                          ValueListenableBuilder(
+                            valueListenable: cheackout.shipping,
+                            builder: (BuildContext context, bool value, Widget? child) {
+                              return (!cheackout.shipping.value)
+                                  ? SizedBox()
+                                  : Container(
+                                color: AppColor.white_color,
+                                height: Get.height * 0.080,
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: paymentprosess,
+                                      child: button(AppString.paynow),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+
+                          SizedBox(height: Get.height / 80),
+                        ],
                       ),
-                      SizedBox(height: Get.height / 50),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+          ),
         ),
       ),
     );

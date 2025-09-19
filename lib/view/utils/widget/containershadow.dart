@@ -13,7 +13,7 @@ Widget containershadow({required Widget child}){
       borderRadius: BorderRadius.circular(Get.width / 50),
       boxShadow: [
         BoxShadow(
-          color: AppColor.black_color.withOpacity(0.1),
+          color: AppColor.black_color.withOpacity(0.0),
           blurRadius: 5,
           spreadRadius: 1,
           offset: Offset(0, 0),

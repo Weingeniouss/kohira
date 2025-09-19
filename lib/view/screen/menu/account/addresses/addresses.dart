@@ -1,20 +1,20 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/account/addresses.dart';
 import 'package:kohira/view/screen/menu/account/addresses/addNewAddresses.dart';
 import 'package:kohira/view/screen/menu/account/addresses/editaddresses.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
-import 'package:kohira/view/utils/app_gif.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../../../utils/widget/containershadow.dart';
 
 class Addresses extends StatefulWidget {
   const Addresses({super.key});
@@ -91,91 +91,96 @@ class _AddressesState extends State<Addresses> {
                         itemCount: addresses.length,
                         itemBuilder: (BuildContext context, int index) {
                           final fechs = fech.data['userAdddress'][index];
-                          return Container(
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColor.white_color,
-                              boxShadow: kElevationToShadow[1],
-                              borderRadius: BorderRadius.circular(Get.width / 50),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          return Column(
+                            children: [
+                              containershadow(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SvgPicture.asset(AppIcon.parson, color: AppColor.grey_color),
-                                        SizedBox(width: Get.width / 50),
                                         Row(
                                           children: [
-                                            Text(fechs['firstname']),
-                                            SizedBox(width: Get.width / 100),
-                                            Text(fechs['lastname']),
+                                            Icon(Icons.person_outlined, color: AppColor.pink_color),
+                                            SizedBox(width: Get.width / 50),
+                                            Row(
+                                              children: [
+                                                Text(fechs['firstname']),
+                                                SizedBox(width: Get.width / 100),
+                                                Text(fechs['lastname']),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        PopupMenuButton<String>(
+                                          padding: EdgeInsets.zero,
+                                          constraints: BoxConstraints(),
+                                          offset: Offset(0, 40),
+                                          iconSize: 18,
+                                          color: AppColor.white_color,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(2),
+                                            child: Icon(Icons.more_vert, color: AppColor.grey_color, size: 18),
+                                          ),
+                                          onSelected: (value){
+                                            if (value == 'edit') {
+                                              Get.to(() => Editaddresses(id: fechs['id'].toString()));
+                                            } else if (value == 'delete') {
+                                              delet.deletaddress(id: fech.data['userAdddress'][index]['id'].toString()).then((_) {
+                                                fech.fechaddresses().then((_) {
+                                                  if (mounted) {
+                                                    setState(() {});
+                                                  }
+                                                });
+                                              });
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext context) => [
+                                            PopupMenuItem(value: 'edit', child: Text('Change Billing State')),
+                                            if(fechs['isdefault'] == 0) PopupMenuItem(value: 'delete', child: Text('Delete')),
                                           ],
                                         ),
                                       ],
                                     ),
-                                    PopupMenuButton<String>(
-                                      color: AppColor.white_color,
-                                      icon: Icon(Icons.more_vert, color: AppColor.grey_color),
-                                      onSelected: (value){
-                                        if (value == 'edit') {
-                                          Get.to(() => Editaddresses(id: fechs['id'].toString()));
-                                        } else if (value == 'delete') {
-                                          delet.deletaddress(id: fech.data['userAdddress'][index]['id'].toString()).then((_) {
-                                            fech.fechaddresses().then((_) {
-                                              if (mounted) {
-                                                setState(() {});
-                                              }
+                                    SizedBox(height: Get.height / 80),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.location_on_outlined, color: AppColor.pink_color,size: 20),
+                                        SizedBox(width: Get.width / 50),
+                                        SizedBox(width: Get.width /1.5,child: Text(fechs['address'])),
+                                      ],
+                                    ),
+                                    SizedBox(height: Get.height / 80),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.phone_android_outlined, color: AppColor.pink_color,size: 20),
+                                            SizedBox(width: Get.width / 50),
+                                            Text(fechs['mobileno']),
+                                          ],
+                                        ),
+                                        (fechs['isdefault'] == 0) ? GestureDetector(
+                                          onTap: () async{
+                                            DeletAddress().deletaddress(id: fechs['id'].toString()).then((_){
+                                              fech.fechaddresses().then((_){
+                                                if(mounted){
+                                                  setState(() {});
+                                                }
+                                              });
                                             });
-                                          });
-                                        }
-                                      },
-                                      itemBuilder: (BuildContext context) => [
-                                        PopupMenuItem(value: 'edit', child: Text('Change Billing State')),
-                                        if(fechs['isdefault'] == 0) PopupMenuItem(value: 'delete', child: Text('Delete')),
+                                          },
+                                          child: Icon(Icons.delete_outline_outlined, color: AppColor.pink_color,size: 20),
+                                        ) : SizedBox(),
                                       ],
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: Get.height / 80),
-                                Row(
-                                  children: [
-                                    Image.asset(AppGif.earth, scale: 1.9),
-                                    SizedBox(width: Get.width / 50),
-                                    SizedBox(width: Get.width /1.5,child: Text(fechs['address'])),
-                                  ],
-                                ),
-                                SizedBox(height: Get.height / 50),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(AppIcon.mobile, color: AppColor.grey_color),
-                                    SizedBox(width: Get.width / 50),
-                                    Text(fechs['mobileno']),
-                                  ],
-                                ),
-                                SizedBox(height: Get.height / 50),
-                                (fechs['isdefault'] == 0) ? GestureDetector(
-                                  onTap: () async{
-                                     DeletAddress().deletaddress(id: fechs['id'].toString()).then((_){
-                                       fech.fechaddresses().then((_){
-                                         if(mounted){
-                                           setState(() {});
-                                         }
-                                       });
-                                     });
-                                    },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.red),borderRadius: BorderRadius.circular(Get.width / 50)),
-                                    child: Text('Delet Account',style: TextStyle(color: Colors.red,fontWeight: FontWeight.w500)),
-                                  ),
-                                ) : SizedBox(),
-                              ],
-                            ),
+                              ),
+                              SizedBox(height: Get.height / 80),
+                            ],
                           );
                         },
                       ),
