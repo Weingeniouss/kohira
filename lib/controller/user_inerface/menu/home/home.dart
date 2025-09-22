@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:kohira/controller/API/menu/account/profiledetails.dart';
 import 'package:kohira/controller/API/menu/others/drawer/collection.dart';
+import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 
 import '../../../API/menu/account/addresses.dart';
 import '../../../API/menu/account/wallet.dart';
@@ -39,6 +40,9 @@ class HomeController extends GetxController {
   final order = Get.put(OrderhistoryControll());
   final fech = Get.put(Fechaddresses());
   final wallet = Get.put(WalletController());
+
+  //Cart
+  final myCart = Get.put(MyCartValueChange());
 
   //count API Call
   final count = Get.put(CountController());
@@ -93,6 +97,9 @@ class HomeController extends GetxController {
     order.order.myOrder();
     wallet.wallet();
     fech.fechaddresses();
+
+    //Cart
+    myCart.loadCartData();
 
     //Collection
     collection.collectiondata();

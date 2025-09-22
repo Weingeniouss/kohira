@@ -30,7 +30,6 @@ Widget inputField({
                 builder: (context, setState) {
                   return TextField(
                     keyboardType: textInputType,
-                    textAlign: TextAlign.center,
                     maxLength: maxLength,
                     controller: controller,
                     obscureText: isVis ? _obscureText : false,

@@ -108,7 +108,7 @@ class AppString {
     //Cart
     static const shoppingcart = 'Shopping Cart';
     static const CartTotal = 'Cart Total';
-    static const Over = 'Store';
+    static const Over = 'Over Store';
     static const myCart = 'My Cart';
     static const subTotal = 'Sub Total';
     static const discount = 'Discount';
@@ -160,10 +160,13 @@ class AppString {
           //Buy Now
           static const pricedetails = 'Price Details';
           static const totalprice = 'Total Price';
+          static const subtotalprice = 'Subtotal Price';
           static const discountprice = 'Discount on Price';
           static const shippingcharges = 'Shipping Charges';
           static const tax = 'Tax 3 (%)';
           static const totalwallet = 'Total Wallet';
+          static const deduct = 'Deduct Form Wallet';
+          static const remaining = 'Remaining In Wallet';
           static const items = 'Items';
           static const usewallet = 'Use Wallet Amount';
           static const couponcode = 'Coupon code';

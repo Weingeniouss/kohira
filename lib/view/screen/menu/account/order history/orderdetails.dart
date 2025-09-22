@@ -33,7 +33,7 @@ class _OrderdetailsState extends State<Orderdetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.orderDetails),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.orderDetails),
       body: Container(
         width: Get.width,
         height: Get.height,

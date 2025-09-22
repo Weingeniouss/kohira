@@ -18,7 +18,7 @@ class Orderhistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.orderhistroy),
+      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.orderhistroy),
       body: Container(
         height: Get.height, width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),

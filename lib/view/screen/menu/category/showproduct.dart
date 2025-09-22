@@ -151,8 +151,8 @@ class _ShowproductState extends State<Showproduct> {
                       GestureDetector(
                         onTap: () {
                           if(selectedRingSizeId == null && selectedRingSizeParaname == null){
-                           ToastificationError.Error('Please select ring size');
-                          } else{
+                            ToastificationError.Error('Please select ring size');
+                          }else if(selectedRingSizeId != null && selectedRingSizeParaname != null){
                             if (Addtocart().isLoading.value) {
                               Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                             } else {
@@ -822,8 +822,7 @@ class _ShowproductState extends State<Showproduct> {
                 final diamonds = currentVariant?['jewelry_diamonds'] as List?;
                 if (diamonds != null) {
                   for (var diamond in diamonds) {
-                    if (diamond is Map<String, dynamic> &&
-                        diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
+                    if (diamond is Map<String, dynamic> && diamond['diamondtype']?.toLowerCase() == diamondType.toLowerCase()) {
                       selectedDiamondQuality = '${diamond['color']} ${diamond['clarity']}';
                       break;
                     }
@@ -1349,7 +1348,7 @@ class _ShowproductState extends State<Showproduct> {
                                           Text("${currentVariant!['metalweight'].toString()} gram", style: TextStyle(color: AppColor.grey_color)),
                                         ],
                                       ),
-                                      Row(
+                                      (currentVariant!['total_carat'] == null) ? SizedBox() : Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text('Diamond Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
@@ -1514,7 +1513,7 @@ class _ShowproductState extends State<Showproduct> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              priceBreakup = !priceBreakup;
+                              priceBreakup =! priceBreakup;
                             });
                           },
                           child: AnimatedContainer(
@@ -1664,7 +1663,7 @@ class _ShowproductState extends State<Showproduct> {
                       ],
                     ),
                   ),
-                  (list != null)? SizedBox(
+                    (list != null)? SizedBox(
                     height: Get.height * 0.25,
                     child: LayoutBuilder(
                       builder: (context, constraints) {
@@ -1720,13 +1719,14 @@ class _ShowproductState extends State<Showproduct> {
                       },
                     ),
                   ) : SizedBox(),
-                  SizedBox(height: Get.height / 80),
-                ],
+                    SizedBox(height: Get.height / 80),
+                  ],
+                ),
               ),
-            ),
-          );  // Replace with your actual content widget
-          },))
-      );
+            );  // Replace with your actual content widget
+          }),
+        ),
+     );
   }
 }
 
@@ -1735,7 +1735,8 @@ Widget _buildColorButton({
   required bool isSelected,
   required VoidCallback onTap,
   required BoxBorder border,
-}) {
+})
+{
   return GestureDetector(
     onTap: onTap,
     child: Container(

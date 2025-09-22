@@ -58,4 +58,9 @@ class AppIcon {
   static const HelpCenter = 'asset/icon/drawericon/Helpcenter.svg';
   static const PrivacyPolicy = 'asset/icon/drawericon/Privacy.svg';
   static const Logout = 'asset/icon/drawericon/logout.svg';
+
+  //Paymants
+  static const carts = 'asset/icon/payments/card.svg';
+  static const upi = 'asset/icon/payments/upi.svg';
+  static const visa = 'asset/icon/payments/visa.svg';
 }

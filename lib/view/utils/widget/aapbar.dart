@@ -24,7 +24,8 @@ PreferredSizeWidget Appbar({
   String? suffixicon_1,
   String? suffixicon_2,
   void Function()? onTaplefticon,
-}) {
+})
+{
   final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
@@ -48,11 +49,8 @@ PreferredSizeWidget Appbar({
                       onTap: prefixonTap,
                       child: Container(
                         color: AppColor.Appbercolor,
-                        padding: EdgeInsets.only(
-                          right: (suffixicon_1 == null && suffixicon_2 == null) ? 70 : 50,
-                          bottom: 28,
-                          top: 25,
-                        ), child: SvgPicture.asset(prefixicon),
+                        padding: EdgeInsets.only(right: (suffixicon_1 == null && suffixicon_2 == null) ? 1 : 1, bottom: 28, top: 25),
+                        child: SvgPicture.asset(prefixicon),
                       ),
                     ) : null,
 
@@ -60,46 +58,38 @@ PreferredSizeWidget Appbar({
                     (lefticon != null) ? GestureDetector(
                       onTap: () {
                         if (onTaplefticon != null) {onTaplefticon();}
-                        else {Get.back();}
+                        else {
+                          Get.back();
+                        }
                       },
                       child: Container(
                         color: AppColor.Appbercolor,
-                        padding: EdgeInsets.only(right: 50, bottom: 28, top: 28),
+                        padding: EdgeInsets.only(right: 5, bottom: 28, top: 28),
                         child: SvgPicture.asset(lefticon),
                       ),
                     ) : SizedBox.shrink(),
 
-                    (logo != null) ? SizedBox(width: Get.width / 30) : null,
+                    (logo != null) ? SizedBox(width: Get.width / 7) : null,
                     (logo != null) ? Image.asset(logo, scale: 15) : null,
 
+                    SizedBox(),
+
                     // Middle Heading
-                    (hedingname != null) ? Row(
-                      children: [
-                        SizedBox(width: hedingname.length > 15 ? Get.width / 20 : Get.width / 12),
-                        Text(hedingname, textAlign: TextAlign.center, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color)),
-                      ],
-                    ) : const SizedBox.shrink(),
+                    (hedingname != null)
+                        ? Text(hedingname, textAlign: TextAlign.center, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color))
+                        : const SizedBox.shrink(),
 
                     // Second Heading (when no hedingname)
                     (hedingname_2 != null && hedingname == null) ? Expanded(
                       child: Text(hedingname_2, softWrap: true, overflow: TextOverflow.visible, textAlign: TextAlign.center, style: TextStyle(fontSize: Get.width / 23, fontWeight: FontWeight.w600, color: AppColor.pink_color)),
                     ) : null,
 
-                    (hedingname_2 != null && hedingname == null) ? null : (suffixicon_1 == null && suffixicon_2 == null) ? SizedBox(width: Get.width / 5) : null,
-
-                    (logo == null) ? (prefixicon != null && prefixonTap != null) ? SizedBox(width: Get.width / 15) : null : SizedBox(),
-
-                    (hedingname_2 != null && hedingname_2.length > 20) ? SizedBox(width: Get.width / 20) : (hedingname_2 != null && hedingname == null) ? (lefticon != null) ? GestureDetector(
-                      child: Container(
-                        color: AppColor.Appbercolor,
-                        padding: EdgeInsets.only(right: 20, bottom: 28, top: 25),
-                        child: SvgPicture.asset(lefticon, color: AppColor.Appbercolor),
-                      ),
-                    ) : SizedBox.shrink() : SizedBox.shrink(),
-
                     // Wishlist + Cart
+                    (lefticon != null) ? null : SizedBox(),
+
                     Row(
                       children: [
+
                         // Wishlist
                         if (suffixicon_1 != null)
                           Stack(
@@ -134,18 +124,17 @@ PreferredSizeWidget Appbar({
 
                         SizedBox(width: Get.width / 35),
 
-                        // Cart
+                        //Cart
                         if (suffixicon_2 != null)
                           Stack(
                             clipBehavior: Clip.none,
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  // Bottom();
-                                  // bottamSelect.indexThree();
-                                  // Get.back();
-                                  // Get.back();
-                                  Get.to(() => Mycart());
+                                  Bottom();
+                                  bottamSelect.indexThree();
+                                  Get.back();
+                                  Get.back();
                                 },
                                 child: Container(
                                   color: AppColor.Appbercolor,

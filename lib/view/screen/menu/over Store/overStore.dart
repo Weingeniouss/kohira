@@ -71,20 +71,18 @@ class _OverstoreState extends State<Overstore> {
                       SizedBox(height: Get.height / 50),
                       SizedBox(
                         height: Get.height / 10,
-                        child: Expanded(
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (BuildContext context, int index) { 
-                              return Container(
-                               padding: EdgeInsets.all(40),
-                                margin: EdgeInsets.only(right: Get.width / 50),
-                                decoration: BoxDecoration(
-                                  color: AppColor.white_color,
-                                  borderRadius: BorderRadius.circular(Get.width / 50),
-                                ),
-                              );
-                            },
-                          ),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                             padding: EdgeInsets.all(40),
+                              margin: EdgeInsets.only(right: Get.width / 50),
+                              decoration: BoxDecoration(
+                                color: AppColor.white_color,
+                                borderRadius: BorderRadius.circular(Get.width / 50),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       SizedBox(height: Get.height / 50),
