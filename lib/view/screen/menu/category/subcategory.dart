@@ -24,8 +24,7 @@ import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/inputField.dart';
 
-class Subcategorys extends StatelessWidget {
-  final show = Get.put(SubcetegroryShow());
+class Subcategorys extends StatefulWidget {
   String? subcategrorys;
   String? subcategory_slug;
   String? collection_id;
@@ -34,12 +33,34 @@ class Subcategorys extends StatelessWidget {
   String? price_min;
   String? price_max;
   Subcategorys({super.key, this.subcategrorys, this.subcategrorysname, this.subcategory_slug, this.collection_id,this.metal_type, this.price_min, this.price_max});
+
+  @override
+  State<Subcategorys> createState() => _SubcategorysState();
+}
+
+class _SubcategorysState extends State<Subcategorys> {
+  final show = Get.put(SubcetegroryShow());
+
+  late String currentSubcategoryName;
+
+  @override
+  void initState() {
+    super.initState();
+    currentSubcategoryName = widget.subcategrorysname ?? '';
+  }
+
+  void updateSubcategoryName(String newName) {
+    setState(() {
+      currentSubcategoryName = newName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     show.onInit();
-    show.loadData(subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString(), collection_id: collection_id.toString(),metal_type: metal_type,price_min: price_min, price_max: price_max);
+    show.loadData(subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString(), collection_id: widget.collection_id.toString(),metal_type: widget.metal_type,price_min: widget.price_min, price_max: widget.price_max);
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left, hedingname_2: subcategrorysname),
+      appBar: Appbar(lefticon: AppIcon.left,hedingname_2: currentSubcategoryName),
       bottomNavigationBar: Obx((){
         if(show.subcategrory.data.isEmpty) return SizedBox();
         return SafeArea(
@@ -53,7 +74,7 @@ class Subcategorys extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
-                      onTap: () => Storebay().storebay(context, subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString()),
+                      onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString()),
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 40,vertical: 10),
                         color: AppColor.white_color,
@@ -68,7 +89,12 @@ class Subcategorys extends StatelessWidget {
                     ),
                     Text("|",style: TextStyle(color: AppColor.graycolor)),
                     GestureDetector(
-                      onTap: () => ShowBottam().showbottam(context, category_slug: subcategrorys.toString(), subcategrorys: subcategory_slug.toString(), subcategrorysname: subcategrorysname.toString()),
+                      onTap: () => ShowBottam().showbottam(
+                          context, category_slug: widget.subcategrorys.toString(),
+                          subcategrorys: widget.subcategory_slug.toString(),
+                          subcategrorysname: widget.subcategrorysname.toString(),
+                          onCategoryNameChanged: updateSubcategoryName,
+                      ),
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
                         color: AppColor.white_color,
@@ -169,7 +195,7 @@ class Subcategorys extends StatelessWidget {
                 backgroundColor: AppColor.white_color,
                 onRefresh: () async {
                   show.subcategrory.resetPagination();
-                  await show.subcategrory.subcategroryuser(category_slug: subcategrorys,subcategory_slug: subcategory_slug);
+                  await show.subcategrory.subcategroryuser(category_slug: widget.subcategrorys,subcategory_slug: widget.subcategory_slug);
                 },
                 child: Column(
                   children: [
@@ -197,8 +223,8 @@ class Subcategorys extends StatelessWidget {
                               onTap: () {
                                 print('Id :- ${subcategrory['id']}');
                                 print('Slug :- ${subcategrory['slug']}');
-                                Get.to(() => Showproduct(slug: subcategrory['slug'], categoryslug: subcategrorys.toString()));
-                                print('Title :- ${subcategrorys.toString()}');
+                                Get.to(() => Showproduct(slug: subcategrory['slug'], categoryslug: widget.subcategrorys.toString()));
+                                print('Title :- ${widget.subcategrorys.toString()}');
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,9 +278,11 @@ class Subcategorys extends StatelessWidget {
     );
   }
 }
+
 class SelectedSort extends GetxController {
   var selectedSort = ''.obs;
 }
+
 class Storebay {
   final subcategrory = Get.put(Subcategrory());
   final selected = Get.put(SelectedSort());
@@ -375,7 +403,12 @@ class ShowBottam {
 
   var isSelectedlatter;
 
-  showbottam(BuildContext context, {required String category_slug, required String subcategrorys, required String subcategrorysname}) {
+  showbottam(BuildContext context, {
+    required String category_slug,
+    required String subcategrorys,
+    required String subcategrorysname,
+    required Function(String) onCategoryNameChanged,
+  }) {
     showModalBottomSheet(
       elevation: 0,
       context: context,
@@ -692,6 +725,7 @@ class ShowBottam {
                                     onTap: () async {
                                       setState((){
                                         filtertab.clearFilters();
+                                        onCategoryNameChanged(subcategrorysname);
                                       });
                                       subcategrory.resetPagination();
                                       Get.back();
@@ -732,6 +766,16 @@ class ShowBottam {
                                           weight_max: (filtertab.weightMax.value != null) ? filtertab.weightMax.value?.toString() : null,
                                           metal_type: (filtertab.selectedMetalType.value.isNotEmpty) ? filtertab.selectedMetalType.value : null,
                                         );
+
+                                        // Update AppBar name only when Save is clicked and category_slug is not empty
+                                        if (category_slug.isNotEmpty) {
+                                          try {
+                                            final selectedCategory = categorydata.data.firstWhere((item) => item.slug == category_slug);
+                                            onCategoryNameChanged(selectedCategory.name);
+                                          } catch (e) {
+                                            onCategoryNameChanged(subcategrorysname);
+                                          }
+                                        }
                                       });
                                       Get.back();
                                     },
