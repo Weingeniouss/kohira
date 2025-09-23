@@ -601,28 +601,68 @@ class _DrawersState extends State<Drawers> {
                         drawerIcon(
                           icon: AppIcon.Order,
                           text: AppString.Order,
-                          onTap: () => Get.to(() => Orderhistory(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
+                          onTap: () {
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            drawer.allJewellery.value = false;
+                            drawer.metaltype.value = false;
+                            drawer.price.value = false;
+                            drawer.collection.value = false;
+                            setState(() {});
+                            Get.to(() => Orderhistory(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                          },
                         ),
 
                         //Wishlist
                         drawerIcon(
                           icon: AppIcon.Wishlist,
                           text: AppString.Wishlist,
-                          onTap: () => Get.to(() => WishlistScreen(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
+                          onTap: () {
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            drawer.allJewellery.value = false;
+                            drawer.metaltype.value = false;
+                            drawer.price.value = false;
+                            drawer.collection.value = false;
+                            setState(() {});
+                            Get.to(() => WishlistScreen(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                            },
                         ),
 
                         //Wallet
                         drawerIcon(
                           icon: AppIcon.Wallet,
                           text: AppString.Wallet,
-                          onTap: () => Get.to(() => Wallet(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
+                          onTap: () {
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            drawer.allJewellery.value = false;
+                            drawer.metaltype.value = false;
+                            drawer.price.value = false;
+                            drawer.collection.value = false;
+                            setState(() {});
+                            Get.to(() => Wallet(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                            },
                         ),
 
                         //Address
                         drawerIcon(
                           icon: AppIcon.Addresses,
                           text: AppString.Addresses,
-                          onTap: () => Get.to(() => Addresses(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
+                          onTap: () {
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            drawer.allJewellery.value = false;
+                            drawer.metaltype.value = false;
+                            drawer.price.value = false;
+                            drawer.collection.value = false;
+                            setState(() {});
+                            Get.to(() => Addresses(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                            },
                         ),
 
                         //Helpcenter
@@ -632,7 +672,17 @@ class _DrawersState extends State<Drawers> {
                         drawerIcon(
                           icon: AppIcon.PrivacyPolicy,
                           text: AppString.PrivacyPolicy,
-                          onTap: () => Get.to(() => Privacy(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800)),
+                          onTap: () {
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            drawer.allJewellery.value = false;
+                            drawer.metaltype.value = false;
+                            drawer.price.value = false;
+                            drawer.collection.value = false;
+                            setState(() {});
+                            Get.to(() => Privacy(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                            },
                         ),
 
                         //Logout
