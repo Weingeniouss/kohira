@@ -279,7 +279,6 @@ class _DrawersState extends State<Drawers> {
                                                           }
                                                         }
                                                         categoryItem.isExpanded = !(categoryItem.isExpanded);
-                                                        drawer.allJewellery.value = false;
                                                         drawer.metaltype.value = false;
                                                         drawer.price.value = false;
                                                         drawer.collection.value = false;
