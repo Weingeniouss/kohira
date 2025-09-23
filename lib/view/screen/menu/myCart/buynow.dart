@@ -132,13 +132,17 @@ class _BuynowState extends State<Buynow> {
                               children: [
                                 if (fetchimage != null)
                                   GestureDetector(
-                                    onTap: () => Get.to(() => Showproduct(slug: fetchdata['slug'])),
+                                    onTap: () => Get.to(() => Showproduct(
+                                      slug: fetchdata['slug'],
+                                      categoryslug: fetchdata['category']['slug'],
+                                     ),
+                                    ),
                                     child: Image(
-                                        image: NetworkImage(fetchimage['thumb']),
-                                        fit: BoxFit.cover,
-                                        width: 100,
-                                        height: 100,
-                                        errorBuilder: (context, error, stackTrace) =>Icon(Icons.error),
+                                      image: NetworkImage(fetchimage['thumb']),
+                                      fit: BoxFit.cover,
+                                      width: 100,
+                                      height: 100,
+                                      errorBuilder: (context, error, stackTrace) =>Icon(Icons.error),
                                     ),
                                   ),
                                 Expanded(

@@ -70,7 +70,7 @@ class WishlistScreen extends StatelessWidget {
                       return GestureDetector(
                         onTap: () {
                           print(fetch['slug']);
-                          Get.to(() => Showproduct(slug: fetch['slug']));
+                          Get.to(() => Showproduct(slug: fetch['slug'], categoryslug: fetch['category']['slug']));
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),

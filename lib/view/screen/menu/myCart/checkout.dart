@@ -124,8 +124,10 @@ class Checkout extends StatelessWidget {
                       children: [
                         SizedBox(height: Get.height / 50),
 
+                        //item in List of cart
                         containershadow(
                           child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
@@ -140,7 +142,10 @@ class Checkout extends StatelessWidget {
                                   children: [
                                     if (fetchimage != null)
                                       GestureDetector(
-                                        onTap: () => Get.to(() => Showproduct(slug: fetchdata['slug'])),
+                                        onTap: () => Get.to(() => Showproduct(
+                                          slug: fetchdata['slug'],
+                                          categoryslug: fetchdata['category']['slug'],
+                                        )),
                                         child: Image(image: NetworkImage(fetchimage['thumb']), fit: BoxFit.cover, width: 100, height: 100, errorBuilder: (context, error, stackTrace) => Icon(Icons.error)),
                                       ),
                                     Expanded(
@@ -434,7 +439,15 @@ class Checkout extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(AppString.paymentstype, style: TextStyle(height: 1.0)),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(AppIcon.carts,width: 40,height: 40),
+                                      SizedBox(width: Get.width / 100),
+                                      SvgPicture.asset(AppIcon.upi,width: 40,height: 40),
+                                      SizedBox(width: Get.width / 100),
+                                      SvgPicture.asset(AppIcon.visa,width: 40,height: 40),
+                                    ],
+                                  ),
                                   Checkbox(
                                     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -532,7 +545,6 @@ class Checkout extends StatelessWidget {
                                   Text(indianFormat.format(buynowUI.useWallet.value), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                 ],
                               ),
-                              Divider(color: AppColor.textfild_color),
                             ],
                           ),
                         ),

@@ -77,7 +77,7 @@ class _SearchState extends State<Search> {
                       child: GestureDetector(
                         onTap: (){
                           print(jewelryList[index]['slug']);
-                         Get.to(() => Showproduct(slug: jewelryList[index]['slug'].toString()));
+                         Get.to(() => Showproduct(slug: jewelryList[index]['slug'].toString(), categoryslug: jewelryList[index]['category_slug'],));
                         },
                         child: Container(
                           margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),

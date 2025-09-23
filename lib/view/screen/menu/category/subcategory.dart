@@ -192,12 +192,13 @@ class Subcategorys extends StatelessWidget {
                         itemCount: show.subcategrory.data.length + 1,
                         itemBuilder: (context, index) {
                           if (index < show.subcategrory.data.length) {
-                            final subcategrorys = show.subcategrory.data[index];
+                            final subcategrory = show.subcategrory.data[index];
                             return GestureDetector(
                               onTap: () {
-                                print('Id :- ${subcategrorys['id']}');
-                                print('Slug :- ${subcategrorys['slug']}');
-                                Get.to(() => Showproduct(slug: subcategrorys['slug']));
+                                print('Id :- ${subcategrory['id']}');
+                                print('Slug :- ${subcategrory['slug']}');
+                                Get.to(() => Showproduct(slug: subcategrory['slug'], categoryslug: subcategrorys.toString()));
+                                print('Title :- ${subcategrorys.toString()}');
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,20 +207,20 @@ class Subcategorys extends StatelessWidget {
                                     aspectRatio: 1,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        image: DecorationImage(image: NetworkImage(subcategrorys['default_image']), fit: BoxFit.cover),
+                                        image: DecorationImage(image: NetworkImage(subcategrory['default_image']), fit: BoxFit.cover),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
                                   ),
                                   SizedBox(height: Get.height / 150),
                                   Text(
-                                    subcategrorys['title'],
+                                    subcategrory['title'],
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora'),
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
-                                    "₹${double.parse(subcategrorys['discount']?.toString() ?? '0') > 0 ? subcategrorys['offer_price'] : subcategrorys['setting_price']}.00",
+                                    "₹${double.parse(subcategrory['discount']?.toString() ?? '0') > 0 ? subcategrory['offer_price'] : subcategrory['setting_price']}.00",
                                     style: TextStyle(
                                       fontSize: Get.height / 70,
                                       fontFamily: 'Lora', color: AppColor.pink_color,

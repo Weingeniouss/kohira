@@ -48,7 +48,6 @@ dependencies:
   connectivity_plus:
   internet_connection_checker: ^1.0.0
   webview_flutter:
-  recaptcha_enterprise_flutter:
   carousel_slider: ^5.1.1
   smooth_page_indicator: ^1.2.1
   video_player:

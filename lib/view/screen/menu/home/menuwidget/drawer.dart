@@ -130,7 +130,20 @@ class _DrawersState extends State<Drawers> {
                                   : Column(
                                       children: [
                                         GestureDetector(
-                                          onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
+                                          onTap: () {
+                                            setState(() {
+                                              for (var item in filteredCategories) {
+                                                if (item != categoryItem) {
+                                                  item.isExpanded = false;
+                                                }
+                                              }
+                                              categoryItem.isExpanded = !categoryItem.isExpanded;
+                                              drawer.allJewellery.value = false;
+                                              drawer.metaltype.value = false;
+                                              drawer.price.value = false;
+                                              drawer.collection.value = false;
+                                            });
+                                          },
                                           child: Container(
                                             color: AppColor.white_color,
                                             child: Row(
@@ -231,7 +244,15 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         // All Jewellery
-                        GestureDetector(onTap: drawer.selectedJewellery, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.allJewellery))),
+                        GestureDetector(onTap: (){
+                           drawer.selectedJewellery();
+                           for (var item in filteredCategories) {
+                             item.isExpanded = false;
+                           }
+                           setState(() {});
+                          },
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.allJewellery)),
+                        ),
                         AnimatedSize(
                           curve: Curves.easeInOut,
                           duration: Duration(milliseconds: 600),
@@ -250,7 +271,20 @@ class _DrawersState extends State<Drawers> {
                                             : Column(
                                                 children: [
                                                   GestureDetector(
-                                                    onTap: () => setState(() => categoryItem.isExpanded = !(categoryItem.isExpanded)),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        for (var item in filteredCategories2){
+                                                          if(item != categoryItem){
+                                                            item.isExpanded = false;
+                                                          }
+                                                        }
+                                                        categoryItem.isExpanded = !(categoryItem.isExpanded);
+                                                        drawer.allJewellery.value = false;
+                                                        drawer.metaltype.value = false;
+                                                        drawer.price.value = false;
+                                                        drawer.collection.value = false;
+                                                      });
+                                                    },
                                                     child: Container(
                                                       color: AppColor.white_color,
                                                       child: Row(
@@ -342,7 +376,16 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //Collection
-                        GestureDetector(onTap: drawer.collectionTab, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.collection))),
+                        GestureDetector(
+                          onTap: () {
+                            drawer.collectionTab();
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            setState(() {});
+                          },
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.collection)),
+                        ),
                         Visibility(
                           visible: drawer.collection.value,
                           child: Column(
@@ -423,7 +466,16 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //Metal Type
-                        GestureDetector(onTap: drawer.metaltypeTab, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.metaltyoe))),
+                        GestureDetector(
+                          onTap: () {
+                            drawer.metaltypeTab();
+                            for (var item in filteredCategories) {
+                              item.isExpanded = false;
+                            }
+                            setState(() {});
+                          },
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.metaltyoe)),
+                        ),
                         Visibility(
                           visible: drawer.metaltype.value,
                           child: Column(
@@ -493,7 +545,15 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //Buy Price Rang
-                        GestureDetector(onTap: drawer.priceTab, child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.buypricerang))),
+                        GestureDetector(onTap: (){
+                          drawer.priceTab();
+                          for (var item in filteredCategories) {
+                            item.isExpanded = false;
+                          }
+                          setState(() {});
+                         },
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.buypricerang)),
+                        ),
                         Visibility(
                           visible: drawer.price.value,
                           child: ListView.builder(

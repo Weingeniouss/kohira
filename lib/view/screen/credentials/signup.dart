@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable, avoid_print
 
-
-import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,9 +9,6 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_gif.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
-import 'package:recaptcha_enterprise_flutter/recaptcha.dart';
-import 'package:recaptcha_enterprise_flutter/recaptcha_action.dart';
-import 'package:recaptcha_enterprise_flutter/recaptcha_client.dart';
 import '../../../controller/API/credentials/country.dart';
 import '../../../controller/database/local/localstore.dart';
 import '../../../controller/user_inerface/credentials/singup_controller.dart';
@@ -176,7 +171,7 @@ class Signup extends StatelessWidget {
                                     scale: 1.3,
                                     child: Checkbox(
                                       value: validation.value.value,
-                                      onChanged: recaptcha,
+                                      onChanged: (val){},
                                       overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                       side: BorderSide(color: AppColor.pink_color, width: 2),
                                       checkColor: AppColor.white_color,
@@ -237,28 +232,28 @@ class Signup extends StatelessWidget {
     });
   }
 
-  RecaptchaClient? _recaptchaClient;
-  String _token = '';
-
-  void recaptcha(val) async {
-    validation.value.value = val ?? false;
-
-    try {
-      final siteKey = Platform.isAndroid
-          ? '6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF' : '<IOS_SITE_KEY>';
-
-      _recaptchaClient = await Recaptcha.fetchClient(siteKey);
-
-      final token = await _recaptchaClient!.execute(
-        RecaptchaAction.LOGIN(), // 👈 use meaningful action
-      );
-
-      _token = token;
-      debugPrint("reCAPTCHA Token: $_token");
-
-      // ✅ Send token to your backend for verification
-    } catch (e) {
-      debugPrint("reCAPTCHA exception: $e");
-    }
-  }
+  // RecaptchaClient? _recaptchaClient;
+  // String _token = '';
+  //
+  // void recaptcha(val) async {
+  //   validation.value.value = val ?? false;
+  //
+  //   try {
+  //     final siteKey = Platform.isAndroid
+  //         ? '6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF' : '<IOS_SITE_KEY>';
+  //
+  //     _recaptchaClient = await Recaptcha.fetchClient(siteKey);
+  //
+  //     final token = await _recaptchaClient!.execute(
+  //       RecaptchaAction.LOGIN(), // 👈 use meaningful action
+  //     );
+  //
+  //     _token = token;
+  //     debugPrint("reCAPTCHA Token: $_token");
+  //
+  //     // ✅ Send token to your backend for verification
+  //   } catch (e) {
+  //     debugPrint("reCAPTCHA exception: $e");
+  //   }
+  // }
 }

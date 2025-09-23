@@ -18,6 +18,7 @@ import 'package:lottie/lottie.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
+import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
@@ -29,8 +30,9 @@ import '../../../utils/widget/pop.dart';
 
 class Showproduct extends StatefulWidget {
   final String slug;
+  final String categoryslug;
 
-  const Showproduct({super.key, required this.slug});
+  const Showproduct({super.key, required this.slug, required this.categoryslug});
 
   @override
   State<Showproduct> createState() => _ShowproductState();
@@ -54,8 +56,10 @@ class _ShowproductState extends State<Showproduct> {
   List<String> diamondQualities = ['FG VVS', 'EF IF', 'G VS', 'H SI'];
   String? selectedDiamondQuality;
 
+  //Details product
   bool productdetails = false;
   bool centerdiamondDetails = false;
+  bool metal = false;
   bool sidediamondDetails = false;
   bool priceBreakup = false;
 
@@ -68,6 +72,7 @@ class _ShowproductState extends State<Showproduct> {
   final count = Get.put(CountController());
   final myCart = Get.put(MyCartValueChange());
   final wish = Get.put(WishlistController());
+  final category = Get.put(JewelleryFilterCategory());
 
   List<String> savewishlist = [];
   bool isWishlisted = false;
@@ -150,15 +155,34 @@ class _ShowproductState extends State<Showproduct> {
                       //Addd to cart
                       GestureDetector(
                         onTap: () {
-                          if(selectedRingSizeId == null && selectedRingSizeParaname == null){
-                            ToastificationError.Error('Please select ring size');
-                          }else if(selectedRingSizeId != null && selectedRingSizeParaname != null){
+                          if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                            // 🔹 Only for rings → require size selection
+                            if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                              ToastificationError.Error('Please select ring size');
+                            } else {
+                              if (Addtocart().isLoading.value) {
+                                Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                              } else {
+                                Addtocart().addtocartservice(
+                                  jewelryid: jewellery['id'].toString(),
+                                  ringsize: selectedRingSizeId.toString(),
+                                  tokan: tokans,
+                                ).then((_) {
+                                  setState(() {
+                                    count.counting();
+                                    myCart.onInit();
+                                  });
+                                });
+                              }
+                            }
+                          } else {
+                            // 🔹 For necklaces/others → no size validation
                             if (Addtocart().isLoading.value) {
                               Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                             } else {
                               Addtocart().addtocartservice(
                                 jewelryid: jewellery['id'].toString(),
-                                ringsize: selectedRingSizeId.toString(),
+                                ringsize: "",
                                 tokan: tokans,
                               ).then((_) {
                                 setState(() {
@@ -182,15 +206,38 @@ class _ShowproductState extends State<Showproduct> {
                       //Buy Now
                       GestureDetector(
                         onTap: () async {
-                          if(selectedRingSizeId == null && selectedRingSizeParaname == null){
-                            ToastificationError.Error('Please select ring size');
-                          }else{
+                          if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                            // 🔹 Only for rings → require size selection
+                            if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                              ToastificationError.Error('Please select ring size');
+                            } else {
+                              if (Addtocart().isLoading.value) {
+                                Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                              } else {
+                                await Addtocart().addtocartservice(
+                                  jewelryid: jewellery['id'].toString(),
+                                  ringsize: selectedRingSizeId.toString(),
+                                  tokan: tokans,
+                                );
+                                if (!mounted) return;
+                                setState(() {
+                                  count.counting();
+                                  myCart.onInit();
+                                });
+                                Bottom();
+                                bottamSelect.indexThree();
+                                Get.back();
+                                Get.back();
+                                Get.back();
+                              }
+                            }
+                          }else {
                             if (Addtocart().isLoading.value) {
                               Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                             } else {
                               await Addtocart().addtocartservice(
                                 jewelryid: jewellery['id'].toString(),
-                                ringsize: selectedRingSizeId.toString(),
+                                ringsize: '',
                                 tokan: tokans,
                               );
                               if (!mounted) return;
@@ -537,11 +584,15 @@ class _ShowproductState extends State<Showproduct> {
             }
           }
 
-          final totaldiamondsCenter =  currentVariant?['jewelry_diamonds']?[0]?['totaldiamonds'].toString();
-          final totalweightCenter = currentVariant?['jewelry_diamonds']?[0]?['totalweight'].toString();
+            final diamonds = currentVariant?['jewelry_diamonds'] as List? ?? [];
 
-          final totaldiamondsSide =  currentVariant?['jewelry_diamonds']?[1]?['totaldiamonds'].toString();
-          final totalweightSide = currentVariant?['jewelry_diamonds']?[1]?['totalweight'].toString();
+            // ✅ Center diamond (index 0 if available)
+            final totaldiamondsCenter = diamonds.isNotEmpty ? (diamonds[0]['totaldiamonds']?.toString()) : null;
+            final totalweightCenter = diamonds.isNotEmpty ? (diamonds[0]['totalweight']?.toString()) : null;
+
+            // ✅ Side diamond (index 1 if available)
+            final totaldiamondsSide = diamonds.length > 1 ? (diamonds[1]['totaldiamonds']?.toString()) : null;
+            final totalweightSide = diamonds.length > 1 ? (diamonds[1]['totalweight']?.toString()) : null;
 
           // Custom sorting for diamond qualities
           List<String> diamondQualities = diamondQualitySet.toList();
@@ -959,6 +1010,7 @@ class _ShowproductState extends State<Showproduct> {
                       children: [
                         SizedBox(height: Get.height / 50),
 
+                        //itemcode
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -1307,60 +1359,68 @@ class _ShowproductState extends State<Showproduct> {
                           onTap: () {
                             setState(() {
                               productdetails = !productdetails;
+                              sidediamondDetails = false;
+                              centerdiamondDetails = false;
+                              metal = false;
+                              priceBreakup = false;
                             });
                           },
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Product details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                                    Text(productdetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.dividercolor),
-                                AnimatedCrossFade(
-                                  firstChild: SizedBox.shrink(),
-                                  secondChild: Column(
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(height: Get.height / 50),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Product Code :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['itemcode'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Category :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['metal_type']?['slug'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Product Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text("${currentVariant!['metalweight'].toString()} gram", style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      (currentVariant!['total_carat'] == null) ? SizedBox() : Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Diamond Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['total_carat'].toString(),style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
+                                      Text('Product details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                      Text(productdetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                     ],
                                   ),
-                                  crossFadeState: productdetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                  duration: Duration(milliseconds: 300),
-                                ),
-                              ],
+                                  Divider(color: AppColor.dividercolor),
+                                  AnimatedCrossFade(
+                                    firstChild: SizedBox.shrink(),
+                                    secondChild: Column(
+                                      children: [
+                                        SizedBox(height: Get.height / 150),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Product Code :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['itemcode'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Category :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['metal_type']?['slug'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Product Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text("${currentVariant!['metalweight'].toString()} gram", style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        (currentVariant!['total_carat'] == null) ? SizedBox() : Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Diamond Weight(apx) :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['total_carat'].toString(),style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height / 100),
+                                      ],
+                                    ),
+                                    crossFadeState: productdetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                    duration: Duration(milliseconds: 300),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1371,67 +1431,75 @@ class _ShowproductState extends State<Showproduct> {
                           onTap: () {
                             setState(() {
                               sidediamondDetails = !sidediamondDetails;
+                              productdetails = false;
+                              centerdiamondDetails = false;
+                              metal = false;
+                              priceBreakup = false;
                             });
                           },
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Side Diamond Details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                                    Text(sidediamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.dividercolor),
-                                AnimatedCrossFade(
-                                  firstChild: SizedBox.shrink(),
-                                  secondChild: Column(
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Color :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['jewelry_diamonds']?[0]?['color'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Clarity :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['jewelry_diamonds']?[0]?['clarity'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Shape :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['jewelry_diamonds']?[0]?['shape']?['paraname'], style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totaldiamondsSide!,style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totalweightSide!,style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
+                                      Text('Side Diamond Details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                      Text(sidediamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                     ],
                                   ),
-                                  crossFadeState: sidediamondDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                  duration: Duration(milliseconds: 300),
-                                ),
-                              ],
+                                  Divider(color: AppColor.dividercolor),
+                                  AnimatedCrossFade(
+                                    firstChild: SizedBox.shrink(),
+                                    secondChild: Column(
+                                      children: [
+                                        SizedBox(height: Get.height / 150),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Color :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['jewelry_diamonds']?[0]?['color'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Clarity :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['jewelry_diamonds']?[0]?['clarity'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Shape :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['jewelry_diamonds']?[1]?['shape']?['paraname'], style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(totaldiamondsSide ?? '0',style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(totalweightSide ?? '0',style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height / 100),
+                                      ],
+                                    ),
+                                    crossFadeState: sidediamondDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                    duration: Duration(milliseconds: 300),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1442,68 +1510,133 @@ class _ShowproductState extends State<Showproduct> {
                           onTap: () {
                             setState(() {
                               centerdiamondDetails = !centerdiamondDetails;
+                              sidediamondDetails = false;
+                              productdetails = false;
+                              metal = false;
+                              priceBreakup = false;
                             });
                           },
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Center Diamond Details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                                    Text(centerdiamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
-                                Divider(color: AppColor.dividercolor),
-                                AnimatedCrossFade(
-                                  firstChild: SizedBox.shrink(),
-                                  secondChild: Column(
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Shape :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['jewelry_diamonds']?[0]?['shape']?['paraname'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Color :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['jewelry_diamonds']?[0]?['color'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Clarity :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(currentVariant!['jewelry_diamonds']?[0]?['clarity'], style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totaldiamondsCenter!,style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(totalweightCenter!,style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
+                                      Text('Center Diamond Details', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                      Text(centerdiamondDetails ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
                                     ],
                                   ),
-                                  crossFadeState: centerdiamondDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                  duration: Duration(milliseconds: 300),
-                                ),
-                              ],
+                                  Divider(color: AppColor.dividercolor),
+                                  AnimatedCrossFade(
+                                    firstChild: SizedBox.shrink(),
+                                    secondChild: Column(
+                                      children: [
+                                        SizedBox(height: Get.height / 150),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Shape :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['jewelry_diamonds']?[0]?['shape']?['paraname'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Color :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['jewelry_diamonds']?[0]?['color'] ?? 'N/A', style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Clarity :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['jewelry_diamonds']?[0]?['clarity'], style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(totaldiamondsCenter ?? '0',style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(totalweightCenter ?? '0',style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height / 100),
+                                      ],
+                                    ),
+                                    crossFadeState: centerdiamondDetails ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                    duration: Duration(milliseconds: 300),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 150),
+
+                        //Metal
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              metal = !metal;
+                              sidediamondDetails = false;
+                              centerdiamondDetails = false;
+                              productdetails = false;
+                              priceBreakup = false;
+                            });
+                          },
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Metal', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                      Text(metal ? '-' : '+', style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500)),
+                                    ],
+                                  ),
+                                  Divider(color: AppColor.dividercolor),
+                                  AnimatedCrossFade(
+                                    firstChild: SizedBox.shrink(),
+                                    secondChild: Column(
+                                      children: [
+                                        SizedBox(height: Get.height / 150),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Type :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['metal_type']['paraname'], style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Stamp :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(currentVariant!['metal_stamp']['paraname'],style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height / 100),
+                                      ],
+                                    ),
+                                    crossFadeState: metal ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                    duration: Duration(milliseconds: 300),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1514,66 +1647,75 @@ class _ShowproductState extends State<Showproduct> {
                           onTap: () {
                             setState(() {
                               priceBreakup =! priceBreakup;
+                              metal = false;
+                              sidediamondDetails = false;
+                              centerdiamondDetails = false;
+                              productdetails = false;
                             });
                           },
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Price Breakup',
-                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      priceBreakup ? '-' : '+',
-                                      style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                                AnimatedCrossFade(
-                                  firstChild: SizedBox.shrink(),
-                                  secondChild: Column(
+                          child: Container(
+                            color: AppColor.white_color,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Gold Price :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(goldPrices, style: TextStyle(color: AppColor.grey_color)),
-                                        ],
+                                      Text(
+                                        'Price Breakup',
+                                        style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
                                       ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Making Charges :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(makingChargs, style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Diamond Price :', style: TextStyle(color: AppColor.grey_color)),
-                                          Text(diamoinds, style: TextStyle(color: AppColor.grey_color)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('Total :', style: TextStyle(color: AppColor.grey_color,fontSize: Get.width / 27,fontWeight: FontWeight.w600)),
-                                          Text(totals, style: TextStyle(color: AppColor.grey_color,fontSize: Get.width / 27,fontWeight: FontWeight.w600)),
-                                        ],
+                                      Text(
+                                        priceBreakup ? '-' : '+',
+                                        style: TextStyle(fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
-                                  crossFadeState: priceBreakup ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                  duration: Duration(milliseconds: 300),
-                                ),
-                                Divider(color: AppColor.textfild_color),
-                              ],
+                                  AnimatedCrossFade(
+                                    firstChild: SizedBox.shrink(),
+                                    secondChild: Column(
+                                      children: [
+                                        SizedBox(height: Get.height / 150),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Gold Price :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(goldPrices, style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Making Charges :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(makingChargs, style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Diamond Price :', style: TextStyle(color: AppColor.grey_color)),
+                                            Text(diamoinds, style: TextStyle(color: AppColor.grey_color)),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height / 150),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Total :-', style: TextStyle(color: AppColor.pink_color,fontSize: Get.width / 24,fontWeight: FontWeight.w600)),
+                                            Text(totals, style: TextStyle(color: AppColor.pink_color,fontSize: Get.width / 24,fontWeight: FontWeight.w600)),
+                                          ],
+                                        ),
+                                        SizedBox(height: Get.height / 100),
+                                      ],
+                                    ),
+                                    crossFadeState: priceBreakup ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                    duration: Duration(milliseconds: 300),
+                                  ),
+                                  Divider(color: AppColor.textfild_color),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1612,39 +1754,40 @@ class _ShowproductState extends State<Showproduct> {
                         SizedBox(height: Get.height / 150),
                         Text(AppString.conceptMade, style: TextStyle(fontSize: Get.width * 0.035, color: AppColor.grey_color)),
                         SizedBox(height: Get.height / 50),
+
                         Container(
                           decoration: BoxDecoration(
                             color: AppColor.showcontainercolor,
                             borderRadius: BorderRadius.circular(Get.width / 80),
                           ),
-                          padding: EdgeInsets.all(20),
+                          padding: EdgeInsets.all(10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Column(
                                 children: [
-                                  SvgPicture.asset(AppIcon.puzzle,color: AppColor.graycolor,width: 50),
+                                  SvgPicture.asset(AppIcon.puzzle,color: AppColor.grey_color,width: 35),
                                   SizedBox(height: Get.height / 80),
                                   Text(textAlign: TextAlign.center, 'Ethical\nSourcing',style: TextStyle(fontSize: Get.width / 28,color: AppColor.grey_color)),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  SvgPicture.asset(AppIcon.warranty,color: AppColor.graycolor,width: 50),
+                                  SvgPicture.asset(AppIcon.warranty,color: AppColor.grey_color,width: 35),
                                   SizedBox(height: Get.height / 80),
                                   Text(textAlign: TextAlign.center, 'Lifetime\nWarranty',style: TextStyle(fontSize: Get.width / 28,color: AppColor.grey_color)),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  SvgPicture.asset(AppIcon.social,color: AppColor.graycolor,width: 50),
+                                  SvgPicture.asset(AppIcon.social,color: AppColor.grey_color,width: 35),
                                   SizedBox(height: Get.height / 80),
                                   Text(textAlign: TextAlign.center, 'IGI Certified\nDiamonds',style: TextStyle(fontSize: Get.width / 28,color: AppColor.grey_color)),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  SvgPicture.asset(AppIcon.diamond,color: AppColor.graycolor,width: 50),
+                                  SvgPicture.asset(AppIcon.diamond,color: AppColor.grey_color,width: 35),
                                   SizedBox(height: Get.height / 80),
                                   Text(textAlign: TextAlign.center, 'BIS\nHallmark',style: TextStyle(fontSize: Get.width / 28,color: AppColor.grey_color)),
                                 ],
@@ -1680,7 +1823,7 @@ class _ShowproductState extends State<Showproduct> {
                               onTap: () {
                                 Get.back();
                                 print(recommended['slug']);
-                                Get.to(() => Showproduct(slug: recommended['slug']));
+                                Get.to(() => Showproduct(slug: recommended['slug'], categoryslug: '',));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(left: Get.width / 25, right: Get.width / 50),
