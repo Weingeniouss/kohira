@@ -90,10 +90,10 @@ class _SubcategorysState extends State<Subcategorys> {
                     Text("|",style: TextStyle(color: AppColor.graycolor)),
                     GestureDetector(
                       onTap: () => ShowBottam().showbottam(
-                          context, category_slug: widget.subcategrorys.toString(),
-                          subcategrorys: widget.subcategory_slug.toString(),
-                          subcategrorysname: widget.subcategrorysname.toString(),
-                          onCategoryNameChanged: updateSubcategoryName,
+                        context, category_slug: widget.subcategrorys.toString(),
+                        subcategrorys: widget.subcategory_slug.toString(),
+                        subcategrorysname: widget.subcategrorysname.toString(),
+                        onCategoryNameChanged: updateSubcategoryName,
                       ),
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),

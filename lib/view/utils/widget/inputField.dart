@@ -54,7 +54,7 @@ Widget inputField({
                       ) : null,
                       hintText: hintText,
                       hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
-                      contentPadding: EdgeInsets.symmetric(vertical: 11),
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           width: empty ? 2 : 1,

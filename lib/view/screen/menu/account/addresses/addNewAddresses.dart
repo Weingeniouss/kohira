@@ -156,6 +156,7 @@ class AddNewAddresses extends StatelessWidget {
                               dropdownStyleData: DropdownStyleData(offset: Offset(0, -10), maxHeight: Get.height / 3, decoration: BoxDecoration(color: AppColor.white_color)),
                               iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
                               dropdownSearchData: DropdownSearchData(
+                                searchController: AddAddress.statesearchController,
                                 searchInnerWidgetHeight: 40,
                                 searchInnerWidget: Padding(
                                   padding: EdgeInsets.all(8),

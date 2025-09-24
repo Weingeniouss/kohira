@@ -383,7 +383,7 @@ class Home extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -422,7 +422,7 @@ class Home extends StatelessWidget {
                       width: Get.width,
                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -446,7 +446,7 @@ class Home extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -481,7 +481,7 @@ class Home extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            AspectRatio(aspectRatio: 10 / 9, child: VideoPlayerMenu(videoUrl: section['video'])),
+                            AspectRatio(aspectRatio: 9 / 10, child: VideoPlayerMenuSecond(videoUrl: section['video'])),
                             SizedBox(height: Get.height / 40),
                           ],
                         ),
@@ -496,7 +496,7 @@ class Home extends StatelessWidget {
                       width: Get.width,
                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
                       child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -516,7 +516,7 @@ class Home extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.all(10),
                             child: Column(
                               children: [
                                 Text(
@@ -616,16 +616,26 @@ class Home extends StatelessWidget {
 //Set Alignment
   Alignment getAlignmentFromTextPosition(String? position) {
     switch (position) {
-      case 'top-left': return Alignment.topLeft;
-      case 'top-center': return Alignment.topCenter;
-      case 'top-right': return Alignment.topRight;
-      case 'center-left': return Alignment.centerLeft;
-      case 'center': return Alignment.center;
-      case 'center-right': return Alignment.centerRight;
-      case 'bottom-left': return Alignment.bottomLeft;
-      case 'bottom-center': return Alignment.bottomCenter;
-      case 'bottom-right': return Alignment.bottomRight;
-      default: return Alignment.center; // fallback
+      case 'top-left':
+        return Alignment.topLeft;
+      case 'top-center':
+        return Alignment.topCenter;
+      case 'top-right':
+        return Alignment.topRight;
+      case 'center-left':
+        return Alignment.centerLeft;
+      case 'center':
+        return Alignment.center;
+      case 'center-right':
+        return Alignment.centerRight;
+      case 'bottom-left':
+        return Alignment.bottomLeft;
+      case 'bottom-center':
+        return Alignment.bottomCenter;
+      case 'bottom-right':
+        return Alignment.bottomRight;
+      default:
+        return Alignment.center; // fallback
     }
   }
 }
