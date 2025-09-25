@@ -15,6 +15,7 @@ import '../../../API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../API/menu/category/subcategrory/subCategrory.dart';
 import '../../../API/menu/home/categories.dart';
 import '../../../API/menu/home/homecollction.dart';
+import '../../../API/menu/home/homejewelry.dart';
 import '../../../API/menu/home/slider.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 import '../../../API/menu/others/count.dart';
@@ -30,6 +31,7 @@ class HomeController extends GetxController {
   final categories = Get.put(CategoriesCalling());
   final slider = Get.put(SliderCalling());
   final homecollction = Get.put(Homecollction());
+  final homejewelry = Get.put(Homejewelry());
 
   //Wishlist
   final WishlistController wish = Get.put(WishlistController());
@@ -74,6 +76,7 @@ class HomeController extends GetxController {
     //HomeScreen APIs Calling
     slider.slideruser();
     categories.categoriesuser();
+    homejewelry.getHomejewelry();
 
     //Drawer Menu APIs Call
     jewellery.fetchJewelleryFilter();

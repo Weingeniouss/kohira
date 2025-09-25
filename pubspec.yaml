@@ -46,19 +46,19 @@ dependencies:
   http:
   lottie:
   connectivity_plus:
-  internet_connection_checker: ^1.0.0
+  internet_connection_checker:
   webview_flutter:
-  carousel_slider: ^5.1.1
-  smooth_page_indicator: ^1.2.1
+  carousel_slider:
+  smooth_page_indicator:
   video_player:
-  shared_preferences: ^2.5.3
+  shared_preferences:
   intl:
-  flutter_html: ^3.0.0
-  url_launcher: ^6.1.7
-  google_maps_flutter: ^2.12.3
+  flutter_html:
+  url_launcher:
+  google_maps_flutter:
   shimmer:
-  photo_view: ^0.15.0
-  dio: ^5.9.0
+  photo_view:
+  dio:
 
 dev_dependencies:
   flutter_test:

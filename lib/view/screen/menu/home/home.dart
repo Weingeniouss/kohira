@@ -360,8 +360,7 @@ class Home extends StatelessWidget {
                                                   child: Text(
                                                     categorieslist.name.toString().length > 25 ? '${categorieslist.name.toString().substring(0, 10)}...' : categorieslist.name.toString(),
                                                     textAlign: TextAlign.center,
-                                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500,
-                                                    ),
+                                                    style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500),
                                                   ),
                                                 ),
                                               ],
@@ -401,11 +400,8 @@ class Home extends StatelessWidget {
                             GestureDetector(
                               onTap: home.toggleKohiraDiamonds,
                               child: Text(
-                                home.kohiraDiamonds.value
-                                    ? 'See Less'
-                                    : 'See More',
-                                style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.bold,
-                                ),
+                                home.kohiraDiamonds.value ? 'See Less' : 'See More',
+                                style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.bold),
                               ),
                             ),
                             Image.network(home.homecollction.data['2']?['collection_section_2']['images']?[0] ?? '')
@@ -422,16 +418,37 @@ class Home extends StatelessWidget {
                       width: Get.width,
                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
                       child: Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.symmetric(vertical: Get.height / 50),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Most Loved Engagement Rings',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: Get.width * 0.060,
-                                fontFamily: 'Zapf',
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text('Most Loved Engagement Rings', style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.060, fontFamily: 'Zapf')),
+                            ),
+                            SizedBox(height: Get.height / 80),
+                            SizedBox(
+                              height: Get.height * 0.30,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'].length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final image = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['allImages'][0]['thumb'];
+                                  final title = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'];
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 4),
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Image.network(image,width: 150,height: 150),
+                                        SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],
@@ -496,11 +513,38 @@ class Home extends StatelessWidget {
                       width: Get.width,
                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
                       child: Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.symmetric(vertical: Get.height / 50),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Featured Jewellery', style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.060, fontFamily: 'Zapf')),
+                            Padding(
+                              padding:EdgeInsets.all(10),
+                              child: Text('Featured Jewellery', style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.060, fontFamily: 'Zapf')),
+                            ),
+                            SizedBox(
+                              height: Get.height * 0.30,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: home.homejewelry.homejewelrydata['data']['new_arrivals'].length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final image = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['allImages'][0]['thumb'];
+                                  final title = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['title'];
+                                  return Container(
+                                    margin: EdgeInsets.only(right: 4),
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Image.network(image,width: 150,height: 150),
+                                        SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       ),

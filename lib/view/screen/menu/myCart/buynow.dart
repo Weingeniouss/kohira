@@ -108,6 +108,7 @@ class _BuynowState extends State<Buynow> {
 
               var remaining = wallet.data['myWalletAmount'] - myCart.subTotal.value;
               var totalprice  = myCart.subTotal.value + myCart.fetchcart.data['global_tax']['globaltaxcharge'];
+              int myWalletAmount = int.tryParse(wallet.data['myWalletAmount'].toString()) ?? 0;
 
               return SingleChildScrollView(
                 child: horizontalpadding(
@@ -228,37 +229,41 @@ class _BuynowState extends State<Buynow> {
                       SizedBox(height: Get.height / 50),
 
                       //Use Wallet Amount
-                      containershadow(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
+                      (myWalletAmount == 0) ? SizedBox() : Column(
+                        children: [
+                          containershadow(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Transform.scale(
-                                  scale: 1.2,
-                                  child: Checkbox(
-                                    value: buynowUI.ischeack.value,
-                                    overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
-                                    side: BorderSide(color: AppColor.grey_color, width: 1),
-                                    checkColor: AppColor.white_color,
-                                    activeColor: AppColor.pink_color,
-                                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    onChanged: (bool? value) {
-                                        buynowUI.ischack();
-                                        setState(() {});
-                                      },
-                                  ),
+                                Row(
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.2,
+                                      child: Checkbox(
+                                        value: buynowUI.ischeack.value,
+                                        overlayColor: WidgetStatePropertyAll(AppColor.grey_color),
+                                        side: BorderSide(color: AppColor.grey_color, width: 1),
+                                        checkColor: AppColor.white_color,
+                                        activeColor: AppColor.pink_color,
+                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        onChanged: (bool? value) {
+                                          buynowUI.ischack();
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: Get.width / 50),
+                                    Text(AppString.usewallet),
+                                  ],
                                 ),
-                                SizedBox(width: Get.width / 50),
-                                Text(AppString.usewallet),
+                                Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                               ],
                             ),
-                            Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: Get.height / 100),
+                        ],
                       ),
-                      SizedBox(height: Get.height / 100),
 
                       //Coupan code
                       Row(

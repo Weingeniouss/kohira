@@ -32,6 +32,7 @@ class AppUrl {
       static const categories = '$baseurl/home/categories';
       static const slider = '$baseurl/home/slider';
       static const homecollcation = '$baseurl/home/collections';
+      static const homecJewelry = '$baseurl/home/Jewelry';
 
       //drawer
       static const collection = '$baseurl/collections';
