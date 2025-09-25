@@ -63,6 +63,7 @@ class AppUrl {
       //Over Store
       static const store = '$baseurl/storeassetsList';
       static const storecity = '$baseurl/storecity';
+      static const storedetails = '$baseurl/storeassetDetail';
 
       //Acount
       static const profileDetail = '$baseurl/profileDetail';

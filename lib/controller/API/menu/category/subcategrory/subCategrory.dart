@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, equal_keys_in_map, unused_local_variable, file_names, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
@@ -16,6 +17,9 @@ class Subcategrory extends GetxController {
   var start = 0.obs;
   var length = 10.obs;
   var hasMore = true.obs;
+  Timer? _searchTimer;
+  var searchQuery = ''.obs;
+  var isSearching = false.obs;
 
   // Filters state
   String? selectedMetalType;
@@ -136,9 +140,56 @@ class Subcategrory extends GetxController {
     start.value = 0;
     hasMore.value = true;
     data.clear();
-    allData.clear(); // ✅ Reset both
+    allData.clear();
   }
+
+  void handleSearch(String query) {
+    searchQuery.value = query;
+    _searchTimer?.cancel();
+    _searchTimer = Timer(const Duration(milliseconds: 500), () {
+      if (query.isEmpty) {
+        // If search is cleared, reset to original data
+        data.value = List.from(allData);
+        isSearching.value = false;
+      } else if (query.length >= 2) {
+        // Only search if query is 2+ characters
+        _performSearch(query);
+      }
+    });
+  }
+
+  void _performSearch(String query) {
+    isSearching.value = true;
+    // First try local search
+    final localResults = allData.where((item) => item['title'].toString().toLowerCase().contains(query.toLowerCase())).toList();
+
+    if (localResults.isNotEmpty) {
+      data.value = localResults;
+    } else {
+      // If no local results, you might want to call API here
+      // But make sure to handle it properly to avoid loops
+      _searchFromAPI(query);
+    }
+  }
+
+  void _searchFromAPI(String query) {
+    // Implement API search with proper parameters
+    // Make sure to reset pagination when doing new searches
+    resetPagination();
+    // Call your API method with search parameters
+  }
+
+  // Clear search and reset to original data
+  void clearSearch() {
+    searchQuery.value = '';
+    data.value = List.from(allData);
+    isSearching.value = false;
+    _searchTimer?.cancel();
+  }
+
   void filterSearch(String query) {
+    if (allData.isEmpty) return; // Prevent unnecessary logic when data not loaded
+
     if (query.isEmpty) {
       data.value = allData;
     } else {

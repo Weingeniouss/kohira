@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:kohira/controller/API/menu/overstore/overstoredetails.dart';
+
 class AppString {
   //Error
   static const fild = 'Please Fild All Error !';
@@ -109,6 +111,7 @@ class AppString {
     static const shoppingcart = 'Shopping Cart';
     static const CartTotal = 'Cart Total';
     static const Over = 'Over Store';
+    static const OverStoreDetails = 'Over Details';
     static const myCart = 'My Cart';
     static const subTotal = 'Sub Total';
     static const discount = 'Discount';

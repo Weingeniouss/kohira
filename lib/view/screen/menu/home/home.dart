@@ -17,6 +17,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/video.dart';
+import '../category/showproduct.dart';
 import '../category/subcategory.dart';
 import 'menuwidget/drawer.dart';
 
@@ -145,6 +146,8 @@ class Home extends StatelessWidget {
                   ),
                 );
               }
+              final rings = home.homejewelry.homejewelrydata['data']?['most_loved_engagement_rings'];
+              if (rings == null || (rings is List && rings.isEmpty)) return Center(child: Lottie.asset(AppJson.noData));
               final section = home.homecollction.data['3']?['collection_section_3'];
               if (section == null) return Center(child: Lottie.asset(AppJson.noData));
               return SingleChildScrollView(
@@ -435,17 +438,25 @@ class Home extends StatelessWidget {
                                 itemBuilder: (BuildContext context, int index) {
                                   final image = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['allImages'][0]['thumb'];
                                   final title = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'];
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 4),
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Image.network(image,width: 150,height: 150),
-                                        SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
-                                      ],
+                                  return GestureDetector(
+                                    onTap: (){
+                                      Get.to(() => Showproduct(
+                                        slug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['slug'],
+                                        categoryslug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'],
+                                      ));
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 4),
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(image,width: 150,height: 150),
+                                          SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -529,17 +540,25 @@ class Home extends StatelessWidget {
                                 itemBuilder: (BuildContext context, int index) {
                                   final image = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['allImages'][0]['thumb'];
                                   final title = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['title'];
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 4),
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Image.network(image,width: 150,height: 150),
-                                        SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
-                                      ],
+                                  return GestureDetector(
+                                    onTap: (){
+                                      Get.to(() => Showproduct(
+                                        slug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['slug'],
+                                        categoryslug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'],
+                                      ));
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 4),
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(image,width: 150,height: 150),
+                                          SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },

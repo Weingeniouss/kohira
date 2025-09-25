@@ -1,15 +1,13 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print, unused_import, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, body_might_complete_normally_nullable, deprecated_member_use, non_constant_identifier_names, must_be_immutable, prefer_typing_uninitialized_variables
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
-import 'package:kohira/view/screen/menu/category/showproduct.dart'
-    show Showproduct;
+import 'package:kohira/view/screen/menu/category/showproduct.dart' show Showproduct;
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -40,13 +38,26 @@ class Subcategorys extends StatefulWidget {
 
 class _SubcategorysState extends State<Subcategorys> {
   final show = Get.put(SubcetegroryShow());
-
   late String currentSubcategoryName;
+  bool initialLoadDone = false;
 
+  @override
   @override
   void initState() {
     super.initState();
     currentSubcategoryName = widget.subcategrorysname ?? '';
+    // Move API call to initState or didChangeDependencies
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      show.loadData(
+        subcategrorys: widget.subcategrorys.toString(),
+        subcategory_slug: widget.subcategory_slug.toString(),
+        collection_id: widget.collection_id.toString(),
+        metal_type: widget.metal_type,
+        price_min: widget.price_min,
+        price_max: widget.price_max,
+      );
+      initialLoadDone = true;
+    });
   }
 
   void updateSubcategoryName(String newName) {
@@ -56,64 +67,79 @@ class _SubcategorysState extends State<Subcategorys> {
   }
 
   @override
+  void didUpdateWidget(Subcategorys oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only reload if important parameters changed
+    if (widget.subcategrorys != oldWidget.subcategrorys || widget.subcategory_slug != oldWidget.subcategory_slug) {
+      show.subcategrory.resetPagination();
+      show.loadData(
+        subcategrorys: widget.subcategrorys.toString(),
+        subcategory_slug: widget.subcategory_slug.toString(),
+        collection_id: widget.collection_id.toString(),
+        metal_type: widget.metal_type,
+        price_min: widget.price_min,
+        price_max: widget.price_max,
+      );
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    show.onInit();
-    show.loadData(subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString(), collection_id: widget.collection_id.toString(),metal_type: widget.metal_type,price_min: widget.price_min, price_max: widget.price_max);
+    // show.onInit();
+    // show.loadData(subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString(), collection_id: widget.collection_id.toString(),metal_type: widget.metal_type,price_min: widget.price_min, price_max: widget.price_max);
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left,hedingname_2: currentSubcategoryName),
-      bottomNavigationBar: Obx((){
-        if(show.subcategrory.data.isEmpty) return SizedBox();
-        return SafeArea(
-          child: Container(
-            decoration: BoxDecoration(color: AppColor.white_color),
-            height: Get.height * 0.07,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString()),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 40,vertical: 10),
-                        color: AppColor.white_color,
-                        child: Row(
-                          children: [
-                            Icon(Icons.sort,color: AppColor.glodcolor),
-                            SizedBox(width: Get.width / 60),
-                            Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                          ],
-                        ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(color: AppColor.white_color),
+          height: Get.height * 0.07,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString()),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 40,vertical: 10),
+                      color: AppColor.white_color,
+                      child: Row(
+                        children: [
+                          Icon(Icons.sort,color: AppColor.glodcolor),
+                          SizedBox(width: Get.width / 60),
+                          Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
+                        ],
                       ),
                     ),
-                    Text("|",style: TextStyle(color: AppColor.graycolor)),
-                    GestureDetector(
-                      onTap: () => ShowBottam().showbottam(
-                        context, category_slug: widget.subcategrorys.toString(),
-                        subcategrorys: widget.subcategory_slug.toString(),
-                        subcategrorysname: widget.subcategrorysname.toString(),
-                        onCategoryNameChanged: updateSubcategoryName,
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
-                        color: AppColor.white_color,
-                        child: Row(
-                          children: [
-                            Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
-                            SizedBox(width: Get.width / 60),
-                            Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                          ],
-                        ),
+                  ),
+                  Text("|",style: TextStyle(color: AppColor.graycolor)),
+                  GestureDetector(
+                    onTap: () => ShowBottam().showbottam(
+                      context, category_slug: widget.subcategrorys.toString(),
+                      subcategrorys: widget.subcategory_slug.toString(),
+                      subcategrorysname: widget.subcategrorysname.toString(),
+                      onCategoryNameChanged: updateSubcategoryName,
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
+                      color: AppColor.white_color,
+                      child: Row(
+                        children: [
+                          Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
+                          SizedBox(width: Get.width / 60),
+                          Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        );
-      }),
+        ),
+      ),
       body: Container(
         height: Get.height, width: Get.width, color: AppColor.white_color,
         child: Obx(() {
@@ -202,7 +228,7 @@ class _SubcategorysState extends State<Subcategorys> {
                     SizedBox(height: Get.height / 50),
 
                     //Search Start
-                    searchField(onChanged: (val) => show.subcategrory.filterSearch(val)),
+                    searchField(onChanged: show.subcategrory.handleSearch),
                     //Search End
 
                     SizedBox(height: Get.height / 50),

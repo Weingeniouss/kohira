@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/user_inerface/menu/overStore/overStore.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
+import 'package:kohira/view/screen/menu/over%20Store/overStoredetails.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -233,86 +234,89 @@ class _OverstoreState extends State<Overstore> {
                                   ],
                                 ),
                                 SizedBox(height: Get.height / 50),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    boxShadow: kElevationToShadow[1],
-                                    color: AppColor.white_color,
-                                    borderRadius: BorderRadius.circular(Get.width / 70),
-                                  ),
-                                  width: Get.width,
-                                  child: Column(
-                                    children: [
-                                      image != null && image.isNotEmpty ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(Get.width / 70),
-                                        child: Image.network(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          width: Get.width,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return SizedBox();
-                                            },
-                                          ),
-                                        ) : Image.network(image),
-                                      Container(
-                                        padding: EdgeInsets.all(15),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(height: Get.height / 50),
-                                            Text(details['store_city']['state_name']['name'],style: TextStyle(color: AppColor.pink_color)),
-                                            Text(details['store_name']),
-                                            Row(
-                                              children: [
-                                                Text(AppString.contact),
-                                                Text(details['contact_number']),
+                                GestureDetector(
+                                  onTap: () => Get.to(() => OverstoredetailsScreen(slug: details['store_slug'])),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: kElevationToShadow[1],
+                                      color: AppColor.white_color,
+                                      borderRadius: BorderRadius.circular(Get.width / 70),
+                                    ),
+                                    width: Get.width,
+                                    child: Column(
+                                      children: [
+                                        image != null && image.isNotEmpty ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(Get.width / 70),
+                                          child: Image.network(
+                                            image,
+                                            fit: BoxFit.cover,
+                                            width: Get.width,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return SizedBox();
+                                              },
+                                            ),
+                                          ) : Image.network(image),
+                                        Container(
+                                          padding: EdgeInsets.all(15),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(height: Get.height / 50),
+                                              Text(details['store_city']['state_name']['name'],style: TextStyle(color: AppColor.pink_color)),
+                                              Text(details['store_name']),
+                                              Row(
+                                                children: [
+                                                  Text(AppString.contact),
+                                                  Text(details['contact_number']),
+                                                ],
+                                              ),
+                                              SizedBox(height: Get.height / 50),
+                                              GetBuilder<Overstore_Conteroller>(
+                                                builder: (over) {
+                                                  return Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      GestureDetector(
+                                                          onTap: () => over.persee(index),
+                                                          child: Text(over.seePeraList[index] ? "See Less Info" : "See More Info",style: TextStyle(color: AppColor.pink_color)),
+                                                        ),
+                                                        Visibility(
+                                                          visible: over.seePeraList[index],
+                                                          child: Column(
+                                                            children: [
+                                                              SizedBox(height: Get.height / 180),
+                                                              Text(details['address']),
+                                                              SizedBox(height: Get.height / 50),
+                                                              Row(
+                                                                children: [
+                                                                  Text('Timaing :- '),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(details['opening_hours']), SizedBox(width: Get.width / 50),
+                                                                      Text("To"),
+                                                                      SizedBox(width: Get.width / 50), Text(details['closing_hours']),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
                                               ],
                                             ),
-                                            SizedBox(height: Get.height / 50),
-                                            GetBuilder<Overstore_Conteroller>(
-                                              builder: (over) {
-                                                return Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    GestureDetector(
-                                                        onTap: () => over.persee(index),
-                                                        child: Text(over.seePeraList[index] ? "See Less Info" : "See More Info",style: TextStyle(color: AppColor.pink_color)),
-                                                      ),
-                                                      Visibility(
-                                                        visible: over.seePeraList[index],
-                                                        child: Column(
-                                                          children: [
-                                                            SizedBox(height: Get.height / 180),
-                                                            Text(details['address']),
-                                                            SizedBox(height: Get.height / 50),
-                                                            Row(
-                                                              children: [
-                                                                Text('Timaing :- '),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(details['opening_hours']), SizedBox(width: Get.width / 50),
-                                                                    Text("To"),
-                                                                    SizedBox(width: Get.width / 50), Text(details['closing_hours']),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                            ],
                                           ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () => over.openMapDirections(lat, lng, details['store_name']),
-                                          child: Padding(padding: EdgeInsets.all(15), child: button('Get Directions')),
-                                        ),
-                                      ],
+                                          GestureDetector(
+                                            onTap: () => over.openMapDirections(lat, lng, details['store_name']),
+                                            child: Padding(padding: EdgeInsets.all(15), child: button('Get Directions')),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                                ),
                                   SizedBox(height: Get.height / 50),
                                 ],
                               )
