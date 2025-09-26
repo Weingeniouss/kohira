@@ -8,6 +8,7 @@ class AppIcon {
   static const mobile = 'asset/icon/inputType/mobile.svg';
   static const forgetpassword = 'asset/icon/inputType/forgetpassword.svg';
   static const earth = 'asset/icon/inputType/earth.svg';
+  static const calendar = 'asset/icon/inputType/calendar.svg';
 
   //storicon
   static const allstore = 'asset/icon/storeicon/AllStores.svg';

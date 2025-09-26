@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:kohira/controller/API/menu/overstore/overstoredetails.dart';
 
 class AppString {
   //Error
@@ -21,6 +20,10 @@ class AppString {
   static const Checkout = 'Checkout';
   static const paynow = 'Pay Now';
   static const addnewAddress = 'Add New Address';
+  static const message = 'Set Message';
+
+  //check points
+  static const notarobot  = "I'm Not a Robot";
 
   //Heding
   static const signUp = 'Sign Up';
@@ -53,7 +56,6 @@ class AppString {
   static const city = 'City';
   static const zipcode = 'Zip Code';
   static const lastname = 'Last Name';
-  static const notarobot  = "I'm Not a Robot";
 
   //Forget password
   static const subHadingforgat = 'If You Forgot your password no worry Enter Your Email';
@@ -97,6 +99,11 @@ class AppString {
     static const headingMade = 'Made Just for You';
     static const conceptMade = 'Kohira brings the brilliance of lab-grown Type IIA diamonds with exquisite designs, blending sustainability with luxury. Experience ethical, high-quality jewelry crafted for timeless elegance';
     static const youMay = 'You May Also Like';
+    static const name = 'Enter Full Name';
+    static const address = 'Enter Email Address';
+    static const number = 'Enter Mobile Number';
+    static const dates = 'dd/mm/yyyy';
+    static const talkabout = 'I Wnat To Talk About';
 
     //SubCategorie
     static const filter = 'Filter';
@@ -122,6 +129,8 @@ class AppString {
     static const allStores = 'All Stores';
     static const contact = 'Contact :- ';
     static const seelessinfo = 'See less info';
+    static const schedule = 'Schedule An Appointment';
+    static const placeget = "Place Get in touch with us if you'id like more infromation about our products and services";
 
     //Account
     static const accounttitale = 'Account';

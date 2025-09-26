@@ -11,6 +11,7 @@ class AppColor {
   static Color othersub_color = Color(0xff999999);
   static Color green_color = Color(0xff208E53);
   static Color Appbercolor = Color(0xffF5EFE9);
+  static Color Appbercolordark = Color(0xffe6e2db);
   static Color bottomColor = Color(0xffBFBFBF);
   static Color hintColor = Color(0xff949494);
   static Color hintColor2 = Color(0xffE8E2DD);

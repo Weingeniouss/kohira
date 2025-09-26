@@ -8,11 +8,13 @@ import '../app_color.dart';
 
 Widget inputField({
   String? hintText,
+  Widget? suffixIcon,
   String? icon,
   Color? iconcolor,
   double? iconwidth,
   double? iconheight,
   int? maxLength,
+  Color? textfildcolor,
   TextInputType? textInputType,
   TextEditingController? controller,
   bool empty = false,
@@ -44,27 +46,27 @@ Widget inputField({
                           height: iconheight,
                         ),
                       ) : null,
-                      suffixIcon: isVis ? GestureDetector(
+                      suffixIcon: suffixIcon ?? (isVis ? GestureDetector(
                         onTap: () {
                           setState(() {
                             _obscureText =! _obscureText;
                           });
                         },
                         child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility,color: AppColor.grey_color),
-                      ) : null,
-                      hintText: hintText,
+                      ) : null),
+                      hintText: '$hintText*',
                       hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
                       contentPadding: EdgeInsets.symmetric(vertical: 15),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           width: empty ? 2 : 1,
-                          color: empty ? AppColor.pink_color : AppColor.textfild_color,
+                          color: empty ? AppColor.pink_color : textfildcolor ?? AppColor.textfild_color,
                         ),
                       ),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           width: empty ? 2 : 1,
-                          color: empty ? AppColor.pink_color : AppColor.textfild_color,
+                          color: empty ? AppColor.pink_color : textfildcolor ?? AppColor.textfild_color,
                         ),
                       ),
                     ),

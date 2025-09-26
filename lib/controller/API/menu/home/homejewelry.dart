@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import '../../../../view/utils/app_constants.dart';
