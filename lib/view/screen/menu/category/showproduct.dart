@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment
+// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -502,6 +502,30 @@ class _ShowproductState extends State<Showproduct> {
               );
             }
 
+            if (jewellerydetail.data == null || jewellerydetail.data['data'] == null || jewellerydetail.data['data'] is! Map) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 64, color: Colors.grey),
+                    SizedBox(height: 16),
+                    Text(
+                      "No product data available",
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Retry loading data
+                        jewellerydetail.jewellerydetailservices(slug: widget.slug);
+                      },
+                      child: Text("Retry"),
+                    ),
+                  ],
+                ),
+              );
+            }
+
           final jewellery = jewellerydetail.data['data'];
           final variants = jewellery['variants'] ?? [];
           final allRingSizes = jewellery['allRingSize'] ?? [];
@@ -918,6 +942,15 @@ class _ShowproductState extends State<Showproduct> {
           String selectedDiamondType = 'center';
           final uniqueShapes = getUniqueShapes(variants, selectedDiamondType);
 
+            // Helper method
+            String _getShapeText() {
+              try {
+                return currentVariant!['jewelry_diamonds']?[1]?['shape']?['paraname'] ?? 'N/A';
+              } catch (e) {
+                return 'N/A';
+              }
+            }
+
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -995,7 +1028,7 @@ class _ShowproductState extends State<Showproduct> {
                                 borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                 border: Border.all(color: AppColor.textfild_color),
                               ),
-                              // child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                              child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
                             ),
                           );
                         }
@@ -1028,33 +1061,61 @@ class _ShowproductState extends State<Showproduct> {
                             //Wishlist
                             GestureDetector(
                               onTap: () async {
-                                if(selectedRingSizeId == null && selectedRingSizeParaname == null){
-                                  ToastificationError.Error('Please select ring size');
-                                }else{
-                                  if (wishlist.isLoading.value) {
-                                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
-                                  } else {
-                                    await wishlist.wishlistservice(
-                                      ringsize: selectedRingSizeParaname,
-                                      jewelryid: jewellery['id'].toString(),
-                                      metal_stamp: selectedMetalStamp,
-                                      metal_type: selectedMetalType,
-                                      tokan: tokans,
-                                    );
-                                    final String storageKey = jewellery['id'].toString();
-                                    localdatabase().saveToWishlist(storageKey);
+                                // Check conditions for rings
+                                if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                                  if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                                    ToastificationError.Error('Please select ring size');
+                                    return;
                                   }
                                 }
-                                setState(() {
+
+                                if (wishlist.isLoading.value) {
+                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+                                  return;
+                                }
+
+                                try {
+                                  // Show loading
+                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+
+                                  await wishlist.wishlistservice(
+                                    ringsize: selectedRingSizeParaname,
+                                    jewelryid: jewellery['id'].toString(),
+                                    metal_stamp: isWishlisted ? selectedMetalStamp : null, // Only send metal stamp if already in wishlist
+                                    metal_type: selectedMetalType,
+                                    tokan: tokans,
+                                  );
+
+                                  // Update local storage
+                                  final String storageKey = jewellery['id'].toString();
+                                  if (isWishlisted) {
+                                    // Remove from wishlist
+                                    await localdatabase().removeFromWishlist(storageKey);
+                                  } else {
+                                    // Add to wishlist
+                                    await localdatabase().saveToWishlist(storageKey);
+                                  }
+
+                                  // Close loading dialog
+                                  Get.back();
+
+                                  // Update UI immediately
+                                  setState(() {
+                                    isWishlisted = !isWishlisted;
+                                  });
+
+                                  // Refresh counters
                                   count.counting();
                                   wish.fetchwishlist.fechwishlist();
-                                });
-                                count.counting();
-                                wish.fetchwishlist.fechwishlist();
+
+                                } catch (e) {
+                                  Get.back(); // Close loading dialog on error
+                                  print('Wishlist error: $e');
+                                }
                               },
-                              child: (isWishlisted)
-                                  ? SvgPicture.asset(AppIcon.heart,width: 30,height: 30,color: AppColor.pink_color)
-                                  : SvgPicture.asset(AppIcon.like,width: 30,height: 30),
+                              child: isWishlisted
+                                  ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
+                                  : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
                             ),
                           ],
                         ),
@@ -1475,7 +1536,7 @@ class _ShowproductState extends State<Showproduct> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text('Shape :', style: TextStyle(color: AppColor.grey_color)),
-                                            Text(currentVariant!['jewelry_diamonds']?[1]?['shape']?['paraname'], style: TextStyle(color: AppColor.grey_color)),
+                                            Text(_getShapeText(), style: TextStyle(color: AppColor.grey_color)),
                                           ],
                                         ),
                                         Row(

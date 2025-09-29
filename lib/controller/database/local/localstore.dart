@@ -104,6 +104,19 @@ class localdatabase {
       print('Error saving to wishlist: $e');
     }
   }
+
+  Future<void> removeFromWishlist(String storageKey) async {
+    try {
+      List<String> currentList = pref!.getStringList(storageKey) ?? [];
+      if (currentList.contains(storageKey)) {
+        currentList.remove(storageKey);
+        await pref!.setStringList(storageKey, currentList);
+      }
+      print('Removed from wishlist: ${pref!.getStringList(storageKey)}');
+    } catch (e) {
+      print('Error removing from wishlist: $e');
+    }
+  }
 }
 
 void logoutUser() async {

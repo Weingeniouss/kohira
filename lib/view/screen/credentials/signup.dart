@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable, avoid_print
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable, avoid_print, deprecated_member_use
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/API/credentials/Sinup.dart';
 import 'package:kohira/modal/credentials/country.dart';
 import 'package:kohira/view/utils/app_color.dart';
-import 'package:kohira/view/utils/app_gif.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import '../../../controller/API/credentials/country.dart';
