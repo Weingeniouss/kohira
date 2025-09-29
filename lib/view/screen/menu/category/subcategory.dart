@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
@@ -213,6 +214,7 @@ class _SubcategorysState extends State<Subcategorys> {
             );
           }
           if(show.subcategrory.data.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
+          final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
           return SafeArea(
             child: horizontalpadding(
               child: RefreshIndicator(
@@ -272,7 +274,7 @@ class _SubcategorysState extends State<Subcategorys> {
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
-                                    "₹${double.parse(subcategrory['discount']?.toString() ?? '0') > 0 ? subcategrory['offer_price'] : subcategrory['setting_price']}.00",
+                                    indianFormat.format(double.parse(subcategrory['discount']?.toString() ?? '0') > 0 ? subcategrory['offer_price'] : subcategrory['setting_price']),
                                     style: TextStyle(
                                       fontSize: Get.height / 70,
                                       fontFamily: 'Lora', color: AppColor.pink_color,

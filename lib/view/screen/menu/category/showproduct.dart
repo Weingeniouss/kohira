@@ -951,6 +951,8 @@ class _ShowproductState extends State<Showproduct> {
               }
             }
 
+            final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -1123,15 +1125,14 @@ class _ShowproductState extends State<Showproduct> {
                         // Price
                         Row(
                           children: [
-                            Text('₹${currentVariant?['setting_price']?.toString() ?? '0'}.00', style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600, fontSize: Get.width * 0.045)),
+                            Text(indianFormat.format(currentVariant?['setting_price']), style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600, fontSize: Get.width * 0.045)),
                             SizedBox(width: Get.width / 150),
                             Text("(inclusive of all taxes)", style: TextStyle(color: AppColor.grey_color)),
                           ],
                         ),
 
                         SizedBox(height: Get.height / 50),
-
-
+                        
                         // Metal Stamp Selection
                         Row(
                           children: [

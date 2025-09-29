@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kohira/controller/user_inerface/menu/home/home.dart';
 import 'package:kohira/view/screen/menu/home/Search.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -150,6 +151,7 @@ class Home extends StatelessWidget {
               if (rings == null || (rings is List && rings.isEmpty)) return Center(child: Lottie.asset(AppJson.noData));
               final section = home.homecollction.data['3']?['collection_section_3'];
               if (section == null) return Center(child: Lottie.asset(AppJson.noData));
+              final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
               return SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
@@ -438,6 +440,7 @@ class Home extends StatelessWidget {
                                 itemBuilder: (BuildContext context, int index) {
                                   final image = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['allImages'][0]['thumb'];
                                   final title = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'];
+                                  final price = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['setting_price'];
                                   return GestureDetector(
                                     onTap: (){
                                       Get.to(() => Showproduct(
@@ -445,18 +448,29 @@ class Home extends StatelessWidget {
                                         categoryslug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'],
                                       ));
                                     },
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 4),
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Image.network(image,width: 150,height: 150),
-                                          SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
-                                        ],
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(right: 4),
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Image.network(image,width: 150,height: 150),
+                                              SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(width: Get.width / 20),
+                                            Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   );
                                 },
@@ -540,6 +554,7 @@ class Home extends StatelessWidget {
                                 itemBuilder: (BuildContext context, int index) {
                                   final image = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['allImages'][0]['thumb'];
                                   final title = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['title'];
+                                  final price = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['setting_price'];
                                   return GestureDetector(
                                     onTap: (){
                                       Get.to(() => Showproduct(
@@ -547,18 +562,29 @@ class Home extends StatelessWidget {
                                         categoryslug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'],
                                       ));
                                     },
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 4),
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Image.network(image,width: 150,height: 150),
-                                          SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
-                                        ],
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(right: 4),
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Image.network(image,width: 150,height: 150),
+                                              SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(width: Get.width / 20),
+                                            Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   );
                                 },
