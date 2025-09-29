@@ -221,8 +221,8 @@ class _EditaddressesState extends State<Editaddresses> {
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                         child: Row(children: [
-                          SizedBox(width: Get.width / 150),
-                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
+                          SizedBox(width: Get.width / 50),
+                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 20,height: 20),
                           Expanded(
                             child: Obx(() {
                               return DropdownButton2<Data>(
@@ -232,6 +232,7 @@ class _EditaddressesState extends State<Editaddresses> {
                                   style: TextStyle(
                                     color: AppColor.black_color,
                                     fontWeight: FontWeight.w400,
+                                    fontSize: Get.width / 23,
                                   ),
                                 ),
                                 isExpanded: true,
@@ -286,8 +287,8 @@ class _EditaddressesState extends State<Editaddresses> {
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                         child: Row(children: [
-                          SizedBox(width: Get.width / 150),
-                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 28,height: 28),
+                          SizedBox(width: Get.width / 50),
+                          SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 20,height: 20),
                           Expanded(
                             child: DropdownButton2<Map<String, dynamic>>(
                               value: State.selectedState.value,
@@ -296,6 +297,7 @@ class _EditaddressesState extends State<Editaddresses> {
                                 style: TextStyle(
                                   color: AppColor.black_color,
                                   fontWeight: FontWeight.w400,
+                                  fontSize: Get.width / 23,
                                 ),
                               ),
                               isExpanded: true,

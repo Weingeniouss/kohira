@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, must_be_immutable, avoid_print
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/credentials/Sinup.dart';
 import 'package:kohira/modal/credentials/country.dart';
@@ -14,6 +16,7 @@ import '../../../controller/database/local/localstore.dart';
 import '../../../controller/user_inerface/credentials/singup_controller.dart';
 import '../../utils/app_String.dart';
 import '../../utils/app_icon.dart';
+import '../../utils/widget/RecaptchaWidget.dart';
 import '../../utils/widget/button.dart';
 import '../../utils/widget/connction.dart';
 import '../../utils/widget/inputField.dart';
@@ -22,12 +25,111 @@ import '../../utils/widget/pop.dart';
 import '../../utils/widget/set_logo.dart';
 import '../../utils/widget/title_text.dart';
 
-class Signup extends StatelessWidget {
-  final Country = Get.put(CountryCalling()); //CountryAPI
-  final validation = Get.put(SingupController()); // UserInterface
-  final Sinup = Get.put(SinupCalling()); // SinupAPI
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
-  Signup({super.key});
+  @override
+  State<Signup> createState() => _SignupState();
+}
+
+class _SignupState extends State<Signup> {
+  final Country = Get.put(CountryCalling());
+  final validation = Get.put(SingupController());
+  final Sinup = Get.put(SinupCalling());
+  final String siteKey = "6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF";
+  final String baseUrl = "https://next.weingenious.in";
+
+  bool isCheck = false;
+  String? recaptchaToken;
+
+  void isCheckValue(bool? val) {
+    if (val == true) {
+      _showRecaptchaVerification();
+    } else {
+      setState(() {
+        isCheck = false;
+        recaptchaToken = null;
+      });
+    }
+  }
+
+  // Method to show reCAPTCHA
+  void _showRecaptchaVerification() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        backgroundColor: AppColor.white_color,
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Container(
+          height: Get.height * 0.6,
+          decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            children: [
+              // Optional Header
+              Container(
+                  padding: EdgeInsets.all(16),
+                  child: Expanded(
+                    child: RecaptchaWidget(
+                      siteKey: siteKey,
+                      baseUrl: baseUrl,
+                      onVerified: (String token) {
+                        if (kDebugMode) {
+                          print('✅ reCAPTCHA Token: $token');
+                        }
+
+                        Navigator.pop(context);
+
+                        setState(() {
+                          isCheck = true;
+                          recaptchaToken = token;
+                        });
+
+                        Get.snackbar(
+                          'Success',
+                          'Verification completed!',
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: Duration(seconds: 2),
+                          margin: EdgeInsets.all(10),
+                        );
+                      },
+                      onError: () {
+                        if (kDebugMode) {
+                          print('❌ reCAPTCHA Error');
+                        }
+
+                        Navigator.pop(context);
+
+                        setState(() {
+                          isCheck = false;
+                          recaptchaToken = null;
+                        });
+
+                        Get.snackbar(
+                          'Error',
+                          'Verification failed. Please try again.',
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: Duration(seconds: 2),
+                          margin: EdgeInsets.all(10),
+                        );
+                      },
+                    ),
+                  )
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).then((_) {
+      if (recaptchaToken == null) {
+        setState(() => isCheck = false);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,19 +160,19 @@ class Signup extends StatelessWidget {
                   password: validation.password_controller.text,
                   passwordConfirmation: validation.confiim_password_controller.text,
                   mobileno: validation.mobile_controller.text,
-                  captcha: '6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF',
+                  captcha: siteKey,
                   countrycode: Country.selectedCountry.value!.countrycode.toString(),
                   country_shortname: Country.selectedCountry.value!.countryShortname.toString(),
                   login_type: 'mobile',
                 );
                 localdatabase().sinupstore(
-                fristname: validation.frist_controller.text,
-                lastname: validation.last_controller.text,
-                email: validation.email_controller.text,
-                mobile: validation.mobile_controller.text,
-                password: validation.password_controller.text,
-                countrycode: Country.selectedCountry.value!.countrycode.toString(),
-              );
+                  fristname: validation.frist_controller.text,
+                  lastname: validation.last_controller.text,
+                  email: validation.email_controller.text,
+                  mobile: validation.mobile_controller.text,
+                  password: validation.password_controller.text,
+                  countrycode: Country.selectedCountry.value!.countrycode.toString(),
+                );
               });
             } else {
               ToastificationError.Error('Password dose not mache !');
@@ -116,7 +218,8 @@ class Signup extends StatelessWidget {
                                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                                 child: Row(
                                   children: [
-                                    Image.asset(AppGif.earth, scale: 1.5),
+                                    SizedBox(width: Get.width / 60),
+                                    SvgPicture.asset(AppIcon.earth,width: 25,height: 25,color: AppColor.pink_color),
                                     SizedBox(width: Get.width / 50),
                                     Expanded(
                                       child: DropdownButton2<Data>(
@@ -165,21 +268,34 @@ class Signup extends StatelessWidget {
                               inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
                               inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value,isVis: true),
                               inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value,isVis: true),
-                              Row(
-                                children: [
-                                  Transform.scale(
-                                    scale: 1.3,
-                                    child: Checkbox(
-                                      value: validation.value.value,
-                                      onChanged: (val){},
-                                      overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
-                                      side: BorderSide(color: AppColor.pink_color, width: 2),
-                                      checkColor: AppColor.white_color,
-                                      activeColor: AppColor.pink_color,
+                              horizontalpadding(
+                                child: Row(
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.2,
+                                      child: Checkbox(
+                                        value: isCheck,
+                                        onChanged: (val) => isCheckValue(val),
+                                        overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
+                                        side: BorderSide(color: AppColor.pink_color, width: 2),
+                                        checkColor: AppColor.white_color,
+                                        activeColor: AppColor.pink_color,
+                                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                        materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                      ),
                                     ),
-                                  ),
-                                  Text(AppString.notarobot, style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
-                                ],
+                                    SizedBox(width: Get.width / 50),
+                                    Text(
+                                      AppString.notarobot,
+                                      style: TextStyle(
+                                        color: AppColor.pink_color,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: Get.width * 0.04,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: Get.height / 50),
 
@@ -231,29 +347,4 @@ class Signup extends StatelessWidget {
       );
     });
   }
-
-  // RecaptchaClient? _recaptchaClient;
-  // String _token = '';
-  //
-  // void recaptcha(val) async {
-  //   validation.value.value = val ?? false;
-  //
-  //   try {
-  //     final siteKey = Platform.isAndroid
-  //         ? '6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF' : '<IOS_SITE_KEY>';
-  //
-  //     _recaptchaClient = await Recaptcha.fetchClient(siteKey);
-  //
-  //     final token = await _recaptchaClient!.execute(
-  //       RecaptchaAction.LOGIN(), // 👈 use meaningful action
-  //     );
-  //
-  //     _token = token;
-  //     debugPrint("reCAPTCHA Token: $_token");
-  //
-  //     // ✅ Send token to your backend for verification
-  //   } catch (e) {
-  //     debugPrint("reCAPTCHA exception: $e");
-  //   }
-  // }
 }
