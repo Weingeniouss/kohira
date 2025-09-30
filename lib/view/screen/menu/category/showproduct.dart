@@ -82,48 +82,53 @@ class _ShowproductState extends State<Showproduct> {
   @override
   void initState() {
     super.initState();
-    loadJewelleryDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      jewellerydetail.jewellerydetailservices(slug: widget.slug);
+      recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
+      count.counting();
+    });
+    // loadJewelleryDetails();
   }
 
-  Future<void> loadJewelleryDetails() async {
-    try {
-      await jewellerydetail.jewellerydetailservices(slug: widget.slug);
-      await recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
-
-      if (!mounted) return; // stop if widget already disposed
-
-      final jewellery = jewellerydetail.data['data'];
-      if (jewellery == null) {
-        print("Error: jewellerydetail.data['data'] is null");
-        return;
-      }
-
-      final String storageKey = jewellery['id'].toString();
-      final List<String> loadedList = pref?.getStringList(storageKey) ?? [];
-
-      // Define allowed metal stamps
-      final allowedStamps = ['9K', '10K', '14K', '18K'];
-      final metalStamp = selectedMetalStamp?.toUpperCase();
-
-      if (!mounted) return; // check again before setState (in case async gap)
-
-      setState(() {
-        savewishlist = loadedList;
-        isWishlisted = allowedStamps.contains(metalStamp) && loadedList.contains(storageKey);
-      });
-
-      // Debug logs
-      print('Loaded wishlist: $loadedList');
-      print('Selected Metal Stamp: $selectedMetalStamp');
-      print('Selected Metal Type: $selectedMetalType');
-      print('Is Wishlisted: $isWishlisted');
-    } catch (e, stack) {
-      if (mounted) {
-        print("Error in loadJewelleryDetails: $e");
-        print(stack);
-      }
-    }
-  }
+  // Future<void> loadJewelleryDetails() async {
+  //   try {
+  //     await jewellerydetail.jewellerydetailservices(slug: widget.slug);
+  //     await recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
+  //
+  //     if (!mounted) return; // stop if widget already disposed
+  //
+  //     final jewellery = jewellerydetail.data['data'];
+  //     if (jewellery == null) {
+  //       print("Error: jewellerydetail.data['data'] is null");
+  //       return;
+  //     }
+  //
+  //     final String storageKey = jewellery['id'].toString();
+  //     final List<String> loadedList = pref?.getStringList(storageKey) ?? [];
+  //
+  //     // Define allowed metal stamps
+  //     final allowedStamps = ['9K', '10K', '14K', '18K'];
+  //     final metalStamp = selectedMetalStamp?.toUpperCase();
+  //
+  //     if (!mounted) return; // check again before setState (in case async gap)
+  //
+  //     setState(() {
+  //       savewishlist = loadedList;
+  //       isWishlisted = allowedStamps.contains(metalStamp) && loadedList.contains(storageKey);
+  //     });
+  //
+  //     // Debug logs
+  //     print('Loaded wishlist: $loadedList');
+  //     print('Selected Metal Stamp: $selectedMetalStamp');
+  //     print('Selected Metal Type: $selectedMetalType');
+  //     print('Is Wishlisted: $isWishlisted');
+  //   } catch (e, stack) {
+  //     if (mounted) {
+  //       print("Error in loadJewelleryDetails: $e");
+  //       print(stack);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -1062,63 +1067,119 @@ class _ShowproductState extends State<Showproduct> {
 
                             //Wishlist
                             GestureDetector(
-                              onTap: () async {
-                                // Check conditions for rings
-                                if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
-                                  if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
-                                    ToastificationError.Error('Please select ring size');
+                                onTap: () async {
+                                  // Check conditions for rings
+                                  if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                                    if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                                      ToastificationError.Error('Please select ring size');
+                                      return;
+                                    }
+                                  }
+
+                                  if (wishlist.isLoading.value) {
+                                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
                                     return;
                                   }
-                                }
 
-                                if (wishlist.isLoading.value) {
-                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
-                                  return;
-                                }
+                                  try {
+                                    // Show loading
+                                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
 
-                                try {
-                                  // Show loading
-                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+                                    await wishlist.wishlistservice(
+                                      ringsize: selectedRingSizeParaname,
+                                      jewelryid: currentVariant?['id'].toString(),
+                                      metal_stamp: isWishlisted ? selectedMetalStamp : null,
+                                      metal_type: selectedMetalType,
+                                      tokan: tokans,
+                                    );
+                                    // Close loading dialog
+                                    Get.back();
 
-                                  await wishlist.wishlistservice(
-                                    ringsize: selectedRingSizeParaname,
-                                    jewelryid: jewellery['id'].toString(),
-                                    metal_stamp: isWishlisted ? selectedMetalStamp : null, // Only send metal stamp if already in wishlist
-                                    metal_type: selectedMetalType,
-                                    tokan: tokans,
-                                  );
+                                    // Update UI immediately
+                                    setState(() {
+                                      isWishlisted = !isWishlisted;
+                                    });
 
-                                  // Update local storage
-                                  final String storageKey = jewellery['id'].toString();
-                                  if (isWishlisted) {
-                                    // Remove from wishlist
-                                    await localdatabase().removeFromWishlist(storageKey);
-                                  } else {
-                                    // Add to wishlist
-                                    await localdatabase().saveToWishlist(storageKey);
+                                    // Refresh counters
+                                    count.counting();
+                                    wish.fetchwishlist.fechwishlist();
+
+                                  } catch (e) {
+                                    Get.back();
+                                    print('Wishlist error: $e');
                                   }
-
-                                  // Close loading dialog
-                                  Get.back();
-
-                                  // Update UI immediately
-                                  setState(() {
-                                    isWishlisted = !isWishlisted;
-                                  });
-
-                                  // Refresh counters
-                                  count.counting();
-                                  wish.fetchwishlist.fechwishlist();
-
-                                } catch (e) {
-                                  Get.back(); // Close loading dialog on error
-                                  print('Wishlist error: $e');
-                                }
-                              },
-                              child: isWishlisted
+                                },
+                              child: (count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
                                   ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
                                   : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
-                            ),
+                            )
+
+
+                            //Wishlist
+                            // GestureDetector(
+                            //   onTap: () async {
+                            //     // Check conditions for rings
+                            //     if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                            //       if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                            //         ToastificationError.Error('Please select ring size');
+                            //         return;
+                            //       }
+                            //     }
+                            //
+                            //     if (wishlist.isLoading.value) {
+                            //       Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+                            //       return;
+                            //     }
+                            //
+                            //     try {
+                            //       // Show loading
+                            //       Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+                            //
+                            //       await wishlist.wishlistservice(
+                            //         ringsize: selectedRingSizeParaname,
+                            //         jewelryid: jewellery['id'].toString(),
+                            //         metal_stamp: isWishlisted ? selectedMetalStamp : null, // Only send metal stamp if already in wishlist
+                            //         metal_type: selectedMetalType,
+                            //         tokan: tokans,
+                            //       );
+                            //
+                            //       // Update local storage
+                            //       final String storageKey = jewellery['id'].toString();
+                            //       if (isWishlisted) {
+                            //         // Remove from wishlist
+                            //         await localdatabase().removeFromWishlist(storageKey);
+                            //         savewishlist.remove(jewellerydetail.data['data']['id'].toString());
+                            //         pref?.setStringList(jewellerydetail.data['data']['id'].toString(), savewishlist);
+                            //         isWishlisted = false;
+                            //       } else {
+                            //         // Add to wishlist
+                            //         await localdatabase().saveToWishlist(storageKey);
+                            //         savewishlist.add(jewellerydetail.data['data']['id'].toString());
+                            //         pref?.setStringList(jewellerydetail.data['data']['id'].toString(), savewishlist);
+                            //         isWishlisted = true;
+                            //       }
+                            //
+                            //       // Close loading dialog
+                            //       Get.back();
+                            //
+                            //       // Update UI immediately
+                            //       setState(() {
+                            //         isWishlisted = !isWishlisted;
+                            //       });
+                            //
+                            //       // Refresh counters
+                            //       count.counting();
+                            //       wish.fetchwishlist.fechwishlist();
+                            //
+                            //     } catch (e) {
+                            //       Get.back(); // Close loading dialog on error
+                            //       print('Wishlist error: $e');
+                            //     }
+                            //   },
+                            //   child: isWishlisted
+                            //       ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
+                            //       : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
+                            // ),
                           ],
                         ),
 
