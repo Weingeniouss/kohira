@@ -189,9 +189,9 @@ class Mycart extends StatelessWidget {
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
               // Initialize item counts when data is loaded
-              if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
-                myCart.initializeItemCounts();
-              }
+              // if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
+              //   myCart.initializeItemCounts();
+              // }
               final fetch = myCart.fetchcart.data['carts'] ?? [];
               if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
 
@@ -251,11 +251,7 @@ class Mycart extends StatelessWidget {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                myCart.decrementValueOfCount(index).then((_) {
-                                                  Future.delayed(Duration(seconds: 2), () {
-                                                    myCart.onInit();
-                                                  });
-                                                });
+                                                myCart.decrementValueOfCount(index);
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -271,11 +267,7 @@ class Mycart extends StatelessWidget {
                                             SizedBox(width: Get.width / 20),
                                             GestureDetector(
                                               onTap: () {
-                                                myCart.incrementValueOfCount(index).then((_) {
-                                                  Future.delayed(Duration(seconds: 2), () {
-                                                    myCart.onInit();
-                                                  });
-                                                });
+                                                myCart.incrementValueOfCount(index);
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(

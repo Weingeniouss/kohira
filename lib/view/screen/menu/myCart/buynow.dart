@@ -99,9 +99,9 @@ class _BuynowState extends State<Buynow> {
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
               // Initialize item counts when data is loaded
-              if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
-                myCart.initializeItemCounts();
-              }
+              // if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
+              //   myCart.initializeItemCounts();
+              // }
               final fetch = myCart.fetchcart.data['carts'] ?? [];
 
               if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
@@ -165,11 +165,7 @@ class _BuynowState extends State<Buynow> {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                myCart.decrementValueOfCount(index).then((_) {
-                                                  Future.delayed(Duration(seconds: 2), () {
-                                                    myCart.onInit();
-                                                  });
-                                                });
+                                                myCart.decrementValueOfCount(index);
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -181,15 +177,11 @@ class _BuynowState extends State<Buynow> {
                                               ),
                                             ),
                                             SizedBox(width: Get.width / 20),
-                                            Text(myCart.itemCounts[index].toString()),
+                                            GetX<MyCartValueChange>(builder: (controller) => Text(controller.itemCounts[index].toString())),
                                             SizedBox(width: Get.width / 20),
                                             GestureDetector(
                                               onTap: () {
-                                                myCart.incrementValueOfCount(index).then((_) {
-                                                  Future.delayed(Duration(seconds: 2), () {
-                                                    myCart.onInit();
-                                                  });
-                                                });
+                                                myCart.incrementValueOfCount(index);
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -419,7 +411,13 @@ class _BuynowState extends State<Buynow> {
                               ),
                             ),
                             SizedBox(height: Get.height / 150),
-                            Divider(color: AppColor.textfild_color),
+                            Row(
+                              children: [
+                                Expanded(child: Divider(color: AppColor.textfild_color, height: 1, thickness: 1)),
+                                SizedBox(width: Get.width / 20),
+                                Expanded(child: Divider(color: AppColor.textfild_color, height: 1, thickness: 1)),
+                              ],
+                            ),
                             SizedBox(height: Get.height / 150),
                             IntrinsicHeight(
                               child: Row(

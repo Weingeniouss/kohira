@@ -170,11 +170,7 @@ class Checkout extends StatelessWidget {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    myCart.decrementValueOfCount(index).then((_) {
-                                                      Future.delayed(Duration(seconds: 2), () {
-                                                        myCart.onInit();
-                                                      });
-                                                    });
+                                                    myCart.decrementValueOfCount(index);
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -186,15 +182,11 @@ class Checkout extends StatelessWidget {
                                                   ),
                                                 ),
                                                 SizedBox(width: Get.width / 20),
-                                                Text(myCart.itemCounts[index].toString()),
+                                                GetX<MyCartValueChange>(builder: (controller) => Text(controller.itemCounts[index].toString())),
                                                 SizedBox(width: Get.width / 20),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    myCart.incrementValueOfCount(index).then((_) {
-                                                      Future.delayed(Duration(seconds: 2), () {
-                                                        myCart.onInit();
-                                                      });
-                                                    });
+                                                    myCart.incrementValueOfCount(index);
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
