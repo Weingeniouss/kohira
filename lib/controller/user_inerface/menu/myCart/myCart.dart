@@ -216,17 +216,10 @@ class MyCartValueChange extends GetxController {
       for (var entry in pendingUpdates.entries) {
         final index = entry.key;
         final finalQty = entry.value;
-
         if (index < fetchcart.data['carts'].length) {
           final item = fetchcart.data['carts'][index];
           final cartId = item['id'].toString();
-
-          await fetchcart.fetchcartcall(
-              flag: 'flag',
-              cart: cartId,
-              qty: finalQty.toString(),
-              type: 'mobile'
-          );
+          await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: finalQty.toString(), type: 'mobile');
         }
       }
 
@@ -291,16 +284,8 @@ class MyCartValueChange extends GetxController {
       final diamondid = item['diamondid'].toString();
       final jewelryid = item['jewelryid'].toString();
       final itemcode = item['CartJewelryData']['title'];
-
-      await deletcount.deletcartcall(
-          id: deletid,
-          jewelryid: jewelryid,
-          diamondid: diamondid
-      );
-
-      ToastificationSuccess.Success(
-          "$itemcode, ${deletcount.data['message'].replaceAll('Cart', '')}"
-      );
+      await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
+      ToastificationSuccess.Success("$itemcode, ${deletcount.data['message'].replaceAll('Cart', '')}");
 
       // Remove from pending updates if exists
       pendingUpdates.remove(index);

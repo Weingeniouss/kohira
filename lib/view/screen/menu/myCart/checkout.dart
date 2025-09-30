@@ -127,46 +127,68 @@ class Checkout extends StatelessWidget {
                         //item in List of cart
                         containershadow(
                           child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             itemCount: fetch.length,
                             itemBuilder: (context, index) {
                               final item = fetch[index];
                               final fetchdata = item['CartJewelryData'];
                               final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
-                              if (index >= myCart.itemCounts.length) return Container();
+
+                              // Move this check to the top, before any widget building
+                              if (index >= myCart.itemCounts.length) {
+                                return SizedBox.shrink();
+                              }
+
                               return Container(
-                                child: Row(
-                                  children: [
-                                    if (fetchimage != null)
-                                      GestureDetector(
-                                        onTap: () => Get.to(() => Showproduct(
-                                          slug: fetchdata['slug'],
-                                          categoryslug: fetchdata['category']['slug'],
-                                        )),
-                                        child: Image(image: NetworkImage(fetchimage['thumb']), fit: BoxFit.cover, width: 100, height: 100, errorBuilder: (context, error, stackTrace) => Icon(Icons.error)),
-                                      ),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            title: Text(
-                                              fetchdata['title'],
-                                              style: TextStyle(fontSize: Get.width / 27),
-                                            ),
-                                            subtitle: Text(
-                                              indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
-                                              style: TextStyle(
-                                                color: AppColor.pink_color,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                margin: EdgeInsetsGeometry.symmetric(vertical: 3),
+                                child: IntrinsicHeight(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      // Image Section
+                                      if (fetchimage != null)
+                                        GestureDetector(
+                                          onTap: () => Get.to(() => Showproduct(
+                                            slug: fetchdata['slug'],
+                                            categoryslug: fetchdata['category']['slug'],
+                                          )),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(8),
+                                            child: Image(
+                                              image: NetworkImage(fetchimage['thumb']),
+                                              fit: BoxFit.cover,
+                                              width: 100,
+                                              height: 100,
+                                              errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                                             ),
                                           ),
-                                          SizedBox(height: Get.height / 300),
-                                          horizontalpadding(
-                                            child: Row(
+                                        ),
+                                      SizedBox(width: 8),
+
+                                      // Content Section
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            // Title and Price
+                                            Text(
+                                              fetchdata['title'],
+                                              style: TextStyle(fontSize: Get.width / 27),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
+                                              style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600)),
+                                            SizedBox(height: 8),
+
+                                            // Quantity Controls
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
@@ -178,11 +200,20 @@ class Checkout extends StatelessWidget {
                                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                                     ),
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                                    child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
+                                                    child: Text('-', style: TextStyle(fontSize: Get.width / 20)
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(width: Get.width / 20),
-                                                GetX<MyCartValueChange>(builder: (controller) => Text(controller.itemCounts[index].toString())),
+                                                GetX<MyCartValueChange>(
+                                                    builder: (controller) {
+                                                      // Add safety check here too
+                                                      if (index >= controller.itemCounts.length) {
+                                                        return Text('0');
+                                                      }
+                                                      return Text(controller.itemCounts[index].toString());
+                                                    }
+                                                ),
                                                 SizedBox(width: Get.width / 20),
                                                 GestureDetector(
                                                   onTap: () {
@@ -194,16 +225,17 @@ class Checkout extends StatelessWidget {
                                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                                     ),
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                                    child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
+                                                    child: Text('+', style: TextStyle(fontSize: Get.width / 20)
+                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          )
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             },

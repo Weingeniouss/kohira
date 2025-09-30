@@ -118,105 +118,161 @@ class _BuynowState extends State<Buynow> {
 
                       //Items
                       ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: fetch.length,
-                        itemBuilder: (context, index) {
-                          final item = fetch[index];
-                          final fetchdata = item['CartJewelryData'];
-                          final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
-                          if (index >= myCart.itemCounts.length) return Container();
-                          return Container(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: fetch.length,
+                      itemBuilder: (context, index) {
+                        final item = fetch[index];
+                        final fetchdata = item['CartJewelryData'];
+                        final fetchimage = (fetchdata['allImages'].isNotEmpty) ? fetchdata['allImages'][0] : null;
+
+                        // Move this check to the top, before any widget building
+                        if (index >= myCart.itemCounts.length) {
+                          return SizedBox.shrink();
+                        }
+
+                        return Container(
+                          margin: EdgeInsetsGeometry.symmetric(vertical: 3),
+                          child: IntrinsicHeight(
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                // Image Section
                                 if (fetchimage != null)
                                   GestureDetector(
                                     onTap: () => Get.to(() => Showproduct(
                                       slug: fetchdata['slug'],
                                       categoryslug: fetchdata['category']['slug'],
-                                     ),
-                                    ),
-                                    child: Image(
-                                      image: NetworkImage(fetchimage['thumb']),
-                                      fit: BoxFit.cover,
-                                      width: 100,
-                                      height: 100,
-                                      errorBuilder: (context, error, stackTrace) =>Icon(Icons.error),
+                                    )),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image(
+                                        image: NetworkImage(fetchimage['thumb']),
+                                        fit: BoxFit.cover,
+                                        width: 100,
+                                        height: 100,
+                                        errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                                      ),
                                     ),
                                   ),
+                                SizedBox(width: 8),
+
+                                // Content Section
                                 Expanded(
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      ListTile(
-                                        title: Text(
-                                          fetchdata['title'],
-                                          style: TextStyle(fontSize: Get.width / 27),
+                                      // Title and Price
+                                      Text(
+                                        fetchdata['title'],
+                                        style: TextStyle(fontSize: Get.width / 27),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        indianFormat.format(
+                                            (fetchdata['discount'] > 0)
+                                                ? fetchdata['offer_price']
+                                                : fetchdata['setting_price']
                                         ),
-                                        subtitle: Text(
-                                          indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
-                                          style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                            color: AppColor.pink_color,
+                                            fontWeight: FontWeight.w600
                                         ),
                                       ),
-                                      SizedBox(height: Get.height / 300),
-                                      horizontalpadding(
-                                        child: Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                myCart.decrementValueOfCount(index);
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: AppColor.textfild_color,
-                                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                      SizedBox(height: 8),
+
+                                      // Quantity Controls
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              myCart.decrementValueOfCount(index);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: AppColor.textfild_color,
+                                                borderRadius: BorderRadius.circular(
+                                                    Get.width / 50
                                                 ),
-                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                                child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 3
+                                              ),
+                                              child: Text(
+                                                  '-',
+                                                  style: TextStyle(fontSize: Get.width / 20)
                                               ),
                                             ),
-                                            SizedBox(width: Get.width / 20),
-                                            GetX<MyCartValueChange>(builder: (controller) => Text(controller.itemCounts[index].toString())),
-                                            SizedBox(width: Get.width / 20),
-                                            GestureDetector(
-                                              onTap: () {
-                                                myCart.incrementValueOfCount(index);
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: AppColor.textfild_color,
-                                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                          ),
+                                          SizedBox(width: Get.width / 20),
+                                          GetX<MyCartValueChange>(
+                                              builder: (controller) {
+                                                // Add safety check here too
+                                                if (index >= controller.itemCounts.length) {
+                                                  return Text('0');
+                                                }
+                                                return Text(
+                                                    controller.itemCounts[index].toString()
+                                                );
+                                              }
+                                          ),
+                                          SizedBox(width: Get.width / 20),
+                                          GestureDetector(
+                                            onTap: () {
+                                              myCart.incrementValueOfCount(index);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: AppColor.textfild_color,
+                                                borderRadius: BorderRadius.circular(
+                                                    Get.width / 50
                                                 ),
-                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                                child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 3
+                                              ),
+                                              child: Text(
+                                                  '+',
+                                                  style: TextStyle(fontSize: Get.width / 20)
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      )
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
+
+                                // Delete Button
                                 GestureDetector(
+                                  onTap: () {
+                                    myCart.deletValueofcount(item, fetch, index);
+                                    count.counting();
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: AppColor.white_color,
                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                     ),
-                                    padding: EdgeInsets.only(left: 22, top: 38, bottom: 38),
-                                    child: Icon(Icons.delete_outline_outlined, color: AppColor.pink_color, size: 20),
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                        Icons.delete_outline_outlined,
+                                        color: AppColor.pink_color,
+                                        size: 20
+                                    ),
                                   ),
-                                  onTap: () {
-                                    myCart.deletValueofcount(item, fetch, index);
-                                    count.counting();
-                                  },
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
+                    ),
 
                       SizedBox(height: Get.height / 50),
 
