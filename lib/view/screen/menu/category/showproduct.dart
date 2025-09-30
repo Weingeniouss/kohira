@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment, unnecessary_null_comparison
+// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment, unnecessary_null_comparison, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart' show JewellerydetailCall;
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
-import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
@@ -1113,7 +1112,6 @@ class _ShowproductState extends State<Showproduct> {
                                   ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
                                   : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
                             )
-
 
                             //Wishlist
                             // GestureDetector(
