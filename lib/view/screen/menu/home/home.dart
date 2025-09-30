@@ -466,7 +466,7 @@ class Home extends StatelessWidget {
                                         ),
                                         Row(
                                           children: [
-                                            SizedBox(width: Get.width / 20),
+                                            SizedBox(width: Get.width / 60),
                                             Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
                                           ],
                                         ),
@@ -580,7 +580,7 @@ class Home extends StatelessWidget {
                                         ),
                                         Row(
                                           children: [
-                                            SizedBox(width: Get.width / 20),
+                                            SizedBox(width: Get.width / 60),
                                             Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
                                           ],
                                         ),
