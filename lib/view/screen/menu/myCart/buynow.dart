@@ -237,11 +237,7 @@ class _BuynowState extends State<Buynow> {
                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                     ),
                                     padding: EdgeInsets.all(8),
-                                    child: Icon(
-                                        Icons.delete_outline_outlined,
-                                        color: AppColor.pink_color,
-                                        size: 20
-                                    ),
+                                    child: Icon(Icons.delete_outline_outlined, color: AppColor.pink_color, size: 20),
                                   ),
                                 ),
                               ],
@@ -391,7 +387,7 @@ class _BuynowState extends State<Buynow> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.remaining),
-                                  Text(indianFormat.format(remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  Text(indianFormat.format((totalprice >= wallet.data['myWalletAmount']) ?  0 : remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                 ],
                               ),
                               // Divider(color: AppColor.textfild_color),

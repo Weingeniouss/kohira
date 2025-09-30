@@ -14,8 +14,10 @@ import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
+import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import 'package:http/http.dart' as http;
 
@@ -145,10 +147,9 @@ class _OverstoreState extends State<Overstore> {
                 ),
               );
             }
-
-            final city = over.citylist.data['data'];
-            final stores = over.store.data['data'];
-
+            final city = over.citylist.data['data'] ?? [];
+            final stores = over.store.data['data'] ?? [];
+            if(stores.isEmpty || city.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
             return Column(
               children: [
                 SizedBox(height: Get.height / 50),
@@ -316,7 +317,7 @@ class _OverstoreState extends State<Overstore> {
                                         ],
                                       ),
                                     ),
-                                ),
+                                 ),
                                   SizedBox(height: Get.height / 50),
                                 ],
                               )

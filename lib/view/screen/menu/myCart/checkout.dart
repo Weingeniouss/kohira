@@ -19,6 +19,7 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/credentials/country.dart';
+import '../../../../controller/API/menu/account/profiledetails.dart';
 import '../../../../controller/user_inerface/menu/myCart/buynow.dart';
 import '../../../../modal/credentials/country.dart';
 import '../../../utils/app_String.dart';
@@ -39,40 +40,10 @@ class Checkout extends StatelessWidget {
   final cheackout = Get.put(Cheackout_Controller());
   final buynowUI = Get.put(BuynowController());
   final fech = Get.put(Fechaddresses());
-
+  final profile = Get.put(ProfiledetailsController());
   Checkout({super.key});
-
   @override
   Widget build(BuildContext context) {
-    void paymentprosess() async {
-      await processpayment.processpayment(
-        firstname: 'Khemesh',
-        lastname: 'Soni',
-        email: 'guestuser@gmail.com',
-        companyname: 'Gram',
-        address: '181',
-        city: 'Dfgxzfb',
-        state: '85',
-        state_name: 'hzsdgvihbjsfvbbsfb',
-        country: '+852',
-        countrycode: '+852',
-        zip: '123456',
-        mobileno: '1234567890',
-        samebilling: 'true',
-        totalamount: '3577852',
-        walletAmount: '0',
-        remainingAmount: '110259',
-      );
-
-      // Check response
-      if (processpayment.data != null) {
-        final int code = processpayment.data['code'];
-        final String? gatewayUrl = processpayment.data['gatewayUrl'];
-        final Uri url = Uri.parse(gatewayUrl!);
-        launchUrl(url, mode: LaunchMode.externalApplication);
-        }
-    }
-
     final TextEditingController searchController = TextEditingController();
     return WillPopScope(
       onWillPop: () async {
@@ -118,6 +89,7 @@ class Checkout extends StatelessWidget {
                 final fetch = myCart.fetchcart.data['carts'] ?? [];
                 if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
                 var remaining = wallet.data['myWalletAmount'] - myCart.subTotal.value;
+                var totalprice  = myCart.subTotal.value + myCart.fetchcart.data['global_tax']['globaltaxcharge'];
                 return SingleChildScrollView(
                   child: horizontalpadding(
                     child: Column(
@@ -506,7 +478,7 @@ class Checkout extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.totalprice),
-                                  Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  Text(indianFormat.format((totalprice)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                 ],
                               ),
                               Divider(color: AppColor.textfild_color),
@@ -556,7 +528,7 @@ class Checkout extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(AppString.remaining),
-                                      Text(indianFormat.format(remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                      Text(indianFormat.format((totalprice >= wallet.data['myWalletAmount']) ?  0 : remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                     ],
                                   ),
                                   Divider(color: AppColor.textfild_color),
@@ -586,7 +558,55 @@ class Checkout extends StatelessWidget {
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: paymentprosess,
+                                    onTap: (){
+                                      processpayment.processpayment(
+                                        firstname: profile.data['firstname'],
+                                        lastname: profile.data['lastname'],
+                                        email: profile.data['email'],
+                                        companyname: profile.data['companyname'],
+                                        address: '181',
+                                        city: 'Dfgxzfb',
+                                        state: '85',
+                                        state_name: 'hzsdgvihbjsfvbbsfb',
+                                        country: '+852',
+                                        countrycode: '+852',
+                                        zip: '123456',
+                                        mobileno: profile.data['walletAmount'],
+                                        samebilling: 'true',
+                                        totalamount: '3577852',
+                                        walletAmount: profile.data['walletAmount'],
+                                        remainingAmount: remaining,
+                                      );
+
+                                      print({
+                                        processpayment.processpayment(
+                                          firstname: profile.data['firstname'],
+                                          lastname: profile.data['lastname'],
+                                          email: profile.data['email'],
+                                          companyname: profile.data['companyname'],
+                                          address: '181',
+                                          city: 'Dfgxzfb',
+                                          state: '85',
+                                          state_name: 'hzsdgvihbjsfvbbsfb',
+                                          country: '+852',
+                                          countrycode: '+852',
+                                          zip: '123456',
+                                          mobileno: profile.data['walletAmount'],
+                                          samebilling: 'true',
+                                          totalamount: '3577852',
+                                          walletAmount: profile.data['walletAmount'],
+                                          remainingAmount: remaining,
+                                        ),
+                                      });
+
+                                      // Check response
+                                      if (processpayment.data != null) {
+                                        final int code = processpayment.data['code'];
+                                        final String? gatewayUrl = processpayment.data['gatewayUrl'];
+                                        final Uri url = Uri.parse(gatewayUrl!);
+                                        launchUrl(url, mode: LaunchMode.externalApplication);
+                                      }
+                                    },
                                     child: button(AppString.paynow),
                                   ),
                                 ],
@@ -594,7 +614,6 @@ class Checkout extends StatelessWidget {
                             );
                           },
                         ),
-
                         SizedBox(height: Get.height / 80),
                       ],
                     ),
