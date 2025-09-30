@@ -173,15 +173,8 @@ class _BuynowState extends State<Buynow> {
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                        indianFormat.format(
-                                            (fetchdata['discount'] > 0)
-                                                ? fetchdata['offer_price']
-                                                : fetchdata['setting_price']
-                                        ),
-                                        style: TextStyle(
-                                            color: AppColor.pink_color,
-                                            fontWeight: FontWeight.w600
-                                        ),
+                                        indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
+                                        style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600),
                                       ),
                                       SizedBox(height: 8),
 
@@ -196,17 +189,10 @@ class _BuynowState extends State<Buynow> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: AppColor.textfild_color,
-                                                borderRadius: BorderRadius.circular(
-                                                    Get.width / 50
-                                                ),
+                                                borderRadius: BorderRadius.circular(Get.width / 50),
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 3
-                                              ),
-                                              child: Text(
-                                                  '-',
-                                                  style: TextStyle(fontSize: Get.width / 20)
-                                              ),
+                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                              child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
                                             ),
                                           ),
                                           SizedBox(width: Get.width / 20),
@@ -216,9 +202,7 @@ class _BuynowState extends State<Buynow> {
                                                 if (index >= controller.itemCounts.length) {
                                                   return Text('0');
                                                 }
-                                                return Text(
-                                                    controller.itemCounts[index].toString()
-                                                );
+                                                return Text(controller.itemCounts[index].toString());
                                               }
                                           ),
                                           SizedBox(width: Get.width / 20),
@@ -229,17 +213,10 @@ class _BuynowState extends State<Buynow> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: AppColor.textfild_color,
-                                                borderRadius: BorderRadius.circular(
-                                                    Get.width / 50
-                                                ),
+                                                borderRadius: BorderRadius.circular(Get.width / 50),
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 3
-                                              ),
-                                              child: Text(
-                                                  '+',
-                                                  style: TextStyle(fontSize: Get.width / 20)
-                                              ),
+                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                              child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
                                             ),
                                           ),
                                         ],

@@ -125,7 +125,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
-import '../../../API/menu/myCart/countcart.dart';
 import '../../../API/menu/myCart/deletcart.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 
