@@ -140,11 +140,11 @@ class _ShowproductState extends State<Showproduct> {
         ),
         bottomNavigationBar: SafeArea(
           child: Obx(() {
-            if (jewellerydetail.isLoading.value) {
-              return SizedBox();
-            } else {
-              final jewellery = jewellerydetail.data['data'];
-              final allRingSizes = jewellery['allRingSize'] ?? [];
+            if (jewellerydetail.isLoading.value || jewellerydetail.data == null) {
+               return SizedBox();
+             } else {
+               final jewellery = jewellerydetail.data['data'] ?? {};
+               final allRingSizes = (jewellery['allRingSize'] as List?) ?? [];
 
               int selectedIndex = 0;
 
