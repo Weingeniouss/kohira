@@ -53,81 +53,88 @@ class _SignupState extends State<Signup> {
   }
 
   // Method to show reCAPTCHA
-  void _showRecaptchaVerification() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => Dialog(
-        backgroundColor: AppColor.white_color,
-        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Container(
-          height: Get.height * 0.6,
-          decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            children: [
-              // Optional Header
-              Container(
-                  padding: EdgeInsets.all(16),
-                  child: Expanded(
-                    child: RecaptchaWidget(
-                      siteKey: siteKey,
-                      baseUrl: baseUrl,
-                      onVerified: (String token) {
-                        if (kDebugMode) {
-                          print('✅ reCAPTCHA Token: $token');
-                        }
+void _showRecaptchaVerification() {
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) => Dialog(
+      backgroundColor: AppColor.white_color,
+      insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Container(
+        height: Get.height * 0.6,
+        decoration: BoxDecoration(
+          color: AppColor.white_color,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            // Optional header or spacing
+            SizedBox(height: 16),
+            // Expanded must be direct child of Column (a Flex)
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: RecaptchaWidget(
+                  siteKey: siteKey,
+                  baseUrl: baseUrl,
+                  onVerified: (String token) {
+                    if (kDebugMode) {
+                      print('✅ reCAPTCHA Token: $token');
+                    }
 
-                        Navigator.pop(context);
+                    Navigator.pop(context);
 
-                        setState(() {
-                          isCheck = true;
-                          recaptchaToken = token;
-                        });
+                    setState(() {
+                      isCheck = true;
+                      recaptchaToken = token;
+                    });
 
-                        Get.snackbar(
-                          'Success',
-                          'Verification completed!',
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          snackPosition: SnackPosition.BOTTOM,
-                          duration: Duration(seconds: 2),
-                          margin: EdgeInsets.all(10),
-                        );
-                      },
-                      onError: () {
-                        if (kDebugMode) {
-                          print('❌ reCAPTCHA Error');
-                        }
+                    // Get.snackbar(
+                    //   'Success',
+                    //   'Verification completed!',
+                    //   backgroundColor: Colors.green,
+                    //   colorText: Colors.white,
+                    //   snackPosition: SnackPosition.BOTTOM,
+                    //   duration: Duration(seconds: 2),
+                    //   margin: EdgeInsets.all(10),
+                    // );
+                    ToastificationSuccess.Success('Verification completed!');
+                  },
+                  onError: () {
+                    if (kDebugMode) {
+                      print('❌ reCAPTCHA Error');
+                    }
 
-                        Navigator.pop(context);
+                    Navigator.pop(context);
 
-                        setState(() {
-                          isCheck = false;
-                          recaptchaToken = null;
-                        });
+                    setState(() {
+                      isCheck = false;
+                      recaptchaToken = null;
+                    });
 
-                        Get.snackbar(
-                          'Error',
-                          'Verification failed. Please try again.',
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                          snackPosition: SnackPosition.BOTTOM,
-                          duration: Duration(seconds: 2),
-                          margin: EdgeInsets.all(10),
-                        );
-                      },
-                    ),
-                  )
+                    // Get.snackbar(
+                    //   'Error',
+                    //   'Verification failed. Please try again.',
+                    //   backgroundColor: Colors.red,
+                    //   colorText: Colors.white,
+                    //   snackPosition: SnackPosition.BOTTOM,
+                    //   duration: Duration(seconds: 2),
+                    //   margin: EdgeInsets.all(10),
+                    // );
+                    ToastificationError.Error('Verification failed. Please try again.');
+                  },
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    ).then((_) {
-      if (recaptchaToken == null) {
-        setState(() => isCheck = false);
-      }
-    });
+    ),
+  ).then((_) {
+    if (recaptchaToken == null) {
+      setState(() => isCheck = false);
+     }
+   });
   }
 
   @override

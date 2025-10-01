@@ -85,6 +85,7 @@ class AppString {
      static const Wallet = 'Wallet';
      static const HelpCenter = 'HelpCenter';
      static const PrivacyPolicy = 'PrivacyPolicy';
+     static const customJewellery = 'CustomJewellery';
      static const Logout = 'Logout';
 
     //Search

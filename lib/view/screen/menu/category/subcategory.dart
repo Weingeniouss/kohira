@@ -90,7 +90,7 @@ class _SubcategorysState extends State<Subcategorys> {
     // show.onInit();
     // show.loadData(subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString(), collection_id: widget.collection_id.toString(),metal_type: widget.metal_type,price_min: widget.price_min, price_max: widget.price_max);
     return Scaffold(
-      appBar: Appbar(lefticon: AppIcon.left,hedingname_2: currentSubcategoryName),
+      appBar: Appbar(lefticon: AppIcon.left,hedingname_2: currentSubcategoryName.toUpperCase()),
       bottomNavigationBar: SafeArea(
         child: Container(
           decoration: BoxDecoration(color: AppColor.white_color),

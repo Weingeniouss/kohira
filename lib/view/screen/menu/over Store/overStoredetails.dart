@@ -10,6 +10,7 @@ import 'package:kohira/controller/API/menu/overstore/overstoredetails.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
+import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
@@ -74,22 +75,27 @@ class _OverstoredetailsScreenState extends State<OverstoredetailsScreen> {
   }
 
   // Method to show reCAPTCHA
-  void _showRecaptchaVerification() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => Dialog(
-        backgroundColor: AppColor.white_color,
-        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Container(
-          height: Get.height * 0.6,
-          decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            children: [
-              // Optional Header
-              Container(
+void _showRecaptchaVerification() {
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) => Dialog(
+      backgroundColor: AppColor.white_color,
+      insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Container(
+        height: Get.height * 0.6,
+        decoration: BoxDecoration(
+          color: AppColor.white_color,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            // Optional header or spacing
+            SizedBox(height: 16),
+            // Expanded must be direct child of Column (a Flex)
+            Expanded(
+              child: Padding(
                 padding: EdgeInsets.all(16),
-                child: Expanded(
                 child: RecaptchaWidget(
                   siteKey: siteKey,
                   baseUrl: baseUrl,
@@ -105,15 +111,16 @@ class _OverstoredetailsScreenState extends State<OverstoredetailsScreen> {
                       recaptchaToken = token;
                     });
 
-                    Get.snackbar(
-                      'Success',
-                      'Verification completed!',
-                      backgroundColor: Colors.green,
-                      colorText: Colors.white,
-                      snackPosition: SnackPosition.BOTTOM,
-                      duration: Duration(seconds: 2),
-                      margin: EdgeInsets.all(10),
-                    );
+                    // Get.snackbar(
+                    //   'Success',
+                    //   'Verification completed!',
+                    //   backgroundColor: Colors.green,
+                    //   colorText: Colors.white,
+                    //   snackPosition: SnackPosition.BOTTOM,
+                    //   duration: Duration(seconds: 2),
+                    //   margin: EdgeInsets.all(10),
+                    // );
+                    ToastificationSuccess.Success('Verification completed!');
                   },
                   onError: () {
                     if (kDebugMode) {
@@ -127,27 +134,29 @@ class _OverstoredetailsScreenState extends State<OverstoredetailsScreen> {
                       recaptchaToken = null;
                     });
 
-                    Get.snackbar(
-                      'Error', 'Verification failed. Please try again.',
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white,
-                      snackPosition: SnackPosition.BOTTOM,
-                      duration: Duration(seconds: 2),
-                      margin: EdgeInsets.all(10),
-                    );
+                    // Get.snackbar(
+                    //   'Error',
+                    //   'Verification failed. Please try again.',
+                    //   backgroundColor: Colors.red,
+                    //   colorText: Colors.white,
+                    //   snackPosition: SnackPosition.BOTTOM,
+                    //   duration: Duration(seconds: 2),
+                    //   margin: EdgeInsets.all(10),
+                    // );
+                    ToastificationError.Error('Verification failed. Please try again.');
                   },
                 ),
-              )
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    ).then((_) {
-      if (recaptchaToken == null) {
-        setState(() => isCheck = false);
-      }
-    });
+    ),
+  ).then((_) {
+    if (recaptchaToken == null) {
+      setState(() => isCheck = false);
+     }
+   });
   }
 
   @override

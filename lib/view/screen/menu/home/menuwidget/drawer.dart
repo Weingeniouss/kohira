@@ -18,6 +18,7 @@ import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
+import 'package:kohira/view/screen/menu/home/menuwidget/customjewellery.dart';
 import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -683,6 +684,10 @@ class _DrawersState extends State<Drawers> {
                             Get.to(() => Privacy(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
                             },
                         ),
+
+                        drawerIcon(icon: AppIcon.PrivacyPolicy, text: AppString.customJewellery, onTap: () {  
+                          Get.to(() => CustomJewellery(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                        }),
 
                         //Logout
                         drawerIcon(icon: AppIcon.Logout, text: AppString.Logout, onTap: () => logoutUser()),
