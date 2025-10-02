@@ -1,3 +1,5 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_color.dart';

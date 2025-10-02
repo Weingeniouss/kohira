@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_import
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_import, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';

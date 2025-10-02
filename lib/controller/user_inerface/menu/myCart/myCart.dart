@@ -1,5 +1,5 @@
 
-// ignore_for_file: file_names, prefer_const_constructors
+// ignore_for_file: file_names, prefer_const_constructors, strict_top_level_inference
 
 // class MyCartValueChange extends GetxController {
 //   var hasDialogShownOnce = false.obs;

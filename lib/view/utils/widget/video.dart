@@ -365,9 +365,7 @@ class _VideoPlayerMenuSecondState extends State<VideoPlayerMenuSecond> {
 
                         Expanded(
                           child: Slider(
-                            value: _videoDuration.inSeconds > 0
-                                ? _currentPosition.inSeconds / _videoDuration.inSeconds
-                                : 0,
+                            value: _videoDuration.inSeconds > 0 ? _currentPosition.inSeconds / _videoDuration.inSeconds : 0,
                             onChanged: _seekToPosition,
                             min: 0.0,
                             max: 1.0,

@@ -1,5 +1,5 @@
 
-// ignore_for_file: prefer_const_constructors, unnecessary_import
+// ignore_for_file: prefer_const_constructors, unnecessary_import, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

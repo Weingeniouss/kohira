@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, camel_case_types
+// ignore_for_file: file_names, camel_case_types, strict_top_level_inference
 
 import 'dart:async';
 import 'package:get/get.dart';

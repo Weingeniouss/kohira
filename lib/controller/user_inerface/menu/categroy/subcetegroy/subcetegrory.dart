@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

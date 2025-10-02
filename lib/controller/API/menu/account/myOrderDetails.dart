@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_local_variable, file_names, invalid_use_of_protected_member
+// ignore_for_file: avoid_print, unused_local_variable, file_names, invalid_use_of_protected_member, strict_top_level_inference
 
 import 'dart:convert';
 import 'dart:developer';

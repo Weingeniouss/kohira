@@ -16,6 +16,7 @@ import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
+import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/credentials/country.dart';
@@ -559,48 +560,26 @@ class Checkout extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      profile.profiledetailscall();
                                         try {
                                           // await the API call
                                           await processpayment.processpayment(
-                                              firstname: profile.data['firstname'],
-                                              lastname: profile.data['lastname'],
-                                              email: profile.data['email'],
-                                              companyname: profile.data['companyname'],
-                                              address: '181',
-                                              city: 'Dfgxzfb',
-                                              state: '85',
-                                              state_name: 'hzsdgvihbjsfvbbsfb',
-                                              country: '+852',
-                                              countrycode: '+852',
-                                              zip: '123456',
-                                              mobileno: profile.data['walletAmount'],
-                                              samebilling: 'true',
-                                              totalamount: '3577852',
-                                              walletAmount: profile.data['walletAmount'],
-                                              remainingAmount: remaining.toString(),
-                                            );
-                                      
-                                            print({
-                                              processpayment.processpayment(
-                                              firstname: profile.data['firstname'],
-                                              lastname: profile.data['lastname'],
-                                              email: profile.data['email'],
-                                              companyname: profile.data['companyname'],
-                                              address: '181',
-                                              city: 'Dfgxzfb',
-                                              state: '85',
-                                              state_name: 'hzsdgvihbjsfvbbsfb',
-                                              country: '+852',
-                                              countrycode: '+852',
-                                              zip: '123456',
-                                              mobileno: profile.data['walletAmount'],
-                                              samebilling: 'true',
-                                              totalamount: '3577852',
-                                              walletAmount: profile.data['walletAmount'],
-                                              remainingAmount: remaining.toString(),
-                                            ),
-                                        });
+                                            firstname: profile.data['firstname'],
+                                            lastname: profile.data['lastname'],
+                                            email: profile.data['email'],
+                                            companyname: profile.data['companyname'],
+                                            address: '181',
+                                            city: 'Dfgxzfb',
+                                            state: '85',
+                                            state_name: 'hzsdgvihbjsfvbbsfb',
+                                            country: '+852',
+                                            countrycode: '+852',
+                                            zip: '123456',
+                                            mobileno: profile.data['walletAmount'],
+                                            samebilling: 'true',
+                                            totalamount: '3577852',
+                                            walletAmount: profile.data['walletAmount'],
+                                            remainingAmount: remaining.toString(),
+                                          );
 
                                         // ensure data exists
                                         if (processpayment.data != null) {
@@ -617,17 +596,17 @@ class Checkout extends StatelessWidget {
                                             if (url != null) {
                                               await launchUrl(url, mode: LaunchMode.externalApplication);
                                             } else {
-                                              Get.snackbar('Error', 'Invalid payment URL', backgroundColor: Colors.red, colorText: Colors.white);
+                                              ToastificationError.Error('Invalid payment URL');
                                             }
                                           } else {
-                                            Get.snackbar('Error', 'Payment gateway URL not provided', backgroundColor: Colors.red, colorText: Colors.white);
+                                            ToastificationError.Error('Payment gateway URL not provided');
                                           }
                                         } else {
-                                          Get.snackbar('Error', 'Payment failed: no response', backgroundColor: Colors.red, colorText: Colors.white);
+                                          ToastificationError.Error('Payment failed: no response');
                                         }
                                       } catch (e, st) {
                                         if (kDebugMode) print('Payment error: $e\n$st');
-                                        Get.snackbar('Error', 'Payment failed. Try again.', backgroundColor: Colors.red, colorText: Colors.white);
+                                        ToastificationError.Error('Payment failed. Try again.');
                                       }
                                     },
                                     child: button(AppString.paynow),
