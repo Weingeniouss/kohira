@@ -685,8 +685,20 @@ class _DrawersState extends State<Drawers> {
                             },
                         ),
 
-                        drawerIcon(icon: AppIcon.PrivacyPolicy, text: AppString.customJewellery, onTap: () {  
-                          Get.to(() => CustomJewellery(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
+                        drawerIcon(
+                          icon: AppIcon.PrivacyPolicy,
+                           text: AppString.customJewellery,
+                            onTap: () {  
+                            setState(() {
+                              drawer.allJewellery.value = false;
+                              drawer.metaltype.value = false;
+                              drawer.price.value = false;
+                              drawer.collection.value = false;
+                              for (var item in filteredCategories) {
+                                item.isExpanded = false;
+                              }
+                            });
+                            Get.to(() => CustomJewellery(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
                         }),
 
                         //Logout

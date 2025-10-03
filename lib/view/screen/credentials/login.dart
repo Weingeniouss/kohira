@@ -25,9 +25,7 @@ import '../../utils/widget/title_text.dart';
 class Login extends StatelessWidget {
   LoginController validation = Get.put(LoginController()); //UserInterface
   LoginCalling login = Get.put(LoginCalling());  //API Callling
-
   Login({super.key});
-
   @override
   Widget build(BuildContext context) {
     ever(login.isLoading, (isLoading) {
@@ -39,7 +37,6 @@ class Login extends StatelessWidget {
         }
       });
     });
-
     return Obx(() {
       void logins() {
         hasInternetConnection().then((connected) {
@@ -126,13 +123,16 @@ class Login extends StatelessWidget {
                           ),
                           SizedBox(height: Get.height / 30),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              company_button(AppString.google, AppIcon.google),
-                              company_button(AppString.facebook, AppIcon.facebook),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     company_button(AppString.google, AppIcon.google),
+                          //     company_button(AppString.facebook, AppIcon.facebook),
+                          //   ],
+                          // ),
+
+                          SizedBox(height: Get.height / 50),
+                          Text('Continue without Logout', style: TextStyle(color: AppColor.pink_color, fontSize: Get.width * 0.040,fontWeight: FontWeight.w500), textAlign: TextAlign.center),
                         ],
                       ),
                     ),
@@ -172,7 +172,7 @@ class Login extends StatelessWidget {
             ),
           ),
         ),
-        );
+      );
     });
   }
 }
