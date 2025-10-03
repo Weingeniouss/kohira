@@ -16,6 +16,7 @@ import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
+import 'package:kohira/view/screen/credentials/login.dart';
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/customjewellery.dart';
@@ -29,6 +30,7 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../../controller/API/menu/others/drawer/Jewellery_list.dart';
 import '../../../../../controller/API/menu/others/drawer/collection.dart';
+import '../../../../utils/app_constants.dart';
 import '../../account/addresses/addresses.dart';
 import '../../account/order history/orderhistory.dart';
 import '../../account/privacy policy/privacy.dart';
@@ -702,7 +704,9 @@ class _DrawersState extends State<Drawers> {
                         }),
 
                         //Logout
-                        drawerIcon(icon: AppIcon.Logout, text: AppString.Logout, onTap: () => logoutUser()),
+                        (tokans?.isEmpty ?? true)
+                             ? drawerIcon(icon: AppIcon.Logout, text: AppString.Login, onTap: () => Get.off(() => Login()))
+                             : drawerIcon(icon: AppIcon.Logout, text: AppString.Logout, onTap: () => logoutUser()),
                         SizedBox(height: Get.height * 0.030),
                       ],
                     );

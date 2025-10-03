@@ -30,7 +30,7 @@ class FetchcartCalling extends GetxController {
         throw {
           'Fetchcart data Error This :- ${responses.statusCode}, ${responses.body}',
           print('CountCart data this :- ${responses.statusCode}, ${responses.body}'),
-          handleHttpError(responses.statusCode),
+          // handleHttpError(responses.statusCode),
         };
       }
     } catch (e) {

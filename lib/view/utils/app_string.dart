@@ -47,6 +47,7 @@ class AppString {
   static const hintpassword = 'Enter Your Password';
   static const forgetPassword = 'Forget Password?';
   static const donthaveanaccount = "Don't have an account?";
+  static const continues = "Continue without Logout, Guest user";
 
   //Sign up
   static const singupHading = 'Your privacy is important to us. By Clicking “CreateAccount”, you agree to our Terms and Privacy Policy';
@@ -87,6 +88,7 @@ class AppString {
      static const PrivacyPolicy = 'PrivacyPolicy';
      static const customJewellery = 'CustomJewellery';
      static const Logout = 'Logout';
+     static const Login = 'Login';
 
     //Search
     static const Searchs = 'Search';

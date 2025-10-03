@@ -93,7 +93,7 @@ class FetchWishtlist extends GetxController{
       }else{
         throw{
           'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
-          handleHttpError(responce.statusCode),
+          // handleHttpError(responce.statusCode),
         };
       }
     }catch(e){

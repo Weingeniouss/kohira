@@ -10,6 +10,7 @@ import 'package:kohira/view/screen/credentials/signup.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_string.dart';
+import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import '../../utils/app_json.dart';
 import '../../utils/widget/app_size_text.dart';
@@ -23,8 +24,8 @@ import '../../utils/widget/set_logo.dart';
 import '../../utils/widget/title_text.dart';
 
 class Login extends StatelessWidget {
-  LoginController validation = Get.put(LoginController()); //UserInterface
-  LoginCalling login = Get.put(LoginCalling());  //API Callling
+  LoginController validation = Get.put(LoginController());
+  LoginCalling login = Get.put(LoginCalling());
   Login({super.key});
   @override
   Widget build(BuildContext context) {
@@ -132,7 +133,10 @@ class Login extends StatelessWidget {
                           // ),
 
                           SizedBox(height: Get.height / 50),
-                          Text('Continue without Logout', style: TextStyle(color: AppColor.pink_color, fontSize: Get.width * 0.040,fontWeight: FontWeight.w500), textAlign: TextAlign.center),
+                          GestureDetector(
+                            onTap: () => Get.off(() => Bottom()),
+                            child: Text(AppString.continues, style: TextStyle(color: AppColor.pink_color, fontSize: Get.width * 0.040,fontWeight: FontWeight.w500), textAlign: TextAlign.center),
+                          ),
                         ],
                       ),
                     ),

@@ -127,10 +127,12 @@ class Subcategrory extends GetxController {
         }
         log('Subcategrory Response: $jsonData');
       } else {
-        ToastificationError.Error('Subcategrory Error: ${response.statusCode}, ${response.body}');
+        // ToastificationError.Error('Subcategrory Error: ${response.statusCode}, ${response.body}');
+        print('Subcategrory Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
-      ToastificationError.Error('Subcategrory Exception: $e');
+      // ToastificationError.Error('Subcategrory Exception: $e');
+      print('Subcategrory Exception: $e');
     } finally {
       isLoading.value = false;
     }

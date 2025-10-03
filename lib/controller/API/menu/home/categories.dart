@@ -27,8 +27,10 @@ class CategoriesCalling extends GetxController {
        print('JSON format: ${data.map((e) => e.toJson()).toList()}');
 
         // ToastificationSuccess.Success("'Success', ${categories.message}");
+        print("'Success', ${categories.message}");
       } else {
-        ToastificationError.Error("'Error', ${categories?.message}");
+        // ToastificationError.Error("'Error', ${categories?.message}");
+        print("'Error', ${categories?.message}");
       }
     } catch (e) {
       print('Something When Wrong :- $e');

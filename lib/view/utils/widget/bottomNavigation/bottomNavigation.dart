@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kohira/controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
@@ -99,15 +100,22 @@ class Bottom extends StatelessWidget {
               ),
 
               //Account
-              InkWell(
-                onTap: bottamSelect.indexFive,
-                child: bottamIcon(
-                  context: context,
-                  icon: AppIcon.account,
-                  name: AppString.account,
-                  onTap: bottamSelect.indexFive,
-                  condition: bottamSelect.selectindex.value == 4,
-                ),
+              (tokans?.isEmpty ?? true)
+                  ? bottamIcon(
+                    context: context,
+                    icon: AppIcon.account,
+                    name: AppString.account,
+                    color : AppColor.textfild_color,
+                  )
+                  : InkWell(
+                    onTap: bottamSelect.indexFive,
+                    child: bottamIcon(
+                      context: context,
+                      icon: AppIcon.account,
+                      name: AppString.account,
+                      onTap: bottamSelect.indexFive,
+                      condition: bottamSelect.selectindex.value == 4,
+                  ),
               ),
             ],
           ),
@@ -123,6 +131,7 @@ Widget bottamIcon({
   required String icon,
   required String name,
   bool condition = false,
+  Color? color,
   context
 }) {
   return Container(
@@ -133,7 +142,7 @@ Widget bottamIcon({
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(icon, color: condition ? AppColor.pink_color : AppColor.bottomColor,
+          SvgPicture.asset(icon, color:  condition ? color ?? AppColor.pink_color : color ??  AppColor.bottomColor,
             width: MediaQuery.of(context).size.width * 0.058,
             height: MediaQuery.of(context).size.width * 0.058,
           ),
@@ -141,7 +150,7 @@ Widget bottamIcon({
           Text(
             textAlign: TextAlign.center,
             name,style: TextStyle(
-            color: condition ? AppColor.pink_color : AppColor.bottomColor,
+            color: condition ? color ?? AppColor.pink_color : color ?? AppColor.bottomColor,
             fontWeight: condition ? FontWeight.w600 : FontWeight.w500,
             fontSize: MediaQuery.of(context).size.width * 0.03,
            ),

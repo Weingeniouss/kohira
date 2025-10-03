@@ -21,8 +21,10 @@ class SliderCalling extends GetxController {
         print('mainSliderDetail :- ${data.value}');
 
         // ToastificationSuccess.Success("'Success', ${slider.message}");
+        print("'Success', ${slider.message}");
       } else {
-        ToastificationError.Error("'Error', ${slider?.message}");
+        // ToastificationError.Error("'Error', ${slider?.message}");
+        print("'Error', ${slider?.message}");
       }
     } catch (e) {
       print('Something When Wrong :- $e');

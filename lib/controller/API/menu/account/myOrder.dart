@@ -26,7 +26,7 @@ class MyOrderController extends GetxController {
         log("myOrder Details :- ${data.value}");
       } else {
         'myOrder Details Error This :- ${responce.statusCode}, ${responce.body}';
-        handleHttpError(responce.statusCode);
+        // handleHttpError(responce.statusCode);
       }
     } catch (e) {
       print("myOrder Details Error This :- $e");

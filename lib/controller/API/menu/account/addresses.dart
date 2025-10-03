@@ -28,7 +28,7 @@ class Fechaddresses extends GetxController{
       }else{
         throw{
           'Addresses Error this :-  ${responce.statusCode}, ${responce.body}',
-          handleHttpError(responce.statusCode),
+          // handleHttpError(responce.statusCode),
         };
       }
     }catch(e){

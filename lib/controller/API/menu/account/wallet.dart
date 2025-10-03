@@ -26,7 +26,7 @@ class WalletController extends GetxController {
         log("Wallet :- ${data.value}");
       } else {
         'Wallet Error this :- ${responce.statusCode}, ${responce.body}';
-        handleHttpError(responce.statusCode);
+        // handleHttpError(responce.statusCode);
       }
     } catch (e) {
       print("'Wallet Error this :- $e");

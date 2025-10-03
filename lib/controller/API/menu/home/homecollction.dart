@@ -30,12 +30,12 @@ class Homecollction extends GetxController {
         throw {
           'homecollction data Error :- ${response.body}, ${response.statusCode}',
           print('homecollction data Error :- ${response.statusCode}'),
-          handleHttpError(response.statusCode)
+          // handleHttpError(response.statusCode)
         };
       }
     } catch (e) {
       print('homecollction data Error :-  $e');
-      ToastificationError.Error('homecollction data Error :- $e');
+      // ToastificationError.Error('homecollction data Error :- $e');
     } finally {
       isLoading.value = false;
     }

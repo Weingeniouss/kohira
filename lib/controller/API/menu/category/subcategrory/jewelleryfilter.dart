@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import '../../../../../modal/menu/category/subcategory/jewelleryfilter.dart';
@@ -22,10 +24,12 @@ class Jewelleryfilter extends GetxController {
       if (result != null) {
         data.value = result;
       } else {
-        ToastificationError.Error('Failed to fetch jewellery filter data');
+        // ToastificationError.Error('Failed to fetch jewellery filter data');
+        print('Failed to fetch jewellery filter data');
       }
     } catch (e) {
-      ToastificationError.Error('Something went wrong: $e');
+      // ToastificationError.Error('Something went wrong: $e');
+      print('Something went wrong: $e');
     } finally {
       isLoading.value = false;
     }
