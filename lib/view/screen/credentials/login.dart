@@ -15,7 +15,6 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import '../../utils/app_json.dart';
 import '../../utils/widget/app_size_text.dart';
 import '../../utils/widget/button.dart';
-import '../../utils/widget/company_button.dart';
 import '../../utils/widget/connction.dart';
 import '../../utils/widget/inputField.dart';
 import '../../utils/widget/lodingstate.dart';
@@ -92,8 +91,19 @@ class Login extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
-                          inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value,isVis: true),
+                          inputField(
+                            hintText: AppString.hintemail,
+                            icon: AppIcon.mail,
+                            controller: validation.email_controller,
+                            empty: validation.email_type.value,
+                          ),
+                          inputField(
+                            hintText: AppString.hintpassword,
+                            icon: AppIcon.password,
+                            controller: validation.password_controller,
+                            empty: validation.password_type.value,
+                            isVis: true,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -135,7 +145,15 @@ class Login extends StatelessWidget {
                           SizedBox(height: Get.height / 50),
                           GestureDetector(
                             onTap: () => Get.off(() => Bottom()),
-                            child: Text(AppString.continues, style: TextStyle(color: AppColor.pink_color, fontSize: Get.width * 0.040,fontWeight: FontWeight.w500), textAlign: TextAlign.center),
+                            child: Text(
+                              AppString.continues,
+                              style: TextStyle(
+                                color: AppColor.pink_color,
+                                fontSize: Get.width * 0.040,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ],
                       ),

@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/errorcode.dart';
 
 class MyOrderController extends GetxController {
   var isLoading = false.obs;

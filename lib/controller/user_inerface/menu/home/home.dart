@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:kohira/controller/API/menu/account/profiledetails.dart';
+import 'package:kohira/controller/API/menu/home/drawar/customJewellery/customorder.dart';
 import 'package:kohira/controller/API/menu/others/drawer/collection.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 
@@ -54,6 +55,9 @@ class HomeController extends GetxController {
   final category = Get.put(JewelleryFilterCategory());
   final jewelleryfilter = Get.put(JewelleryList());
 
+    //Custom Jewellery Api
+      final customorder = Get.put(Customorder());
+
   //OverStore
   final store =  Get.put(Overstore_Controller());
   final citylist =  Get.put(Citylist());
@@ -83,6 +87,9 @@ class HomeController extends GetxController {
     category.fetchFilter();
     jewelleryfilter.jewellerylist();
     count.counting();
+
+     //Custom Jewellery Api
+       customorder.fetchCustomorder();
 
     //Wishlist
     wish.onInit();

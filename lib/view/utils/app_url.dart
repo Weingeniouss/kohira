@@ -39,6 +39,9 @@ class AppUrl {
       static const collection = '$baseurl/collections';
       static const jewellery_filter = '$baseurl/Jewellery-filter';
 
+          //Custom Jewellery
+          static const customorder = '$baseurl/category-customorder';
+
       //Categorie
       static const recommendedJewelleryList ='$baseurl/recommendedJewelleryList';
       static const wishlist = '$baseurl/wishlist';

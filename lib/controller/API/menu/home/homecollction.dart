@@ -5,9 +5,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/widget/pop.dart';
 
-import '../../../../view/utils/errorcode.dart';
 
 class Homecollction extends GetxController {
   var isLoading = false.obs;

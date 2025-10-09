@@ -3,7 +3,6 @@
 import 'package:get/get.dart';
 import 'package:kohira/controller/service/menu/home/categories.dart';
 import '../../../../modal/menu/home/categories.dart';
-import '../../../../view/utils/widget/pop.dart';
 
 class CategoriesCalling extends GetxController {
   var isLoading = false.obs;

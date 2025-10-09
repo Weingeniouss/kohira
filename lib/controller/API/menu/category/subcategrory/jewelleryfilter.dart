@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/widget/pop.dart';
 import '../../../../../modal/menu/category/subcategory/jewelleryfilter.dart';
 import '../../../../service/menu/category/subcategory/jewelleryfilter.dart';
 

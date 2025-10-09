@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/service/menu/home/slider.dart';
 
 import '../../../../modal/menu/home/slider.dart';
-import '../../../../view/utils/widget/pop.dart';
 
 class SliderCalling extends GetxController {
   var isLoading = false.obs;
