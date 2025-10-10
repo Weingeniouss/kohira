@@ -15,6 +15,7 @@ import '../../../API/menu/category/subcategrory/filtercategory.dart';
 import '../../../API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../API/menu/category/subcategrory/subCategrory.dart';
 import '../../../API/menu/home/categories.dart';
+import '../../../API/menu/home/drawar/customJewellery/clarity.dart';
 import '../../../API/menu/home/homecollction.dart';
 import '../../../API/menu/home/homejewelry.dart';
 import '../../../API/menu/home/slider.dart';
@@ -57,6 +58,7 @@ class HomeController extends GetxController {
 
     //Custom Jewellery Api
       final customorder = Get.put(Customorder());
+      final clarity = Get.put(Clarity());
 
   //OverStore
   final store =  Get.put(Overstore_Controller());
@@ -90,6 +92,7 @@ class HomeController extends GetxController {
 
      //Custom Jewellery Api
        customorder.fetchCustomorder();
+       clarity.clarity();
 
     //Wishlist
     wish.onInit();

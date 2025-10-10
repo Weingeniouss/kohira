@@ -11,23 +11,25 @@ import 'package:kohira/view/utils/app_icon.dart';
 
 Widget dropDown<T>({
   required TextEditingController searchController,
-  required customorder,
-  required Rxn<T> value,
+  Rxn<T>? value, // Make it optional
   required List<T> items,
   required String Function(T item) displayText,
   required String hintText,
-  String? icons
-}) {
+  Color? color,
+  String? icons,
+  void Function(T?)? onChanged,
+})
+{
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 8),
-    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
+    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: color ?? AppColor.textfild_color))),
     child: Row(
       children: [
-        SizedBox(width: Get.width / 60),
-        SvgPicture.asset(icons ?? AppIcon.earth, width: 25, height: 25, color: AppColor.pink_color),
-        SizedBox(width: Get.width / 50),
+        SizedBox(width: Get.width / 200),
+        SvgPicture.asset(icons ?? AppIcon.earth, width: 28, height: 28, color: color ?? AppColor.pink_color),
         Expanded(
           child: DropdownButton2<T>(
+            style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 28),
             iconStyleData: IconStyleData(
               icon: Icon(Icons.keyboard_arrow_down),
               iconSize: 20,
@@ -35,27 +37,21 @@ Widget dropDown<T>({
               iconDisabledColor: AppColor.grey_color,
               openMenuIcon: Icon(Icons.keyboard_arrow_up),
             ),
-            value: value.value,
+            value: value?.value, // Safe access
             dropdownSearchData: DropdownSearchData(
               searchController: searchController,
               searchInnerWidgetHeight: 40,
               searchInnerWidget: Padding(
                 padding: EdgeInsets.all(8),
-                child: TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+                child: TextField(controller: searchController, decoration: InputDecoration(hintText: 'Search...', border: OutlineInputBorder())),
               ),
               searchMatchFn: (item, searchValue) => displayText(item.value!).toLowerCase().contains(searchValue.toLowerCase()),
             ),
             underline: SizedBox(),
-            hint: Text(hintText, style: TextStyle(fontSize: Get.width / 28)),
+            hint: Text(hintText, style: TextStyle(fontSize: Get.width / 27,color: AppColor.black_color,fontWeight: FontWeight.w400)),
             isExpanded: true,
             items: items.map((item) => DropdownMenuItem<T>(value: item, child: Text(displayText(item)))).toList(),
-            onChanged: (T? newValue) => value.value = newValue,
+            onChanged: onChanged ?? (T? newValue) => value?.value = newValue,
             dropdownStyleData: DropdownStyleData(
               offset: Offset(0, -10),
               maxHeight: Get.height / 3,

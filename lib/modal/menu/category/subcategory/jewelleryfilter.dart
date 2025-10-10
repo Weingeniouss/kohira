@@ -20,6 +20,7 @@ class JewelleryFilterModel {
 
 class Data {
   final List<BraceletSize> shape;
+  final List<BraceletSize> color;
   final List<BraceletSize> settingType;
   final List<BraceletSize> ringSize;
   final List<BraceletSize> braceletSize;
@@ -30,6 +31,7 @@ class Data {
 
   Data({
     required this.shape,
+    required this.color,
     required this.settingType,
     required this.ringSize,
     required this.braceletSize,
@@ -50,6 +52,7 @@ class Data {
 
     return Data(
       shape: parseList('Shape'),
+      color: parseList('Color'),
       settingType: parseList('Setting_Type'),
       ringSize: parseList('RingSize'),
       braceletSize: parseList('BraceletSize'),

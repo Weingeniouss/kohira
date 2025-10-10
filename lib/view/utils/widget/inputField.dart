@@ -19,6 +19,7 @@ Widget inputField({
   TextEditingController? controller,
   bool empty = false,
   bool isVis = false,
+  bool? readOnly
 })
 {
   return StatefulBuilder(
@@ -31,6 +32,8 @@ Widget inputField({
               return StatefulBuilder(
                 builder: (context, setState) {
                   return TextField(
+                    readOnly: readOnly ?? false,
+                    style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 28),
                     keyboardType: textInputType,
                     maxLength: maxLength,
                     controller: controller,
@@ -39,11 +42,13 @@ Widget inputField({
                       counterText: "",
                       prefixIcon: icon != null ? Padding(
                         padding: EdgeInsets.all(10),
-                        child: SvgPicture.asset(
-                          icon, fit: BoxFit.cover,
-                          color: iconcolor,
-                          width: iconwidth,
-                          height: iconheight,
+                        child: SizedBox(
+                          child: SvgPicture.asset(
+                            icon, fit: BoxFit.cover,
+                            color: iconcolor,
+                            width: iconwidth,
+                            height: iconheight,
+                          ),
                         ),
                       ) : null,
                       suffixIcon: suffixIcon ?? (isVis ? GestureDetector(
@@ -75,7 +80,7 @@ Widget inputField({
               );
             },
           ),
-          SizedBox(height: Get.height / 50),
+          SizedBox(height: Get.height / 100),
         ],
       );
     },
