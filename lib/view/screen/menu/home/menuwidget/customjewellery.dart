@@ -98,6 +98,7 @@ import 'package:kohira/controller/API/menu/home/drawar/customJewellery/clarity.d
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/customorder.dart';
 import 'package:kohira/controller/API/menu/others/drawer/Jewellery_list.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/subcetegroy/filter.dart';
+import 'package:kohira/modal/menu/category/subcategory/jewelleryfilter.dart';
 import 'package:kohira/modal/menu/home/drawar/customJewellery/category_customorder.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/dropdown.dart';
@@ -126,6 +127,9 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   var selectedSubcategory = Rxn<Category_Subcategory>();
   var selectedMetalType = Rxn<MetalType>();
   var selectedMetalStamp = Rxn<MetalStamp>();
+  var selectedShape = Rxn<BraceletSize>();
+  var selectcolor =  Rxn<BraceletSize>();
+  final selectedClarity = Rxn<ClarityItem>();
 
   final TextEditingController searchController = TextEditingController();
   final TextEditingController subcategorySearchController = TextEditingController();
@@ -187,6 +191,86 @@ class _CustomJewelleryState extends State<CustomJewellery> {
       isCheck_side_stone = val;
     });
   }
+
+void side_Stone_bottambar() {
+  isCheck_side_stone = true;
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    builder: (BuildContext context) {
+      return Obx(() {
+        final filter = jewellery.data.value?.data;
+
+        return Container(
+          height: Get.height * 0.7,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Select Shape',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+
+              // Dropdown for shapes
+               dropDown<BraceletSize>(
+                searchController: searchController,
+                value: selectedShape,
+                items: filter?.shape ?? [],
+                displayText: (item) => item?.name ?? 'Select Shape',
+                hintText: 'Choose Shape',
+                onChanged: (BraceletSize? selectedItem) {
+                  if (selectedItem != null) {
+                    setState(() {
+                      selectedShape.value = selectedItem;
+                      filtertab.setDiamondType(selectedItem.slug);
+                    });
+                  }
+                },
+              ),
+
+              SizedBox(height: Get.height / 60),
+
+              dropDown<BraceletSize>(
+                searchController: searchController,
+                value: selectcolor,
+                items: filter?.color ?? [],
+                displayText: (item) => item?.name ?? 'Select Color',
+                hintText: 'Choose Color',
+                onChanged: (BraceletSize? selectedItem) {
+                  if (selectedItem != null) {
+                    setState(() {
+                      selectcolor.value = selectedItem;
+                      filtertab.setColoeType(selectedItem.slug);
+                    });
+                  }
+                },
+              ),
+
+              SizedBox(height: Get.height / 60),
+
+              dropDown<ClarityItem>(
+                searchController: searchController,
+                value: selectedClarity,
+                items: clarity.clarityData,
+                displayText: (item) => item?.name ?? 'Select Clarity',
+                hintText: 'Choose Clarity',
+                onChanged: (ClarityItem? selectedItem) {
+                  if (selectedItem != null) {
+                    setState(() {
+                      selectedClarity.value = selectedItem;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      });
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -343,6 +427,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                     ),
                     SizedBox(height: Get.height / 80),
 
+                    //isCheck_center == True after Center Stone = true then ....
                     Visibility(
                       visible: isCheck_center,
                       child: Container(
@@ -490,10 +575,11 @@ class _CustomJewelleryState extends State<CustomJewellery> {
 
                             SizedBox(height: Get.height / 50),
 
+                            //Select Stamp
                             dropDown<Map<String, dynamic>>(
                               color: AppColor.grey_color,
                               searchController: selectedmetalValueController,
-                              value: selectedMetalStampValue, // Use .value to get the actual Map
+                              value: selectedMetalStampValue,
                               items: stampvalue,
                               displayText: (stamp) => "${stamp['name']}",
                               hintText: 'Select Stamp',
@@ -501,9 +587,12 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                             ),
 
                             SizedBox(height: Get.height / 200),
-                            
+
+                            //Min Value and max value
                             Row(
                               children: [
+
+                                //Min Value
                                 Expanded(
                                   child: inputField(
                                     readOnly: true,
@@ -520,6 +609,8 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                                 SizedBox(width: Get.width / 20),
                                 
                                 Expanded(
+
+                                  //max value
                                   child: inputField(
                                     readOnly: true,
                                     controller: maxValueController,
@@ -547,7 +638,10 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                           scale: 1.2,
                           child: Checkbox(
                             value: isCheck_side_stone,
-                            onChanged: (val) => side_stone(val),
+                            onChanged: (val) {
+                              side_stone(val);
+                              (isCheck_side_stone == true) ? side_Stone_bottambar() : isCheck_side_stone == false;
+                            },
                             overlayColor: WidgetStatePropertyAll(AppColor.black_color),
                             side: BorderSide(color: AppColor.black_color, width: 1),
                             checkColor: AppColor.white_color,
