@@ -59,6 +59,9 @@ dependencies:
   shimmer:
   photo_view:
   dio:
+  image_picker:
+  file_picker:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

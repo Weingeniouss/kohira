@@ -90,9 +90,13 @@
 //   return SizedBox();
 // }),
 
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/clarity.dart';
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/customorder.dart';
@@ -108,6 +112,7 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import '../../../../../view/utils/app_String.dart';
 import '../../../../../view/utils/app_icon.dart';
 import '../../../../utils/widget/aapbar.dart';
+import '../../../../utils/widget/pop.dart';
 
 class CustomJewellery extends StatefulWidget {
 
@@ -139,6 +144,10 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   var listofshape = <BraceletSize>[].obs;
   var listofcolor = <BraceletSize>[].obs;
   var listofclarity = <ClarityItem>[].obs;
+
+  //image
+  String? imagefile;
+  String? videofile;
 
   final TextEditingController searchController = TextEditingController();
   final TextEditingController subcategorySearchController = TextEditingController();
@@ -202,6 +211,72 @@ class _CustomJewelleryState extends State<CustomJewellery> {
     setState(() {
       isCheck_side_stone = val;
     });
+  }
+
+  // For Image Upload
+  Future<void> _pickImage() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1080,
+        maxHeight: 1080,
+        imageQuality: 85,
+      ).catchError((error) {
+        print('Error in pickImage: $error');
+        return null;
+      });
+
+      if (image != null && mounted) {
+        setState(() {
+          imagefile = image.name;
+        });
+        print('Selected image: ${image.path}');
+        print('Image name: ${image.name}');
+      } else if (image == null) {
+        print('No image selected or selection cancelled');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      // Show error message only if the widget is still mounted
+      if (mounted) {
+        ToastificationError.Error("Failed to pick image");
+      }
+    }
+  }
+
+  // For Video Upload
+  Future<void> _pickVideo() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? video = await picker.pickVideo(
+        source: ImageSource.gallery,
+        maxDuration: const Duration(minutes: 5),
+      );
+
+      if (video != null && mounted) {
+
+        setState(() {
+          videofile= video.name;
+        });
+        // Handle the selected video
+        print('Selected video: ${video.path}');
+        // Check file size
+        final file = File(video.path);
+        final sizeInMB = await file.length() / (1024 * 1024);
+
+        if (sizeInMB > 100) {
+          // Get.snackbar('Error', 'Video size too large (max 100MB)');
+          ToastificationError.Error("'Error', Video size too large (max 100MB)}");
+          return;
+        }
+
+        // You can upload the video to your server here
+      }
+    } catch (e) {
+      print('Error picking video: $e');
+      Get.snackbar('Error', 'Failed to pick video');
+    }
   }
 
   void side_Stone_bottambar() {
@@ -772,6 +847,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                             onChanged: (val) {
                               side_stone(val);
                               (isCheck_side_stone == true) ? side_Stone_bottambar() : isCheck_side_stone == false;
+                              (listofshape.isEmpty && listofclarity.isEmpty && listofcolor.isEmpty) ? isCheck_side_stone == false : isCheck_side_stone == true;
                             },
                             overlayColor: WidgetStatePropertyAll(Colors.transparent),
                             side: BorderSide(color: AppColor.black_color, width: 1),
@@ -899,9 +975,33 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(child: button('Upload Image')),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickImage();
+                            },
+                            child: Column(
+                              children: [
+                                button('Upload Image'),
+                                Text(imagefile ?? "No image selected"),
+                              ],
+                            ),
+                          ),
+                        ),
                         SizedBox(width: Get.width / 15),
-                        Expanded(child: button('Upload Video')),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickVideo();
+                            },
+                            child: Column(
+                              children: [
+                                button('Upload Video'),
+                                Text(videofile ?? 'No image selected')
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     Divider(color: AppColor.textfild_color),
