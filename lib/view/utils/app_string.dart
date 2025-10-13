@@ -21,6 +21,8 @@ class AppString {
   static const paynow = 'Pay Now';
   static const addnewAddress = 'Add New Address';
   static const message = 'Set Message';
+  static const add = 'Add';
+  static const update = 'Update';
 
   //check points
   static const notarobot  = "I'm Not a Robot";

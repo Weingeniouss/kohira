@@ -101,6 +101,7 @@ import 'package:kohira/controller/user_inerface/menu/categroy/subcetegroy/filter
 import 'package:kohira/modal/menu/category/subcategory/jewelleryfilter.dart';
 import 'package:kohira/modal/menu/home/drawar/customJewellery/category_customorder.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/dropdown.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
@@ -129,7 +130,15 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   var selectedMetalStamp = Rxn<MetalStamp>();
   var selectedShape = Rxn<BraceletSize>();
   var selectcolor =  Rxn<BraceletSize>();
-  final selectedClarity = Rxn<ClarityItem>();
+  var selectedClarity = Rxn<ClarityItem>();
+
+  // List<BraceletSize> listofshape = [];
+  // List<BraceletSize> listofcolor = [];
+  // List<ClarityItem> listofclarity = [];
+
+  var listofshape = <BraceletSize>[].obs;
+  var listofcolor = <BraceletSize>[].obs;
+  var listofclarity = <ClarityItem>[].obs;
 
   final TextEditingController searchController = TextEditingController();
   final TextEditingController subcategorySearchController = TextEditingController();
@@ -140,6 +149,9 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   final TextEditingController selectedmetalValueController = TextEditingController();
   final TextEditingController minValueController = TextEditingController();
   final TextEditingController maxValueController = TextEditingController();
+  final TextEditingController shapeController = TextEditingController();
+  final TextEditingController colorController = TextEditingController();
+  final TextEditingController clarityController = TextEditingController();
 
   // Define variables for your dropdown values
   final selectedMetalStampValue = Rxn<Map<String, dynamic>>();
@@ -192,85 +204,211 @@ class _CustomJewelleryState extends State<CustomJewellery> {
     });
   }
 
-void side_Stone_bottambar() {
-  isCheck_side_stone = true;
-  showModalBottomSheet(
-    isScrollControlled: true,
-    context: context,
-    builder: (BuildContext context) {
-      return Obx(() {
-        final filter = jewellery.data.value?.data;
+  void side_Stone_bottambar() {
+    isCheck_side_stone = true;
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: AppColor.white_color,
+      context: context,
+      builder: (BuildContext context) {
+        return Obx(() {
+          final filter = jewellery.data.value?.data;
 
-        return Container(
-          height: Get.height * 0.7,
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Select Shape',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16),
+          return Container(
+            height: Get.height * 0.7,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 9,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Select Type', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: Get.height / 50),
 
-              // Dropdown for shapes
-               dropDown<BraceletSize>(
-                searchController: searchController,
-                value: selectedShape,
-                items: filter?.shape ?? [],
-                displayText: (item) => item?.name ?? 'Select Shape',
-                hintText: 'Choose Shape',
-                onChanged: (BraceletSize? selectedItem) {
-                  if (selectedItem != null) {
-                    setState(() {
-                      selectedShape.value = selectedItem;
-                      filtertab.setDiamondType(selectedItem.slug);
-                    });
-                  }
-                },
-              ),
+                      // Dropdown for shapes
+                      dropDown<BraceletSize>(
+                        searchController: shapeController,
+                        value: selectedShape,
+                        items: filter?.shape ?? [],
+                        displayText: (item) => item?.name ?? 'Select Shape',
+                        hintText: 'Choose Shape',
+                        onChanged: (BraceletSize? selectedItem) {
+                          if (selectedItem != null) {
+                            selectedShape.value = selectedItem;
+                            filtertab.setDiamondType(selectedItem.slug);
+                          }
+                        },
+                      ),
 
-              SizedBox(height: Get.height / 60),
+                      SizedBox(height: Get.height / 60),
 
-              dropDown<BraceletSize>(
-                searchController: searchController,
-                value: selectcolor,
-                items: filter?.color ?? [],
-                displayText: (item) => item?.name ?? 'Select Color',
-                hintText: 'Choose Color',
-                onChanged: (BraceletSize? selectedItem) {
-                  if (selectedItem != null) {
-                    setState(() {
-                      selectcolor.value = selectedItem;
-                      filtertab.setColoeType(selectedItem.slug);
-                    });
-                  }
-                },
-              ),
+                      // Dropdown for Color
+                      dropDown<BraceletSize>(
+                        searchController: colorController,
+                        value: selectcolor,
+                        items: filter?.color ?? [],
+                        displayText: (item) => item?.name ?? 'Select Color',
+                        hintText: 'Choose Color',
+                        onChanged: (BraceletSize? selectedItem) {
+                          if (selectedItem != null) {
+                            selectcolor.value = selectedItem;
+                            filtertab.setColoeType(selectedItem.slug);
+                          }
+                        },
+                      ),
 
-              SizedBox(height: Get.height / 60),
+                      SizedBox(height: Get.height / 60),
 
-              dropDown<ClarityItem>(
-                searchController: searchController,
-                value: selectedClarity,
-                items: clarity.clarityData,
-                displayText: (item) => item?.name ?? 'Select Clarity',
-                hintText: 'Choose Clarity',
-                onChanged: (ClarityItem? selectedItem) {
-                  if (selectedItem != null) {
-                    setState(() {
-                      selectedClarity.value = selectedItem;
-                    });
-                  }
-                },
-              ),
-            ],
-          ),
-        );
-      });
-    },
-  );
-}
+                      // Dropdown for clarity
+                      dropDown<ClarityItem>(
+                        searchController: clarityController,
+                        value: selectedClarity,
+                        items: clarity.clarityData,
+                        displayText: (item) => item?.name ?? 'Select Clarity',
+                        hintText: 'Choose Clarity',
+                        onChanged: (ClarityItem? selectedItem) {
+                          if (selectedItem != null) {
+                            selectedClarity.value = selectedItem;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      if (selectedShape.value != null && selectcolor.value != null && selectedClarity.value != null) {
+                        listofshape.add(selectedShape.value!);
+                        listofcolor.add(selectcolor.value!);
+                        listofclarity.add(selectedClarity.value!);
+                        print("Shapes: ${listofshape.map((e) => e.name).toList()}");
+                        print("Colors: ${listofcolor.map((e) => e.name).toList()}");
+                        print("Clarity: ${listofclarity.map((e) => e.name).toList()}");
+
+                        // Clear selections after adding
+                        selectedShape.value = null;
+                        selectcolor.value = null;
+                        selectedClarity.value = null;
+                      } else {
+                        print("Please select shape, color, and clarity first!");
+                      }
+                      Get.back();
+                    },
+                    child: button(AppString.add),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  void side_Stone_bottambar_update({
+    required int index,
+    required Rxn<BraceletSize> selectedShape_edit,
+    required Rxn<BraceletSize> selectcolor_edit,
+    required Rxn<ClarityItem> selectedClarity_edit,
+  }) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: AppColor.white_color,
+      context: context,
+      builder: (BuildContext context) {
+        return Obx(() {
+          final filter = jewellery.data.value?.data;
+          return Container(
+            height: Get.height * 0.7,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 9,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Select Type', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: Get.height / 50),
+
+                      // Dropdown for shapes - Use the passed value
+                      dropDown<BraceletSize>(
+                        searchController: shapeController,
+                        value: selectedShape_edit,
+                        items: filter?.shape ?? [],
+                        displayText: (item) => item?.name ?? 'Select Shape',
+                        hintText: 'Choose Shape',
+                        onChanged: (BraceletSize? selectedItem) {
+                          selectedShape_edit.value = selectedItem;
+                        },
+                      ),
+
+                      SizedBox(height: Get.height / 60),
+
+                      // Dropdown for Color - Use the passed value
+                      dropDown<BraceletSize>(
+                        searchController: colorController,
+                        value: selectcolor_edit,
+                        items: filter?.color ?? [],
+                        displayText: (item) => item?.name ?? 'Select Color',
+                        hintText: 'Choose Color',
+                        onChanged: (BraceletSize? selectedItem) {
+                          selectcolor_edit.value = selectedItem;
+                        },
+                      ),
+
+                      SizedBox(height: Get.height / 60),
+
+                      // Dropdown for clarity - Use the passed value
+                      dropDown<ClarityItem>(
+                        searchController: clarityController,
+                        value: selectedClarity_edit,
+                        items: clarity.clarityData,
+                        displayText: (item) => item?.name ?? 'Select Clarity',
+                        hintText: 'Choose Clarity',
+                        onChanged: (ClarityItem? selectedItem) {
+                          selectedClarity_edit.value = selectedItem;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      if (selectedShape_edit.value != null && selectcolor_edit.value != null && selectedClarity_edit.value != null) {
+
+                        // Update the existing items in the lists
+                        listofshape[index] = selectedShape_edit.value!;
+                        listofcolor[index] = selectcolor_edit.value!;
+                        listofclarity[index] = selectedClarity_edit.value!;
+
+                        print("Updated Shapes: ${listofshape.map((e) => e.name).toList()}");
+                        print("Updated Colors: ${listofcolor.map((e) => e.name).toList()}");
+                        print("Updated Clarity: ${listofclarity.map((e) => e.name).toList()}");
+
+                        // Clear the edit values
+                        selectedShape_edit.value = null;
+                        selectcolor_edit.value = null;
+                        selectedClarity_edit.value = null;
+                      } else {
+                        print("Please select shape, color, and clarity first!");
+                      }
+                      Get.back();
+                    },
+                    child: button(AppString.update),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -359,43 +497,36 @@ void side_Stone_bottambar() {
                     ),
 
                    //Remark
-                  Container(
-                    height: Get.height / 9,
-                    decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: AppColor.textfild_color)),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: TextField(
-                      style: TextStyle(fontSize: Get.width * 0.04, color: AppColor.black_color),
-                      maxLines: 100,
-                      minLines: 1,
-                      decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: SvgPicture.asset(
-                            AppIcon.earth,
-                            width: 20,
-                            height: 20,
-                            color: AppColor.pink_color,
+                    Container(
+                      height: Get.height / 9,
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: AppColor.textfild_color)),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: TextField(
+                        style: TextStyle(fontSize: Get.width * 0.04, color: AppColor.black_color),
+                        maxLines: 100,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: SvgPicture.asset(AppIcon.earth, width: 20, height: 20, color: AppColor.pink_color),
                           ),
+                          disabledBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintText: 'Remark',
+                          hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
+                          contentPadding: EdgeInsets.only(left: 8, right: 12, top: 16, bottom: 16),
+                          filled: true,
+                          fillColor: AppColor.white_color,
+                          isDense: true, // Reduces the overall height
                         ),
-                        disabledBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'Remark',
-                        hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
-                        contentPadding: EdgeInsets.only(left: 8, right: 12, top: 16, bottom: 16),
-                        filled: true,
-                        fillColor: AppColor.white_color,
-                        isDense: true, // Reduces the overall height
                       ),
                     ),
-                  ),
 
                     SizedBox(height: Get.height / 50),
-
                     Text('Diamond And Gemstone Details',style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
-
                     SizedBox(height: Get.height / 50),
 
                     //Center Stone
@@ -642,7 +773,7 @@ void side_Stone_bottambar() {
                               side_stone(val);
                               (isCheck_side_stone == true) ? side_Stone_bottambar() : isCheck_side_stone == false;
                             },
-                            overlayColor: WidgetStatePropertyAll(AppColor.black_color),
+                            overlayColor: WidgetStatePropertyAll(Colors.transparent),
                             side: BorderSide(color: AppColor.black_color, width: 1),
                             checkColor: AppColor.white_color,
                             activeColor: AppColor.black_color,
@@ -662,7 +793,117 @@ void side_Stone_bottambar() {
                       ],
                     ),
 
+                    SizedBox(height: Get.height / 60),
+
+                    //isCheck_isCheck_side_stone == True after isCheck_side_stone = true then ....
+                    (listofshape.isNotEmpty && listofclarity.isNotEmpty && listofcolor.isNotEmpty) ? Visibility(
+                      visible: isCheck_side_stone,
+                      child: Obx(() => Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColor.graycolor,
+                          borderRadius: BorderRadius.circular(Get.width / 50),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(color: AppColor.Appbercolor),
+                              child: Row(
+                                children: [
+                                  SizedBox(width: Get.width / 4,child: Text('Shape',style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 5,child: Text('Color',style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 4.5,child: Text('Clarity',style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 6,child: Text('Action',style: TextStyle(fontWeight: FontWeight.w600))),
+                                ],
+                              ),
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: listofshape.length,
+                              itemBuilder: (context, index) {
+                                final shape = listofshape[index];
+                                final color = listofcolor[index];
+                                final clarity = listofclarity[index];
+                                return Container(
+                                  padding: EdgeInsetsGeometry.symmetric(horizontal: Get.width / 50),
+                                  decoration: BoxDecoration(color: AppColor.white_color),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: Get.width / 4,child: Text(shape.name,style: TextStyle(fontWeight: FontWeight.w600))),
+                                      SizedBox(width: Get.width / 25),
+                                      SizedBox(width: Get.width / 10,child: Text(color.name,style: TextStyle(fontWeight: FontWeight.w600))),
+                                      SizedBox(width: Get.width / 10),
+                                      SizedBox(width: Get.width / 8,child: Text(clarity.name.toString(),style: TextStyle(fontWeight: FontWeight.w600))),
+                                      SizedBox(width: Get.width / 13),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            child: SvgPicture.asset(AppIcon.edit,width: 15,height: 15,color: AppColor.grey_color),
+                                            onTap: (){
+                                              side_Stone_bottambar_update(
+                                                index: index,
+                                                selectedShape_edit: Rxn<BraceletSize>(listofshape[index]),
+                                                selectcolor_edit: Rxn<BraceletSize>(listofcolor[index]),
+                                                selectedClarity_edit: Rxn<ClarityItem>(listofclarity[index]),
+                                              );
+                                            },
+                                          ),
+                                          SizedBox(width: Get.width / 30),
+                                          GestureDetector(
+                                            onTap: (){
+                                              listofshape.removeAt(index);
+                                              listofcolor.removeAt(index);
+                                              listofclarity.removeAt(index);
+                                            },
+                                            child: Icon(Icons.delete_outline_outlined, color: AppColor.grey_color, size: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: Get.height / 50),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    side_Stone_bottambar();
+                                  },
+                                  child: Text(
+                                    '${AppString.add} +',
+                                    style: TextStyle(
+                                      color: AppColor.pink_color,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: AppColor.pink_color,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )),
+                    ) : SizedBox(),
+                    (listofshape.isNotEmpty && listofclarity.isNotEmpty && listofcolor.isNotEmpty) ? SizedBox(height: Get.height / 50) : SizedBox(),
+                    Divider(color: AppColor.textfild_color),
+
                     SizedBox(height: Get.height / 50),
+                    Text('Upload Your Image',style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
+                    SizedBox(height: Get.height / 50),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(child: button('Upload Image')),
+                        SizedBox(width: Get.width / 15),
+                        Expanded(child: button('Upload Video')),
+                      ],
+                    ),
                     Divider(color: AppColor.textfild_color),
                   ],
                 ),

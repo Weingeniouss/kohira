@@ -59,7 +59,7 @@ Widget inputField({
                         },
                         child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility,color: AppColor.grey_color),
                       ) : null),
-                      hintText: '$hintText*',
+                      hintText: '$hintText *',
                       hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
                       contentPadding: EdgeInsets.symmetric(vertical: 15),
                       enabledBorder: UnderlineInputBorder(
