@@ -601,7 +601,7 @@ class ShowBottam {
                                             return GestureDetector(
                                               onTap: () {
                                                  setState((){
-                                                   filtertab.setDiamondType(item.slug);
+                                                   filtertab.setDiamondType(item.slug,item.id.toString());
                                                   });
                                                 },
                                               child: Container(

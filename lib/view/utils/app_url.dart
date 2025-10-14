@@ -43,6 +43,7 @@ class AppUrl {
           //Custom Jewellery
           static const customorder = '$baseurl/category-customorder';
           static const clarity = '$baseurl/clarity';
+          static const addcustom = '$baseurl/add-custom-jewelry';
 
       //Categorie
       static const recommendedJewelleryList ='$baseurl/recommendedJewelleryList';

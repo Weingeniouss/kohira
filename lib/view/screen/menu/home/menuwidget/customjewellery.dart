@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, non_constant_identifier_names, avoid_print, must_be_immutable, strict_top_level_inference
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, non_constant_identifier_names, avoid_print, must_be_immutable, strict_top_level_inference, prefer_typing_uninitialized_variables
 
 // Container(
 //   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -91,8 +91,7 @@
 // }),
 
 import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -100,6 +99,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/clarity.dart';
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/customorder.dart';
+import 'package:kohira/controller/API/menu/home/drawar/customJewellery/submit_custom_jewelley.dart';
 import 'package:kohira/controller/API/menu/others/drawer/Jewellery_list.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/subcetegroy/filter.dart';
 import 'package:kohira/modal/menu/category/subcategory/jewelleryfilter.dart';
@@ -111,6 +111,8 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import '../../../../../view/utils/app_String.dart';
 import '../../../../../view/utils/app_icon.dart';
+import '../../../../utils/app_constants.dart';
+import '../../../../utils/widget/RecaptchaWidget.dart';
 import '../../../../utils/widget/aapbar.dart';
 import '../../../../utils/widget/pop.dart';
 
@@ -123,11 +125,15 @@ class CustomJewellery extends StatefulWidget {
 }
 
 class _CustomJewelleryState extends State<CustomJewellery> {
+  final String siteKey = "6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF";
+  final String baseUrl = "https://next.weingenious.in";
+
   final customorder = Get.put(Customorder());
   final jewelleryfilter = Get.put(JewelleryList());
   final filtertab = Get.put(FilterController());
   final jewellery = Get.put(Jewelleryfilter());
   final clarity = Get.put(Clarity());
+  final submit = Get.put(SubmitCustomJewelley());
 
   var selectedCategory = Rxn<Category_Customorder>();
   var selectedSubcategory = Rxn<Category_Subcategory>();
@@ -137,6 +143,8 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   var selectcolor =  Rxn<BraceletSize>();
   var selectedClarity = Rxn<ClarityItem>();
 
+  var jwellery;
+
   // List<BraceletSize> listofshape = [];
   // List<BraceletSize> listofcolor = [];
   // List<ClarityItem> listofclarity = [];
@@ -144,6 +152,12 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   var listofshape = <BraceletSize>[].obs;
   var listofcolor = <BraceletSize>[].obs;
   var listofclarity = <ClarityItem>[].obs;
+
+  var shape;
+  var color;
+  var claritys;
+
+  var metalname;
 
   //image
   String? imagefile;
@@ -155,6 +169,8 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   final TextEditingController metalstampsearchcontoller = TextEditingController();
   final TextEditingController metalWeightController = TextEditingController();
   final TextEditingController metalBudgetController = TextEditingController();
+  final TextEditingController metalremarkController = TextEditingController();
+  final TextEditingController urlController = TextEditingController();
   final TextEditingController selectedmetalValueController = TextEditingController();
   final TextEditingController minValueController = TextEditingController();
   final TextEditingController maxValueController = TextEditingController();
@@ -184,17 +200,33 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   // Function to handle stamp selection
   void onStampSelected(Map<String, dynamic>? selectedStamp) {
     if (selectedStamp != null) {
-      selectedMetalStampValue.value = selectedStamp;
+      metalname = selectedStamp['name'];
+      print('selectedDiamCarat: $metalname');
 
-      // Auto-populate min and max values
+      // Auto-populate min and max values if needed
       minValueController.text = selectedStamp['min'].toString();
       maxValueController.text = selectedStamp['max'].toString();
     } else {
-      selectedMetalStampValue.value = null;
+      metalname = '';
       minValueController.clear();
       maxValueController.clear();
     }
   }
+
+  // void onStampSelected(Map<String, dynamic>? selectedStamp) {
+  //   if (selectedStamp != null) {
+  //     // selectedMetalStampValue.value = selectedStamp;
+  //     metalnane = selectedStamp['name'];
+  //     // Auto-populate min and max values
+  //     minValueController.text = selectedStamp['min'].toString();
+  //     maxValueController.text = selectedStamp['max'].toString();
+  //   } else {
+  //     metalnane = '';
+  //     // selectedMetalStampValue.value = null;
+  //     minValueController.clear();
+  //     maxValueController.clear();
+  //   }
+  // }
 
   bool isCheck_center = false;
   bool isCheck_side_stone = false;
@@ -312,7 +344,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                         onChanged: (BraceletSize? selectedItem) {
                           if (selectedItem != null) {
                             selectedShape.value = selectedItem;
-                            filtertab.setDiamondType(selectedItem.slug);
+                            filtertab.setDiamondType(selectedItem.slug,selectedItem.id.toString());
                           }
                         },
                       ),
@@ -329,7 +361,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                         onChanged: (BraceletSize? selectedItem) {
                           if (selectedItem != null) {
                             selectcolor.value = selectedItem;
-                            filtertab.setColoeType(selectedItem.slug);
+                            filtertab.setColoeType(selectedItem.slug,selectedItem.id.toString());
                           }
                         },
                       ),
@@ -381,6 +413,75 @@ class _CustomJewelleryState extends State<CustomJewellery> {
         });
       },
     );
+  }
+
+  bool isCheck = false;
+  String? recaptchaToken;
+
+  void isCheckValue(bool? val) {
+    if (val == true) {
+      _showRecaptchaVerification();
+    } else {
+      setState(() {
+        isCheck = false;
+        recaptchaToken = null;
+      });
+    }
+  }
+
+  void _showRecaptchaVerification() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        backgroundColor: AppColor.white_color,
+        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Container(
+          height: Get.height * 0.6,
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              // Optional header or spacing
+              SizedBox(height: 16),
+              // Expanded must be direct child of Column (a Flex)
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: RecaptchaWidget(
+                    siteKey: siteKey,
+                    baseUrl: baseUrl,
+                    onVerified: (String token) {
+                      if (kDebugMode) {
+                        print('✅ reCAPTCHA Token: $token');
+                      }
+                      Navigator.pop(context);
+                      setState(() {isCheck = true;recaptchaToken = token;});
+                      print('recapcha :- $recaptchaToken');
+                      ToastificationSuccess.Success('Verification completed!');
+                    },
+                    onError: () {
+                      if (kDebugMode) {
+                        print('❌ reCAPTCHA Error');
+                      }
+                      Navigator.pop(context);
+                      setState(() {isCheck = false;recaptchaToken = null;});
+                      ToastificationError.Error('Verification failed. Please try again.');
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).then((_) {
+      if (recaptchaToken == null) {
+        setState(() => isCheck = false);
+      }
+    });
   }
 
   void side_Stone_bottambar_update({
@@ -485,6 +586,12 @@ class _CustomJewelleryState extends State<CustomJewellery> {
     );
   }
 
+  void onCategoryChanged(Category_Customorder? newCategory) {
+    selectedCategory.value = newCategory;
+    selectedSubcategory.value = null;
+    subcategorySearchController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -496,6 +603,15 @@ class _CustomJewelleryState extends State<CustomJewellery> {
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
             final filter = jewellery.data.value?.data;
+            String jewelryTypeValue = selectedCategory.value?.id.toString() ?? selectedCategory.value?.name.toString() ?? '';
+            String subcategoryIdValue = selectedSubcategory.value?.id.toString() ?? selectedSubcategory.value?.name.toString() ?? '';
+            String metalTypeValue = selectedMetalType.value?.id.toString() ?? selectedMetalType.value?.name.toString() ?? '';
+            String metalStampValue = selectedMetalStamp.value?.id.toString() ?? selectedMetalStamp.value?.name.toString() ?? '';
+
+            var selectedShapeId;
+            var colors;
+            var clarityy;
+
             return horizontalpadding(
               child: SingleChildScrollView(
                 child: Column(
@@ -510,24 +626,39 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                       items: customorder.categories,
                       displayText: (category) => category.name,
                       hintText: 'Choose Jewelry Type',
+                      onChanged: onCategoryChanged,
                     ),
 
                     SizedBox(height: Get.height / 60),
 
-                    //Choose Subcategory
-                    (selectedCategory.value != null)
-                        ? Column(
-                          children: [
-                            dropDown<Category_Subcategory>(
-                               searchController: subcategorySearchController,
-                               value: selectedSubcategory,
-                               items: selectedCategory.value!.subcategory,
-                               displayText: (subcategory) => subcategory.name,
-                               hintText: 'Choose Subcategory',
-                            ),
-                            SizedBox(height: Get.height / 60),
-                          ],
-                        ) : SizedBox(),
+                    // Choose Subcategory
+                    Obx(() {
+                      if (selectedCategory.value == null || selectedCategory.value!.subcategory == null || selectedCategory.value!.subcategory!.isEmpty) {
+                        return SizedBox();
+                      }
+
+                      // Ensure the current subcategory value exists in the new list
+                      final currentSubcategory = selectedSubcategory.value;
+                      if (currentSubcategory != null) {
+                        final exists = selectedCategory.value!.subcategory.any((subcat) => subcat.id == currentSubcategory.id);
+                        if (!exists) {
+                          selectedSubcategory.value = null;
+                        }
+                      }
+
+                      return Column(
+                        children: [
+                          dropDown<Category_Subcategory>(
+                            searchController: subcategorySearchController,
+                            value: selectedSubcategory,
+                            items: selectedCategory.value!.subcategory,
+                            displayText: (subcategory) => subcategory.name,
+                            hintText: 'Choose Subcategory',
+                          ),
+                          SizedBox(height: Get.height / 60),
+                        ],
+                      );
+                    }),
 
                     //Metal Type
                     dropDown(
@@ -553,6 +684,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
 
                     //Weight
                     inputField(
+                      textInputType: TextInputType.number,
                       controller: metalWeightController,
                       icon: AppIcon.earth,
                       iconheight: 10,
@@ -563,6 +695,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
 
                     //Budget
                     inputField(
+                      textInputType: TextInputType.number,
                       controller: metalBudgetController,
                       icon: AppIcon.earth,
                       iconheight: 10,
@@ -579,6 +712,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: TextField(
+                        controller: metalremarkController,
                         style: TextStyle(fontSize: Get.width * 0.04, color: AppColor.black_color),
                         maxLines: 100,
                         minLines: 1,
@@ -595,7 +729,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                           contentPadding: EdgeInsets.only(left: 8, right: 12, top: 16, bottom: 16),
                           filled: true,
                           fillColor: AppColor.white_color,
-                          isDense: true, // Reduces the overall height
+                          isDense: true,
                         ),
                       ),
                     ),
@@ -652,10 +786,13 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                                 child: Row(
                                   children: filter!.shape.map((item) {
                                     final isSelected = filtertab.diamondtype.value == item.slug;
+                                    if (isSelected) {
+                                      selectedShapeId = item.id.toString();
+                                    }
                                     return GestureDetector(
                                       onTap: () {
                                          setState((){
-                                            filtertab.setDiamondType(item.slug);
+                                            filtertab.setDiamondType(item.slug,item.id.toString());
                                           });
                                         },
                                       child: Container(
@@ -702,10 +839,13 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                                 child: Row(
                                   children: filter!.color.map((item) {
                                     final isSelected = filtertab.colortype.value == item.id.toString();
+                                    if (isSelected) {
+                                      colors = item.id.toString();
+                                    }
                                     return GestureDetector(
                                       onTap: () {
                                          setState((){
-                                            filtertab.setColoeType(item.id.toString());
+                                            filtertab.setColoeType(item.id.toString(),item.slug);
                                           });
                                         },
                                       child: Container(
@@ -742,6 +882,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                                   final clar = clarity.clarity_data['data'][index];
                                   final String slug = clar['slug'];
                                   final bool isSelected = _selectedSlug == slug;
+                                  clarityy = clar['id'];
                                   return GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -899,9 +1040,9 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: listofshape.length,
                               itemBuilder: (context, index) {
-                                final shape = listofshape[index];
-                                final color = listofcolor[index];
-                                final clarity = listofclarity[index];
+                                shape = listofshape[index];
+                                color = listofcolor[index];
+                                claritys = listofclarity[index];
                                 return Container(
                                   padding: EdgeInsetsGeometry.symmetric(horizontal: Get.width / 50),
                                   decoration: BoxDecoration(color: AppColor.white_color),
@@ -911,7 +1052,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                                       SizedBox(width: Get.width / 25),
                                       SizedBox(width: Get.width / 10,child: Text(color.name,style: TextStyle(fontWeight: FontWeight.w600))),
                                       SizedBox(width: Get.width / 10),
-                                      SizedBox(width: Get.width / 8,child: Text(clarity.name.toString(),style: TextStyle(fontWeight: FontWeight.w600))),
+                                      SizedBox(width: Get.width / 8,child: Text(claritys.name.toString(),style: TextStyle(fontWeight: FontWeight.w600))),
                                       SizedBox(width: Get.width / 13),
                                       Row(
                                         children: [
@@ -1004,7 +1145,96 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                         ),
                       ],
                     ),
-                    Divider(color: AppColor.textfild_color),
+                    SizedBox(height: Get.height / 50),
+
+                    //Url
+                    inputField(
+                      controller: urlController,
+                      icon: AppIcon.earth,
+                      iconheight: 10,
+                      iconwidth: 10,
+                      iconcolor: AppColor.pink_color,
+                      hintText: 'Enter URL',
+                    ),
+                    SizedBox(height: Get.height / 50),
+                    Row(
+                      children: [
+                        Transform.scale(
+                          scale: 1.2,
+                          child: Checkbox(
+                            value: isCheck,
+                            onChanged: (val) => isCheckValue(val),
+                            overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
+                            side: BorderSide(color: AppColor.pink_color, width: 2),
+                            checkColor: AppColor.white_color,
+                            activeColor: AppColor.pink_color,
+                            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                            materialTapTargetSize:
+                            MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                        SizedBox(width: Get.width / 50),
+                        Text(
+                          AppString.notarobot,
+                          style: TextStyle(
+                            color: AppColor.pink_color,
+                            fontWeight: FontWeight.w500,
+                            fontSize: Get.width * 0.04,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: Get.height / 50),
+
+                    GestureDetector(
+                      onTap: (){
+                        submit.submitCustomJewelley(
+                          jewelrytype: jewelryTypeValue,
+                          appxmetalWgt: metalWeightController.text,
+                          budget: metalBudgetController.text,
+                          centerStoneSelect: 'true',
+                          password: '',
+                          confirm_password: '',
+                          diamMaxSelectedCarat: maxValueController.text,
+                          diamMinSelectedCarat: minValueController.text,
+                          currency_id: '',
+                          email: '',
+                          firstname: '',
+                          lastname: '',
+                          engraving: '',
+                          metalstamp: metalStampValue,
+                          metaltype: metalTypeValue,
+                          mobileno: '',
+                          referredby: '',
+                          ringsize: '',
+                          sideStoneSelect: '',
+                          subcategory_id: subcategoryIdValue,
+                          remark: metalremarkController.text,
+                          selectedDiamCarat: metalname,
+                          selectedDiamClarity: clarityy.toString(),
+                          selectedDiamColor: colors,
+                          selectedDiamShape: selectedShapeId,
+                          userid: '',
+                          url: urlController.text,
+                          token: tokans,
+                          shape: [shape.name.toString()],
+                          color: [color.name.toString()],
+                          clarity: [claritys.name.toString()],
+                        );
+
+                        print('jewelryTypeValue :- $jewelryTypeValue');
+                        print('subcategoryIdValue :- $subcategoryIdValue');
+                        print('metalTypeValue :- $metalTypeValue');
+                        print('metalStampValue :- $metalStampValue');
+                        print('selectedDiamShape: $selectedShapeId');
+                        print('selectedDiamCarat: $metalname');
+                        print('selectedDiamColor: $colors');
+                        print('selectedDiamClarity: $clarityy');
+                      },
+                      child: button(AppString.submit),
+                    ),
+
+                    SizedBox(height: Get.height / 50),
                   ],
                 ),
               ),

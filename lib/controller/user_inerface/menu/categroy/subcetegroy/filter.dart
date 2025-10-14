@@ -8,6 +8,7 @@ class FilterController extends GetxController {
   var colortype = ''.obs;
   var selectedWeight = ''.obs;
   var selectedMetalType = ''.obs;
+  var selectedShapeId = ''.obs;
   var weightMin = RxnDouble();
   var weightMax = RxnDouble();
   var selectedPrice = ''.obs;
@@ -34,13 +35,17 @@ class FilterController extends GetxController {
   void setMetalStamp(String slug) => metalstapid.value = slug;
 
   //Select Diamond Shap
-  void setDiamondType(String slug) => diamondtype.value = slug;
+  void setDiamondType(String slug, String id) {
+    diamondtype.value = slug;
+    selectedShapeId.value = id;
+  }
 
   //Select Color Type - FIXED: Added toggle functionality
-  void setColoeType(String slug) {
+  void setColoeType(String slug, String id) {
     if (colortype.value == slug) {
       colortype.value = ''; // Deselect if same color is clicked again
     } else {
+      colortype.value = id;
       colortype.value = slug; // Select new color
     }
     print('Selected color type: ${colortype.value}');

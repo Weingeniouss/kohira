@@ -37,7 +37,7 @@ Widget dropDown<T>({
               iconDisabledColor: AppColor.grey_color,
               openMenuIcon: Icon(Icons.keyboard_arrow_up),
             ),
-            value: value?.value, // Safe access
+            value: value?.value,
             dropdownSearchData: DropdownSearchData(
               searchController: searchController,
               searchInnerWidgetHeight: 40,
