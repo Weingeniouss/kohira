@@ -1108,7 +1108,7 @@ class _ShowproductState extends State<Showproduct> {
                                     print('Wishlist error: $e');
                                   }
                                 },
-                              child: (tokans?.isEmpty ?? true) ? SvgPicture.asset(AppIcon.like, width: 30, height: 30) :(count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
+                              child: (tokans.isEmpty ?? true) ? SvgPicture.asset(AppIcon.like, width: 30, height: 30) :(count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
                                   ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
                                   : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
                             )

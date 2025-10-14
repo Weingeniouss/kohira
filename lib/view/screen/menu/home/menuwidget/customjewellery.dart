@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, non_constant_identifier_names, avoid_print, must_be_immutable, strict_top_level_inference, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, non_constant_identifier_names, avoid_print, must_be_immutable, strict_top_level_inference, prefer_typing_uninitialized_variables, unnecessary_null_comparison
 
 // Container(
 //   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -633,7 +633,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
 
                     // Choose Subcategory
                     Obx(() {
-                      if (selectedCategory.value == null || selectedCategory.value!.subcategory == null || selectedCategory.value!.subcategory!.isEmpty) {
+                      if (selectedCategory.value == null || selectedCategory.value!.subcategory == null || selectedCategory.value!.subcategory.isEmpty) {
                         return SizedBox();
                       }
 
