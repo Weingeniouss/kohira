@@ -198,19 +198,21 @@ class _CustomJewelleryState extends State<CustomJewellery> {
   ];
 
   // Function to handle stamp selection
-  void onStampSelected(Map<String, dynamic>? selectedStamp) {
-    if (selectedStamp != null) {
-      metalname = selectedStamp['name'];
-      print('selectedDiamCarat: $metalname');
 
-      // Auto-populate min and max values if needed
-      minValueController.text = selectedStamp['min'].toString();
-      maxValueController.text = selectedStamp['max'].toString();
-    } else {
-      metalname = '';
-      minValueController.clear();
-      maxValueController.clear();
-    }
+  void onStampSelected(Map<String, dynamic>? selectedStamp) {
+    setState(() {
+      if (selectedStamp != null) {
+        selectedMetalStampValue.value = selectedStamp;
+        metalname = selectedStamp['name'];
+        minValueController.text = selectedStamp['min'].toString();
+        maxValueController.text = selectedStamp['max'].toString();
+      } else {
+        selectedMetalStampValue.value = null;
+        metalname = '';
+        minValueController.clear();
+        maxValueController.clear();
+      }
+    });
   }
 
   // void onStampSelected(Map<String, dynamic>? selectedStamp) {
@@ -239,7 +241,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
     });
   }
 
-   void side_stone(val){
+  void side_stone(val){
     setState(() {
       isCheck_side_stone = val;
     });
@@ -633,7 +635,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
 
                     // Choose Subcategory
                     Obx(() {
-                      if (selectedCategory.value == null || selectedCategory.value!.subcategory == null || selectedCategory.value!.subcategory.isEmpty) {
+                      if (selectedCategory.value == null || selectedCategory.value!.subcategory == null || selectedCategory.value!.subcategory!.isEmpty) {
                         return SizedBox();
                       }
 
@@ -704,7 +706,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                       hintText: 'Budget',
                     ),
 
-                   //Remark
+                    //Remark
                     Container(
                       height: Get.height / 9,
                       decoration: BoxDecoration(
@@ -771,105 +773,105 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                     Visibility(
                       visible: isCheck_center,
                       child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(color: AppColor.graycolor,borderRadius: BorderRadius.circular(Get.width / 50)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(color: AppColor.graycolor,borderRadius: BorderRadius.circular(Get.width / 50)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
 
-                            //Shap
-                            Text(AppString.shape, style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
-                            SizedBox(height: Get.height / 100),
-                            Obx((){
-                              return  SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: filter!.shape.map((item) {
-                                    final isSelected = filtertab.diamondtype.value == item.slug;
-                                    if (isSelected) {
-                                      selectedShapeId = item.id.toString();
-                                    }
-                                    return GestureDetector(
-                                      onTap: () {
-                                         setState((){
+                              //Shap
+                              Text(AppString.shape, style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
+                              SizedBox(height: Get.height / 100),
+                              Obx((){
+                                return  SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: filter!.shape.map((item) {
+                                      final isSelected = filtertab.diamondtype.value == item.slug;
+                                      if (isSelected) {
+                                        selectedShapeId = item.id.toString();
+                                      }
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState((){
                                             filtertab.setDiamondType(item.slug,item.id.toString());
                                           });
                                         },
-                                      child: Container(
-                                        margin: EdgeInsets.only(right: 2),
-                                        width: Get.width / 5,
-                                        height: Get.height / 12,
-                                        padding: EdgeInsets.all(1),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: (isSelected) ? AppColor.black_color : Colors.grey.shade300),
-                                          borderRadius: BorderRadius.circular(Get.width / 50),
-                                        ),
                                         child: Container(
-                                          padding: EdgeInsets.all(3),
-                                          decoration: BoxDecoration(color: AppColor.white_color,borderRadius: BorderRadius.circular(Get.width / 80)),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius: BorderRadius.circular(Get.width / 50),
-                                                child: Image.network(
-                                                  item.image,
-                                                  fit: BoxFit.cover,
-                                                   errorBuilder: (context, error, stackTrace) {return Icon(Icons.broken_image, color: (isSelected) ? AppColor.pink_color : Colors.grey);},
+                                          margin: EdgeInsets.only(right: 2),
+                                          width: Get.width / 5,
+                                          height: Get.height / 12,
+                                          padding: EdgeInsets.all(1),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: (isSelected) ? AppColor.black_color : Colors.grey.shade300),
+                                            borderRadius: BorderRadius.circular(Get.width / 50),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(3),
+                                            decoration: BoxDecoration(color: AppColor.white_color,borderRadius: BorderRadius.circular(Get.width / 80)),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(Get.width / 50),
+                                                  child: Image.network(
+                                                    item.image,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) {return Icon(Icons.broken_image, color: (isSelected) ? AppColor.pink_color : Colors.grey);},
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(item.name,style: TextStyle(fontSize: Get.width / 30)),
-                                            ],
+                                                Text(item.name,style: TextStyle(fontSize: Get.width / 30)),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              );
-                            }),
+                                      );
+                                    }).toList(),
+                                  ),
+                                );
+                              }),
 
-                            //Color
-                            SizedBox(height: Get.height / 100),
-                            Text('Color', style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
-                            SizedBox(height: Get.height / 200),
-                            Obx((){
-                              return  SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: filter!.color.map((item) {
-                                    final isSelected = filtertab.colortype.value == item.id.toString();
-                                    if (isSelected) {
-                                      colors = item.id.toString();
-                                    }
-                                    return GestureDetector(
-                                      onTap: () {
-                                         setState((){
+                              //Color
+                              SizedBox(height: Get.height / 100),
+                              Text('Color', style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
+                              SizedBox(height: Get.height / 200),
+                              Obx((){
+                                return  SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: filter!.color.map((item) {
+                                      final isSelected = filtertab.colortype.value == item.id.toString();
+                                      if (isSelected) {
+                                        colors = item.id.toString();
+                                      }
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState((){
                                             filtertab.setColoeType(item.id.toString(),item.slug);
                                           });
                                         },
-                                      child: Container(
-                                        margin: EdgeInsets.only(right: 2),
-                                        width: 30,
-                                        height: 30,
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: (isSelected) ? AppColor.black_color : Colors.grey.shade300),
-                                          borderRadius: BorderRadius.circular(Get.width / 50),
-                                        ),
                                         child: Container(
-                                          padding: EdgeInsets.all(3),
-                                          decoration: BoxDecoration(color: AppColor.white_color,borderRadius: BorderRadius.circular(Get.width / 80)),
-                                          child: Center(child: Text(item.name)),
+                                          margin: EdgeInsets.only(right: 2),
+                                          width: 30,
+                                          height: 30,
+                                          padding: EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: (isSelected) ? AppColor.black_color : Colors.grey.shade300),
+                                            borderRadius: BorderRadius.circular(Get.width / 50),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(3),
+                                            decoration: BoxDecoration(color: AppColor.white_color,borderRadius: BorderRadius.circular(Get.width / 80)),
+                                            child: Center(child: Text(item.name)),
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              );
-                            }),
+                                      );
+                                    }).toList(),
+                                  ),
+                                );
+                              }),
 
-                            //Clarity
+                              //Clarity
                             SizedBox(height: Get.height / 100),
                             Text('Clarity', style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
                             SizedBox(height: Get.height / 200),
@@ -954,7 +956,7 @@ class _CustomJewelleryState extends State<CustomJewellery> {
                                 ),
 
                                 SizedBox(width: Get.width / 20),
-                                
+
                                 Expanded(
 
                                   //max value
