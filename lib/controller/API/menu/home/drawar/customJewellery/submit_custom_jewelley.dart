@@ -45,6 +45,7 @@ class SubmitCustomJewelley extends GetxController{
     final List<String>? color,
     final List<String>? clarity,
     final String? token,
+    final String? captcha,
   }) async {
     final apiUrl = Uri.parse(AppUrl.addcustom);
     print('📤 Sending To Url :- $apiUrl');
