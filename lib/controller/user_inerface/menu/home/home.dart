@@ -29,6 +29,22 @@ import '../account/orderhistory.dart';
 import '../myCart/wishlist/wishlist.dart';
 
 class HomeController extends GetxController {
+  final RxBool _isActive = true.obs;
+
+  // Add condition to all methods
+  void someMethod() {
+    if (!_isActive.value) return;
+    // Your method logic here
+  }
+
+  void disableController() {
+    _isActive.value = false;
+  }
+
+  void enableController() {
+    _isActive.value = true;
+  }
+
   //HomeScreen APIs Calling
   final categories = Get.put(CategoriesCalling());
   final slider = Get.put(SliderCalling());
@@ -156,6 +172,12 @@ class HomeController extends GetxController {
     homecollction.homecollction(section_no: '3');
     homecollction.homecollction(section_no: '4');
     super.dispose();
+  }
+
+  @override
+  void onClose() {
+    _isActive.value = false;
+    super.onClose();
   }
 
 

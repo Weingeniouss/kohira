@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors, strict_top_level_inference
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_constants.dart';
@@ -8,6 +9,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../../view/screen/credentials/login.dart' show Login;
 import '../../API/credentials/logout.dart';
+import '../../user_inerface/menu/home/home.dart';
 
 class localdatabase {
   void sinupstore({
@@ -70,6 +72,25 @@ class localdatabase {
     islogin = pref!.getBool('login')?? false;
     print('isLogin :- $islogin');
 
+    await pref!.remove('login');
+    await pref!.remove('fristname');
+    await pref!.remove('lastname');
+    await pref!.remove('email');
+    await pref!.remove('mobile');
+    await pref!.remove('password');
+    await pref!.remove('countrycode');
+    await pref!.remove('tokan');
+
+    // Reset variables
+    islogin = false;
+    Fristname = '';
+    Lastname = '';
+    Email = '';
+    Mobile = '';
+    Password = '';
+    Countrycode = '';
+    tokans = '';
+
     pref!.setString('fristname', '');
     pref!.setString('lastname', '');
     pref!.setString('email', '');
@@ -128,6 +149,9 @@ void logoutUser() async {
   Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
   await Future.delayed(Duration(seconds: 2));
   Get.back();
+  if (Get.isRegistered<HomeController>()) {
+    Get.delete<HomeController>(force: true);
+  }
   localdatabase().logout();
   await Future.delayed(Duration(milliseconds: 200));
   Get.offAll(() => Login());
