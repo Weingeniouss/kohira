@@ -22,6 +22,7 @@ class AppUrl {
   //credentials
   static const login = '$baseurl/login';
   static const sinup = '$baseurl/signup';
+  static const logout = '$baseurl/logout';
   static const forgetpassword = '$baseurl/forgot-password';
   static const country = '$baseurl/country';
   static const state = '$baseurl/state';

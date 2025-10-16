@@ -7,6 +7,7 @@ import 'package:kohira/view/utils/app_constants.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../view/screen/credentials/login.dart' show Login;
+import '../../API/credentials/logout.dart';
 
 class localdatabase {
   void sinupstore({
@@ -64,6 +65,7 @@ class localdatabase {
   }
 
   Future logout() async{
+    Logout().logout();
    await pref!.setBool('login', false);
     islogin = pref!.getBool('login')?? false;
     print('isLogin :- $islogin');
@@ -74,6 +76,7 @@ class localdatabase {
     pref!.setString('mobile', '');
     pref!.setString('password', '');
     pref!.setString('countrycode', '');
+    await pref!.setString('tokan', '');
 
     Fristname = pref!.getString('fristname')!;
     Lastname = pref!.getString('lastname')!;
@@ -81,6 +84,7 @@ class localdatabase {
     Mobile = pref!.getString('mobile')!;
     Password = pref!.getString('password')!;
     Countrycode = pref!.getString('countrycode')!;
+    tokans = pref!.getString('tokan') ?? '';
 
     print('fristname :- $Fristname');
     print('lastname :- $Lastname');
@@ -88,6 +92,7 @@ class localdatabase {
     print('mobile :- $Mobile');
     print('password :- $Password');
     print('countrycode :- $Countrycode');
+    print('token :- $tokans');
   }
 
   //Product details
