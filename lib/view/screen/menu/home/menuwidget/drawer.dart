@@ -687,7 +687,8 @@ class _DrawersState extends State<Drawers> {
                             },
                         ),
 
-                        drawerIcon(
+                        //CustomJewellery
+                        (tokans?.isEmpty ?? true) ?  SizedBox() : drawerIcon(
                           icon: AppIcon.PrivacyPolicy,
                            text: AppString.customJewellery,
                             onTap: () {  

@@ -21,3 +21,5 @@ bool islogin = false;
 
 //get Tokan
 String tokans =  '';
+
+var existingItems;

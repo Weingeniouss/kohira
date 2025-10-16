@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment, unnecessary_null_comparison, no_leading_underscores_for_local_identifiers
+// ignore_for_file: avoid_print, unused_local_variable, prefer_const_constructors, avoid_unnecessary_containers, deprecated_member_use, prefer_collection_literals, prefer_conditional_assignment, unnecessary_null_comparison, no_leading_underscores_for_local_identifiers, avoid_function_literals_in_foreach_calls
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart' show JewellerydetailCall;
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
+import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -19,8 +20,10 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
+import '../../../../controller/database/local/localstore.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
+import '../../../../modal/menu/category/subcategory/addtocart.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/widget/aapbar.dart';
@@ -158,18 +161,60 @@ class _ShowproductState extends State<Showproduct> {
 
                       //Addd to cart
                       GestureDetector(
-                        onTap: () {
-                          if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
-                            // 🔹 Only for rings → require size selection
-                            if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
-                              ToastificationError.Error('Please select ring size');
+                        onTap: () async{
+                          if(tokans?.isEmpty ?? true){
+                            // Get existing items with await
+                            List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
+
+                            // Add items with different properties
+                            currentItems.addAll([
+                              JewelryItem(
+                                jewelryId: jewellery['id'].toString(),
+                                ringSize: selectedRingSizeId.toString(),
+                                qty: 1,
+                              ),
+                            ]);
+
+                            // Save the updated list
+                            await localdatabase.saveJewelryItems(currentItems);
+                            Withoutlogin().withoutlogin(currentItems);
+
+                            // Update the global variable
+                            existingItems = currentItems;
+
+                            // Print all items for verification
+                            print('All items in database:');
+                            currentItems.forEach((item) => print(item.toJson()));
+
+                          } else {
+                            if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                              // 🔹 Only for rings → require size selection
+                              if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                                ToastificationError.Error('Please select ring size');
+                              } else {
+                                if (Addtocart().isLoading.value) {
+                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                                } else {
+                                  Addtocart().addtocartservice(
+                                    jewelryid: jewellery['id'].toString(),
+                                    ringsize: selectedRingSizeId.toString(),
+                                    tokan: tokans,
+                                  ).then((_) {
+                                    setState(() {
+                                      count.counting();
+                                      myCart.onInit();
+                                    });
+                                  });
+                                }
+                              }
                             } else {
+                              // 🔹 For necklaces/others → no size validation
                               if (Addtocart().isLoading.value) {
                                 Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                               } else {
                                 Addtocart().addtocartservice(
                                   jewelryid: jewellery['id'].toString(),
-                                  ringsize: selectedRingSizeId.toString(),
+                                  ringsize: "",
                                   tokan: tokans,
                                 ).then((_) {
                                   setState(() {
@@ -178,22 +223,6 @@ class _ShowproductState extends State<Showproduct> {
                                   });
                                 });
                               }
-                            }
-                          } else {
-                            // 🔹 For necklaces/others → no size validation
-                            if (Addtocart().isLoading.value) {
-                              Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                            } else {
-                              Addtocart().addtocartservice(
-                                jewelryid: jewellery['id'].toString(),
-                                ringsize: "",
-                                tokan: tokans,
-                              ).then((_) {
-                                setState(() {
-                                  count.counting();
-                                  myCart.onInit();
-                                });
-                              });
                             }
                           }
                         },
@@ -1034,7 +1063,7 @@ class _ShowproductState extends State<Showproduct> {
                                 borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                 border: Border.all(color: AppColor.textfild_color),
                               ),
-                              child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                              // child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
                             ),
                           );
                         }

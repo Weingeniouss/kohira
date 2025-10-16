@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
 import 'dart:developer';
@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 class Logout extends GetxController {
   var isLoading = false.obs;
-  var isLoggedOut = false.obs; // 👈 Add this
+  var isLoggedOut = false.obs;
   var logoutData = {}.obs;
 
   Future<void> logout() async {

@@ -1,17 +1,50 @@
 // ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors, strict_top_level_inference
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
+import 'package:kohira/modal/menu/category/subcategory/addtocart.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_constants.dart';
 import 'package:lottie/lottie.dart';
-
 import '../../../view/screen/credentials/login.dart' show Login;
 import '../../API/credentials/logout.dart';
 import '../../user_inerface/menu/home/home.dart';
 
 class localdatabase {
+  static const String _jewelryItemsKey = 'jewelry_items';
+
+  // Save jewelry items locally
+  static Future<void> saveJewelryItems(List<JewelryItem> items) async {
+    final jsonList = items.map((item) => item.toJson()).toList();
+    await pref!.setString(_jewelryItemsKey, json.encode(jsonList));
+  }
+
+  // Get jewelry items from local storage
+  static Future<List<JewelryItem>> getJewelryItems() async {
+    final jsonString = pref!.getString(_jewelryItemsKey);
+
+    if (jsonString != null) {
+      final jsonList = json.decode(jsonString) as List<dynamic>;
+      return jsonList.map((item) => JewelryItem.fromJson(item)).toList();
+    }
+
+    return [];
+  }
+
+  // Add a single jewelry item
+  static Future<void> addJewelryItem(JewelryItem newItem) async {
+    final items = await getJewelryItems();
+    items.add(newItem);
+    await saveJewelryItems(items);
+  }
+
+  // Clear all jewelry items
+  static Future<void> clearJewelryItems() async {
+    await pref!.remove(_jewelryItemsKey);
+  }
+
+
   void sinupstore({
     required String fristname,
     required String lastname,

@@ -1,12 +1,10 @@
 // ignore_for_file: strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../../../modal/menu/category/subcategory/jewelleryfilter.dart';
 import '../../../../../modal/menu/home/drawar/customJewellery/category_customorder.dart';
 import '../../../../../view/utils/app_String.dart';
