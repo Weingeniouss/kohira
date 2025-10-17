@@ -9,6 +9,7 @@ import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dar
 import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
+import 'package:kohira/view/screen/credentials/login.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_constants.dart';
@@ -41,6 +42,8 @@ class Showproduct extends StatefulWidget {
 }
 
 class _ShowproductState extends State<Showproduct> {
+  final bool isGuest = (tokans?.isEmpty ?? true);
+
   int selectindex = 0;
   String? selectedRingSize;
   String? selectedRingSizeParaname;
@@ -162,7 +165,7 @@ class _ShowproductState extends State<Showproduct> {
                       //Addd to cart
                       GestureDetector(
                         onTap: () async{
-                          if(tokans?.isEmpty ?? true){
+                          if(isGuest){
                             // Get existing items with await
                             List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
 
@@ -244,17 +247,41 @@ class _ShowproductState extends State<Showproduct> {
                       //Buy Now
                       GestureDetector(
                         onTap: () async {
-                          if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
-                            // 🔹 Only for rings → require size selection
-                            if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
-                              ToastificationError.Error('Please select ring size');
-                            } else {
+                          if(isGuest){
+                            Get.offAll(() => Login());
+                          }else{
+                            if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                              // 🔹 Only for rings → require size selection
+                              if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                                ToastificationError.Error('Please select ring size');
+                              } else {
+                                if (Addtocart().isLoading.value) {
+                                  Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+                                } else {
+                                  await Addtocart().addtocartservice(
+                                    jewelryid: jewellery['id'].toString(),
+                                    ringsize: selectedRingSizeId.toString(),
+                                    tokan: tokans,
+                                  );
+                                  if (!mounted) return;
+                                  setState(() {
+                                    count.counting();
+                                    myCart.onInit();
+                                  });
+                                  Bottom();
+                                  bottamSelect.indexThree();
+                                  Get.back();
+                                  Get.back();
+                                  Get.back();
+                                }
+                              }
+                            }else {
                               if (Addtocart().isLoading.value) {
                                 Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
                               } else {
                                 await Addtocart().addtocartservice(
                                   jewelryid: jewellery['id'].toString(),
-                                  ringsize: selectedRingSizeId.toString(),
+                                  ringsize: '',
                                   tokan: tokans,
                                 );
                                 if (!mounted) return;
@@ -268,26 +295,6 @@ class _ShowproductState extends State<Showproduct> {
                                 Get.back();
                                 Get.back();
                               }
-                            }
-                          }else {
-                            if (Addtocart().isLoading.value) {
-                              Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                            } else {
-                              await Addtocart().addtocartservice(
-                                jewelryid: jewellery['id'].toString(),
-                                ringsize: '',
-                                tokan: tokans,
-                              );
-                              if (!mounted) return;
-                              setState(() {
-                                count.counting();
-                                myCart.onInit();
-                              });
-                              Bottom();
-                              bottamSelect.indexThree();
-                              Get.back();
-                              Get.back();
-                              Get.back();
                             }
                           }
                         },
@@ -1142,10 +1149,10 @@ class _ShowproductState extends State<Showproduct> {
                                     print('Wishlist error: $e');
                                   }
                                 },
-                              child: (tokans.isEmpty ?? true) ? SvgPicture.asset(AppIcon.like, width: 30, height: 30) :(count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
-                                  ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
-                                  : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
-                            )
+                              child: (isGuest)
+                                  ? SvgPicture.asset(AppIcon.like, width: 30, height: 30) :(count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
+                                  ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color) : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
+                             )
 
                             //Wishlist
                             // GestureDetector(

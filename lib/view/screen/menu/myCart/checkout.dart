@@ -12,6 +12,7 @@ import 'package:kohira/controller/API/menu/myCart/process-payment.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/cheackout.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
+import 'package:kohira/view/screen/credentials/login.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -24,6 +25,7 @@ import '../../../../controller/API/menu/account/profiledetails.dart';
 import '../../../../controller/user_inerface/menu/myCart/buynow.dart';
 import '../../../../modal/credentials/country.dart';
 import '../../../utils/app_String.dart';
+import '../../../utils/app_constants.dart';
 import '../../../utils/app_gif.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
@@ -46,6 +48,21 @@ class Checkout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
+    double getProductPrice(Map<String, dynamic> fetchdata) {
+      // Safely check if discount exists and is greater than 0
+      final discount = fetchdata['discount'];
+      final offerPrice = fetchdata['offer_price'];
+      final settingPrice = fetchdata['setting_price'];
+
+      // Use offer price if discount exists and is greater than 0, otherwise use setting price
+      if (discount != null && discount > 0 && offerPrice != null) {
+        return offerPrice.toDouble();
+      } else if (settingPrice != null) {
+        return settingPrice.toDouble();
+      } else {
+        return 0.0; // Default fallback
+      }
+    }
     return WillPopScope(
       onWillPop: () async {
         Get.back();
@@ -84,13 +101,35 @@ class Checkout extends StatelessWidget {
               decoration: BoxDecoration(color: AppColor.white_color),
               child: Obx(() {
                 final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-                if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
-                  myCart.initializeItemCounts();
-                }
-                final fetch = myCart.fetchcart.data['carts'] ?? [];
+                // if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
+                //   myCart.initializeItemCounts();
+                // }
+                // final fetch = myCart.fetchcart.data['carts'] ?? [];
+                // if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
+                // var remaining = wallet.data['myWalletAmount'] - myCart.subTotal.value;
+                // var totalprice  = myCart.subTotal.value + myCart.fetchcart.data['global_tax']['globaltaxcharge'];
+
+                final bool isGuest = (tokans?.isEmpty ?? true);
+                final fetch = isGuest ? myCart.witoutlogin.data['carts'] ?? [] :  myCart.fetchcart.data['carts'] ?? [];
+
                 if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
-                var remaining = wallet.data['myWalletAmount'] - myCart.subTotal.value;
-                var totalprice  = myCart.subTotal.value + myCart.fetchcart.data['global_tax']['globaltaxcharge'];
+
+                // Safe null handling for wallet amount
+                String totalitems = isGuest
+                    ? myCart.witoutlogin.data['count']?.toString() ?? '0'
+                    : myCart.fetchcart.data['count']?.toString() ?? '0';
+
+                int myWalletAmount = int.tryParse(wallet.data['myWalletAmount']?.toString() ?? '0') ?? 0;
+                double subTotalValue = myCart.subTotal.value ?? 0.0;
+                double globalTax = isGuest
+                    ? (myCart.witoutlogin.data['global_tax']['globaltaxcharge'] as num?)?.toDouble() ?? 0.0
+                    : (myCart.fetchcart.data['global_tax']['globaltaxcharge'] as num?)?.toDouble() ?? 0.0;
+
+                // Calculate with safe defaults
+                var remaining = myWalletAmount - subTotalValue;
+                var totalprice = subTotalValue + globalTax;
+
+
                 return SingleChildScrollView(
                   child: horizontalpadding(
                     child: Column(
@@ -155,8 +194,9 @@ class Checkout extends StatelessWidget {
                                             ),
                                             SizedBox(height: 4),
                                             Text(
-                                              indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
-                                              style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600)),
+                                              indianFormat.format(getProductPrice(fetchdata)),
+                                              style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600),
+                                            ),
                                             SizedBox(height: 8),
 
                                             // Quantity Controls
@@ -165,7 +205,11 @@ class Checkout extends StatelessWidget {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    myCart.decrementValueOfCount(index);
+                                                    if(isGuest){
+                                                      myCart.decrementValueOfLocal(index);
+                                                    }else{
+                                                      myCart.decrementValueOfCount(index);
+                                                    }
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -173,8 +217,7 @@ class Checkout extends StatelessWidget {
                                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                                     ),
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                                    child: Text('-', style: TextStyle(fontSize: Get.width / 20)
-                                                    ),
+                                                    child: Text('-', style: TextStyle(fontSize: Get.width / 20)),
                                                   ),
                                                 ),
                                                 SizedBox(width: Get.width / 20),
@@ -190,7 +233,11 @@ class Checkout extends StatelessWidget {
                                                 SizedBox(width: Get.width / 20),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    myCart.incrementValueOfCount(index);
+                                                    if (isGuest) {
+                                                      myCart.incrementValueOfLocal(index);
+                                                    } else {
+                                                      myCart.incrementValueOfCount(index);
+                                                    }
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -198,8 +245,7 @@ class Checkout extends StatelessWidget {
                                                       borderRadius: BorderRadius.circular(Get.width / 50),
                                                     ),
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                                    child: Text('+', style: TextStyle(fontSize: Get.width / 20)
-                                                    ),
+                                                    child: Text('+', style: TextStyle(fontSize: Get.width / 20)),
                                                   ),
                                                 ),
                                               ],
@@ -207,6 +253,26 @@ class Checkout extends StatelessWidget {
                                           ],
                                         ),
                                       ),
+
+                                      // // Delete Button
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     if(isGuest){
+                                      //       myCart.deletvalueoflocal(index);
+                                      //     }else{
+                                      //       myCart.deletValueofcount(item, fetch, index);
+                                      //       count.counting();
+                                      //     }
+                                      //   },
+                                      //   child: Container(
+                                      //     decoration: BoxDecoration(
+                                      //       color: AppColor.white_color,
+                                      //       borderRadius: BorderRadius.circular(Get.width / 50),
+                                      //     ),
+                                      //     padding: EdgeInsets.all(8),
+                                      //     child: Icon(Icons.delete_outline_outlined, color: AppColor.pink_color, size: 20),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -214,10 +280,10 @@ class Checkout extends StatelessWidget {
                             },
                           ),
                         ),
-                        SizedBox(height: Get.height / 50),
+                        (isGuest) ?  SizedBox() :  SizedBox(height: Get.height / 50),
 
                         //Shiping Address
-                        containershadow(
+                        (isGuest) ?  SizedBox() :  containershadow(
                           child: Column(
                             children: [
                               Row(
@@ -260,7 +326,7 @@ class Checkout extends StatelessWidget {
                               ),
                               SizedBox(height: Get.height / 80),
                               SizedBox(
-                                child: ListView.builder(
+                                child:  (isGuest) ?  SizedBox() :  ListView.builder(
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: fech.data['userAdddress'].length,
@@ -503,18 +569,18 @@ class Checkout extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.tax),
-                                  Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  Text(indianFormat.format(globalTax), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                 ],
                               ),
                               Divider(color: AppColor.textfild_color),
-                              Row(
+                              (isGuest) ? SizedBox() : Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.totalwallet),
                                   Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                 ],
                               ),
-                              Divider(color: AppColor.textfild_color),
+                              (isGuest) ? SizedBox() : Divider(color: AppColor.textfild_color),
                               (buynowUI.ischeack.value) ? Column(
                                 children: [
                                   Row(
@@ -535,7 +601,13 @@ class Checkout extends StatelessWidget {
                                   Divider(color: AppColor.textfild_color),
                                 ],
                               ) : SizedBox(),
-                              Row(
+                              (isGuest) ?  Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(AppString.totalprice),
+                                  Text(indianFormat.format(totalprice), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                ],
+                              ) : Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(AppString.estimatedamount),
@@ -560,6 +632,9 @@ class Checkout extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
+                                      if(isGuest){
+                                        Get.offAll(() => Login());
+                                      }else{
                                         try {
                                           // await the API call
                                           await processpayment.processpayment(
@@ -581,32 +656,33 @@ class Checkout extends StatelessWidget {
                                             remainingAmount: remaining.toString(),
                                           );
 
-                                        // ensure data exists
-                                        if (processpayment.data != null) {
-                                          // safe parse of code (could be int or string)
-                                          final dynamic codeRaw = processpayment.data['code'];
-                                          final int code = (codeRaw is int)
-                                              ? codeRaw
-                                              : int.tryParse(codeRaw?.toString() ?? '') ?? 0;
+                                          // ensure data exists
+                                          if (processpayment.data != null) {
+                                            // safe parse of code (could be int or string)
+                                            final dynamic codeRaw = processpayment.data['code'];
+                                            final int code = (codeRaw is int)
+                                                ? codeRaw
+                                                : int.tryParse(codeRaw?.toString() ?? '') ?? 0;
 
-                                          // safe extraction of gatewayUrl
-                                          final String? gatewayUrlRaw = processpayment.data['gatewayUrl']?.toString();
-                                          if (gatewayUrlRaw != null && gatewayUrlRaw.isNotEmpty) {
-                                            final Uri? url = Uri.tryParse(gatewayUrlRaw);
-                                            if (url != null) {
-                                              await launchUrl(url, mode: LaunchMode.externalApplication);
+                                            // safe extraction of gatewayUrl
+                                            final String? gatewayUrlRaw = processpayment.data['gatewayUrl']?.toString();
+                                            if (gatewayUrlRaw != null && gatewayUrlRaw.isNotEmpty) {
+                                              final Uri? url = Uri.tryParse(gatewayUrlRaw);
+                                              if (url != null) {
+                                                await launchUrl(url, mode: LaunchMode.externalApplication);
+                                              } else {
+                                                ToastificationError.Error('Invalid payment URL');
+                                              }
                                             } else {
-                                              ToastificationError.Error('Invalid payment URL');
+                                              ToastificationError.Error('Payment gateway URL not provided');
                                             }
                                           } else {
-                                            ToastificationError.Error('Payment gateway URL not provided');
+                                            ToastificationError.Error('Payment failed: no response');
                                           }
-                                        } else {
-                                          ToastificationError.Error('Payment failed: no response');
+                                        } catch (e, st) {
+                                          if (kDebugMode) print('Payment error: $e\n$st');
+                                          ToastificationError.Error('Payment failed. Try again.');
                                         }
-                                      } catch (e, st) {
-                                        if (kDebugMode) print('Payment error: $e\n$st');
-                                        ToastificationError.Error('Payment failed. Try again.');
                                       }
                                     },
                                     child: button(AppString.paynow),
