@@ -25,6 +25,7 @@ import '../../../../controller/database/local/localstore.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import '../../../../modal/menu/category/subcategory/addtocart.dart';
+import '../../../../modal/menu/category/subcategory/addtowish.dart';
 import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/widget/aapbar.dart';
@@ -182,7 +183,7 @@ class _ShowproductState extends State<Showproduct> {
                             await localdatabase.saveJewelryItems(currentItems);
                             Withoutlogin().withoutlogin(currentItems);
                             // Update the global variable
-                            existingItems = currentItems;
+                            existingItemsCart = currentItems;
 
                             ToastificationSuccess.Success('Add To cart Suessfully');
 
@@ -1108,45 +1109,77 @@ class _ShowproductState extends State<Showproduct> {
                             //Wishlist
                             GestureDetector(
                                 onTap: () async {
-                                  // Check conditions for rings
-                                  if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
-                                    if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
-                                      ToastificationError.Error('Please select ring size');
+                                  if(isGuest){
+                                    // Get existing items with await
+                                    List<JewelryItemWish> currentItemswish = await localdatabase.getJewelryItemsWish();
+
+                                    // Add items with different properties
+                                    currentItemswish.addAll([
+                                      JewelryItemWish(
+                                        jewelryId: jewellery['id'].toString(),
+                                        ringSize: selectedRingSizeId.toString(),
+                                        qty: 1,
+                                      ),
+                                    ]);
+
+                                    // Save the updated list
+                                    await localdatabase.saveJewelryItemsWish(currentItemswish);
+                                    WithoutloginWishList().withoutloginwishlist(currentItemswish);
+
+                                    // Update the global variable
+                                    existingItemsWish = currentItemswish;
+
+                                    ToastificationSuccess.Success('Add To Wish Suessfully');
+
+                                    // Print all items for verification
+                                    print('All items in database:');
+                                    currentItemswish.forEach((itemwish) => print(itemwish.toJson()));
+
+                                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      wish.withoutloginWish.withoutloginwishlist(currentItemswish);
+                                    });
+                                  }
+                                  else{
+                                    // Check conditions for rings
+                                    if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
+                                      if (selectedRingSizeId == null && selectedRingSizeParaname == null) {
+                                        ToastificationError.Error('Please select ring size');
+                                        return;
+                                      }
+                                    }
+
+                                    if (wishlist.isLoading.value) {
+                                      Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
                                       return;
                                     }
-                                  }
 
-                                  if (wishlist.isLoading.value) {
-                                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
-                                    return;
-                                  }
+                                    try {
+                                      // Show loading
+                                      Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
 
-                                  try {
-                                    // Show loading
-                                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)), barrierDismissible: false);
+                                      await wishlist.wishlistservice(
+                                        ringsize: selectedRingSizeParaname,
+                                        jewelryid: currentVariant?['id'].toString(),
+                                        metal_stamp: isWishlisted ? selectedMetalStamp : null,
+                                        metal_type: selectedMetalType,
+                                        tokan: tokans,
+                                      );
+                                      // Close loading dialog
+                                      Get.back();
 
-                                    await wishlist.wishlistservice(
-                                      ringsize: selectedRingSizeParaname,
-                                      jewelryid: currentVariant?['id'].toString(),
-                                      metal_stamp: isWishlisted ? selectedMetalStamp : null,
-                                      metal_type: selectedMetalType,
-                                      tokan: tokans,
-                                    );
-                                    // Close loading dialog
-                                    Get.back();
+                                      // Update UI immediately
+                                      setState(() {
+                                        isWishlisted = !isWishlisted;
+                                      });
 
-                                    // Update UI immediately
-                                    setState(() {
-                                      isWishlisted = !isWishlisted;
-                                    });
+                                      // Refresh counters
+                                      count.counting();
+                                      wish.fetchwishlist.fechwishlist();
 
-                                    // Refresh counters
-                                    count.counting();
-                                    wish.fetchwishlist.fechwishlist();
-
-                                  } catch (e) {
-                                    Get.back();
-                                    print('Wishlist error: $e');
+                                    } catch (e) {
+                                      Get.back();
+                                      print('Wishlist error: $e');
+                                    }
                                   }
                                 },
                               child: (isGuest)

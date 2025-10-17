@@ -49,6 +49,7 @@ class AppUrl {
       //Categorie
       static const recommendedJewelleryList ='$baseurl/recommendedJewelleryList';
       static const wishlist = '$baseurl/wishlist';
+      static const wishlistwithoutlogin = '$baseurl/wishlist/withoutlogin';
       static const wishlistdelete = '$baseurl/wishlist-delete';
       static const addtocart = '$baseurl/cart';
       static const jewelleryDetail = '$baseurl/JewelleryDetailApp';

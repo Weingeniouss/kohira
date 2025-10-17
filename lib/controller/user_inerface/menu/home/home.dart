@@ -8,7 +8,10 @@ import 'package:kohira/controller/API/menu/account/profiledetails.dart';
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/customorder.dart';
 import 'package:kohira/controller/API/menu/others/drawer/collection.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
+import 'package:kohira/modal/menu/category/subcategory/addtowish.dart';
 
+import '../../../../modal/menu/category/subcategory/addtocart.dart';
+import '../../../../view/utils/app_constants.dart';
 import '../../../API/menu/account/addresses.dart';
 import '../../../API/menu/account/wallet.dart';
 import '../../../API/menu/category/subcategrory/filtercategory.dart';
@@ -20,10 +23,12 @@ import '../../../API/menu/home/homecollction.dart';
 import '../../../API/menu/home/homejewelry.dart';
 import '../../../API/menu/home/slider.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
+import '../../../API/menu/myCart/withoutlogin.dart';
 import '../../../API/menu/others/count.dart';
 import '../../../API/menu/others/drawer/Jewellery_list.dart';
 import '../../../API/menu/overstore/citylist.dart';
 import '../../../API/menu/overstore/overStore.dart';
+import '../../../database/local/localstore.dart';
 import '../account/account.dart';
 import '../account/orderhistory.dart';
 import '../myCart/wishlist/wishlist.dart';
@@ -52,7 +57,7 @@ class HomeController extends GetxController {
   final homejewelry = Get.put(Homejewelry());
 
   //Wishlist
-  final WishlistController wish = Get.put(WishlistController());
+  final wish = Get.put(WishlistController());
 
   //Account Scrren
   final profileDetails = Get.put(ProfiledetailsController());

@@ -22,4 +22,5 @@ bool islogin = false;
 //get Tokan
 String tokans =  '';
 
-var existingItems;
+var existingItemsCart;
+var existingItemsWish;

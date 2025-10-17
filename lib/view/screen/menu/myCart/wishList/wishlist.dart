@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -12,12 +13,14 @@ import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
+import '../../../../utils/app_constants.dart';
 import '../../../../utils/app_json.dart';
 import '../../../../utils/widget/horizontalpading.dart';
 import '../../category/showproduct.dart';
 
 class WishlistScreen extends StatelessWidget {
   final wish = Get.put(WishlistController());
+  final bool isGuest = (tokans?.isEmpty ?? true);
   WishlistScreen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -86,7 +89,7 @@ class WishlistScreen extends StatelessWidget {
             );
           }
 
-          final wishlists = wish.fetchwishlist.data['wishlists'];
+          final wishlists = isGuest ? wish.withoutloginWish.data['wishlists'] : wish.fetchwishlist.data['wishlists'];
 
           if (wishlists == null || wishlists is! List || wishlists.isEmpty) {
             return Center(child: Lottie.asset(AppJson.noData));
@@ -100,9 +103,11 @@ class WishlistScreen extends StatelessWidget {
               Expanded(
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.68),
-                  itemCount: (wish.fetchwishlist.data['wishlists'] != null) ? wish.fetchwishlist.data['wishlists'].length : 0,
+                  itemCount: isGuest
+                      ? (wish.withoutloginWish.data['wishlists']) ? wish.withoutloginWish.data['wishlists'].length : 0
+                      : (wish.fetchwishlist.data['wishlists'] != null) ? wish.fetchwishlist.data['wishlists'].length : 0,
                   itemBuilder: (BuildContext context, int index) {
-                    final wishlistItem = wish.fetchwishlist.data['wishlists'][index];
+                    final wishlistItem =  isGuest ? wish.withoutloginWish.data['wishlists'] :  wish.fetchwishlist.data['wishlists'][index];
                     final fetch = wishlistItem['WishlistJewelryData'];
                     final id = wishlistItem['id'].toString();
                     String priceText = 'N/A';

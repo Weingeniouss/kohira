@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/modal/menu/category/subcategory/addtocart.dart';
+import 'package:kohira/modal/menu/category/subcategory/addtowish.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_constants.dart';
 import 'package:lottie/lottie.dart';
@@ -12,19 +13,41 @@ import '../../API/credentials/logout.dart';
 import '../../user_inerface/menu/home/home.dart';
 
 class localdatabase {
-  static const String _jewelryItemsKey = 'jewelry_items';
+  static const String _jewelryItemsKeyCart = 'jewelry_items';
+  static const String _jewelryItemsKeyWish = 'jewelry_items';
 
   // Cart List
   // Save List Localiy  Guest User
   // Save jewelry items locally
+
+  //wishlist
+  static Future<void> saveJewelryItemsWish(List<JewelryItemWish> items) async {
+    final jsonList = items.map((item) => item.toJson()).toList();
+    await pref!.setString(_jewelryItemsKeyWish, json.encode(jsonList));
+  }
+
+  // Get jewelry items from local storage
+  static Future<List<JewelryItemWish>> getJewelryItemsWish() async {
+    final jsonString = pref!.getString(_jewelryItemsKeyWish);
+
+    if (jsonString != null) {
+      final jsonList = json.decode(jsonString) as List<dynamic>;
+      return jsonList.map((item) => JewelryItemWish.fromJson(item)).toList();
+    }
+
+    return [];
+  }
+
+
+  //Cart
   static Future<void> saveJewelryItems(List<JewelryItem> items) async {
     final jsonList = items.map((item) => item.toJson()).toList();
-    await pref!.setString(_jewelryItemsKey, json.encode(jsonList));
+    await pref!.setString(_jewelryItemsKeyCart, json.encode(jsonList));
   }
 
   // Get jewelry items from local storage
   static Future<List<JewelryItem>> getJewelryItems() async {
-    final jsonString = pref!.getString(_jewelryItemsKey);
+    final jsonString = pref!.getString(_jewelryItemsKeyCart);
 
     if (jsonString != null) {
       final jsonList = json.decode(jsonString) as List<dynamic>;
@@ -43,18 +66,18 @@ class localdatabase {
 
   // Clear all jewelry items
   static Future<void> clearJewelryItems() async {
-    await pref!.remove(_jewelryItemsKey);
+    await pref!.remove(_jewelryItemsKeyCart);
   }
 
   Future<void> deleteJewelryItem(int index) async {
-    final String? jewelryItemsJson = pref!.getString(_jewelryItemsKey);
+    final String? jewelryItemsJson = pref!.getString(_jewelryItemsKeyCart);
 
     if (jewelryItemsJson != null) {
       List<dynamic> jewelryItems = jsonDecode(jewelryItemsJson);
       if (index >= 0 && index < jewelryItems.length) {
         print('Deleting jewelry item: ${jewelryItems[index]}');
         jewelryItems.removeAt(index);
-        await pref!.setString(_jewelryItemsKey, jsonEncode(jewelryItems));
+        await pref!.setString(_jewelryItemsKeyCart, jsonEncode(jewelryItems));
         print('Jewelry item at index $index deleted successfully.');
       } else {
         print('Invalid index: $index');
@@ -65,7 +88,7 @@ class localdatabase {
   }
 
   Future<void> incrementItemCountInLocal(int index, int newCount) async {
-    final String? jewelryItemsJson = pref!.getString(_jewelryItemsKey);
+    final String? jewelryItemsJson = pref!.getString(_jewelryItemsKeyCart);
 
     if (jewelryItemsJson != null) {
       List<dynamic> jewelryItems = jsonDecode(jewelryItemsJson);
@@ -73,7 +96,7 @@ class localdatabase {
         var item = jewelryItems[index];
         item['count'] = newCount;
         jewelryItems[index] = item;
-        await pref!.setString(_jewelryItemsKey, jsonEncode(jewelryItems));
+        await pref!.setString(_jewelryItemsKeyCart, jsonEncode(jewelryItems));
         print('Updated local jewelry item count at index $index → $newCount');
       } else {
         print('Invalid index: $index');
@@ -84,7 +107,7 @@ class localdatabase {
   }
 
   Future<void> decrementItemCountInLocal(int index, int newCount) async {
-    final String? jewelryItemsJson = pref!.getString(_jewelryItemsKey);
+    final String? jewelryItemsJson = pref!.getString(_jewelryItemsKeyCart);
 
     if (jewelryItemsJson != null) {
       List<dynamic> jewelryItems = jsonDecode(jewelryItemsJson);
@@ -92,7 +115,7 @@ class localdatabase {
         var item = jewelryItems[index];
         item['count'] = newCount;
         jewelryItems[index] = item;
-        await pref!.setString(_jewelryItemsKey, jsonEncode(jewelryItems));
+        await pref!.setString(_jewelryItemsKeyCart, jsonEncode(jewelryItems));
         print('Updated local jewelry item count at index $index → $newCount');
       } else {
         print('Invalid index: $index');
