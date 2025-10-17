@@ -16,6 +16,7 @@ import 'package:kohira/view/utils/widget/button.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../controller/user_inerface/menu/myCart/myCart.dart';
 import '../../../utils/app_String.dart';
+import '../../../utils/app_constants.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
@@ -34,6 +35,23 @@ class _BuynowState extends State<Buynow> {
   final buynowUI = Get.put(BuynowController());
   final count = Get.put(CountController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  double getProductPrice(Map<String, dynamic> fetchdata) {
+    // Safely check if discount exists and is greater than 0
+    final discount = fetchdata['discount'];
+    final offerPrice = fetchdata['offer_price'];
+    final settingPrice = fetchdata['setting_price'];
+
+    // Use offer price if discount exists and is greater than 0, otherwise use setting price
+    if (discount != null && discount > 0 && offerPrice != null) {
+      return offerPrice.toDouble();
+    } else if (settingPrice != null) {
+      return settingPrice.toDouble();
+    } else {
+      return 0.0; // Default fallback
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -102,13 +120,26 @@ class _BuynowState extends State<Buynow> {
               // if (myCart.fetchcart.data.isNotEmpty && myCart.fetchcart.data['carts'] != null && myCart.itemCounts.length != myCart.fetchcart.data['carts'].length) {
               //   myCart.initializeItemCounts();
               // }
-              final fetch = myCart.fetchcart.data['carts'] ?? [];
+
+              final bool isGuest = (tokans?.isEmpty ?? true);
+              final fetch = isGuest ? myCart.witoutlogin.data['carts'] ?? [] :  myCart.fetchcart.data['carts'] ?? [];
 
               if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
 
-              var remaining = wallet.data['myWalletAmount'] - myCart.subTotal.value;
-              var totalprice  = myCart.subTotal.value + myCart.fetchcart.data['global_tax']['globaltaxcharge'];
-              int myWalletAmount = int.tryParse(wallet.data['myWalletAmount'].toString()) ?? 0;
+              // Safe null handling for wallet amount
+              String totalitems = isGuest
+                  ? myCart.witoutlogin.data['count']?.toString() ?? '0'
+                  : myCart.fetchcart.data['count']?.toString() ?? '0';
+
+              int myWalletAmount = int.tryParse(wallet.data['myWalletAmount']?.toString() ?? '0') ?? 0;
+              double subTotalValue = myCart.subTotal.value ?? 0.0;
+              double globalTax = isGuest
+                  ? (myCart.witoutlogin.data['global_tax']['globaltaxcharge'] as num?)?.toDouble() ?? 0.0
+                  : (myCart.fetchcart.data['global_tax']['globaltaxcharge'] as num?)?.toDouble() ?? 0.0;
+
+              // Calculate with safe defaults
+              var remaining = myWalletAmount - subTotalValue;
+              var totalprice = subTotalValue + globalTax;
 
               return SingleChildScrollView(
                 child: horizontalpadding(
@@ -173,7 +204,7 @@ class _BuynowState extends State<Buynow> {
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                        indianFormat.format((fetchdata['discount'] > 0) ? fetchdata['offer_price'] : fetchdata['setting_price']),
+                                        indianFormat.format(getProductPrice(fetchdata)),
                                         style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600),
                                       ),
                                       SizedBox(height: 8),
@@ -184,7 +215,11 @@ class _BuynowState extends State<Buynow> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              myCart.decrementValueOfCount(index);
+                                              if(isGuest){
+                                                myCart.decrementValueOfLocal(index);
+                                              }else{
+                                                myCart.decrementValueOfCount(index);
+                                              }
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -208,7 +243,11 @@ class _BuynowState extends State<Buynow> {
                                           SizedBox(width: Get.width / 20),
                                           GestureDetector(
                                             onTap: () {
-                                              myCart.incrementValueOfCount(index);
+                                              if (isGuest) {
+                                                myCart.incrementValueOfLocal(index);
+                                              } else {
+                                                myCart.incrementValueOfCount(index);
+                                              }
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -228,8 +267,12 @@ class _BuynowState extends State<Buynow> {
                                 // Delete Button
                                 GestureDetector(
                                   onTap: () {
-                                    myCart.deletValueofcount(item, fetch, index);
-                                    count.counting();
+                                    if(isGuest){
+                                      myCart.deletvalueoflocal(index);
+                                    }else{
+                                      myCart.deletValueofcount(item, fetch, index);
+                                      count.counting();
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -321,7 +364,7 @@ class _BuynowState extends State<Buynow> {
                             children: [
                               Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
                               SizedBox(width: Get.width / 80),
-                              Text('(${myCart.fetchcart.data['count']} ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                              Text('($totalitems ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
                             ],
                           ),
                           SizedBox(height: Get.height / 80),
@@ -329,7 +372,7 @@ class _BuynowState extends State<Buynow> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppString.subtotalprice),
-                              Text(indianFormat.format((myCart.subTotal.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                              Text(indianFormat.format(subTotalValue), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                             ],
                           ),
                           Divider(color: AppColor.textfild_color),
@@ -353,7 +396,7 @@ class _BuynowState extends State<Buynow> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppString.tax),
-                              Text(indianFormat.format(myCart.fetchcart.data['global_tax']['globaltaxcharge']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                              Text(indianFormat.format(globalTax), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                             ],
                           ),
                           Divider(color: AppColor.textfild_color),

@@ -1,5 +1,5 @@
 
-// ignore_for_file: file_names, prefer_const_constructors, strict_top_level_inference
+// ignore_for_file: file_names, prefer_const_constructors, strict_top_level_inference, avoid_print
 
 // class MyCartValueChange extends GetxController {
 //   var hasDialogShownOnce = false.obs;
@@ -125,14 +125,19 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
+import '../../../../modal/menu/category/subcategory/addtocart.dart';
+import '../../../../view/utils/app_constants.dart';
 import '../../../API/menu/myCart/deletcart.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
+import '../../../API/menu/myCart/withoutlogin.dart';
+import '../../../database/local/localstore.dart';
 
 class MyCartValueChange extends GetxController {
   var hasDialogShownOnce = false.obs;
   var isDialogVisible = false.obs;
 
   final fetchcart = Get.put(FetchcartCalling());
+  final witoutlogin = Get.put(Withoutlogin());
   final deletcount = Get.put(Deletcart());
 
   var subTotal = 0.0.obs;
@@ -141,6 +146,8 @@ class MyCartValueChange extends GetxController {
   var tax = 0.0.obs;
 
   var itemCounts = <int>[].obs;
+  bool get isGuestUser => (tokans?.isEmpty ?? true);
+  RxList<JewelryItem> existingItems = <JewelryItem>[].obs;
 
   // Store pending updates for each cart item
   Map<int, int> pendingUpdates = {};
@@ -160,10 +167,28 @@ class MyCartValueChange extends GetxController {
   }
 
   // Load data
+  // Future<void> loadCartData() async {
+  //   try {
+  //     await fetchcart.fetchcartcall();
+  //     _updateAllCartData();
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Error loading cart data: $e');
+  //     }
+  //   }
+  // }
+
   Future<void> loadCartData() async {
     try {
-      await fetchcart.fetchcartcall();
-      _updateAllCartData();
+      if (isGuestUser) {
+        final items = await localdatabase.getJewelryItems();
+        existingItems.value = items;
+        await witoutlogin.withoutlogin(items);
+        _updateAllCartData();
+      } else {
+        await fetchcart.fetchcartcall();
+        _updateAllCartData();
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error loading cart data: $e');
@@ -172,27 +197,31 @@ class MyCartValueChange extends GetxController {
   }
 
   void initializeItemCounts() {
-    if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
-      itemCounts.value = List.generate(fetchcart.data['carts'].length, (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()));
+    final cartData = isGuestUser ? witoutlogin.data : fetchcart.data;
+
+    if (cartData.isNotEmpty && cartData['carts'] != null) {
+      itemCounts.value = List.generate(cartData['carts'].length, (index) => int.parse(cartData['carts'][index]['qty'].toString()));
     }
   }
 
   // Update all cart data from API response
   void _updateAllCartData() {
-    if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
+    final cartData = isGuestUser ? witoutlogin.data : fetchcart.data;
+
+    if (cartData.isNotEmpty && cartData['carts'] != null) {
       // Update item counts
-      final newItemCounts = fetchcart.data['carts'].map<int>((item) {
+      final newItemCounts = cartData['carts'].map<int>((item) {
         return int.tryParse(item['qty'].toString()) ?? 1;
       }).toList();
       itemCounts.value = newItemCounts;
 
       // Update totals
-      subTotal.value = double.tryParse(fetchcart.data['cart_gross'].toString()) ?? 0.0;
-      discount.value = double.tryParse(fetchcart.data['discount'].toString()) ?? 0.0;
-      total.value = double.tryParse(fetchcart.data['net_amount'].toString()) ?? 0.0;
+      subTotal.value = double.tryParse(cartData['cart_gross'].toString()) ?? 0.0;
+      discount.value = double.tryParse(cartData['discount'].toString()) ?? 0.0;
+      total.value = double.tryParse(cartData['net_amount'].toString()) ?? 0.0;
 
       if (fetchcart.data['global_tax'] != null) {
-        tax.value = double.tryParse(fetchcart.data['global_tax']['globaltaxcharge'].toString()) ?? 0.0;
+        tax.value = double.tryParse(cartData['global_tax']['globaltaxcharge'].toString()) ?? 0.0;
       }
     } else {
       // Reset values if cart is empty
@@ -242,6 +271,41 @@ class MyCartValueChange extends GetxController {
     }
   }
 
+  // Increment Value of Localy
+  void incrementValueOfLocal(int index) async {
+    if (index >= itemCounts.length) return;
+
+    try {
+
+      itemCounts[index] = itemCounts[index] + 1;
+
+      List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
+
+      if (index < currentItems.length) {
+        currentItems[index] = JewelryItem(
+          diamondId: currentItems[index].diamondId,
+          jewelryId: currentItems[index].jewelryId,
+          ringSize: currentItems[index].ringSize,
+          qty: itemCounts[index],
+        );
+
+        await localdatabase.saveJewelryItems(currentItems);
+
+        print('Updated quantity for item at index $index → ${itemCounts[index]}');
+      }
+
+      await localdatabase().incrementItemCountInLocal(index, itemCounts[index]);
+
+      await loadCartData();
+
+      print('Incremented item count locally and updated local DB at index $index → ${itemCounts[index]}');
+
+    } catch (e) {
+      print('Error incrementing value: $e');
+    }
+  }
+
+
   // Increment Value
   void incrementValueOfCount(int index) {
     if (index >= itemCounts.length) return;
@@ -259,6 +323,45 @@ class MyCartValueChange extends GetxController {
     });
   }
 
+  void decrementValueOfLocal(int index) async {
+    if (index >= itemCounts.length) return;
+
+    try {
+      // Ensure quantity doesn't go below 1 (or 0 if you want to allow removal)
+      if (itemCounts[index] > 1) {
+        itemCounts[index] = itemCounts[index] - 1;
+
+        List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
+
+        if (index < currentItems.length) {
+          currentItems[index] = JewelryItem(
+            diamondId: currentItems[index].diamondId,
+            jewelryId: currentItems[index].jewelryId,
+            ringSize: currentItems[index].ringSize,
+            qty: itemCounts[index],
+          );
+
+          await localdatabase.saveJewelryItems(currentItems);
+
+          print('Decremented quantity for item at index $index → ${itemCounts[index]}');
+        }
+
+        await localdatabase().incrementItemCountInLocal(index, itemCounts[index]);
+
+        await loadCartData();
+
+        print('Decremented item count locally and updated local DB at index $index → ${itemCounts[index]}');
+      } else {
+        print('Cannot decrement below 1 at index $index');
+        // Optional: You can remove the item if quantity reaches 0
+        // await removeItemFromLocal(index);
+      }
+
+    } catch (e) {
+      print('Error decrementing value: $e');
+    }
+  }
+
   // Decrement Value
   void decrementValueOfCount(int index) {
     if (index >= itemCounts.length || itemCounts[index] <= 1) return;
@@ -274,6 +377,15 @@ class MyCartValueChange extends GetxController {
     _debounce = Timer(Duration(milliseconds: 800), () {
       _processPendingUpdates();
     });
+  }
+
+  Future<void> deletvalueoflocal(int index) async{
+    if (index >= itemCounts.length) return;
+
+    // Update local state immediately
+    localdatabase().deleteJewelryItem(index);
+    ToastificationSuccess.Success("Item Deleted Successfully");
+    await loadCartData();
   }
 
   // Delete Value

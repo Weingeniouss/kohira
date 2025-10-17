@@ -178,13 +178,18 @@ class _ShowproductState extends State<Showproduct> {
                             // Save the updated list
                             await localdatabase.saveJewelryItems(currentItems);
                             Withoutlogin().withoutlogin(currentItems);
-
                             // Update the global variable
                             existingItems = currentItems;
+
+                            ToastificationSuccess.Success('Add To cart Suessfully');
 
                             // Print all items for verification
                             print('All items in database:');
                             currentItems.forEach((item) => print(item.toJson()));
+
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              myCart.loadCartData();
+                            });
 
                           } else {
                             if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
