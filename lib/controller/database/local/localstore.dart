@@ -14,7 +14,7 @@ import '../../user_inerface/menu/home/home.dart';
 
 class localdatabase {
   static const String _jewelryItemsKeyCart = 'jewelry_items';
-  static const String _jewelryItemsKeyWish = 'jewelry_items';
+  static const String _jewelryItemsKeyWish = 'jewelry_items_wish';
 
   // Cart List
   // Save List Localiy  Guest User

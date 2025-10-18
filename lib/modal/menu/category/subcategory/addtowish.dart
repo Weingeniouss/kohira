@@ -8,14 +8,14 @@ class JewelryItemWish {
 
   @override
   String toString() {
-    return 'JewelryItem{diamondId: $diamondId, jewelryId: $jewelryId, ringSize: $ringSize, qty: $qty}';
+    return 'JewelryItemWish{diamondId: $diamondId, jewelryId: $jewelryId, ringSize: $ringSize, qty: $qty}';
   }
 
   Map<String, dynamic> toJson() {
     return {
       'diamondid': diamondId,
       'jewelryid': jewelryId,
-      'ringSize': ringSize,
+      'ringsize': ringSize,
       'qty': qty,
     };
   }
@@ -24,7 +24,7 @@ class JewelryItemWish {
     return JewelryItemWish(
       diamondId: json['diamondid'] ?? 0,
       jewelryId: json['jewelryid'],
-      ringSize: json['ringSize'],
+      ringSize: json['ringsize'],
       qty: json['qty'] ?? 1,
     );
   }

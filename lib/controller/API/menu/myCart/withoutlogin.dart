@@ -55,7 +55,7 @@ class WithoutloginWishList extends GetxController{
 
       final wishDataJson = jsonEncode(wishData.map((item) => item.toJson()).toList());
 
-      final body = {'cartData': wishDataJson,};
+      final body = {'wishData': wishDataJson,};
 
       print("Request body Wishlist: $body");
 

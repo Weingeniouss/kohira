@@ -20,7 +20,6 @@ import '../../category/showproduct.dart';
 
 class WishlistScreen extends StatelessWidget {
   final wish = Get.put(WishlistController());
-  final bool isGuest = (tokans?.isEmpty ?? true);
   WishlistScreen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -89,11 +88,20 @@ class WishlistScreen extends StatelessWidget {
             );
           }
 
+          final bool isGuest = (tokans?.isEmpty ?? true);
+
           final wishlists = isGuest ? wish.withoutloginWish.data['wishlists'] : wish.fetchwishlist.data['wishlists'];
 
           if (wishlists == null || wishlists is! List || wishlists.isEmpty) {
             return Center(child: Lottie.asset(AppJson.noData));
           }
+
+          final int wishlistCount = isGuest
+              ? (wish.withoutloginWish.data['wishlists'] != null
+              ? wish.withoutloginWish.data['wishlists'].length : 0)
+              : (wish.fetchwishlist.data['wishlists'] != null
+              ? wish.fetchwishlist.data['wishlists'].length : 0);
+
 
           final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
 
@@ -103,14 +111,35 @@ class WishlistScreen extends StatelessWidget {
               Expanded(
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.68),
-                  itemCount: isGuest
-                      ? (wish.withoutloginWish.data['wishlists']) ? wish.withoutloginWish.data['wishlists'].length : 0
-                      : (wish.fetchwishlist.data['wishlists'] != null) ? wish.fetchwishlist.data['wishlists'].length : 0,
+                  itemCount: wishlistCount,
                   itemBuilder: (BuildContext context, int index) {
-                    final wishlistItem =  isGuest ? wish.withoutloginWish.data['wishlists'] :  wish.fetchwishlist.data['wishlists'][index];
+                    final wishlists = isGuest
+                        ? wish.withoutloginWish.data['wishlists']
+                        : wish.fetchwishlist.data['wishlists'];
+
+                    dynamic wishlistItem;
+                    if (wishlists is List) {
+                      wishlistItem = wishlists[index];
+                    } else if (wishlists is Map) {
+                      wishlistItem = wishlists[index.toString()];
+                    } else {
+                      print("Unexpected wishlist type: ${wishlists.runtimeType}");
+                      return const SizedBox();
+                    }
+
+                    // Extract jewelry data
                     final fetch = wishlistItem['WishlistJewelryData'];
                     final id = wishlistItem['id'].toString();
+
+                    final ringSize = wishlistItem['ringsize'];
+
                     String priceText = 'N/A';
+                    if (fetch != null &&
+                        fetch['jewelry_diamonds'] != null &&
+                        fetch['jewelry_diamonds'] is List &&
+                        fetch['jewelry_diamonds'].isNotEmpty) {
+                      priceText = fetch['jewelry_diamonds'][0]['price'].toString();
+                    }
                     if (fetch != null && fetch['jewelry_diamonds'] != null && fetch['jewelry_diamonds'] is List && fetch['jewelry_diamonds'].isNotEmpty) {
                       priceText = fetch['jewelry_diamonds'][0]['price'].toString();
                     }
@@ -173,10 +202,18 @@ class WishlistScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: Get.height / 150),
-                            (wishlistItem['ringsize'] == null) ? SizedBox() : Row(
+                            (ringSize == null || ringSize.toString().isEmpty || ringSize.toString().toLowerCase() == 'null')
+                                ? const SizedBox()
+                                : Row(
                               children: [
-                                Text("Ring Size :- ", style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
-                                Text(wishlistItem['ringsize'].toString(), style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
+                                Text(
+                                  "Ring Size :- ",
+                                  style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color),
+                                ),
+                                Text(
+                                  ringSize.toString(),
+                                  style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color),
+                                ),
                               ],
                             ),
                           ],
