@@ -321,6 +321,7 @@ void _showRecaptchaVerification() {
                               inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
                               inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value,isVis: true),
                               inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value,isVis: true),
+                              SizedBox(height: Get.height / 50),
                               horizontalpadding(
                                 child: Row(
                                   children: [
