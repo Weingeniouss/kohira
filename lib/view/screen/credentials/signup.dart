@@ -166,7 +166,7 @@ void _showRecaptchaVerification() {
                   password: validation.password_controller.text,
                   passwordConfirmation: validation.confiim_password_controller.text,
                   mobileno: validation.mobile_controller.text,
-                  captcha: siteKey,
+                  captcha: recaptchaToken.toString(),
                   countrycode: Country.selectedCountry.value!.countrycode.toString(),
                   country_shortname: Country.selectedCountry.value!.countryShortname.toString(),
                   login_type: 'mobile',
@@ -219,53 +219,100 @@ void _showRecaptchaVerification() {
                               inputField(hintText: AppString.firstname, icon: AppIcon.parson, controller: validation.frist_controller, empty: validation.firstname_type.value),
                               inputField(hintText: AppString.lastname, icon: AppIcon.parson, controller: validation.last_controller, empty: validation.lastname_type.value),
                               inputField(hintText: AppString.hintemail, icon: AppIcon.mail, controller: validation.email_controller, empty: validation.email_type.value),
+                              // Container(
+                              //   padding: EdgeInsets.symmetric(horizontal: 8),
+                              //   decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
+                              //   child: Row(
+                              //     children: [
+                              //       SizedBox(width: Get.width / 60),
+                              //       SvgPicture.asset(AppIcon.earth,width: 25,height: 25,color: AppColor.pink_color),
+                              //       SizedBox(width: Get.width / 50),
+                              //       Expanded(
+                              //         child: DropdownButton2<Data>(
+                              //           iconStyleData: IconStyleData(
+                              //             icon: Icon(Icons.keyboard_arrow_down),
+                              //             iconSize: 20,
+                              //             iconEnabledColor: AppColor.grey_color,
+                              //             iconDisabledColor: AppColor.grey_color,
+                              //             openMenuIcon: Icon(Icons.keyboard_arrow_up),
+                              //           ),
+                              //           value: Country.selectedCountry.value,
+                              //           dropdownSearchData: DropdownSearchData(
+                              //             searchController: searchController,
+                              //             searchInnerWidgetHeight: 40,
+                              //             searchInnerWidget: Padding(
+                              //               padding: EdgeInsets.all(8),
+                              //               child: TextField(
+                              //                 controller: searchController,
+                              //                 decoration: InputDecoration(
+                              //                   hintText: 'Search...',
+                              //                   border: OutlineInputBorder(),
+                              //                 ),
+                              //               ),
+                              //             ),
+                              //             searchMatchFn: (item, searchValue) {
+                              //               return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
+                              //             },
+                              //           ),
+                              //           underline: SizedBox(),
+                              //           isExpanded: true,
+                              //           items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
+                              //           onChanged: (newValue) {
+                              //             Country.selectedCountry.value = newValue!;
+                              //           },
+                              //           dropdownStyleData: DropdownStyleData(
+                              //             offset: Offset(0, -10),
+                              //             maxHeight: Get.height / 3,
+                              //             decoration: BoxDecoration(color: AppColor.white_color),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
                                 child: Row(
                                   children: [
-                                    SizedBox(width: Get.width / 60),
-                                    SvgPicture.asset(AppIcon.earth,width: 25,height: 25,color: AppColor.pink_color),
                                     SizedBox(width: Get.width / 50),
+                                    SvgPicture.asset(AppIcon.location, fit: BoxFit.cover, color: AppColor.pink_color, width: 20, height: 20),
+                                    //Country
                                     Expanded(
-                                      child: DropdownButton2<Data>(
-                                        iconStyleData: IconStyleData(
-                                          icon: Icon(Icons.keyboard_arrow_down),
-                                          iconSize: 20,
-                                          iconEnabledColor: AppColor.grey_color,
-                                          iconDisabledColor: AppColor.grey_color,
-                                          openMenuIcon: Icon(Icons.keyboard_arrow_up),
-                                        ),
-                                        value: Country.selectedCountry.value,
-                                        dropdownSearchData: DropdownSearchData(
-                                          searchController: searchController,
-                                          searchInnerWidgetHeight: 40,
-                                          searchInnerWidget: Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: TextField(
-                                              controller: searchController,
-                                              decoration: InputDecoration(
-                                                hintText: 'Search...',
-                                                border: OutlineInputBorder(),
+                                      child: Obx(() {
+                                        return DropdownButton2<Data>(
+                                          value: Country.selectedCountry.value,
+                                          hint: Text('Select Country', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 28)),
+                                          isExpanded: true,
+                                          underline: SizedBox(),
+                                          items: Country.countries.map((item) {
+                                            return DropdownMenuItem<Data>(value: item, child: Text(item.label.toString()));
+                                          }).toList(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: Get.width / 25,
+                                            color: AppColor.black_color,
+                                          ),
+                                          onChanged: (newValue) => Country.selectedCountry.value = newValue!,
+                                          dropdownStyleData: DropdownStyleData(offset: Offset(0, -10), maxHeight: Get.height / 3, decoration: BoxDecoration(color: AppColor.white_color)),
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
+                                          dropdownSearchData: DropdownSearchData(
+                                            searchController: searchController,
+                                            searchInnerWidgetHeight: 40,
+                                            searchInnerWidget: Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: TextField(
+                                                controller: searchController,
+                                                decoration: InputDecoration(
+                                                  hintText: 'Search Country...',
+                                                  border: OutlineInputBorder(),
+                                                ),
                                               ),
                                             ),
+                                            searchMatchFn: (item, searchValue) =>  item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false,
                                           ),
-                                          searchMatchFn: (item, searchValue) {
-                                            return item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
-                                          },
-                                        ),
-                                        underline: SizedBox(),
-                                        isExpanded: true,
-                                        items: Country.countries.map((item) => DropdownMenuItem(value: item, child: Text("${item.label} (${item.countrycode})"))).toList(),
-                                        onChanged: (newValue) {
-                                          Country.selectedCountry.value = newValue!;
-                                        },
-                                        dropdownStyleData: DropdownStyleData(
-                                          offset: Offset(0, -10),
-                                          maxHeight: Get.height / 3,
-                                          decoration: BoxDecoration(color: AppColor.white_color),
-                                        ),
-                                      ),
+                                        );
+                                      }),
                                     ),
                                   ],
                                 ),

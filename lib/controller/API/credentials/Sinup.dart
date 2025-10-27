@@ -55,8 +55,6 @@ class SinupCalling extends GetxController {
             'login_type :-$login_type \n'
       });
     } else {
-      ToastificationError.Error("Error, ${result?.message}");
-
       print({
         '\n Frist Name :-$firstname \n'
             'Last Name:- $lastname \n'
@@ -74,6 +72,8 @@ class SinupCalling extends GetxController {
       print('status :- ${result?.status}');
       print('type :- ${result?.type}');
       print('message :- ${result?.message}');
+
+      ToastificationError.Error("'Error', ${result?.message}");
     }
     isLoading.value = false;
   }

@@ -41,7 +41,7 @@ Widget inputField({
                     decoration: InputDecoration(
                       counterText: "",
                       prefixIcon: icon != null ? Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(15),
                         child: SizedBox(
                           child: SvgPicture.asset(
                             icon, fit: BoxFit.cover,
