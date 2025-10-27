@@ -117,10 +117,8 @@ class WishlistScreen extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.68),
                   itemCount: wishlistCount,
                   itemBuilder: (BuildContext context, int index) {
-                    final wishlists = isGuest
-                        ? wish.withoutloginWish.data['wishlists']
-                        : wish.fetchwishlist.data['wishlists'];
 
+                    final wishlists = isGuest ? wish.withoutloginWish.data['wishlists'] : wish.fetchwishlist.data['wishlists'];
                     dynamic wishlistItem;
                     if (wishlists is List) {
                       wishlistItem = wishlists[index];
@@ -223,14 +221,8 @@ class WishlistScreen extends StatelessWidget {
                                 ? const SizedBox()
                                 : Row(
                               children: [
-                                Text(
-                                  "Ring Size :- ",
-                                  style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color),
-                                ),
-                                Text(
-                                  ringSize.toString(),
-                                  style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color),
-                                ),
+                                Text("Ring Size :- ", style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
+                                Text(ringSize.toString(), style: TextStyle(fontSize: Get.width / 30, color: AppColor.grey_color)),
                               ],
                             ),
                           ],
