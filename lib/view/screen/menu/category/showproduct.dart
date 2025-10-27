@@ -1179,7 +1179,7 @@ class _ShowproductState extends State<Showproduct> {
                                   WidgetsBinding.instance.addPostFrameCallback((_) {
                                     wish.withoutloginWish.withoutloginwishlist(currentItemswish);
                                   });
-
+                                  Get.forceAppUpdate();
                                   setState(() {});
                                 } else {
                                   // 🔒 Logged-in logic (same as yours)

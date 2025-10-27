@@ -12,16 +12,19 @@ import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../controller/database/local/localstore.dart';
 import '../../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
+import '../../../../../modal/menu/category/subcategory/addtowish.dart';
 import '../../../../utils/app_constants.dart';
 import '../../../../utils/app_json.dart';
 import '../../../../utils/widget/horizontalpading.dart';
 import '../../category/showproduct.dart';
 
 class WishlistScreen extends StatelessWidget {
-  final wish = Get.put(WishlistController());
-  final bool isGuest = (tokans?.isEmpty ?? true);
   WishlistScreen({super.key});
+  final wish = Get.put(WishlistController());
+  final wishguest = Get.put(WishcartControllet());
+  final bool isGuest = (tokans?.isEmpty ?? true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,10 +138,7 @@ class WishlistScreen extends StatelessWidget {
                     final ringSize = wishlistItem['ringsize'];
 
                     String priceText = 'N/A';
-                    if (fetch != null &&
-                        fetch['jewelry_diamonds'] != null &&
-                        fetch['jewelry_diamonds'] is List &&
-                        fetch['jewelry_diamonds'].isNotEmpty) {
+                    if (fetch != null && fetch['jewelry_diamonds'] != null && fetch['jewelry_diamonds'] is List && fetch['jewelry_diamonds'].isNotEmpty) {
                       priceText = fetch['jewelry_diamonds'][0]['price'].toString();
                     }
                     if (fetch != null && fetch['jewelry_diamonds'] != null && fetch['jewelry_diamonds'] is List && fetch['jewelry_diamonds'].isNotEmpty) {
@@ -174,15 +174,31 @@ class WishlistScreen extends StatelessWidget {
                                   top: 5,
                                   child: GestureDetector(
                                     onTap: () async {
-                                      wish.deleteItem(id).then((_) {
+                                      if(isGuest){
+                                        List<JewelryItemWish> currentItemswish = await localdatabase.getJewelryItemsWish();
+                                        final jewelryId = wish.withoutloginWish.data['wishlists'][index]['jewelryid'].toString();
+                                        currentItemswish.removeWhere((item) => item.jewelryId == jewelryId);
+                                        await localdatabase.saveJewelryItemsWish(currentItemswish);
+                                        wish.withoutloginWish.data['wishlists'].removeWhere((item) => item['jewelryid'].toString() == jewelryId);
+                                        wish.withoutloginWish.refresh();
+                                        WithoutloginWishList().withoutloginwishlist(currentItemswish);
                                         wish.onInit();
-                                         if (wish.deletWishtlist.data['success'] == true) {
-                                           ToastificationSuccess.Success('${fetch['title']}, ${wish.deletWishtlist.data['message'].replaceAll('Item', '')}');
-                                          }
-                                        },
-                                      );
+                                        wishguest.wishcount.value = currentItemswish.length;
+                                        pref!.setString('wishcount', wishguest.wishcount.value.toString());
+                                        wishCount = pref!.getString('wishcount') ?? '0';
+                                        ToastificationSuccess.Success('Item removed from wishlist');
+                                        Get.forceAppUpdate();
+                                      }else{
+                                        wish.deleteItem(id).then((_) {
+                                          wish.onInit();
+                                            if (wish.deletWishtlist.data['success'] == true) {
+                                              ToastificationSuccess.Success('${fetch['title']}, ${wish.deletWishtlist.data['message'].replaceAll('Item', '')}');
+                                            }
+                                          },
+                                        );
+                                      }
                                     },
-                                    child: (isGuest) ? SizedBox() : SvgPicture.asset(AppIcon.heart, width: 25, height: 25, color: AppColor.pink_color),
+                                    child: SvgPicture.asset(AppIcon.heart, width: 25, height: 25, color: AppColor.pink_color),
                                   ),
                                 ),
                               ],

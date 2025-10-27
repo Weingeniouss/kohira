@@ -31,9 +31,11 @@ PreferredSizeWidget Appbar({
   final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
-  final userguest = Get.put(CartControllor());
   final bool isGuest = (tokans?.isEmpty ?? true);
-  cartCount = pref!.getString('count') ?? '0';
+  if(isGuest){
+    cartCount = pref!.getString('count') ?? '0';
+    wishCount = pref!.getString('wishcount') ?? '0';
+  }
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(
@@ -134,7 +136,6 @@ PreferredSizeWidget Appbar({
                                   ),
                                 );
                               }),
-
                             ],
                           ),
 
