@@ -34,6 +34,7 @@ class _BuynowState extends State<Buynow> {
   final wallet = Get.put(WalletController());
   final buynowUI = Get.put(BuynowController());
   final count = Get.put(CountController());
+  final userguest = Get.put(CartControllor());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   double getProductPrice(Map<String, dynamic> fetchdata) {
@@ -269,6 +270,9 @@ class _BuynowState extends State<Buynow> {
                                   onTap: () {
                                     if(isGuest){
                                       myCart.deletvalueoflocal(index);
+                                      userguest.cartcount.value = userguest.cartcount.value - 1;
+                                      cartCount = userguest.cartcount.value.toString();
+                                      pref!.setString('count', cartCount);
                                     }else{
                                       myCart.deletValueofcount(item, fetch, index);
                                       count.counting();

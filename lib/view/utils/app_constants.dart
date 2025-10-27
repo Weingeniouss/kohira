@@ -24,3 +24,5 @@ String tokans =  '';
 
 var existingItemsCart;
 var existingItemsWish;
+String cartCount = '';
+String wishCount = '';

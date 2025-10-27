@@ -10,7 +10,9 @@ import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import '../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../controller/user_inerface/menu/home/home.dart';
+import '../../screen/menu/category/showproduct.dart';
 import '../app_color.dart';
+import '../app_constants.dart';
 import 'bottomNavigation/bottomNavigation.dart';
 import 'horizontalpading.dart';
 
@@ -29,6 +31,9 @@ PreferredSizeWidget Appbar({
   final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
+  final userguest = Get.put(CartControllor());
+  final bool isGuest = (tokans?.isEmpty ?? true);
+  cartCount = pref!.getString('count') ?? '0';
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(
@@ -103,7 +108,17 @@ PreferredSizeWidget Appbar({
                                   child: SvgPicture.asset(suffixicon_1),
                                 ),
                               ),
-                              Obx(() {
+                              (isGuest) ? Positioned(
+                                right: -10, top: 8,
+                                child: CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: AppColor.pink_color,
+                                  child: Text(
+                                    wishCount,
+                                    style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
+                                  ),
+                                ),
+                              ) : Obx(() {
                                 if (count.isLoading.value || count.data == null || count.data['wishlist'] == null || count.data['wishlist']['count'] == 0) {
                                   return SizedBox.shrink();
                                 }
@@ -119,6 +134,7 @@ PreferredSizeWidget Appbar({
                                   ),
                                 );
                               }),
+
                             ],
                           ),
 
@@ -142,7 +158,26 @@ PreferredSizeWidget Appbar({
                                   child: SvgPicture.asset(suffixicon_2),
                                 ),
                               ),
-                              Obx(() {
+                              (isGuest) ? Positioned(
+                                  right: -10,
+                                  top: 8,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Bottom();
+                                      bottamSelect.indexThree();
+                                      Get.back();
+                                      Get.back();
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: AppColor.pink_color,
+                                      child: Text(
+                                        cartCount,
+                                        style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 38),
+                                      ),
+                                    ),
+                                  ),
+                                ): Obx(() {
                                 if (count.isLoading.value || count.data == null || count.data['cart'] == null || count.data['cart']['count'] == 0) {
                                   return SizedBox.shrink();
                                 }
@@ -167,6 +202,7 @@ PreferredSizeWidget Appbar({
                                   ),
                                 );
                               }),
+
                             ],
                           ),
                       ],

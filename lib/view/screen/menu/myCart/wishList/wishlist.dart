@@ -20,6 +20,7 @@ import '../../category/showproduct.dart';
 
 class WishlistScreen extends StatelessWidget {
   final wish = Get.put(WishlistController());
+  final bool isGuest = (tokans?.isEmpty ?? true);
   WishlistScreen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -181,7 +182,7 @@ class WishlistScreen extends StatelessWidget {
                                         },
                                       );
                                     },
-                                    child: SvgPicture.asset(AppIcon.heart, width: 25, height: 25, color: AppColor.pink_color),
+                                    child: (isGuest) ? SizedBox() : SvgPicture.asset(AppIcon.heart, width: 25, height: 25, color: AppColor.pink_color),
                                   ),
                                 ),
                               ],

@@ -18,7 +18,15 @@ import 'firebase_options.dart';
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final bool isGuest = (tokans?.isEmpty ?? true);
   pref = await SharedPreferences.getInstance();
+
+  if(isGuest){
+    cartCount = pref!.getString('count') ?? '0';
+    wishCount = pref!.getString('wishcount') ?? '0';
+    print('Guestuser Cartcount :- $cartCount');
+    print('Guestuser Wishcount :- $wishCount');
+  }
 
   Fristname = pref!.getString('fristname') ?? '';
   Lastname = pref!.getString('lastname') ?? '';

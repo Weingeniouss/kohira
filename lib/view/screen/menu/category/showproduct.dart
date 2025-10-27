@@ -80,9 +80,13 @@ class _ShowproductState extends State<Showproduct> {
   final wish = Get.put(WishlistController());
   final category = Get.put(JewelleryFilterCategory());
 
+  final userguest = Get.put(CartControllor());
+  final wishguest = Get.put(WishcartControllet());
+
   List<String> savewishlist = [];
   bool isWishlisted = false;
   bool isWishlistedGuest = false;
+  List<JewelryItemWish> existingItemsWish = [];
 
   String? ringsizeid;
 
@@ -93,9 +97,24 @@ class _ShowproductState extends State<Showproduct> {
       jewellerydetail.jewellerydetailservices(slug: widget.slug);
       recommendedjewellerylist.recommendedjewellerylistFuction(slug: widget.slug);
       count.counting();
+      initializeWishlistStatus();
     });
     // loadJewelleryDetails();
   }
+
+  void  initializeWishlistStatus() async {
+    if (isGuest) {
+      List<JewelryItemWish> currentItemswish = await localdatabase.getJewelryItemsWish();
+      final jewelryId = jewellerydetail.data['data']['id'].toString();
+      final exists = currentItemswish.any((item) => item.jewelryId == jewelryId);
+
+      setState(() {
+        isWishlistedGuest = exists;
+        existingItemsWish = currentItemswish;
+      });
+    }
+  }
+
 
   // Future<void> loadJewelleryDetails() async {
   //   try {
@@ -183,6 +202,16 @@ class _ShowproductState extends State<Showproduct> {
                             // Save the updated list
                             await localdatabase.saveJewelryItems(currentItems);
                             Withoutlogin().withoutlogin(currentItems);
+
+                            // Calculate and update count
+                            userguest.cartcount.value = currentItems.length;
+                            pref!.setString('count', userguest.cartcount.value.toString());
+                            cartCount = pref!.getString('count') ?? '0';
+
+                            Withoutlogin().data['count'] = userguest.cartcount.value;
+
+                            print('🛒 Cart count updated: ${userguest.cartcount.value}');
+
                             // Update the global variable
                             existingItemsCart = currentItems;
 
@@ -195,6 +224,8 @@ class _ShowproductState extends State<Showproduct> {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               myCart.loadCartData();
                             });
+
+                            setState(() {});
 
                           } else {
                             if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
@@ -1115,8 +1146,7 @@ class _ShowproductState extends State<Showproduct> {
                                   final jewelryId = jewellery['id'].toString();
                                   final exists = currentItemswish.any((item) => item.jewelryId == jewelryId);
                                   if (exists) {
-                                    currentItemswish.removeWhere((item) =>
-                                    item.jewelryId == jewelryId);
+                                    currentItemswish.removeWhere((item) => item.jewelryId == jewelryId);
                                     ToastificationSuccess.Success('Removed from Wishlist');
                                   } else {
                                     // Add items with different properties
@@ -1132,6 +1162,10 @@ class _ShowproductState extends State<Showproduct> {
                                   await localdatabase.saveJewelryItemsWish(currentItemswish);
                                   WithoutloginWishList().withoutloginwishlist(currentItemswish);
 
+                                  wishguest.wishcount.value = currentItemswish.length;
+                                  pref!.setString('wishcount', wishguest.wishcount.value.toString());
+                                  wishCount = pref!.getString('wishcount') ?? '0';
+
                                   // ✅ Refresh UI instantly
                                   setState(() {
                                     isWishlistedGuest = !exists;
@@ -1145,6 +1179,8 @@ class _ShowproductState extends State<Showproduct> {
                                   WidgetsBinding.instance.addPostFrameCallback((_) {
                                     wish.withoutloginWish.withoutloginwishlist(currentItemswish);
                                   });
+
+                                  setState(() {});
                                 } else {
                                   // 🔒 Logged-in logic (same as yours)
                                   if (widget.categoryslug == 'rings' || widget.categoryslug == 'engagement-rings') {
@@ -1182,17 +1218,24 @@ class _ShowproductState extends State<Showproduct> {
                                   }
                                 }
                               },
-                              child: (isGuest)
-                                  ? SvgPicture.asset(
-                                  (isWishlistedGuest)
-                                      ? AppIcon.heart
-                                      : AppIcon.like, width: 30, height: 30,
-                                  color: (isWishlistedGuest)
-                                      ? AppColor.pink_color : null)
-                                      : (count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
+                              child: (isGuest) ? FutureBuilder<List<JewelryItemWish>>(
+                                future: localdatabase.getJewelryItemsWish(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    final exists = snapshot.data!.any((item) => item.jewelryId == jewellery['id'].toString());
+                                    return SvgPicture.asset(
+                                        exists ? AppIcon.heart : AppIcon.like,
+                                        width: 30,
+                                        height: 30,
+                                        color: exists ? AppColor.pink_color : null
+                                    );
+                                  }
+                                  return SvgPicture.asset(AppIcon.like, width: 30, height: 30);
+                                },
+                              ) : (count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
                                   ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
                                   : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
-                             ),
+                            ),
 
                             //Wishlist
                             // GestureDetector(
@@ -2093,4 +2136,12 @@ Widget _buildColorButton({
       child: CircleAvatar(backgroundColor: color, radius: 16),
     ),
   );
+}
+
+class CartControllor extends GetxController{
+  var cartcount = 0.obs;
+}
+
+class WishcartControllet extends GetxController{
+  var wishcount = 0.obs;
 }
