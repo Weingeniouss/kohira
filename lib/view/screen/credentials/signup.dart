@@ -351,7 +351,7 @@ void _showRecaptchaVerification() {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: Get.height / 50),
+                              SizedBox(height: Get.height / 40),
 
                               //
                               Text(AppString.singupHading, style: TextStyle(fontSize: Get.width * 0.033)),
