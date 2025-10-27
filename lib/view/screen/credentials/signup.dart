@@ -276,7 +276,7 @@ void _showRecaptchaVerification() {
                                 child: Row(
                                   children: [
                                     SizedBox(width: Get.width / 50),
-                                    SvgPicture.asset(AppIcon.location, fit: BoxFit.cover, color: AppColor.pink_color, width: 20, height: 20),
+                                    SvgPicture.asset(AppIcon.location, fit: BoxFit.cover, color: AppColor.pink_color, width: 22, height: 22),
                                     //Country
                                     Expanded(
                                       child: Obx(() {
@@ -317,7 +317,7 @@ void _showRecaptchaVerification() {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: Get.height / 50),
+                              SizedBox(height: Get.height / 150),
                               inputField(hintText: AppString.hintmobile, icon: AppIcon.mobile, controller: validation.mobile_controller, empty: validation.mobile_type.value),
                               inputField(hintText: AppString.hintpassword, icon: AppIcon.password, controller: validation.password_controller, empty: validation.password_type.value,isVis: true),
                               inputField(hintText: AppString.hintconfirmpassword, icon: AppIcon.password, controller: validation.confiim_password_controller, empty: validation.confirmpassword_type.value,isVis: true),
