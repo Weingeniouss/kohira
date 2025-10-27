@@ -277,12 +277,13 @@ void _showRecaptchaVerification() {
                                   children: [
                                     SizedBox(width: Get.width / 50),
                                     SvgPicture.asset(AppIcon.location, fit: BoxFit.cover, color: AppColor.pink_color, width: 22, height: 22),
+                                    SizedBox(width: Get.width / 60),
                                     //Country
                                     Expanded(
                                       child: Obx(() {
                                         return DropdownButton2<Data>(
                                           value: Country.selectedCountry.value,
-                                          hint: Text('Select Country', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 28)),
+                                          hint: Text('Select Country *', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 26)),
                                           isExpanded: true,
                                           underline: SizedBox(),
                                           items: Country.countries.map((item) {
