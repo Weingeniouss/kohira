@@ -25,8 +25,8 @@ Widget dropDown<T>({
     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: color ?? AppColor.textfild_color))),
     child: Row(
       children: [
-        SizedBox(width: Get.width / 200),
-        SvgPicture.asset(icons ?? AppIcon.earth, width: 28, height: 28, color: color ?? AppColor.pink_color),
+        SizedBox(width: Get.width / 50),
+        SvgPicture.asset(icons ?? AppIcon.earth, width: 18, height: 18, color: color ?? AppColor.pink_color),
         Expanded(
           child: DropdownButton2<T>(
             style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 28),

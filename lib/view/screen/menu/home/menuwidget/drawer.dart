@@ -68,21 +68,18 @@ class _DrawersState extends State<Drawers> {
 
   String getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'engagement rings':
-        return AppIcon.ring;
-      case 'bracelet':
-        return AppIcon.bracelet;
-      case 'collection':
-        return AppIcon.collection;
-      case 'earrings':
-        return AppIcon.earrings;
-      case 'mangalsutra':
-        return AppIcon.mangalsutra;
-      case 'necklace':
-        return AppIcon.necklace;
-      case 'rings':
-        return AppIcon.ring;
-      default: return 'asset/icon/drawericon/dummy.svg';
+      case 'engagement rings': return AppIcon.ring;
+      case 'bracelet': return AppIcon.bracelet;
+      case 'collection': return AppIcon.collection;
+      case 'earrings': return AppIcon.earrings;
+      case 'mangalsutra': return AppIcon.mangalsutra;
+      case 'necklaces': return AppIcon.cat_necklace;
+      case 'mangalsutras': return AppIcon.mangalsutra;
+      case 'bangles bracelets': return AppIcon.cat_bracelet;
+      case 'for him' : return AppIcon.ring;
+      case 'pendants': return AppIcon.necklace;
+      case 'rings': return AppIcon.ring;
+      default: return AppIcon.remark;
     }
   }
 
@@ -254,7 +251,7 @@ class _DrawersState extends State<Drawers> {
                            }
                            setState(() {});
                           },
-                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.allJewellery)),
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.cat_jewelry, color: AppColor.white_color, text: AppString.allJewellery)),
                         ),
                         AnimatedSize(
                           curve: Curves.easeInOut,
@@ -295,7 +292,7 @@ class _DrawersState extends State<Drawers> {
                                                             margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
                                                             decoration: BoxDecoration(color: AppColor.pink_color, borderRadius: BorderRadius.circular(Get.width / 50)),
                                                             padding: EdgeInsets.all(10),
-                                                            child: SvgPicture.asset(AppIcon.Order, width: Get.width * 0.018, height: Get.height * 0.018),
+                                                            child: SvgPicture.asset(getCategoryIcon(categoryItem.name), width: Get.width * 0.018, height: Get.height * 0.018,color: AppColor.white_color),
                                                           ),
                                                           SizedBox(width: Get.width / 30),
                                                           SizedBox(
@@ -352,12 +349,20 @@ class _DrawersState extends State<Drawers> {
                                                                         },
                                                                         child: Padding(
                                                                           padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                                                                          child: Row(
-                                                                            children: [
-                                                                              Text("*"),
-                                                                              SizedBox(width: Get.width * 0.015),
-                                                                              Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: Colors.blue)),
-                                                                            ],
+                                                                          child: Container(
+                                                                            decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(Get.width / 50),
+                                                                              color: AppColor.black_color,
+                                                                            ),
+                                                                            padding: EdgeInsets.all(5),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Text("*"),
+                                                                                SizedBox(width: Get.width * 0.015),
+                                                                                Text("View All (${categoryItem.subcategory.length})", style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400, color: AppColor.white_color)),
+                                                                              ],
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ),
@@ -386,7 +391,7 @@ class _DrawersState extends State<Drawers> {
                             }
                             setState(() {});
                           },
-                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.collection)),
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.collection, color: AppColor.white_color, text: AppString.collection)),
                         ),
                         Visibility(
                           visible: drawer.collection.value,
@@ -476,7 +481,7 @@ class _DrawersState extends State<Drawers> {
                             }
                             setState(() {});
                           },
-                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.metaltyoe)),
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.metal_type, text: AppString.metaltyoe, color: AppColor.white_color)),
                         ),
                         Visibility(
                           visible: drawer.metaltype.value,
@@ -554,7 +559,7 @@ class _DrawersState extends State<Drawers> {
                           }
                           setState(() {});
                          },
-                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.Order, text: AppString.buypricerang)),
+                          child: Container(color: AppColor.white_color, child: drawerIcon(icon: AppIcon.returns,color: AppColor.white_color, text: AppString.buypricerang)),
                         ),
                         Visibility(
                           visible: drawer.price.value,
@@ -601,7 +606,8 @@ class _DrawersState extends State<Drawers> {
 
                         //Order History
                         drawerIcon(
-                          icon: AppIcon.Order,
+                          icon: AppIcon.remark,
+                          color: AppColor.white_color,
                           text: AppString.Order,
                           onTap: () {
                             for (var item in filteredCategories) {
@@ -689,7 +695,8 @@ class _DrawersState extends State<Drawers> {
 
                         //CustomJewellery
                         (tokans?.isEmpty ?? true) ?  SizedBox() : drawerIcon(
-                          icon: AppIcon.PrivacyPolicy,
+                          icon: AppIcon.custom,
+                           color: AppColor.white_color,
                            text: AppString.customJewellery,
                             onTap: () {  
                             setState(() {

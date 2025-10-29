@@ -129,11 +129,12 @@ class CustomJewellery extends StatelessWidget {
 
                     //Jewelry Type
                     dropDown<Category_Customorder>(
+                      icons: AppIcon.jewellery_type,
                       searchController: customUI.searchController,
                       value: customUI.selectedCategory,
                       items: customUI.customorder.categories,
                       displayText: (category) => category.name,
-                      hintText: 'Choose Jewelry Type',
+                      hintText: AppString.jewelery_Type,
                       onChanged: customUI.onCategoryChanged,
                     ),
 
@@ -157,11 +158,12 @@ class CustomJewellery extends StatelessWidget {
                       return Column(
                         children: [
                           dropDown<Category_Subcategory>(
+                            icons: AppIcon.jewellery_type,
                             searchController: customUI.subcategorySearchController,
                             value: customUI.selectedSubcategory,
                             items: customUI.selectedCategory.value!.subcategory,
                             displayText: (subcategory) => subcategory.name,
-                            hintText: 'Choose Subcategory',
+                            hintText: AppString.jewelery_Subcategory,
                           ),
                           SizedBox(height: Get.height / 60),
                         ],
@@ -170,22 +172,24 @@ class CustomJewellery extends StatelessWidget {
 
                     //Metal Type
                     dropDown(
+                      icons: AppIcon.metal_type,
                       searchController: customUI.metalsearchcontoller,
                       value: customUI.selectedMetalType,
                       items: customUI.jewelleryfilter.metalTypes,
                       displayText: (metalType) => metalType.name,
-                      hintText: 'Choose Metal Type',
+                      hintText: AppString.metal_Type,
                     ),
 
                     SizedBox(height: Get.height / 60),
 
                     //Metal Stamp
                     dropDown(
+                      icons: AppIcon.ethical,
                       searchController: customUI.metalstampsearchcontoller,
                       value: customUI.selectedMetalStamp,
                       items: customUI.jewelleryfilter.metalStamp,
                       displayText: (metalType) => metalType.name,
-                      hintText: 'Choose Metal Stamp',
+                      hintText: AppString.metal_stamp,
                     ),
 
                     SizedBox(height: Get.height / 100),
@@ -194,22 +198,22 @@ class CustomJewellery extends StatelessWidget {
                     inputField(
                       textInputType: TextInputType.number,
                       controller: customUI.metalWeightController,
-                      icon: AppIcon.earth,
+                      icon: AppIcon.appx_weight,
                       iconheight: 10,
                       iconwidth: 10,
                       iconcolor: AppColor.pink_color,
-                      hintText: 'Appx Metal Weight (gm)',
+                      hintText: AppString.metal_Weight,
                     ),
 
                     //Budget
                     inputField(
                       textInputType: TextInputType.number,
                       controller: customUI.metalBudgetController,
-                      icon: AppIcon.earth,
+                      icon: AppIcon.returns,
                       iconheight: 10,
                       iconwidth: 10,
                       iconcolor: AppColor.pink_color,
-                      hintText: 'Budget',
+                      hintText: AppString.budget,
                     ),
 
                     //Remark
@@ -221,20 +225,20 @@ class CustomJewellery extends StatelessWidget {
                       ),
                       child: TextField(
                         controller: customUI.metalremarkController,
-                        style: TextStyle(fontSize: Get.width * 0.04, color: AppColor.black_color),
+                        style: TextStyle(fontSize: Get.width / 30, color: AppColor.black_color),
                         maxLines: 100,
                         minLines: 1,
                         decoration: InputDecoration(
                           prefixIcon: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: SvgPicture.asset(AppIcon.earth, width: 20, height: 20, color: AppColor.pink_color),
+                            padding: EdgeInsets.all(15),
+                            child: SvgPicture.asset(AppIcon.remark, width: 20, height: 20, color: AppColor.pink_color),
                           ),
                           disabledBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
-                          hintText: 'Remark',
-                          hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 27),
-                          contentPadding: EdgeInsets.only(left: 8, right: 12, top: 16, bottom: 16),
+                          hintText: AppString.remark,
+                          hintStyle: TextStyle(color: AppColor.black_color,fontSize: Get.width / 30),
+                          contentPadding: EdgeInsets.symmetric(vertical: 15),
                           filled: true,
                           fillColor: AppColor.white_color,
                           isDense: true,
@@ -243,7 +247,7 @@ class CustomJewellery extends StatelessWidget {
                     ),
 
                     SizedBox(height: Get.height / 50),
-                    Text('Diamond And Gemstone Details',style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
+                    Text(AppString.diamond_Type,style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
                     SizedBox(height: Get.height / 50),
 
                     //Center Stone
@@ -264,7 +268,7 @@ class CustomJewellery extends StatelessWidget {
                         ),
                         SizedBox(width: Get.width / 50),
                         Text(
-                          'Center Stone',
+                          AppString.centerStone,
                           style: TextStyle(
                             color: AppColor.black_color,
                             fontWeight: FontWeight.w500,
@@ -335,7 +339,7 @@ class CustomJewellery extends StatelessWidget {
 
                               //Color
                               SizedBox(height: Get.height / 100),
-                              Text('Color', style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
+                              Text(AppString.color, style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
                               SizedBox(height: Get.height / 200),
                               Obx((){
                                 return  SingleChildScrollView(
@@ -369,7 +373,7 @@ class CustomJewellery extends StatelessWidget {
 
                               //Clarity
                             SizedBox(height: Get.height / 100),
-                            Text('Clarity', style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
+                            Text(AppString.clarity, style: TextStyle(fontSize: Get.width / 25, color: AppColor.black_color, fontWeight: FontWeight.w500)),
                             SizedBox(height: Get.height / 200),
                             GetBuilder<CustomJewelleryUI>(
                               builder: (GetxController controller) {
@@ -417,7 +421,7 @@ class CustomJewellery extends StatelessWidget {
                               value: customUI.selectedMetalStampValue,
                               items: customUI.stampvalue,
                               displayText: (stamp) => "${stamp['name']}",
-                              hintText: 'Select Stamp',
+                              hintText: AppString.selected_Stamp,
                               onChanged: customUI.onStampSelected,
                             ),
 
@@ -437,7 +441,7 @@ class CustomJewellery extends StatelessWidget {
                                     iconheight: 10,
                                     iconwidth: 10,
                                     iconcolor: AppColor.grey_color,
-                                    hintText: 'Min Value',
+                                    hintText: AppString.minValue,
                                   ),
                                 ),
 
@@ -454,7 +458,7 @@ class CustomJewellery extends StatelessWidget {
                                     iconheight: 10,
                                     iconwidth: 10,
                                     iconcolor: AppColor.grey_color,
-                                    hintText: 'Max Value',
+                                    hintText: AppString.maxValue,
                                   ),
                                 ),
                               ],
@@ -487,7 +491,7 @@ class CustomJewellery extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: Get.width / 50),
-                        Text('Side Stone', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
+                        Text(AppString.sideStone, style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
                       ],
                     ),
 
@@ -509,10 +513,10 @@ class CustomJewellery extends StatelessWidget {
                               decoration: BoxDecoration(color: AppColor.Appbercolor),
                               child: Row(
                                 children: [
-                                  SizedBox(width: Get.width / 4,child: Text('Shape',style: TextStyle(fontWeight: FontWeight.w600))),
-                                  SizedBox(width: Get.width / 5,child: Text('Color',style: TextStyle(fontWeight: FontWeight.w600))),
-                                  SizedBox(width: Get.width / 4.5,child: Text('Clarity',style: TextStyle(fontWeight: FontWeight.w600))),
-                                  SizedBox(width: Get.width / 6,child: Text('Action',style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 4,child: Text(AppString.shape,style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 5,child: Text(AppString.color,style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 4.5,child: Text(AppString.clarity,style: TextStyle(fontWeight: FontWeight.w600))),
+                                  SizedBox(width: Get.width / 6,child: Text(AppString.action,style: TextStyle(fontWeight: FontWeight.w600))),
                                 ],
                               ),
                             ),
@@ -595,7 +599,7 @@ class CustomJewellery extends StatelessWidget {
                     Divider(color: AppColor.textfild_color),
 
                     SizedBox(height: Get.height / 50),
-                    Text('Upload Your Image',style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
+                    Text(AppString.upyourImage,style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
                     SizedBox(height: Get.height / 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -605,7 +609,7 @@ class CustomJewellery extends StatelessWidget {
                             onTap: () => customUI.pickImage(),
                             child: Column(
                               children: [
-                                button('Upload Image'),
+                                button(AppString.upImage),
                                 Text(customUI.imagefile.value),
                               ],
                             ),
@@ -617,7 +621,7 @@ class CustomJewellery extends StatelessWidget {
                             onTap: () => customUI.pickVideo(),
                             child: Column(
                               children: [
-                                button('Upload Video'),
+                                button(AppString.upVideo),
                                 Text(customUI.videofile.value)
                               ],
                             ),
@@ -630,10 +634,10 @@ class CustomJewellery extends StatelessWidget {
                     //Url
                     inputField(
                       controller: customUI.urlController,
-                      icon: AppIcon.earth,
+                      icon: AppIcon.returns,
                       iconheight: 10, iconwidth: 10,
                       iconcolor: AppColor.pink_color,
-                      hintText: 'Enter URL',
+                      hintText: AppString.URl,
                     ),
 
                     SizedBox(height: Get.height / 50),

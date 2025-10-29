@@ -360,10 +360,10 @@ class Checkout extends StatelessWidget {
                                               SizedBox(width: Get.width / 1.2,child: Text(userData['countryName'])),
                                             ],
                                           ),
-                                          Row(
+                                          (userData['stateName'] == null) ? SizedBox() :  Row(
                                             children: [
                                               // SizedBox(width: Get.width / 5,child: Text('State :',style: TextStyle(fontWeight: FontWeight.w500))),
-                                              SizedBox(width: Get.width / 1.2,child: Text(userData['stateName'])),
+                                              SizedBox(width: Get.width / 1.2,child: Text(userData['stateName'].toString())),
                                             ],
                                           ),
                                           Row(

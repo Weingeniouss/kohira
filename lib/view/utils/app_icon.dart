@@ -59,9 +59,24 @@ class AppIcon {
   static const HelpCenter = 'asset/icon/drawericon/Helpcenter.svg';
   static const PrivacyPolicy = 'asset/icon/drawericon/Privacy.svg';
   static const Logout = 'asset/icon/drawericon/logout.svg';
+      //customJewellery
+          static const appx_weight = 'asset/icon/drawericon/appx_weight.svg';
+          static const ethical = 'asset/icon/drawericon/ethical.svg';
+          static const jewellery_type = 'asset/icon/drawericon/jewellery_type.svg';
+          static const metal_type = 'asset/icon/drawericon/metal_type.svg';
+          static const remark = 'asset/icon/drawericon/remark.svg';
+          static const returns = 'asset/icon/drawericon/return.svg';
+          static const budget = 'asset/icon/drawericon/budget.svg';
+          static const cat_jewelry = 'asset/icon/drawericon/cat_jewelry.svg';
+          static const cat_necklace1 = 'asset/icon/drawericon/cat_necklace1.svg';
+          static const cat_necklace = 'asset/icon/drawericon/cat_necklace.svg';
+          static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
+          static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
+          static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
 
   //Paymants
   static const carts = 'asset/icon/payments/card.svg';
   static const upi = 'asset/icon/payments/upi.svg';
   static const visa = 'asset/icon/payments/visa.svg';
+  static const coupon = 'asset/icon/payments/coupon.svg';
 }

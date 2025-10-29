@@ -92,6 +92,34 @@ class AppString {
      static const Logout = 'Logout';
      static const Login = 'Login';
 
+            //CustomJewellery
+              static const jewelery_Type = 'Choose Jewelry Type *';
+              static const jewelery_Subcategory = 'Choose Subcategory *';
+              static const metal_Type = 'Choose Metal Type *';
+              static const metal_stamp = 'Choose Metal Stamp *';
+              static const metal_Weight = 'Appx Metal Weight(gm) ';
+              static const budget = 'Budget';
+              static const remark = 'Remark *';
+              static const diamond_Type = 'Diamond And Gemstone Details';
+              static const centerStone = 'Center Stone';
+              static const sideStone = 'Side Stone';
+              static const selected_Stamp = 'Select Stamp *';
+              static const minValue = 'Min Value';
+              static const maxValue = 'Max Value';
+              static const shpae = 'Shpae';
+              static const color = 'Color';
+              static const clarity = 'Clarity';
+              static const selecttype = 'Select type';
+              static const shapevalue = 'Choose Shape';
+              static const colorvalue = 'Choose Color';
+              static const action = 'Action';
+              static const clarityvalue = 'Choose Clarity';
+              static const upyourImage = 'Upload Your Image';
+              static const upImage = 'Upload Image';
+              static const upVideo = 'Upload Video';
+              static const URl = 'Enter URl';
+
+
     //Search
     static const Searchs = 'Search';
 
