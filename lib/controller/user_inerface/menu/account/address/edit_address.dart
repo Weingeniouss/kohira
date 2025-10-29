@@ -84,6 +84,7 @@ class EditAddressUserIntrface extends GetxController{
     );
     if(add.data['type'] == 'success'){
       ToastificationSuccess.Success(add.data['message']);
+      Get.back();
     }
     if (add.data['success'] == false) {
       final errors = add.data['errors'];
@@ -100,7 +101,6 @@ class EditAddressUserIntrface extends GetxController{
       if (errors != null && errors.containsKey('id')) ToastificationError.Error(errors['mobileno'][0]);
       if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
     }
-    Get.back();
     await fech.fechaddresses();
   }
 

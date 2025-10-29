@@ -93,20 +93,20 @@ class Addaddresses extends GetxController{
       final url = Uri.parse(AppUrl.addressesfeach);
       final body =  {
         'id' : id,
-        'firstname' : firstname,
-        'lastname' : lastname,
-        'email' : email,
-        'companyname' : companyname,
-        'address' : address,
-        'city' : city,
-        'state' : state,
-        'country' : country,
-        'countrycode' : country,
-        'zip' : zip,
-        'mobileno' : mobileno,
-        'ip_address' : ip_address,
-        'isdefault' : isdefault,
-      }..removeWhere((key,value) => value == null);
+        if (firstname != null && firstname.isNotEmpty) 'firstname': firstname,
+        if (lastname != null && lastname.isNotEmpty) 'lastname': lastname,
+        if (email != null && email.isNotEmpty) 'email': email,
+        if (companyname != null && companyname.isNotEmpty) 'companyname': companyname,
+        if (address != null && address.isNotEmpty) 'address': address,
+        if (city != null && city.isNotEmpty) 'city': city,
+        if (state != null && state.isNotEmpty) 'state': state,
+        if (country != null && country.isNotEmpty) 'country': country,
+        if (countrycode != null && countrycode.isNotEmpty) 'countrycode': countrycode,
+        if (zip != null && zip.isNotEmpty) 'zip': zip,
+        if (mobileno != null && mobileno.isNotEmpty) 'mobileno': mobileno,
+        if (ip_address != null && ip_address.isNotEmpty) 'ip_address': ip_address,
+        if (isdefault != null) 'isdefault': isdefault,
+      }..removeWhere((key, value) => value == null || value.toString().isEmpty);
       print("Sending Add_addresses body :- $body");
       print("Sending Request To :- $url");
       final responce =  await http.post(url,body: body,headers: {ApiHeaders.heading: ApiHeaders.peramitters,ApiHeaders.authorization : tokans});
