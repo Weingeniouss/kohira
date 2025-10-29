@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, strict_top_level_inference, prefer_typing_uninitialized_variables
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';

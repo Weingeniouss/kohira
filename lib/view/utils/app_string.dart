@@ -91,7 +91,6 @@ class AppString {
      static const customJewellery = 'CustomJewellery';
      static const Logout = 'Logout';
      static const Login = 'Login';
-
             //CustomJewellery
               static const jewelery_Type = 'Choose Jewelry Type *';
               static const jewelery_Subcategory = 'Choose Subcategory *';
@@ -167,6 +166,14 @@ class AppString {
 
     //Account
     static const accounttitale = 'Account';
+       //Add New Adress
+         static const firstname_hint = 'First Name';
+         static const lastname_hint = 'Last Name';
+         static const address_hint = 'Adresss';
+         static const city_hint = 'City';
+         static const zipcode_hint = 'ZipCode';
+         static const email_hint = 'Email';
+         static const phone_hint = 'Phone Numbers';
 
        //Order
        static const orderid = 'Orderid';

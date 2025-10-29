@@ -345,7 +345,7 @@ class _BuynowState extends State<Buynow> {
                                 helperStyle: TextStyle(fontSize: Get.width / 30),
                                 prefixIcon: Padding(
                                   padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-                                  child: SvgPicture.asset(AppIcon.cart, height: 10, width: 10),
+                                  child: SvgPicture.asset(AppIcon.coupon, height: 10, width: 10,color: AppColor.grey_color),
                                 ),
                                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColor.textfild_color)),
                                 disabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColor.textfild_color)),
