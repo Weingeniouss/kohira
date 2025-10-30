@@ -492,38 +492,45 @@ class Home extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: home.kohiraDiamonds.value ? Get.height / 3.8 : Get.height / 5.5,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    section['name'] ?? '',
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  section['name'] ?? '',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: Get.width * 0.060,
+                                    fontFamily: 'Zapf',
+                                  ),
+                                ),
+                                SizedBox(height: Get.height / 50),
+                                Text(
+                                  section['description'] ?? '',
+                                  maxLines: home.dreemJewwlry.value ? null : 3,
+                                  overflow: home.dreemJewwlry.value ? TextOverflow.visible : TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: AppColor.hintColor,
+                                    fontSize: Get.width / 29,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                GestureDetector(
+                                  onTap: home.toggleDreemJewwlry,
+                                  child: Text(
+                                    home.dreemJewwlry.value ? 'See Less' : 'See More',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: Get.width * 0.060,
-                                      fontFamily: 'Zapf',
+                                      color: AppColor.pink_color,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: Get.height / 50),
-                                  Text(
-                                    section['description'] ?? '',
-                                    maxLines: home.dreemJewwlry.value ? null : 3,
-                                    overflow: home.dreemJewwlry.value ? TextOverflow.visible : TextOverflow.ellipsis,
-                                    style: TextStyle(color: AppColor.hintColor, fontSize: Get.width / 29),
-                                  ),
-                                  GestureDetector(
-                                    onTap: home.toggleDreemJewwlry,
-                                    child: Text(
-                                      home.dreemJewwlry.value ? 'See Less' : 'See More',
-                                      style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            AspectRatio(aspectRatio: 9 / 10, child: VideoPlayerMenuSecond(videoUrl: section['video'])),
+                            SizedBox(height: Get.height / 40),
+                            AspectRatio(
+                              aspectRatio: 9 / 10,
+                              child: VideoPlayerMenuSecond(videoUrl: section['video']),
+                            ),
                             SizedBox(height: Get.height / 40),
                           ],
                         ),
