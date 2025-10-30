@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kohira/controller/API/credentials/login.dart';
+import 'package:kohira/controller/API/menu/account/profiledetails.dart';
+import 'package:kohira/controller/user_inerface/credentials/login_controller.dart';
 import '../../../../../modal/menu/category/subcategory/jewelleryfilter.dart';
 import '../../../../../modal/menu/home/drawar/customJewellery/category_customorder.dart';
 import '../../../../../view/utils/app_String.dart';
@@ -78,6 +81,7 @@ class CustomJewelleryUI extends GetxController{
   final jewellery = Get.put(Jewelleryfilter());
   final clarity = Get.put(Clarity());
   final submit = Get.put(SubmitCustomJewelley());
+  final profile = Get.put(ProfiledetailsController());
 
   final TextEditingController searchController = TextEditingController();
   final TextEditingController subcategorySearchController = TextEditingController();
@@ -93,6 +97,10 @@ class CustomJewelleryUI extends GetxController{
   final TextEditingController shapeController = TextEditingController();
   final TextEditingController colorController = TextEditingController();
   final TextEditingController clarityController = TextEditingController();
+   TextEditingController firstname_controller = TextEditingController();
+   TextEditingController lastname_controller = TextEditingController();
+   TextEditingController mobile_controller = TextEditingController();
+   TextEditingController email_controller = TextEditingController();
 
   var selectedCategory = Rxn<Category_Customorder>();
   var selectedSubcategory = Rxn<Category_Subcategory>();
@@ -101,6 +109,34 @@ class CustomJewelleryUI extends GetxController{
   var selectedShape = Rxn<BraceletSize>();
   var selectcolor =  Rxn<BraceletSize>();
   var selectedClarity = Rxn<ClarityItem>();
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    // Initialize with empty values
+    firstname_controller = TextEditingController();
+    lastname_controller = TextEditingController();
+    email_controller = TextEditingController();
+    mobile_controller = TextEditingController();
+
+    loadData();
+  }
+
+  void loadData() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await profile.profiledetailscall();
+
+      // Update controllers after profile data is loaded
+      if (profile.data['data'] != null) {
+        final info = profile.data['data'];
+        firstname_controller.text = info['firstname']?.toString() ?? '';
+        lastname_controller.text = info['lastname']?.toString() ?? '';
+        email_controller.text = info['email']?.toString() ?? '';
+        mobile_controller.text = info['mobileno']?.toString() ?? '';
+      }
+    });
+  }
 
   var jwellery;
 
@@ -503,32 +539,25 @@ class CustomJewelleryUI extends GetxController{
 
   void submits(){
     submit.submitCustomJewelley(
+      userid: profile.data['data']['userid'].toString(),
       jewelrytype: selectedCategory.value?.id.toString() ?? selectedCategory.value?.name.toString() ?? '',
       appxmetalWgt: metalWeightController.text,
       budget: metalBudgetController.text,
       centerStoneSelect: 'true',
-      password: '',
-      confirm_password: '',
       diamMaxSelectedCarat: maxValueController.text,
       diamMinSelectedCarat: minValueController.text,
-      currency_id: '',
-      email: '',
-      firstname: '',
-      lastname: '',
-      engraving: '',
+      email: email_controller.text,
+      firstname: firstname_controller.text,
+      lastname: lastname_controller.text,
       metalstamp: selectedMetalStamp.value?.id.toString() ?? selectedMetalStamp.value?.name.toString() ?? '',
       metaltype: selectedMetalType.value?.id.toString() ?? selectedMetalType.value?.name.toString() ?? '',
-      mobileno: '',
-      referredby: '',
-      ringsize: '',
-      sideStoneSelect: '',
+      mobileno: mobile_controller.text,
       subcategory_id: selectedSubcategory.value?.id.toString() ?? selectedSubcategory.value?.name.toString() ?? '',
       remark: metalremarkController.text,
       selectedDiamCarat: metalname,
       selectedDiamClarity: clarityy.value.toString(),
       selectedDiamColor: colors.value,
       selectedDiamShape: selectedShapeId.value,
-      userid: '',
       url: urlController.text,
       token: tokans,
       shape: [shape.name.toString()],
@@ -546,5 +575,6 @@ class CustomJewelleryUI extends GetxController{
     print('selectedDiamColor: $colors');
     print('selectedDiamClarity: $clarityy');
     print('captcha: $recaptchaToken');
+    print('UserId:- ${profile.data['data']['userid'].toString()}');
   }
 }

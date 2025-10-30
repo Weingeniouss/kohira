@@ -596,8 +596,70 @@ class CustomJewellery extends StatelessWidget {
                         ? SizedBox(height: Get.height / 50)
                         : SizedBox(),
 
+                    //Information
                     Divider(color: AppColor.textfild_color),
 
+                    SizedBox(height: Get.height / 50),
+                    Text(AppString.information,style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
+                    SizedBox(height: Get.height / 50),
+
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColor.graycolor,
+                        borderRadius: BorderRadius.circular(Get.width / 50),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: Get.height / 80),
+                          inputField(
+                            textfildcolor: AppColor.grey_color,
+                            controller: customUI.firstname_controller,
+                            icon: AppIcon.parson,
+                            iconheight: 10,
+                            iconwidth: 10,
+                            iconcolor: AppColor.grey_color,
+                            hintText: AppString.firstname_hint,
+                          ),
+                          SizedBox(height: Get.height / 80),
+                          inputField(
+                            textInputType: TextInputType.number,
+                            textfildcolor: AppColor.grey_color,
+                            controller: customUI.lastname_controller,
+                            icon: AppIcon.parson,
+                            iconheight: 10,
+                            iconwidth: 10,
+                            iconcolor: AppColor.grey_color,
+                            hintText: AppString.lastname_hint,
+                          ),
+                          SizedBox(height: Get.height / 80),
+                          inputField(
+                            textfildcolor: AppColor.grey_color,
+                            controller: customUI.email_controller,
+                            icon: AppIcon.mail,
+                            iconheight: 10,
+                            iconwidth: 10,
+                            iconcolor: AppColor.grey_color,
+                            hintText: AppString.email_hint,
+                          ),
+                          SizedBox(height: Get.height / 80),
+                          inputField(
+                            textInputType: TextInputType.number,
+                            textfildcolor: AppColor.grey_color,
+                            controller: customUI.mobile_controller,
+                            icon: AppIcon.mobile,
+                            iconheight: 10,
+                            iconwidth: 10,
+                            iconcolor: AppColor.grey_color,
+                            hintText: AppString.phone_hint,
+                          ),
+                          SizedBox(height: Get.height / 80),
+                        ],
+                      ),
+                    ),
+                    Divider(color: AppColor.textfild_color),
+
+                    //Upload Image or Video
                     SizedBox(height: Get.height / 50),
                     Text(AppString.upyourImage,style: TextStyle(fontSize: Get.width / 24,color: AppColor.grey_color,fontWeight: FontWeight.w500)),
                     SizedBox(height: Get.height / 50),

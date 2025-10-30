@@ -170,10 +170,10 @@ class _ProfileeditState extends State<Profileedit> {
               return Column(
                 children: [
                   SizedBox(height: Get.height / 50),
-                  inputField(icon: AppIcon.parson, controller: fristname),
-                  inputField(icon: AppIcon.parson, controller: lastname),
-                  inputField(icon: AppIcon.mail, controller: email),
-                  inputField(icon: AppIcon.mobile, controller: mobile),
+                  inputField(icon: AppIcon.parson, controller: fristname,hintText: AppString.firstname_hint),
+                  inputField(icon: AppIcon.parson, controller: lastname,hintText: AppString.lastname_hint),
+                  inputField(icon: AppIcon.mail, controller: email,hintText: AppString.email_hint),
+                  inputField(icon: AppIcon.mobile, controller: mobile,maxLength: 10,textInputType: TextInputType.phone,hintText: AppString.phone_hint),
                 ],
               );
             }),

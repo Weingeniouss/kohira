@@ -86,9 +86,9 @@ class AppString {
      static const allJewellery = 'All Jewellery';
      static const Wishlist = 'Wishlist';
      static const Wallet = 'Wallet';
-     static const HelpCenter = 'HelpCenter';
-     static const PrivacyPolicy = 'PrivacyPolicy';
-     static const customJewellery = 'CustomJewellery';
+     static const HelpCenter = 'Help Center';
+     static const PrivacyPolicy = 'Privacy Policy';
+     static const customJewellery = 'Custom Jewellery';
      static const Logout = 'Logout';
      static const Login = 'Login';
             //CustomJewellery
@@ -100,6 +100,7 @@ class AppString {
               static const budget = 'Budget';
               static const remark = 'Remark *';
               static const diamond_Type = 'Diamond And Gemstone Details';
+              static const information = 'Information';
               static const centerStone = 'Center Stone';
               static const sideStone = 'Side Stone';
               static const selected_Stamp = 'Select Stamp *';

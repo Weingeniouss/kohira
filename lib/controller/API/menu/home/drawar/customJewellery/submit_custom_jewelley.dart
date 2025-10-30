@@ -6,10 +6,11 @@ import 'package:get/get.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/widget/pop.dart';
 
 class SubmitCustomJewelley extends GetxController{
   var isLoading = false.obs;
-  var customData = false.obs;
+  var customData = {}.obs;
 
   Future<void> submitCustomJewelley({
     final String? jewelrytype,
@@ -128,8 +129,9 @@ class SubmitCustomJewelley extends GetxController{
       print('📩 Response Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        customData = jsonDecode(response.body);
+        customData.value = jsonDecode(response.body);
         print('✅ Custom Jewellery Response :- $customData');
+        ToastificationSuccess.Success(customData.value['message']);
       } else {
         throw Exception('${response.statusCode}, ${response.body}');
       }
