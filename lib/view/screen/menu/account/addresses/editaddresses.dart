@@ -83,7 +83,6 @@ class Editaddresses extends StatelessWidget {
             ),
           );
         }),
-
         body: Container(
           width: Get.width,
           height: Get.height,
@@ -122,7 +121,6 @@ class Editaddresses extends StatelessWidget {
               );
             }
             edit.facedataedit();
-
             return horizontalpadding(
               child: SingleChildScrollView(
                 child: Column(
@@ -251,10 +249,10 @@ class Editaddresses extends StatelessWidget {
                         ])),
                     SizedBox(height: Get.height / 80),
                     // inputField(icon: AppIcon.location, controller: state,iconcolor: AppColor.pink_color),
-                    inputField(icon: AppIcon.location,controller: edit.city,iconcolor: AppColor.pink_color),
-                    inputField(icon: AppIcon.earth, controller: edit.zip,iconheight: 20,iconcolor: AppColor.pink_color,textInputType: TextInputType.number,maxLength: 6),
-                    inputField(icon: AppIcon.mail, controller: edit.mail),
-                    inputField(icon: AppIcon.mobile, controller: edit.mobile,maxLength: 10,textInputType: TextInputType.number),
+                    inputField(icon: AppIcon.location,controller: edit.city,iconcolor: AppColor.pink_color,hintText: AppString.city_hint),
+                    inputField(icon: AppIcon.earth, controller: edit.zip,iconheight: 20,iconcolor: AppColor.pink_color,textInputType: TextInputType.number,maxLength: 6,hintText: AppString.zipcode_hint),
+                    inputField(icon: AppIcon.mail, controller: edit.mail,hintText: AppString.email_hint),
+                    inputField(icon: AppIcon.mobile, controller: edit.mobile,maxLength: 10,textInputType: TextInputType.number,hintText: AppString.phone_hint),
                     (edit.fechedit.data['userAdddress']['isdefault'] ==  1) ? Column(
                       children: [
                         SizedBox(height: Get.height / 80),

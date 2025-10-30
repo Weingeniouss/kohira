@@ -137,9 +137,9 @@ class AddNewAddresses extends StatelessWidget {
                           Expanded(
                             child: Obx(() {
                               return DropdownButton2<Data>(
-                                style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 27),
+                                style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 28),
                                 value: AddAddress.Country.selectedCountry.value,
-                                hint: Text('Select Country *', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 27)),
+                                hint: Text('Select Country *', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 28)),
                                 isExpanded: true,
                                 underline: SizedBox(),
                                 items: AddAddress.Country.countries.map((item) {
