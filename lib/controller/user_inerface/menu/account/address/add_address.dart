@@ -54,7 +54,8 @@ class AddAddressController extends GetxController {
       email: mail.text,
       city: city.text,
       zip: zip.text,
-      country: countryValue.toString(),
+      countrycode: countryValue.value.isNotEmpty ? countryValue.value : (countrycode?.text ?? ''),
+      country: countryValue.value.isNotEmpty ? countryValue.value : (countrycode?.text ?? ''),
       isdefault: isDefaultValue,
     );
     if (add.data['success'] == false) {
@@ -82,6 +83,7 @@ class AddAddressController extends GetxController {
   void countryCalling(newValue) async {
     Country.selectedCountry.value = newValue!;
     State.stateList(newValue.id.toString());
+    countryValue.value = newValue.countrycode?.toString() ?? '';
     countryValue.value = newValue.id.toString();
     countryLabal.value = newValue.label;
     print("Country ID: $countryValue");

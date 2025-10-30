@@ -219,8 +219,8 @@ class AddNewAddresses extends StatelessWidget {
                     SizedBox(height: Get.height / 80),
                     inputField(icon: AppIcon.location, hintText: AppString.city_hint, controller: AddAddress.city, iconcolor: AppColor.pink_color),
                     inputField(icon: AppIcon.earth, hintText: AppString.zipcode_hint, controller: AddAddress.zip, iconwidth: 20, iconheight: 20, iconcolor: AppColor.pink_color, textInputType: TextInputType.number, maxLength: 6),
-                    inputField(icon: AppIcon.mail, hintText: AppString.zipcode_hint, controller: AddAddress.mail),
-                    inputField(icon: AppIcon.mobile, hintText: AppString.email_hint, controller: AddAddress.mobile, maxLength: 10, textInputType: TextInputType.number),
+                    inputField(icon: AppIcon.mail, hintText: AppString.email_hint, controller: AddAddress.mail),
+                    inputField(icon: AppIcon.mobile, hintText: AppString.phone_hint, controller: AddAddress.mobile, maxLength: 10, textInputType: TextInputType.number),
                     Row(
                       children: [
                         Checkbox(

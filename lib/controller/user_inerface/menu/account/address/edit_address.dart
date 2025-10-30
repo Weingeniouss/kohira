@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../../view/utils/widget/pop.dart';
 import '../../../../API/credentials/country.dart';
 import '../../../../API/menu/account/addresses.dart';
@@ -23,6 +22,13 @@ class EditAddressUserIntrface extends GetxController{
   var countryValue = ''.obs;
   var stateLabel = ''.obs;
   var stateId = ''.obs;
+
+  var edits = false.obs;
+
+  void edinti(){
+    edits.value = true;
+    update();
+  }
 
   var selectedState = 'Selected State'.obs;
   var selectedCountry = 'Selected Country'.obs;
@@ -69,19 +75,19 @@ class EditAddressUserIntrface extends GetxController{
 
   void editfechaddresses()async{
     await add.addfechaddresses(
-      id: ids,
-      firstname: (firstname != null) ? firstname!.text : firstname!.text,
-      lastname: (lastname != null) ? lastname!.text : lastname!.text,
-      mobileno: (mobile != null) ? mobile!.text : mobile!.text,
-      address: (address != null) ? address!.text : address!.text,
-      state: (stateId != null) ? stateId.toString() : stateID!.text,
-      email: (mail != null) ? mail!.text : mail!.text,
-      city: (city != null) ? city!.text : city!.text,
-      zip: (zip != null) ? zip!.text : zip!.text,
-      countrycode: (countryValue.value != null) ? countryValue.value : countrycode!.text,
-      country: (countryValue.value != null) ? countryValue.value : countrycode!.text,
-      isdefault: isDefaultValue,
-    );
+        id: ids,
+        firstname: (firstname != null) ? firstname!.text : firstname!.text,
+        lastname: (lastname != null) ? lastname!.text : lastname!.text,
+        mobileno: (mobile != null) ? mobile!.text : mobile!.text,
+        address: (address != null) ? address!.text : address!.text,
+        state: stateId.value.isNotEmpty ? stateId.value : (stateID?.text ?? ''),
+        email: (mail != null) ? mail!.text : mail!.text,
+        city: (city != null) ? city!.text : city!.text,
+        zip: (zip != null) ? zip!.text : zip!.text,
+        countrycode: countryValue.value.isNotEmpty ? countryValue.value : (countrycode?.text ?? ''),
+        country: countryValue.value.isNotEmpty ? countryValue.value : (countrycode?.text ?? ''),
+        isdefault: isDefaultValue,
+      );
     if(add.data['type'] == 'success'){
       ToastificationSuccess.Success(add.data['message']);
       Get.back();
@@ -121,20 +127,44 @@ class EditAddressUserIntrface extends GetxController{
     }
   }
 
-  void changeCountryvalue(newValue){
-    Country.selectedCountry.value = newValue!;
+  void changeCountryvalue(newValue) {
+    if (newValue == null) {
+      Country.selectedCountry.value = null;
+      countryValue.value = '';
+      countryLabal.value = '';
+      // Clear states when country is cleared
+      State.selectedState.value = null;
+      stateId.value = '';
+      stateLabel.value = '';
+      print("Country selection cleared");
+      return;
+    }
+    Country.selectedCountry.value = newValue;
+    countryValue.value = newValue.id?.toString() ?? '';
+    countryLabal.value = newValue.label?.toString() ?? ''; // ✅ This should be country NAME
+    // Clear the state selection when country changes
+    State.selectedState.value = null;
+    stateId.value = '';
+    stateLabel.value = '';
     State.stateList(newValue.id.toString());
-    countryValue.value = newValue.id.toString();
-    countryLabal.value = newValue.label.toString();
-    print("Country ID: $countryValue");
-    print("Country Label: $countryLabal");
-    Get.find<StateCalling>().stateList(countryValue.value);
+    print("✅ Country Code: ${countryValue.value}");
+    print("✅ Country Name: ${countryLabal.value}");
+
+    update();
   }
 
-  void changeStatevalue(newValue){
+  void changeStatevalue(newValue) {
+    if (newValue == null) {
+      State.selectedState.value = null;
+      stateId.value = '';
+      stateLabel.value = '';
+      print("State selection cleared");
+      return;
+    }
+
     State.selectedState.value = newValue;
-    stateId.value = newValue!["id"].toString();
-    stateLabel.value = newValue?["label"];
+    stateId.value = newValue["id"].toString();
+    stateLabel.value = newValue["label"]?.toString() ?? '';
     print("Selected State ID: $stateId, Label: $stateLabel");
   }
 

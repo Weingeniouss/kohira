@@ -30,7 +30,14 @@ class Editaddresses extends StatelessWidget {
         return true;
       },
       child: Scaffold(
-        appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.editAddresses),
+        appBar: Appbar(
+          lefticon: AppIcon.left,
+          hedingname_2: AppString.editAddresses,
+          onTaplefticon: ()async{
+            Get.back();
+            await edit.fech.fechaddresses();
+          },
+        ),
         bottomNavigationBar:Obx((){
           if(edit.fechedit.isLoading.value){
             return horizontalpadding(
@@ -121,9 +128,9 @@ class Editaddresses extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: Get.height / 50),
-                    inputField(icon: AppIcon.parson, controller: edit.firstname),
-                    inputField(icon: AppIcon.parson, controller: edit.lastname),
-                    inputField(icon: AppIcon.location, controller: edit.address,iconcolor: AppColor.pink_color),
+                    inputField(icon: AppIcon.parson, controller: edit.firstname,hintText: AppString.firstname_hint),
+                    inputField(icon: AppIcon.parson, controller: edit.lastname,hintText: AppString.lastname_hint),
+                    inputField(icon: AppIcon.location, controller: edit.address,iconcolor: AppColor.pink_color,hintText: AppString.address_hint),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
@@ -133,24 +140,19 @@ class Editaddresses extends StatelessWidget {
                           Expanded(
                             child: Obx(() {
                               final userData = edit.fechedit.data['userAdddress'];
+                              final selectedCountry = edit.Country.selectedCountry.value;
+                              final isValidCountry = selectedCountry != null && edit.Country.countries.any((country) => country.id == selectedCountry.id);
                               return DropdownButton2<Data>(
                                 style: TextStyle(color: AppColor.black_color,fontWeight: FontWeight.w400,fontSize: Get.width / 27),
-                                value: edit.Country.selectedCountry.value,
+                                value: isValidCountry ? selectedCountry : null,
                                 hint: Text(
-                                  userData['country_data']?['name'] ?? '',
-                                  style: TextStyle(
-                                    color: AppColor.black_color,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: Get.width / 27,
-                                  ),
+                                  userData['country_data']?['name'] ?? 'Select Country',
+                                  style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400, fontSize: Get.width / 27),
                                 ),
                                 isExpanded: true,
                                 underline: SizedBox(),
                                 items: edit.Country.countries.map((item) {
-                                  return DropdownMenuItem<Data>(
-                                    value: item,
-                                    child: Text(item.label.toString()),
-                                  );
+                                  return DropdownMenuItem<Data>(value: item, child: Text(item.label.toString()));
                                 }).toList(),
                                 onChanged: (newValue) => edit.changeCountryvalue(newValue),
                                 dropdownStyleData: DropdownStyleData(
@@ -158,10 +160,7 @@ class Editaddresses extends StatelessWidget {
                                   maxHeight: Get.height / 3,
                                   decoration: BoxDecoration(color: AppColor.white_color),
                                 ),
-                                iconStyleData: IconStyleData(
-                                  icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor),
-                                  iconSize: 24,
-                                ),
+                                iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
                                 dropdownSearchData: DropdownSearchData(
                                   searchController: edit.searchController,
                                   searchInnerWidgetHeight: 40,
@@ -191,13 +190,19 @@ class Editaddresses extends StatelessWidget {
                           SizedBox(width: Get.width / 50),
                           SvgPicture.asset(AppIcon.location,fit: BoxFit.cover,color: AppColor.pink_color,width: 20,height: 20),
                           Expanded(
-                            child: Obx((){
+                            child: Obx(() {
                               final userData = edit.fechedit.data['userAdddress'];
+
+                              // Ensure selected state exists in the list
+                              final selectedState = edit.State.selectedState.value;
+                              final isValidState = selectedState != null &&
+                                  edit.State.states.any((state) => state["id"] == selectedState["id"]);
+
                               return DropdownButton2<Map<String, dynamic>>(
                                 style: TextStyle(color: AppColor.black_color,fontWeight: FontWeight.w400,fontSize: Get.width / 27),
-                                value: edit.State.selectedState.value,
+                                value: isValidState ? selectedState : null,
                                 hint: Text(
-                                  userData['state_data']?['name'] ?? '',
+                                  userData['state_data']?['name'] ?? 'Select State',
                                   style: TextStyle(
                                     color: AppColor.black_color,
                                     fontWeight: FontWeight.w400,
