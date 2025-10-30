@@ -209,7 +209,7 @@ void _showRecaptchaVerification() {
                       title_text(AppString.signin),
                       SizedBox(height: Get.height / 80),
                       sub_titel_text(AppString.subsignin),
-                      SizedBox(height: Get.height / 20),
+                      SizedBox(height: Get.height / 80),
 
                       //Inputfild
                       Expanded(
