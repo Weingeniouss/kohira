@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_color.dart';
 
-Widget containershadow({required Widget child}){
+Widget containershadow({required Widget child, Color? color}){
   return Container(
     padding: EdgeInsets.all(10),
     decoration: BoxDecoration(
-      border: Border.all(color: AppColor.textfild_color),
+      border: Border.all(color: color ?? AppColor.textfild_color),
       borderRadius: BorderRadius.circular(Get.width / 50),
       boxShadow: [
         BoxShadow(

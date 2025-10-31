@@ -1,13 +1,11 @@
 // ignore_for_file: strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
-
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kohira/controller/API/credentials/login.dart';
 import 'package:kohira/controller/API/menu/account/profiledetails.dart';
-import 'package:kohira/controller/user_inerface/credentials/login_controller.dart';
 import '../../../../../modal/menu/category/subcategory/jewelleryfilter.dart';
 import '../../../../../modal/menu/home/drawar/customJewellery/category_customorder.dart';
 import '../../../../../view/utils/app_String.dart';
@@ -73,7 +71,7 @@ class DrawerInterface extends GetxController{
 
 class CustomJewelleryUI extends GetxController{
   final String siteKey = "6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF";
-  final String baseUrl = "https://next.weingenious.in";
+  final String baseUrl = "https://next.weingenious.in/";
 
   final customorder = Get.put(Customorder());
   final jewelleryfilter = Get.put(JewelleryList());
@@ -155,8 +153,8 @@ class CustomJewelleryUI extends GetxController{
   var metalname;
 
   //image
-  var imagefile = ''.obs;
-  var videofile = ''.obs;
+  var imagefile = Rx<File?>(null);
+  var videofile = Rx<File?>(null);
 
   //Bottam
   var isCheck_center = false.obs;
@@ -217,6 +215,8 @@ class CustomJewelleryUI extends GetxController{
                       isCheck.value = true;
                       recaptchaToken = token;
                       print('recapcha :- $recaptchaToken');
+                      print('siteKey :- $siteKey');
+                      print('baseUrl :- $baseUrl');
                       ToastificationSuccess.Success('Verification completed!');
                     },
                     onError: () {
@@ -272,18 +272,18 @@ class CustomJewelleryUI extends GetxController{
   // For Image Upload
   Future<void> pickImage() async {
     final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      imagefile.value = image.name;
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      imagefile.value = File(pickedFile.path);
     }
   }
 
   // For Video Upload
   Future<void> pickVideo() async {
     final picker = ImagePicker();
-    final video = await picker.pickVideo(source: ImageSource.gallery);
-    if (video != null) {
-      videofile.value = video.name;
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      videofile.value = File(pickedFile.path);
     }
   }
 
@@ -539,6 +539,7 @@ class CustomJewelleryUI extends GetxController{
 
   void submits(){
     submit.submitCustomJewelley(
+      captcha: recaptchaToken,
       userid: profile.data['data']['userid'].toString(),
       jewelrytype: selectedCategory.value?.id.toString() ?? selectedCategory.value?.name.toString() ?? '',
       appxmetalWgt: metalWeightController.text,
@@ -563,7 +564,8 @@ class CustomJewelleryUI extends GetxController{
       shape: [shape.name.toString()],
       color: [color.name.toString()],
       clarity: [claritys.name.toString()],
-      captcha: recaptchaToken,
+      image: imagefile.value,
+      video: videofile.value,
     );
 
     print('jewelryTypeValue :- $jewelryTypeValue');

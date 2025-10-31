@@ -267,14 +267,7 @@ class CustomJewellery extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: Get.width / 50),
-                        Text(
-                          AppString.centerStone,
-                          style: TextStyle(
-                            color: AppColor.black_color,
-                            fontWeight: FontWeight.w500,
-                            fontSize: Get.width * 0.04,
-                          ),
-                        ),
+                        Text(AppString.centerStone, style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w500, fontSize: Get.width / 27)),
                       ],
                     ),
                     SizedBox(height: Get.height / 80),
@@ -491,106 +484,108 @@ class CustomJewellery extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: Get.width / 50),
-                        Text(AppString.sideStone, style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w500, fontSize: Get.width * 0.04)),
+                        Text(AppString.sideStone, style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w500, fontSize: Get.width / 27)),
                       ],
                     ),
 
                     SizedBox(height: Get.height / 60),
 
                     //isCheck_isCheck_side_stone == True after isCheck_side_stone = true then ....
-                    (customUI.listofshape.isNotEmpty && customUI.listofclarity.isNotEmpty && customUI.listofcolor.isNotEmpty) ? Visibility(
-                      visible: customUI.isCheck_side_stone.value,
-                      child: Obx(() => Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColor.graycolor,
-                          borderRadius: BorderRadius.circular(Get.width / 50),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(color: AppColor.Appbercolor),
-                              child: Row(
-                                children: [
-                                  SizedBox(width: Get.width / 4,child: Text(AppString.shape,style: TextStyle(fontWeight: FontWeight.w600))),
-                                  SizedBox(width: Get.width / 5,child: Text(AppString.color,style: TextStyle(fontWeight: FontWeight.w600))),
-                                  SizedBox(width: Get.width / 4.5,child: Text(AppString.clarity,style: TextStyle(fontWeight: FontWeight.w600))),
-                                  SizedBox(width: Get.width / 6,child: Text(AppString.action,style: TextStyle(fontWeight: FontWeight.w600))),
-                                ],
+                    (customUI.listofshape.isNotEmpty && customUI.listofclarity.isNotEmpty && customUI.listofcolor.isNotEmpty)
+                        ? Visibility(
+                            visible: customUI.isCheck_side_stone.value,
+                            child: Obx(() => Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppColor.graycolor,
+                                borderRadius: BorderRadius.circular(Get.width / 50),
                               ),
-                            ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: customUI.listofshape.length,
-                              itemBuilder: (context, index) {
-                                customUI.shape = customUI.listofshape[index];
-                                customUI.color = customUI.listofcolor[index];
-                                customUI.claritys = customUI.listofclarity[index];
-                                return Container(
-                                  padding: EdgeInsetsGeometry.symmetric(horizontal: Get.width / 50),
-                                  decoration: BoxDecoration(color: AppColor.white_color),
-                                  child: Row(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(color: AppColor.Appbercolor),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: Get.width / 4,child: Text(AppString.shape,style: TextStyle(fontWeight: FontWeight.w600))),
+                                        SizedBox(width: Get.width / 5,child: Text(AppString.color,style: TextStyle(fontWeight: FontWeight.w600))),
+                                        SizedBox(width: Get.width / 4.5,child: Text(AppString.clarity,style: TextStyle(fontWeight: FontWeight.w600))),
+                                        SizedBox(width: Get.width / 6,child: Text(AppString.action,style: TextStyle(fontWeight: FontWeight.w600))),
+                                      ],
+                                    ),
+                                  ),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: customUI.listofshape.length,
+                                    itemBuilder: (context, index) {
+                                      customUI.shape = customUI.listofshape[index];
+                                      customUI.color = customUI.listofcolor[index];
+                                      customUI.claritys = customUI.listofclarity[index];
+                                      return Container(
+                                        padding: EdgeInsetsGeometry.symmetric(horizontal: Get.width / 50),
+                                        decoration: BoxDecoration(color: AppColor.white_color),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: Get.width / 4,child: Text(customUI.shape.name,style: TextStyle(fontWeight: FontWeight.w600))),
+                                            SizedBox(width: Get.width / 25),
+                                            SizedBox(width: Get.width / 10,child: Text(customUI.color.name,style: TextStyle(fontWeight: FontWeight.w600))),
+                                            SizedBox(width: Get.width / 10),
+                                            SizedBox(width: Get.width / 8,child: Text(customUI.claritys.name.toString(),style: TextStyle(fontWeight: FontWeight.w600))),
+                                            SizedBox(width: Get.width / 13),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  child: SvgPicture.asset(AppIcon.edit,width: 15,height: 15,color: AppColor.grey_color),
+                                                  onTap: (){
+                                                    customUI.side_Stone_bottambar_update(
+                                                      context: context,
+                                                      index: index,
+                                                      selectedShape_edit: Rxn<BraceletSize>(customUI.listofshape[index]),
+                                                      selectcolor_edit: Rxn<BraceletSize>(customUI.listofcolor[index]),
+                                                      selectedClarity_edit: Rxn<ClarityItem>(customUI.listofclarity[index]),
+                                                    );
+                                                  },
+                                                ),
+                                                SizedBox(width: Get.width / 30),
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    customUI.listofshape.removeAt(index);
+                                                    customUI.listofcolor.removeAt(index);
+                                                    customUI.listofclarity.removeAt(index);
+                                                  },
+                                                  child: Icon(Icons.delete_outline_outlined, color: AppColor.grey_color, size: 20),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(height: Get.height / 50),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      SizedBox(width: Get.width / 4,child: Text(customUI.shape.name,style: TextStyle(fontWeight: FontWeight.w600))),
-                                      SizedBox(width: Get.width / 25),
-                                      SizedBox(width: Get.width / 10,child: Text(customUI.color.name,style: TextStyle(fontWeight: FontWeight.w600))),
-                                      SizedBox(width: Get.width / 10),
-                                      SizedBox(width: Get.width / 8,child: Text(customUI.claritys.name.toString(),style: TextStyle(fontWeight: FontWeight.w600))),
-                                      SizedBox(width: Get.width / 13),
-                                      Row(
-                                        children: [
-                                          GestureDetector(
-                                            child: SvgPicture.asset(AppIcon.edit,width: 15,height: 15,color: AppColor.grey_color),
-                                            onTap: (){
-                                              customUI.side_Stone_bottambar_update(
-                                                context: context,
-                                                index: index,
-                                                selectedShape_edit: Rxn<BraceletSize>(customUI.listofshape[index]),
-                                                selectcolor_edit: Rxn<BraceletSize>(customUI.listofcolor[index]),
-                                                selectedClarity_edit: Rxn<ClarityItem>(customUI.listofclarity[index]),
-                                              );
-                                            },
-                                          ),
-                                          SizedBox(width: Get.width / 30),
-                                          GestureDetector(
-                                            onTap: (){
-                                              customUI.listofshape.removeAt(index);
-                                              customUI.listofcolor.removeAt(index);
-                                              customUI.listofclarity.removeAt(index);
-                                            },
-                                            child: Icon(Icons.delete_outline_outlined, color: AppColor.grey_color, size: 20),
-                                          ),
-                                        ],
+                                      GestureDetector(
+                                        onTap: () => customUI.side_Stone_bottambar(context),
+                                        child: Text(
+                                          '${AppString.add} +',
+                                            style: TextStyle(
+                                              color: AppColor.pink_color,
+                                              fontWeight: FontWeight.w600,
+                                              decoration: TextDecoration.underline,
+                                              decorationColor: AppColor.pink_color,
+                                            ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                );
-                              },
-                            ),
-                            SizedBox(height: Get.height / 50),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () => customUI.side_Stone_bottambar(context),
-                                  child: Text(
-                                    '${AppString.add} +',
-                                      style: TextStyle(
-                                        color: AppColor.pink_color,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: AppColor.pink_color,
-                                      ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )),
-                    ) : SizedBox(),
+                                ],
+                              ),
+                            )),
+                          )
+                        : SizedBox(),
 
                     (customUI.listofshape.isNotEmpty && customUI.listofclarity.isNotEmpty && customUI.listofcolor.isNotEmpty)
                         ? SizedBox(height: Get.height / 50)
@@ -672,7 +667,7 @@ class CustomJewellery extends StatelessWidget {
                             child: Column(
                               children: [
                                 button(AppString.upImage),
-                                Text(customUI.imagefile.value),
+                                Text(customUI.imagefile.value.toString()),
                               ],
                             ),
                           ),
@@ -684,7 +679,7 @@ class CustomJewellery extends StatelessWidget {
                             child: Column(
                               children: [
                                 button(AppString.upVideo),
-                                Text(customUI.videofile.value)
+                                Text(customUI.videofile.value.toString())
                               ],
                             ),
                           ),
@@ -737,3 +732,5 @@ class CustomJewellery extends StatelessWidget {
     );
   }
 }
+
+
