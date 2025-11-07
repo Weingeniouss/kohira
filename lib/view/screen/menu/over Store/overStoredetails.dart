@@ -328,6 +328,8 @@ void _showRecaptchaVerification() {
                           children: [
                             Html(data: storeDetail['store_direction_step']),
                             SizedBox(height: Get.height / 90),
+
+                            //Infromation
                             horizontalpadding(
                               child: Container(
                                 width: Get.width,

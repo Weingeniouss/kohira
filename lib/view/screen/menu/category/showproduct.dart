@@ -1108,7 +1108,7 @@ class _ShowproductState extends State<Showproduct> {
                                 borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
                                 border: Border.all(color: AppColor.textfild_color),
                               ),
-                              // child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
+                              child: Center(child: VideoPlayerMenuContainer(videoUrl: video[0]['path'])),
                             ),
                           );
                         }

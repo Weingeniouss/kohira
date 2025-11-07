@@ -9,7 +9,9 @@ class Cheackout_Controller extends GetxController {
   final shipping = ValueNotifier<bool>(true);
   var billing = true.obs;
   var shippingtype = true.obs;
+  var showItems = false.obs;
 
   void isbilling() => billing.value =! billing.value;
   void isshippingtype() => shippingtype.value =! shippingtype.value;
+  void showitems() => showItems.value =! showItems.value;
 }
