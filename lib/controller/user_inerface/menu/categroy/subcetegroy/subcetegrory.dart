@@ -4,16 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../../../API/menu/category/subcategrory/subCategrory.dart';
 
-class SubcetegroryShow extends  GetxController{
-  final subcategrory = Get.put(Subcategrory());
+class SubcetegroryShow extends GetxController {
+  final subcategrory = Get.put(Subcategrory(), permanent: false);
   final ScrollController scrollController = ScrollController();
-  var dataLoaded = false;
+  bool dataLoaded = false;
 
-  loadData({String? subcategrorys,String? subcategory_slug, String? collection_id, String? metal_type, String? price_min, String? price_max}){
+  void loadData({String? subcategrorys, String? subcategory_slug, String? collection_id, String? metal_type, String? price_min, String? price_max}) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if(!dataLoaded){
+      if (!dataLoaded) {
         subcategrory.resetPagination();
         subcategrory.subcategroryuser(category_slug: subcategrorys, subcategory_slug: subcategory_slug, collection_id: collection_id, metal_type: metal_type, price_min: price_min, price_max: price_max);
+        dataLoaded = true;
       }
     });
 
@@ -22,19 +23,13 @@ class SubcetegroryShow extends  GetxController{
         subcategrory.subcategroryuser(category_slug: subcategrorys, isLoadMore: true);
       }
     });
-
-
   }
 
   @override
   void onClose() {
+    scrollController.dispose();
+    Get.delete<Subcategrory>();
     dataLoaded = false;
     super.onClose();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 }

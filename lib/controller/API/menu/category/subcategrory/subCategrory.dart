@@ -147,13 +147,14 @@ class Subcategrory extends GetxController {
   void handleSearch(String query) {
     searchQuery.value = query;
     _searchTimer?.cancel();
+
     _searchTimer = Timer(const Duration(milliseconds: 500), () {
       if (query.isEmpty) {
-        // If search is cleared, reset to original data
+        // 🔹 Search cleared → restore original data
         data.value = List.from(allData);
         isSearching.value = false;
       } else if (query.length >= 2) {
-        // Only search if query is 2+ characters
+        // 🔹 Only search when user typed at least 2 characters
         _performSearch(query);
       }
     });
@@ -161,24 +162,22 @@ class Subcategrory extends GetxController {
 
   void _performSearch(String query) {
     isSearching.value = true;
-    // First try local search
-    final localResults = allData.where((item) => item['title'].toString().toLowerCase().contains(query.toLowerCase())).toList();
 
-    if (localResults.isNotEmpty) {
-      data.value = localResults;
-    } else {
-      // If no local results, you might want to call API here
-      // But make sure to handle it properly to avoid loops
-      _searchFromAPI(query);
-    }
+    final localResults = allData.where((item) {
+      final title = item['title']?.toString().toLowerCase() ?? '';
+      return title.contains(query.toLowerCase());
+    }).toList();
+
+    data.value = localResults; // Always show local results
+    isSearching.value = false;
   }
 
-  void _searchFromAPI(String query) {
-    // Implement API search with proper parameters
-    // Make sure to reset pagination when doing new searches
-    resetPagination();
-    // Call your API method with search parameters
-  }
+  // void _searchFromAPI(String query) {
+  //   // Implement API search with proper parameters
+  //   // Make sure to reset pagination when doing new searches
+  //   resetPagination();
+  //   // Call your API method with search parameters
+  // }
 
   // Clear search and reset to original data
   void clearSearch() {

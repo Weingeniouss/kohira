@@ -10,10 +10,10 @@ class GoogleUrl{
 class AppUrl {
   //local
   // static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
-  //   static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
+    static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
 
   //staging
-  static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  // static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'https://api.weingenious.in/kohira/api';
 
   //Live

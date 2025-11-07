@@ -39,25 +39,31 @@ class Subcategorys extends StatefulWidget {
 
 class _SubcategorysState extends State<Subcategorys> {
   final show = Get.put(SubcetegroryShow());
+  final subcategrory = Get.put(Subcategrory(), permanent: false);
+  final ScrollController scrollController = ScrollController();
   late String currentSubcategoryName;
   bool initialLoadDone = false;
+  bool isBottomShown = false;
 
-  @override
   @override
   void initState() {
     super.initState();
     currentSubcategoryName = widget.subcategrorysname ?? '';
-    // Move API call to initState or didChangeDependencies
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      show.loadData(
-        subcategrorys: widget.subcategrorys.toString(),
-        subcategory_slug: widget.subcategory_slug.toString(),
-        collection_id: widget.collection_id.toString(),
+      show.subcategrory.subcategroryuser(
+        category_slug : widget.subcategrorys,
+        subcategory_slug: widget.subcategory_slug,
+        collection_id: widget.collection_id,
         metal_type: widget.metal_type,
         price_min: widget.price_min,
         price_max: widget.price_max,
       );
-      initialLoadDone = true;
+    });
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 && !subcategrory.isLoading.value && subcategrory.hasMore.value) {
+        subcategrory.subcategroryuser(category_slug: widget.subcategrorys, isLoadMore: true);
+      }
     });
   }
 
@@ -84,11 +90,14 @@ class _SubcategorysState extends State<Subcategorys> {
     }
   }
 
+  @override
+  void dispose() {
+    Get.delete<SubcetegroryShow>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // show.onInit();
-    // show.loadData(subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString(), collection_id: widget.collection_id.toString(),metal_type: widget.metal_type,price_min: widget.price_min, price_max: widget.price_max);
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left,hedingname_2: currentSubcategoryName.toUpperCase()),
       bottomNavigationBar: SafeArea(
@@ -118,7 +127,8 @@ class _SubcategorysState extends State<Subcategorys> {
                   Text("|",style: TextStyle(color: AppColor.graycolor)),
                   GestureDetector(
                     onTap: () => ShowBottam().showbottam(
-                      context, category_slug: widget.subcategrorys.toString(),
+                      context,
+                      category_slug: widget.subcategrorys.toString(),
                       subcategrorys: widget.subcategory_slug.toString(),
                       subcategrorysname: widget.subcategrorysname.toString(),
                       onCategoryNameChanged: updateSubcategoryName,
@@ -213,7 +223,6 @@ class _SubcategorysState extends State<Subcategorys> {
               ),
             );
           }
-          if(show.subcategrory.data.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
           final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
           return SafeArea(
             child: horizontalpadding(
@@ -230,65 +239,72 @@ class _SubcategorysState extends State<Subcategorys> {
                     SizedBox(height: Get.height / 50),
 
                     //Search Start
-                    searchField(onChanged: show.subcategrory.handleSearch),
+                    searchField(
+                      onChanged: (value){
+                        show.subcategrory.handleSearch(value);
+                        show.subcategrory.update();
+                      }
+                    ),
                     //Search End
 
                     SizedBox(height: Get.height / 50),
-                    Expanded(
-                      child: GridView.builder(
-                        controller: show.scrollController,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: Get.height / 50,
-                          crossAxisSpacing: Get.width / 50,
-                          childAspectRatio: 0.8,
-                        ),
-                        itemCount: show.subcategrory.data.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index < show.subcategrory.data.length) {
-                            final subcategrory = show.subcategrory.data[index];
-                            return GestureDetector(
-                              onTap: () {
-                                print('Id :- ${subcategrory['id']}');
-                                print('Slug :- ${subcategrory['slug']}');
-                                Get.to(() => Showproduct(slug: subcategrory['slug'], categoryslug: widget.subcategrorys.toString()));
-                                print('Title :- ${widget.subcategrorys.toString()}');
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(image: NetworkImage(subcategrory['default_image']), fit: BoxFit.cover),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: Get.height / 150),
-                                  Text(
-                                    subcategrory['title'],
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora'),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    indianFormat.format(double.parse(subcategrory['discount']?.toString() ?? '0') > 0 ? subcategrory['offer_price'] : subcategrory['setting_price']),
-                                    style: TextStyle(
-                                      fontSize: Get.height / 70,
-                                      fontFamily: 'Lora', color: AppColor.pink_color,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                    (show.subcategrory.data.isEmpty)
+                        ? Expanded(child: Center(child: Lottie.asset(AppJson.noData)))
+                        : Expanded(
+                            child: GridView.builder(
+                              controller: scrollController,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: Get.height / 50,
+                                crossAxisSpacing: Get.width / 50,
+                                childAspectRatio: 0.8,
                               ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
+                              itemCount: show.subcategrory.data.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < show.subcategrory.data.length) {
+                                  final subcategrory = show.subcategrory.data[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print('Id :- ${subcategrory['id']}');
+                                      print('Slug :- ${subcategrory['slug']}');
+                                      Get.to(() => Showproduct(slug: subcategrory['slug'], categoryslug: widget.subcategrorys.toString()));
+                                      print('Title :- ${widget.subcategrorys.toString()}');
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(image: NetworkImage(subcategrory['default_image']), fit: BoxFit.cover),
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: Get.height / 150),
+                                        Text(
+                                          subcategrory['title'],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora'),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          indianFormat.format(double.parse(subcategrory['discount']?.toString() ?? '0') > 0 ? subcategrory['offer_price'] : subcategrory['setting_price']),
+                                          style: TextStyle(
+                                            fontSize: Get.height / 70,
+                                            fontFamily: 'Lora', color: AppColor.pink_color,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
                     (show.subcategrory.hasMore.value && show.subcategrory.isLoading.value) ?
                     Padding(
                       padding: EdgeInsets.all(16),
@@ -806,6 +822,7 @@ class ShowBottam {
                                         }
                                       });
                                       Get.back();
+                                      setState((){});
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
