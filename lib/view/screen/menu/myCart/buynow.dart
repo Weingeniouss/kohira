@@ -360,89 +360,90 @@ class _BuynowState extends State<Buynow> {
                       SizedBox(height: Get.height / 50),
 
 
-                      //Price Details
-                      containershadow(child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                              SizedBox(width: Get.width / 80),
-                              Text('($totalitems ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
-                            ],
+                        //Price Details
+                        containershadow(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(AppString.pricedetails, style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                    SizedBox(width: Get.width / 80),
+                                    Text('($totalitems ${AppString.items})', style: TextStyle(fontSize: Get.width / 25, fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                                SizedBox(height: Get.height / 80),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.subtotalprice),
+                                    Text(indianFormat.format(subTotalValue), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.discountprice),
+                                    Text(indianFormat.format((myCart.discount.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.shippingcharges),
+                                    Text('FREE', style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.tax),
+                                    Text(indianFormat.format(globalTax), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                Divider(color: AppColor.textfild_color),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppString.totalprice),
+                                    Text(indianFormat.format(totalprice), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                  ],
+                                ),
+                                (buynowUI.ischeack.value) ?  Divider(color: AppColor.textfild_color) : SizedBox(),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //   children: [
+                                //     Text(AppString.totalwallet),
+                                //     Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                //   ],
+                                // ),
+                                // Divider(color: AppColor.textfild_color),
+                                (buynowUI.ischeack.value) ? Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(AppString.deduct),
+                                        Text(indianFormat.format(myCart.subTotal.value), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                      ],
+                                    ),
+                                    Divider(color: AppColor.textfild_color),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(AppString.remaining),
+                                        Text(indianFormat.format((totalprice >= wallet.data['myWalletAmount']) ?  0 : remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                      ],
+                                    ),
+                                    // Divider(color: AppColor.textfild_color),
+                                  ],
+                                ) : SizedBox(),
+                              ],
+                            ),
                           ),
-                          SizedBox(height: Get.height / 80),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppString.subtotalprice),
-                              Text(indianFormat.format(subTotalValue), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                            ],
-                          ),
-                          Divider(color: AppColor.textfild_color),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppString.discountprice),
-                              Text(indianFormat.format((myCart.discount.value)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                            ],
-                          ),
-                          Divider(color: AppColor.textfild_color),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppString.shippingcharges),
-                              Text('FREE', style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                            ],
-                          ),
-                          Divider(color: AppColor.textfild_color),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppString.tax),
-                              Text(indianFormat.format(globalTax), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                            ],
-                          ),
-                          Divider(color: AppColor.textfild_color),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppString.totalprice),
-                              Text(indianFormat.format(totalprice), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                            ],
-                          ),
-                          (buynowUI.ischeack.value) ?  Divider(color: AppColor.textfild_color) : SizedBox(),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Text(AppString.totalwallet),
-                          //     Text(indianFormat.format(wallet.data['myWalletAmount']), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                          //   ],
-                          // ),
-                          // Divider(color: AppColor.textfild_color),
-                          (buynowUI.ischeack.value) ? Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.deduct),
-                                  Text(indianFormat.format(myCart.subTotal.value), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              Divider(color: AppColor.textfild_color),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(AppString.remaining),
-                                  Text(indianFormat.format((totalprice >= wallet.data['myWalletAmount']) ?  0 : remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
-                                ],
-                              ),
-                              // Divider(color: AppColor.textfild_color),
-                            ],
-                          ) : SizedBox(),
-
-                        ],
-                      )),
 
                       SizedBox(height: Get.height / 50),
 

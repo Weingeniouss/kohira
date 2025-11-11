@@ -318,7 +318,7 @@ class MyCartValueChange extends GetxController {
 
     // Cancel existing timer and start new one
     _debounce?.cancel();
-    _debounce = Timer(Duration(milliseconds: 800), () {
+    _debounce = Timer(Duration(milliseconds: 300), () {
       _processPendingUpdates();
     });
   }
@@ -374,7 +374,7 @@ class MyCartValueChange extends GetxController {
 
     // Cancel existing timer and start new one
     _debounce?.cancel();
-    _debounce = Timer(Duration(milliseconds: 800), () {
+    _debounce = Timer(Duration(milliseconds: 300), () {
       _processPendingUpdates();
     });
   }

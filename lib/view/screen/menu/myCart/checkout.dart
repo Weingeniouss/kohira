@@ -121,6 +121,7 @@ class Checkout extends StatelessWidget {
 
                 int myWalletAmount = int.tryParse(wallet.data['myWalletAmount']?.toString() ?? '0') ?? 0;
                 double subTotalValue = myCart.subTotal.value ?? 0.0;
+                int walletamount = wallet.data['myWalletAmount'];
                 double globalTax = isGuest
                     ? (myCart.witoutlogin.data['global_tax']['globaltaxcharge'] as num?)?.toDouble() ?? 0.0
                     : (myCart.fetchcart.data['global_tax']['globaltaxcharge'] as num?)?.toDouble() ?? 0.0;
@@ -128,11 +129,12 @@ class Checkout extends StatelessWidget {
                 // Calculate with safe defaults
                 var remaining = myWalletAmount - subTotalValue;
                 var totalprice = subTotalValue + globalTax;
-
+                var wallettotal =  totalprice - walletamount;
 
                 return SingleChildScrollView(
                   child: Column(
                     children: [
+                      //item in List of cart
                       GestureDetector(
                         onTap: cheackout.showitems,
                         child: Container(
@@ -151,7 +153,6 @@ class Checkout extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       AnimatedContainer(
                         height: (cheackout.showItems.value) ? null : 0, // Slide up/down
                         constraints: (cheackout.showItems.value)
@@ -187,7 +188,7 @@ class Checkout extends StatelessWidget {
                                         padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(Get.width / 50),
-                                          border: Border.all(color: AppColor.hintColor),
+                                          border: Border.all(color: AppColor.graycolor),
                                         ),
                                         child: IntrinsicHeight(
                                           child: Row(
@@ -318,7 +319,6 @@ class Checkout extends StatelessWidget {
                           ],
                         ),
                       ),
-
 
                       horizontalpadding(
                         child: Column(
@@ -734,7 +734,7 @@ class Checkout extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(AppString.totalprice),
-                                      Text(indianFormat.format((totalprice)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                      Text(indianFormat.format((subTotalValue)), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                     ],
                                   ),
                                   Divider(color: AppColor.textfild_color),
@@ -800,7 +800,7 @@ class Checkout extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(AppString.estimatedamount),
-                                      Text(indianFormat.format((totalprice >= wallet.data['myWalletAmount']) ?  0 : remaining), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
+                                      Text(indianFormat.format((buynowUI.ischeack.value) ? wallettotal : totalprice), style: TextStyle(fontWeight: FontWeight.w500, color: AppColor.green_color)),
                                     ],
                                   ),
                                 ],
