@@ -147,11 +147,7 @@ class Login extends StatelessWidget {
                             onTap: () => Get.off(() => Bottom()),
                             child: Text(
                               AppString.continues,
-                              style: TextStyle(
-                                color: AppColor.pink_color,
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: TextStyle(color: AppColor.pink_color, fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
                               textAlign: TextAlign.center,
                             ),
                           ),
