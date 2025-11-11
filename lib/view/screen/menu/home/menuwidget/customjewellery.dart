@@ -91,6 +91,7 @@
 // }),
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/home/drawar/customJewellery/clarity.dart';
@@ -705,7 +706,7 @@ class CustomJewellery extends StatelessWidget {
                           scale: 1.2,
                           child: Checkbox(
                             value: customUI.isCheck.value,
-                            onChanged: (val) => customUI.isCheckValue(val,context),
+                            onChanged: (val) => customUI.isCheckValue(val),
                             overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                             side: BorderSide(color: AppColor.pink_color, width: 2),
                             checkColor: AppColor.white_color,

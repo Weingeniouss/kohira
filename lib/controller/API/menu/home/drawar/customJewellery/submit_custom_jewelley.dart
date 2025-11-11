@@ -96,6 +96,7 @@ class SubmitCustomJewelley extends GetxController{
         'diamMaxSelectedCarat': diamMaxSelectedCarat,
         'sideStoneSelect': sideStoneSelect,
         'currency_id': currency_id,
+        'captcha' : captcha,
         'sideStone': jsonEncode(sideStoneData),
       }..removeWhere((key, value) => value == null);
 

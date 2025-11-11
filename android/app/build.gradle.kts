@@ -43,6 +43,11 @@ android {
     }
 }
 
+dependencies {
+    implementation("com.google.android.gms:play-services-safetynet:18.1.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+}
+
 flutter {
     source = "../.."
 }

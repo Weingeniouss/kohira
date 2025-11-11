@@ -146,7 +146,7 @@ class Checkout extends StatelessWidget {
                             children: [
                               Text(
                                 (cheackout.showItems.value) ? "Hide Selected Items" : "Show Selected Items",
-                                style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 23),
+                                style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 25),
                               ),
                               (cheackout.showItems.value) ? Icon(Icons.keyboard_arrow_down,color: AppColor.white_color) : Icon(Icons.keyboard_arrow_up,color: AppColor.white_color),
                             ],
@@ -323,7 +323,7 @@ class Checkout extends StatelessWidget {
                       horizontalpadding(
                         child: Column(
                           children: [
-                            SizedBox(height: Get.height / 50),
+                            // SizedBox(height: Get.height / 50),
 
                             //item in List of cart
                             // containershadow(

@@ -1232,9 +1232,9 @@ class _ShowproductState extends State<Showproduct> {
                                   }
                                   return SvgPicture.asset(AppIcon.like, width: 30, height: 30);
                                 },
-                              ) : (count.data['wishlist']['jewelry_ids'].contains(currentVariant?['id']))
+                              ) : (count.data?['wishlist']?['jewelry_ids']?.contains(currentVariant?['id']) ?? false)
                                   ? SvgPicture.asset(AppIcon.heart, width: 30, height: 30, color: AppColor.pink_color)
-                                  : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
+                                  : SvgPicture.asset(AppIcon.like, width: 30, height: 30)
                             ),
 
                             //Wishlist

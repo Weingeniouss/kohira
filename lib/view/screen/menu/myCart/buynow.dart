@@ -559,7 +559,7 @@ class _BuynowState extends State<Buynow> {
                                 padding: EdgeInsets.symmetric(horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(Get.width / 50),
-                                  color: AppColor.black_color,
+                                  color: AppColor.pink_color,
                                 ),
                                 child: Text(AppString.Checkout, style: TextStyle(color: AppColor.white_color)),
                               ),

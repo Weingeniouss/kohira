@@ -1,8 +1,8 @@
 // ignore_for_file: strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kohira/controller/API/menu/account/profiledetails.dart';
@@ -11,10 +11,8 @@ import '../../../../../modal/menu/home/drawar/customJewellery/category_customord
 import '../../../../../view/utils/app_String.dart';
 import '../../../../../view/utils/app_color.dart';
 import '../../../../../view/utils/app_constants.dart';
-import '../../../../../view/utils/widget/RecaptchaWidget.dart';
 import '../../../../../view/utils/widget/button.dart';
 import '../../../../../view/utils/widget/dropdown.dart';
-import '../../../../../view/utils/widget/pop.dart';
 import '../../../../API/menu/category/subcategrory/jewelleryfilter.dart';
 import '../../../../API/menu/home/drawar/customJewellery/clarity.dart';
 import '../../../../API/menu/home/drawar/customJewellery/customorder.dart';
@@ -160,6 +158,8 @@ class CustomJewelleryUI extends GetxController{
   var isCheck_center = false.obs;
   var isCheck_side_stone = false.obs;
 
+  var tokanRecaptcha = '';
+
   // Define variables for your dropdown values
   final selectedMetalStampValue = Rxn<Map<String, dynamic>>();
 
@@ -183,63 +183,53 @@ class CustomJewelleryUI extends GetxController{
   var isCheck = false.obs;
   String? recaptchaToken;
 
-  void showRecaptchaVerification(context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => Dialog(
-        backgroundColor: AppColor.white_color,
-        insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Container(
-          height: Get.height * 0.6,
-          decoration: BoxDecoration(
-            color: AppColor.white_color,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            children: [
-              // Optional header or spacing
-              SizedBox(height: 16),
-              // Expanded must be direct child of Column (a Flex)
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: RecaptchaWidget(
-                    siteKey: siteKey,
-                    baseUrl: baseUrl,
-                    onVerified: (String token) {
-                      if (kDebugMode) {
-                        print('✅ reCAPTCHA Token: $token');
-                      }
-                      Navigator.pop(context);
-                      isCheck.value = true;
-                      recaptchaToken = token;
-                      print('recapcha :- $recaptchaToken');
-                      print('siteKey :- $siteKey');
-                      print('baseUrl :- $baseUrl');
-                      ToastificationSuccess.Success('Verification completed!');
-                    },
-                    onError: () {
-                      if (kDebugMode) {
-                        print('❌ reCAPTCHA Error');
-                      }
-                      Navigator.pop(context);
-                      isCheck.value = false;
-                      recaptchaToken = null;
-                      ToastificationError.Error('Verification failed. Please try again.');
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ).then((_) {
-      if (recaptchaToken == null) {
-        isCheck.value = false;
-      }
-    });
+  // void isCheckValue(bool? val) {
+  //   if (val == true) {
+  //     _verifyRecaptcha();
+  //     isCheck.value = true;
+  //   } else {
+  //     isCheck.value = false;
+  //   }
+  // }
+
+  void isCheckValue(bool? val) async {
+    if (val == true) {
+      bool verified = await _verifyRecaptcha();
+      isCheck.value = verified;
+    } else {
+      isCheck.value = false;
+    }
+  }
+
+  static const platform = MethodChannel('com.example.recaptcha');
+  String _verificationStatus = 'Not Verified';
+
+  // Future<void> _verifyRecaptcha() async {
+  //   try {
+  //     final String token = await platform.invokeMethod('verifyRecaptcha');
+  //     _verificationStatus = 'Verified! Token: ${token.substring(0, 20)}...';
+  //     print('Full reCAPTCHA Token: $token');
+  //   } on PlatformException catch (e) {
+  //     _verificationStatus = 'Failed: ${e.message}';
+  //   }
+  // }
+
+  Future<bool> _verifyRecaptcha() async {
+    try {
+      final String token = await platform.invokeMethod('verifyRecaptcha');
+      _verificationStatus = 'Verified! Token: ${token.substring(0, 20)}...';
+      tokanRecaptcha = token;
+      print('Full reCAPTCHA Token: $token');
+      return true;
+    } on PlatformException catch (e) {
+      _verificationStatus = 'Failed: ${e.message}';
+      print('Recaptcha failed: ${e.message}');
+      return false;
+    } catch (e) {
+      _verificationStatus = 'Error: $e';
+      print('Unexpected error: $e');
+      return false;
+    }
   }
 
   // Function to handle stamp selection
@@ -374,15 +364,6 @@ class CustomJewelleryUI extends GetxController{
         });
       },
     );
-  }
-
-  void isCheckValue(bool? val,context) {
-    if (val == true) {
-      showRecaptchaVerification(context);
-    } else {
-      isCheck.value = false;
-      recaptchaToken = null;
-    }
   }
 
   void side_Stone_bottambar_update({
@@ -539,7 +520,7 @@ class CustomJewelleryUI extends GetxController{
 
   void submits(){
     submit.submitCustomJewelley(
-      captcha: recaptchaToken,
+      captcha: tokanRecaptcha,
       userid: profile.data['data']['userid'].toString(),
       jewelrytype: selectedCategory.value?.id.toString() ?? selectedCategory.value?.name.toString() ?? '',
       appxmetalWgt: metalWeightController.text,
@@ -570,13 +551,15 @@ class CustomJewelleryUI extends GetxController{
 
     print('jewelryTypeValue :- $jewelryTypeValue');
     print('subcategoryIdValue :- $subcategoryIdValue');
+    print('jewelryTypeValue :- $jewelryTypeValue');
+    print('subcategoryIdValue :- $subcategoryIdValue');
     print('metalTypeValue :- $metalTypeValue');
     print('metalStampValue :- $metalStampValue');
     print('selectedDiamShape: $selectedShapeId');
     print('selectedDiamCarat: $metalname');
     print('selectedDiamColor: $colors');
     print('selectedDiamClarity: $clarityy');
-    print('captcha: $recaptchaToken');
+    print('captcha: $tokanRecaptcha');
     print('UserId:- ${profile.data['data']['userid'].toString()}');
   }
 }
