@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/credentials/login.dart';
 import 'package:kohira/controller/database/local/localstore.dart';
+import 'package:kohira/controller/user_inerface/checkinternet/checkinternet.dart';
 import 'package:kohira/controller/user_inerface/credentials/login_controller.dart';
 import 'package:kohira/view/screen/credentials/forgetpassword.dart';
 import 'package:kohira/view/screen/credentials/signup.dart';
@@ -25,6 +26,7 @@ import '../../utils/widget/title_text.dart';
 class Login extends StatelessWidget {
   LoginController validation = Get.put(LoginController());
   LoginCalling login = Get.put(LoginCalling());
+  final internetController = Get.put(InternetCheckerController());
   Login({super.key});
   @override
   Widget build(BuildContext context) {
@@ -38,35 +40,55 @@ class Login extends StatelessWidget {
       });
     });
     return Obx(() {
-      void logins() {
-        hasInternetConnection().then((connected) {
-          if (!connected) {
-            ToastificationError.Error('No Internet Connection! Conncet the Internet then try Agen !!');
-            return;
-          } else {
-            if (validation.email_controller.value.text.isEmpty && validation.password_controller.value.text.isEmpty) {
-              ToastificationError.Error("Error, Please fill All");
-              validation.email_type.value = true;
-              validation.password_type.value = true;
-              return;
-            } else if (validation.password_controller.value.text.isEmpty) {
-              ToastificationError.Error("Error, Please fill Password");
-              validation.password_type.value = true;
-              validation.email_type.value = false;
-              return;
-            } else if (validation.email_controller.value.text.isEmpty) {
-              ToastificationError.Error("Error, Please fill Email");
-              validation.email_type.value = true;
-              validation.password_type.value = false;
-              return;
-            } else {
-              validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
-              localdatabase().loginstrore(email: validation.email_controller.text, password: validation.password_controller.text);
-            }
-          }
-        });
+      if(!internetController.isConnected.value){
+        return  Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.wifi_off, size: 80, color: AppColor.pink_color),
+                SizedBox(height: Get.height / 50),
+                Text("No Internet Connection", style: TextStyle(fontSize: Get.width / 20,color: AppColor.pink_color)),
+                SizedBox(height: Get.height / 50),
+                ElevatedButton(
+                  onPressed: () => internetController.retryConnection(),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColor.pink_color),
+                  child: Text("Retry", style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
+        );
       }
-        return Scaffold(
+      // void logins() {
+      //   hasInternetConnection().then((connected) {
+      //     if (!connected) {
+      //       ToastificationError.Error('No Internet Connection! Conncet the Internet then try Agen !!');
+      //       return;
+      //     } else {
+      //       if (validation.email_controller.value.text.isEmpty && validation.password_controller.value.text.isEmpty) {
+      //         ToastificationError.Error("Error, Please fill All");
+      //         validation.email_type.value = true;
+      //         validation.password_type.value = true;
+      //         return;
+      //       } else if (validation.password_controller.value.text.isEmpty) {
+      //         ToastificationError.Error("Error, Please fill Password");
+      //         validation.password_type.value = true;
+      //         validation.email_type.value = false;
+      //         return;
+      //       } else if (validation.email_controller.value.text.isEmpty) {
+      //         ToastificationError.Error("Error, Please fill Email");
+      //         validation.email_type.value = true;
+      //         validation.password_type.value = false;
+      //         return;
+      //       } else {
+      //         validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
+      //         localdatabase().loginstrore(email: validation.email_controller.text, password: validation.password_controller.text);
+      //       }
+      //     }
+      //   });
+      // }
+      return Scaffold(
         body: Container(
           height: Get.height, width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
@@ -117,8 +139,28 @@ class Login extends StatelessWidget {
 
                           //button
                           GestureDetector(
-                            onTap: logins,
-                            child: button(AppString.signin),
+                            onTap: (){
+                              if (validation.email_controller.value.text.isEmpty && validation.password_controller.value.text.isEmpty) {
+                                ToastificationError.Error("Error, Please fill All");
+                                validation.email_type.value = true;
+                                validation.password_type.value = true;
+                                return;
+                              } else if (validation.password_controller.value.text.isEmpty) {
+                                ToastificationError.Error("Error, Please fill Password");
+                                validation.password_type.value = true;
+                                validation.email_type.value = false;
+                                return;
+                              } else if (validation.email_controller.value.text.isEmpty) {
+                                ToastificationError.Error("Error, Please fill Email");
+                                validation.email_type.value = true;
+                                validation.password_type.value = false;
+                                return;
+                              } else {
+                                validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
+                                localdatabase().loginstrore(email: validation.email_controller.text, password: validation.password_controller.text);
+                              }
+                            },
+                            child: button((validation.login.isLoading.value) ? 'Loading...': AppString.signin),
                           ),
                           SizedBox(height: Get.height / 40),
 

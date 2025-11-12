@@ -10,10 +10,10 @@ class GoogleUrl{
 class AppUrl {
   //local
   // static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
-  //   static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
+    static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
 
   //staging
-  static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  // static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'https://api.weingenious.in/kohira/api';
 
   //Live
@@ -67,7 +67,8 @@ class AppUrl {
       static const cart = '$baseurl/cart';
       static const countcart = '$baseurl/cart';
       static const deletcart = '$baseurl/cart-delete-particular';
-      static const payment = '$baseurl/process-payment';
+      // static const payment = '$baseurl/process-payment';
+      static const payment = '$baseurl/make-payment';
       static const withoutlogin = '$baseurl/cart/withoutlogin';
 
       //Over Store

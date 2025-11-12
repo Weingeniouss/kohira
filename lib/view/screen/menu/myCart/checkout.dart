@@ -824,54 +824,7 @@ class Checkout extends StatelessWidget {
                                           if(isGuest){
                                             Get.offAll(() => Login());
                                           }else{
-                                            try {
-                                              // await the API call
-                                              await processpayment.processpayment(
-                                                firstname: profile.data['firstname'],
-                                                lastname: profile.data['lastname'],
-                                                email: profile.data['email'],
-                                                companyname: profile.data['companyname'],
-                                                address: '181',
-                                                city: 'Dfgxzfb',
-                                                state: '85',
-                                                state_name: 'hzsdgvihbjsfvbbsfb',
-                                                country: '+852',
-                                                countrycode: '+852',
-                                                zip: '123456',
-                                                mobileno: profile.data['walletAmount'],
-                                                samebilling: 'true',
-                                                totalamount: '3577852',
-                                                walletAmount: profile.data['walletAmount'],
-                                                remainingAmount: remaining.toString(),
-                                              );
-
-                                              // ensure data exists
-                                              if (processpayment.data != null) {
-                                                // safe parse of code (could be int or string)
-                                                final dynamic codeRaw = processpayment.data['code'];
-                                                final int code = (codeRaw is int)
-                                                    ? codeRaw
-                                                    : int.tryParse(codeRaw?.toString() ?? '') ?? 0;
-
-                                                // safe extraction of gatewayUrl
-                                                final String? gatewayUrlRaw = processpayment.data['gatewayUrl']?.toString();
-                                                if (gatewayUrlRaw != null && gatewayUrlRaw.isNotEmpty) {
-                                                  final Uri? url = Uri.tryParse(gatewayUrlRaw);
-                                                  if (url != null) {
-                                                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                                                  } else {
-                                                    ToastificationError.Error('Invalid payment URL');
-                                                  }
-                                                } else {
-                                                  ToastificationError.Error('Payment gateway URL not provided');
-                                                }
-                                              } else {
-                                                ToastificationError.Error('Payment failed: no response');
-                                              }
-                                            } catch (e, st) {
-                                              if (kDebugMode) print('Payment error: $e\n$st');
-                                              ToastificationError.Error('Payment failed. Try again.');
-                                            }
+                                            cheackout.paymantProess();
                                           }
                                         },
                                         child: button(AppString.paynow),

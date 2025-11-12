@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/user_inerface/menu/home/home.dart';
@@ -148,9 +149,186 @@ class Home extends StatelessWidget {
                 );
               }
               final rings = home.homejewelry.homejewelrydata['data']?['most_loved_engagement_rings'];
-              if (rings == null || (rings is List && rings.isEmpty)) return Center(child: Lottie.asset(AppJson.noData));
+              if (rings == null || (rings is List && rings.isEmpty)) {
+                return SingleChildScrollView(
+                  child: horizontalpadding(
+                    child: Column(
+                      children: [
+                        SizedBox(height: Get.height / 50),
+                        Shimmer.fromColors(
+                          baseColor: AppColor.lodingcolor,
+                          highlightColor: AppColor.highlightColor,
+                          child: Container(
+                            height: Get.height * 0.05,
+                            decoration: BoxDecoration(
+                              color: AppColor.white_color,
+                              border: Border.all(color: AppColor.textfild_color),
+                              borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                        Shimmer.fromColors(
+                          baseColor: AppColor.lodingcolor,
+                          highlightColor: AppColor.highlightColor,
+                          child: Container(
+                            height: Get.height * 0.45,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.white_color),
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                        Shimmer.fromColors(
+                          baseColor: AppColor.lodingcolor,
+                          highlightColor: AppColor.highlightColor,
+                          child: Container(
+                            height: Get.height * 0.015,
+                            width: Get.width / 5,
+                            decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                        Shimmer.fromColors(
+                          baseColor: AppColor.lodingcolor,
+                          highlightColor: AppColor.highlightColor,
+                          child: SizedBox(
+                            height: Get.height * 0.23,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(border: Border.all(color: AppColor.white_color), borderRadius: BorderRadius.circular(12)),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(45),
+                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      SizedBox(height: Get.height / 150),
+                                      Container(
+                                        width: Get.width / 6,
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      SizedBox(height: Get.height / 150),
+                                      Container(
+                                        width: Get.width / 9,
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      SizedBox(height: Get.height / 150),
+                                      Container(
+                                        width: Get.width / 13,
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: Get.height / 50),
+                      ],
+                    ),
+                  ),
+                );
+              }
               final section = home.homecollction.data['3']?['collection_section_3'];
-              if (section == null) return Center(child: Lottie.asset(AppJson.noData));
+              if (section == null) {
+                return SingleChildScrollView(
+                  child: horizontalpadding(
+                    child: Column(
+                    children: [
+                      SizedBox(height: Get.height / 50),
+                      Shimmer.fromColors(
+                        baseColor: AppColor.lodingcolor,
+                        highlightColor: AppColor.highlightColor,
+                        child: Container(
+                          height: Get.height * 0.05,
+                          decoration: BoxDecoration(
+                            color: AppColor.white_color,
+                            border: Border.all(color: AppColor.textfild_color),
+                            borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: Get.height / 50),
+                      Shimmer.fromColors(
+                        baseColor: AppColor.lodingcolor,
+                        highlightColor: AppColor.highlightColor,
+                        child: Container(
+                          height: Get.height * 0.45,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.white_color),
+                        ),
+                      ),
+                      SizedBox(height: Get.height / 50),
+                      Shimmer.fromColors(
+                        baseColor: AppColor.lodingcolor,
+                        highlightColor: AppColor.highlightColor,
+                        child: Container(
+                          height: Get.height * 0.015,
+                          width: Get.width / 5,
+                          decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                      SizedBox(height: Get.height / 50),
+                      Shimmer.fromColors(
+                        baseColor: AppColor.lodingcolor,
+                        highlightColor: AppColor.highlightColor,
+                        child: SizedBox(
+                          height: Get.height * 0.23,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                margin: EdgeInsets.only(right: 8),
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(border: Border.all(color: AppColor.white_color), borderRadius: BorderRadius.circular(12)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(45),
+                                      decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                    SizedBox(height: Get.height / 150),
+                                    Container(
+                                      width: Get.width / 6,
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                    SizedBox(height: Get.height / 150),
+                                    Container(
+                                      width: Get.width / 9,
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                    SizedBox(height: Get.height / 150),
+                                    Container(
+                                      width: Get.width / 13,
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: Get.height / 50),
+                    ],
+                  ),
+                  ),
+                );
+              }
+              if(home.homejewelry.homejewelrydata.isEmpty){
+                return Center(child:SvgPicture.asset(AppJson.noData));
+              }
               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
               return SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -461,15 +639,22 @@ class Home extends StatelessWidget {
                                             children: [
                                               Image.network(image,width: 150,height: 150),
                                               SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                              SizedBox(height: Get.height / 150),
+                                              Row(
+                                                children: [
+                                                  Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w600,fontSize: Get.width / 28)),
+                                                  SizedBox(width: Get.width / 8),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            SizedBox(width: Get.width / 60),
-                                            Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
-                                          ],
-                                        ),
+                                        // Row(
+                                        //   children: [
+                                        //     SizedBox(width: Get.width / 60),
+                                        //     Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
+                                        //   ],
+                                        // ),
                                       ],
                                     ),
                                   );
@@ -582,15 +767,22 @@ class Home extends StatelessWidget {
                                             children: [
                                               Image.network(image,width: 150,height: 150),
                                               SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
+                                              SizedBox(height: Get.height / 150),
+                                              Row(
+                                                children: [
+                                                  Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w600,fontSize: Get.width / 28)),
+                                                  SizedBox(width: Get.width / 7),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            SizedBox(width: Get.width / 60),
-                                            Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
-                                          ],
-                                        ),
+                                        // Row(
+                                        //   children: [
+                                        //     SizedBox(width: Get.width / 60),
+                                        //     Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
+                                        //   ],
+                                        // ),
                                       ],
                                     ),
                                   );
@@ -731,7 +923,7 @@ class Home extends StatelessWidget {
       case 'bottom-right':
         return Alignment.bottomRight;
       default:
-        return Alignment.center; // fallback
+        return Alignment.center;
     }
   }
 }
