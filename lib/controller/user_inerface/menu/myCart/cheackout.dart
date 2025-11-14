@@ -52,7 +52,7 @@ class Cheackout_Controller extends GetxController {
        globaltaxper: '3', //24
        globaltaxcharge: '2780', //25
        amount: '95437', //26
-       MerchantId: '100000000005859', //27
+       merchant_id: '100000000005859', //27
        BankId: '24520', //28
        TerminalId: 'EG000488', //29
        Version: '1', //30
