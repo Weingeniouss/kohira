@@ -15,7 +15,7 @@ class AppString {
   static const cancel = 'Cancel';
   static const addtocart = 'Add To Cart';
   static const buynow = 'Buy Now';
-  static const cheackout = 'Cheackout';
+  static const cheackout = 'Checkout';
   static const proceedcheckout = 'Proceed Checkout';
   static const Checkout = 'Checkout';
   static const paynow = 'Pay Now';

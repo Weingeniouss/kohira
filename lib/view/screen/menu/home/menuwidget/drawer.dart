@@ -49,6 +49,7 @@ class _DrawersState extends State<Drawers> {
   final collection = Get.put(Collection());
   final jewelleryfilter = Get.put(JewelleryList());
 
+  //Container Color
   Widget jewelleryColorContainer(String name){
     switch (name) {
       case 'White Gold':
@@ -61,11 +62,14 @@ class _DrawersState extends State<Drawers> {
         return MyCustomContainer(size: 20, firstColor: Colors.amber, secondColor: AppColor.graycolor);
       case 'Rose Gold and White Gold':
         return MyCustomContainer(size: 20, firstColor: AppColor.rosegoldcolor, secondColor: AppColor.graycolor);
+      case 'yellow gold rose gold':
+        return MyCustomContainer(size: 20, firstColor: Colors.amber, secondColor: AppColor.rosegoldcolor);
       default:
         return Container();
     }
   }
 
+  //Icon
   String getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
       case 'engagement rings': return AppIcon.ring;

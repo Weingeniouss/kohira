@@ -40,7 +40,7 @@ class Checkout extends StatelessWidget {
   final Country = Get.put(CountryCalling());
   final processpayment = Get.put(Processpayment());
   final scroll = ScrollController();
-  final cheackout = Get.put(Cheackout_Controller());
+  final checkout = Get.put(Cheackout_Controller());
   final buynowUI = Get.put(BuynowController());
   final fech = Get.put(Fechaddresses());
   final profile = Get.put(ProfiledetailsController());
@@ -66,7 +66,7 @@ class Checkout extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         Get.back();
-        cheackout.shipping.value = true;
+        checkout.shipping.value = true;
         return false;
       },
       child: Scaffold(
@@ -136,7 +136,7 @@ class Checkout extends StatelessWidget {
                     children: [
                       //item in List of cart
                       GestureDetector(
-                        onTap: cheackout.showitems,
+                        onTap: checkout.showitems,
                         child: Container(
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(vertical: 12,horizontal: 15),
@@ -145,17 +145,17 @@ class Checkout extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                (cheackout.showItems.value) ? "Hide Selected Items" : "Show Selected Items",
+                                (checkout.showItems.value) ? "Hide Selected Items" : "Show Selected Items",
                                 style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 25),
                               ),
-                              (cheackout.showItems.value) ? Icon(Icons.keyboard_arrow_down,color: AppColor.white_color) : Icon(Icons.keyboard_arrow_up,color: AppColor.white_color),
+                              (checkout.showItems.value) ? Icon(Icons.keyboard_arrow_down,color: AppColor.white_color) : Icon(Icons.keyboard_arrow_up,color: AppColor.white_color),
                             ],
                           ),
                         ),
                       ),
                       AnimatedContainer(
-                        height: (cheackout.showItems.value) ? null : 0, // Slide up/down
-                        constraints: (cheackout.showItems.value)
+                        height: (checkout.showItems.value) ? null : 0, // Slide up/down
+                        constraints: (checkout.showItems.value)
                             ? BoxConstraints() // normal layout
                             : BoxConstraints(maxHeight: 0),
                         decoration: BoxDecoration(color: AppColor.Appbercolor),
@@ -166,7 +166,7 @@ class Checkout extends StatelessWidget {
                             horizontalpadding(
                               child: AnimatedOpacity(
                                 duration: const Duration(milliseconds: 300),
-                                opacity: (cheackout.showItems.value) ? 1 : 0,
+                                opacity: (checkout.showItems.value) ? 1 : 0,
                                 child: ListView.builder(
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
@@ -590,12 +590,12 @@ class Checkout extends StatelessWidget {
                                       Checkbox(
                                         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        value: cheackout.billing.value,
+                                        value: checkout.billing.value,
                                         overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                         side: BorderSide(color: AppColor.pink_color, width: 2),
                                         checkColor: AppColor.white_color,
                                         activeColor: AppColor.pink_color,
-                                        onChanged: (bool? value) => cheackout.isbilling(),
+                                        onChanged: (bool? value) => checkout.isbilling(),
                                       ),
                                     ],
                                   ),
@@ -603,7 +603,7 @@ class Checkout extends StatelessWidget {
                                   AnimatedSize(
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.easeInOut,
-                                    child: cheackout.billing.value
+                                    child: checkout.billing.value
                                         ? SizedBox.shrink()
                                         : Column(
                                       children: [
@@ -703,12 +703,12 @@ class Checkout extends StatelessWidget {
                                       Checkbox(
                                         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        value: cheackout.shippingtype.value,
+                                        value: checkout.shippingtype.value,
                                         overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                         side: BorderSide(color: AppColor.pink_color, width: 2),
                                         checkColor: AppColor.white_color,
                                         activeColor: AppColor.pink_color,
-                                        onChanged: (bool? value) => cheackout.isshippingtype(),
+                                        onChanged: (bool? value) => checkout.isshippingtype(),
                                       ),
                                     ],
                                   ),
@@ -810,9 +810,9 @@ class Checkout extends StatelessWidget {
                             SizedBox(height: Get.height / 50),
 
                             ValueListenableBuilder(
-                              valueListenable: cheackout.shipping,
+                              valueListenable: checkout.shipping,
                               builder: (BuildContext context, bool value, Widget? child) {
-                                return (!cheackout.shipping.value)
+                                return (!checkout.shipping.value)
                                     ? SizedBox()
                                     : Container(
                                   color: AppColor.white_color,
@@ -824,7 +824,7 @@ class Checkout extends StatelessWidget {
                                           if(isGuest){
                                             Get.offAll(() => Login());
                                           }else{
-                                            cheackout.paymantProess();
+                                            checkout.paymantProess();
                                           }
                                         },
                                         child: button(AppString.paynow),
