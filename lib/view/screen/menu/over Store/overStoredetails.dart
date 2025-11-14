@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_constructors, file_names, unnecessary_null_comparison
+// ignore_for_file: prefer_const_constructors, file_names, unnecessary_null_comparison, avoid_print
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/overstore/overstoredetails.dart';
+import 'package:kohira/controller/user_inerface/menu/overStore/overStoredetails.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
@@ -18,149 +20,14 @@ import '../../../utils/widget/RecaptchaWidget.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/button.dart';
 
-class OverstoredetailsScreen extends StatefulWidget {
+class OverstoredetailsScreen extends StatelessWidget {
   final String slug;
-  const OverstoredetailsScreen({super.key, required this.slug});
-
-  @override
-  State<OverstoredetailsScreen> createState() => _OverstoredetailsScreenState();
-}
-
-class _OverstoredetailsScreenState extends State<OverstoredetailsScreen> {
+  OverstoredetailsScreen({super.key, required this.slug});
   final overstoredetails = Get.put(OverStoreDetails());
-  final String siteKey = "6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF";
-  final String baseUrl = "https://next.weingenious.in";
-
-  TextEditingController dateController = TextEditingController();
-  TextEditingController enterfullname = TextEditingController();
-  TextEditingController emailaddress = TextEditingController();
-  TextEditingController talkabout = TextEditingController();
-  TextEditingController phonenumber = TextEditingController();
-
-  bool isCheck = false;
-  String? recaptchaToken;
-  DateTime? selectedDate;
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => overstoredetails.getOverStoreDetails(widget.slug));
-    super.initState();
-  }
-
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        dateController.text = DateFormat('dd/MM/yyyy').format(picked);
-      });
-    }
-  }
-
-  // Show reCAPTCHA when checkbox is clicked
-  void isCheckValue(bool? val) {
-    if (val == true) {
-      _showRecaptchaVerification();
-    } else {
-      setState(() {
-        isCheck = false;
-        recaptchaToken = null;
-      });
-    }
-  }
-
-  // Method to show reCAPTCHA
-void _showRecaptchaVerification() {
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (context) => Dialog(
-      backgroundColor: AppColor.white_color,
-      insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Container(
-        height: Get.height * 0.6,
-        decoration: BoxDecoration(
-          color: AppColor.white_color,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          children: [
-            // Optional header or spacing
-            SizedBox(height: 16),
-            // Expanded must be direct child of Column (a Flex)
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: RecaptchaWidget(
-                  siteKey: siteKey,
-                  baseUrl: baseUrl,
-                  onVerified: (String token) {
-                    if (kDebugMode) {
-                      print('✅ reCAPTCHA Token: $token');
-                    }
-
-                    Navigator.pop(context);
-
-                    setState(() {
-                      isCheck = true;
-                      recaptchaToken = token;
-                    });
-
-                    // Get.snackbar(
-                    //   'Success',
-                    //   'Verification completed!',
-                    //   backgroundColor: Colors.green,
-                    //   colorText: Colors.white,
-                    //   snackPosition: SnackPosition.BOTTOM,
-                    //   duration: Duration(seconds: 2),
-                    //   margin: EdgeInsets.all(10),
-                    // );
-                    ToastificationSuccess.Success('Verification completed!');
-                  },
-                  onError: () {
-                    if (kDebugMode) {
-                      print('❌ reCAPTCHA Error');
-                    }
-
-                    Navigator.pop(context);
-
-                    setState(() {
-                      isCheck = false;
-                      recaptchaToken = null;
-                    });
-
-                    // Get.snackbar(
-                    //   'Error',
-                    //   'Verification failed. Please try again.',
-                    //   backgroundColor: Colors.red,
-                    //   colorText: Colors.white,
-                    //   snackPosition: SnackPosition.BOTTOM,
-                    //   duration: Duration(seconds: 2),
-                    //   margin: EdgeInsets.all(10),
-                    // );
-                    ToastificationError.Error('Verification failed. Please try again.');
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ).then((_) {
-    if (recaptchaToken == null) {
-      setState(() => isCheck = false);
-     }
-   });
-  }
-
+  late final overstorUi = Get.put(OverstoredetailsController(slug: slug));
   @override
   Widget build(BuildContext context) {
+    overstorUi.onInit();
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.OverStoreDetails),
       body: Container(
@@ -320,10 +187,7 @@ void _showRecaptchaVerification() {
                       SizedBox(height: Get.height / 90),
                       Container(
                         width: Get.width,
-                        decoration: BoxDecoration(
-                          color: AppColor.Appbercolor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        decoration: BoxDecoration(color: AppColor.Appbercolor, borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           children: [
                             Html(data: storeDetail['store_direction_step']),
@@ -342,15 +206,15 @@ void _showRecaptchaVerification() {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(AppString.schedule, style: TextStyle(fontSize: Get.width * 0.060, fontFamily: 'Zapf', fontWeight: FontWeight.w600)),
-                                    inputField(hintText: AppString.name, textfildcolor: AppColor.grey_color, controller: enterfullname),
-                                    inputField(hintText: AppString.address, textfildcolor: AppColor.grey_color, controller: emailaddress),
-                                    inputField(hintText: AppString.number, textfildcolor: AppColor.grey_color, controller: phonenumber, textInputType: TextInputType.number, maxLength: 10),
+                                    inputField(hintText: AppString.name, textfildcolor: AppColor.grey_color, controller: overstorUi.enterfullname),
+                                    inputField(hintText: AppString.address, textfildcolor: AppColor.grey_color, controller: overstorUi.emailaddress),
+                                    inputField(hintText: AppString.number, textfildcolor: AppColor.grey_color, controller: overstorUi.phonenumber, textInputType: TextInputType.number, maxLength: 10),
                                     inputField(
                                       hintText: AppString.dates,
                                       textfildcolor: AppColor.grey_color,
-                                      controller: dateController,
+                                      controller: overstorUi.dateController,
                                       suffixIcon: GestureDetector(
-                                        onTap: () => selectDate(context),
+                                        onTap: () => overstorUi.selectDate(context),
                                         child: SvgPicture.asset(AppIcon.calendar, width: 5, height: 5),
                                       ),
                                     ),
@@ -358,7 +222,7 @@ void _showRecaptchaVerification() {
                                       child: SizedBox(
                                         height: Get.height / 8,
                                         child: TextField(
-                                          controller: talkabout,
+                                          controller: overstorUi.talkabout,
                                           expands: true,
                                           maxLines: null,
                                           minLines: null,
@@ -376,8 +240,8 @@ void _showRecaptchaVerification() {
                                         Transform.scale(
                                           scale: 1.2,
                                           child: Checkbox(
-                                            value: isCheck,
-                                            onChanged: (val) => isCheckValue(val),
+                                            value: overstorUi.isCheck.value,
+                                            onChanged: (val) => overstorUi.isCheckValue(val),
                                             overlayColor: WidgetStatePropertyAll(AppColor.pink_color),
                                             side: BorderSide(color: AppColor.pink_color, width: 2),
                                             checkColor: AppColor.white_color,
@@ -399,15 +263,18 @@ void _showRecaptchaVerification() {
                                       ],
                                     ),
                                     SizedBox(height: Get.height / 50),
-            
+
                                     // Your existing button - you handle the submit
                                     button(AppString.message),
-            
+
                                     // Debug: Show if token is available
-                                    if (kDebugMode && recaptchaToken != null)
+                                    if (kDebugMode && overstorUi.tokanRecaptcha.isNotEmpty)
                                       Padding(
                                         padding: const EdgeInsets.only(top: 8.0),
-                                        child: Text('Token: ${recaptchaToken!.substring(0, 20)}...', style: TextStyle(fontSize: 10, color: Colors.green)),
+                                        child: Text(
+                                          'Token: ${overstorUi.tokanRecaptcha.length >= 20 ? overstorUi.tokanRecaptcha.substring(0, 20) : overstorUi.tokanRecaptcha}...',
+                                          style: TextStyle(fontSize: 10, color: Colors.green),
+                                        ),
                                       ),
                                   ],
                                 ),
@@ -427,15 +294,5 @@ void _showRecaptchaVerification() {
         }),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    dateController.dispose();
-    enterfullname.dispose();
-    emailaddress.dispose();
-    talkabout.dispose();
-    phonenumber.dispose();
-    super.dispose();
   }
 }

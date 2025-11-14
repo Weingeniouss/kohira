@@ -674,7 +674,7 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //Helpcenter
-                        drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
+                        // drawerIcon(icon: AppIcon.HelpCenter, text: AppString.HelpCenter),
 
                         //Privacy Policy
                         drawerIcon(

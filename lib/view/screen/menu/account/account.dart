@@ -177,14 +177,58 @@ class Account extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  //All items show
+                  // Expanded(
+                  //   flex: 5,
+                  //   child: horizontalpadding(
+                  //     child: ListView.builder(
+                  //       itemCount: accountlist.length,
+                  //       itemBuilder: (BuildContext context, int index) {
+                  //         return GestureDetector(
+                  //           onTap: () => account.listButton(index,context),
+                  //           child: Container(
+                  //             color: AppColor.white_color,
+                  //             child: Row(
+                  //               children: [
+                  //                 Container(
+                  //                   margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
+                  //                   decoration: BoxDecoration(
+                  //                     color: AppColor.pink_color,
+                  //                     borderRadius: BorderRadius.circular(Get.width / 50),
+                  //                   ),
+                  //                   padding: EdgeInsets.all(15),
+                  //                   child: SvgPicture.asset(
+                  //                     accountlist[index]['image'],
+                  //                     width: Get.width * 0.025,
+                  //                     height: Get.height * 0.025,
+                  //                     color: AppColor.white_color,
+                  //                   ),
+                  //                 ),
+                  //                 SizedBox(width: Get.width / 30),
+                  //                 Text(accountlist[index]['name'],style: TextStyle(fontSize: Get.width / 25)),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+
+                  //if(index 5 min  hlepCenter is hide)
                   Expanded(
                     flex: 5,
                     child: horizontalpadding(
                       child: ListView.builder(
-                        itemCount: accountlist.length,
+                        itemCount: accountlist.length -1,
                         itemBuilder: (BuildContext context, int index) {
+
+                          // Skip index 4 by adjusting indices
+                          final adjustedIndex = index >= 5 ? index + 1 : index;
+
                           return GestureDetector(
-                            onTap: () => account.listButton(index,context),
+                            onTap: () => account.listButton(adjustedIndex,context),
                             child: Container(
                               color: AppColor.white_color,
                               child: Row(
@@ -197,14 +241,14 @@ class Account extends StatelessWidget {
                                     ),
                                     padding: EdgeInsets.all(15),
                                     child: SvgPicture.asset(
-                                      accountlist[index]['image'],
+                                      accountlist[adjustedIndex]['image'],
                                       width: Get.width * 0.025,
                                       height: Get.height * 0.025,
                                       color: AppColor.white_color,
                                     ),
                                   ),
                                   SizedBox(width: Get.width / 30),
-                                  Text(accountlist[index]['name'],style: TextStyle(fontSize: Get.width / 25)),
+                                  Text(accountlist[adjustedIndex]['name'],style: TextStyle(fontSize: Get.width / 25)),
                                 ],
                               ),
                             ),

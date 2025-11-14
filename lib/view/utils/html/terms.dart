@@ -165,7 +165,7 @@ const terms = """
   502, Jai Mahal, Opp Metro Shoes, Bandra, Linking Rd, Khar West, Mumbai, Maharashtra 400052</p>
 
   <p><strong>Email:</strong> <a href="mailto:care@kohira.com">care@kohira.com</a><br>
-  <strong>Phone:</strong> +91 7851005200</p>
+  <strong>Phone:</strong> <a href="phone:+917851005200">+91 7851005200</a></p>
 
   <p>Thank you for choosing Kohira Diamonds!</p>
 

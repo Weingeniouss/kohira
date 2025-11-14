@@ -122,7 +122,7 @@ const retray = """
   <p><strong>KOHIRA DIAMONDS – Lab Grown Diamond Jewellery</strong><br>
   502, Jai Mahal, Opp Metro Shoes, Bandra, Linking Rd, Khar West, Mumbai, Maharashtra 400052</p>
   <p>Email: <a href="mailto:care@kohira.com">care@kohira.com</a><br>
-  Phone: +91 7851005200</p>
+  <strong>Phone:</strong> <a href="phone:+917851005200">+91 7851005200</a></p>
 
   <p>Thank you for choosing Kohira Diamonds. We’re committed to serving you with care, clarity, and confidence!</p>
 
