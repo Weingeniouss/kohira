@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/API/menu/account/addresses.dart';
 import 'package:kohira/controller/user_inerface/menu/account/address/address.dart';
 import 'package:kohira/view/screen/menu/account/addresses/addNewAddresses.dart';
-import 'package:kohira/view/screen/menu/account/addresses/editaddresses.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -14,8 +12,6 @@ import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shimmer/shimmer.dart';
-
 import '../../../../utils/widget/containershadow.dart';
 
 class Addresses extends StatelessWidget {

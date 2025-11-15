@@ -16,7 +16,6 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import '../../utils/app_json.dart';
 import '../../utils/widget/app_size_text.dart';
 import '../../utils/widget/button.dart';
-import '../../utils/widget/connction.dart';
 import '../../utils/widget/inputField.dart';
 import '../../utils/widget/lodingstate.dart';
 import '../../utils/widget/pop.dart';
