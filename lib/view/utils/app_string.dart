@@ -206,6 +206,7 @@ class AppString {
           static const oldpassword =  'Old password';
           static const newpassword =  'New password';
           static const confirmpassword =  'Confirm Oldpassword';
+          static const changepasswoard =  'Change Password';
 
           //Address
           static const setdefult = 'Set as Defult Address';

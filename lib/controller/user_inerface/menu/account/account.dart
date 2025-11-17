@@ -31,7 +31,7 @@ class AccountController extends GetxController{
     profileDetails.profiledetailscall();
   }
 
-  listButton(index,context){
+  void listButton(index,context){
     //Order History
     if(index == 0) Get.to(() => Orderhistory(),transition: Transition.rightToLeft,duration: Duration(milliseconds: 800));
 
@@ -88,57 +88,65 @@ class ChangePassword {
         return AlertDialog(
           elevation: 0,
           backgroundColor: AppColor.white_color,
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(onTap: () => Get.back(), child: button(AppString.cancel)),
-                GestureDetector(
-                  onTap: () async {
-                    final info = profile.data['data'];
-                    final result = await profileEdit.profileedit(
-                      firstname: info['firstname'],
-                      lastname: info['lastname'],
-                      email: info['email'],
-                      mobileno: info['mobileno'],
-                      change_password: 'true',
-                      old_password: oldPassword.text,
-                      password: newPassword.text,
-                      confirm_password: confirmPassword.text,
-                    );
-
-                    if (result['success'] == true && result['message'] != null) {
-                      ToastificationSuccess.Success(result['message']);
-                      Get.back();
-                    } else {
-                      if (result['errors'] != null) {
-                        final errors = result['errors'];
-                        if (errors.containsKey('old_password')) ToastificationError.Error(errors['old_password'][0]);
-                        if (errors.containsKey('password')) ToastificationError.Error(errors['password'][0]);
-                        if (errors.containsKey('confirm_password')) ToastificationError.Error(errors['confirm_password'][0]);
-                        if (errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
-                        if (errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
-                        if (errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
-                      } else {
-                        ToastificationError.Error(result['message'] ?? 'Unknown error occurred');
-                      }
-                    }
-                  },
-                  child: button(AppString.submit),
-                ),
-              ],
-            )
-          ],
+          insetPadding: EdgeInsets.all(10),
+          contentPadding: EdgeInsets.all(15),
+          actionsPadding: const EdgeInsets.all(15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
           content: Container(
-            height: Get.height * 0.3,
+            height: Get.height / 2.85,
             width: Get.width,
             decoration: BoxDecoration(color: AppColor.white_color),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: Get.height / 20),
+                SizedBox(height: Get.height / 150),
+                Text(AppString.changepasswoard,style: TextStyle(fontSize: Get.width / 21,fontWeight: FontWeight.w500)),
+                SizedBox(height: Get.height / 100),
                 inputField(controller: oldPassword, hintText: AppString.oldpassword,isVis: true),
                 inputField(controller: newPassword, hintText: AppString.newpassword,isVis: true),
                 inputField(controller: confirmPassword, hintText: AppString.confirmpassword,isVis: true),
+                SizedBox(height: Get.height / 80),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(onTap: () => Get.back(), child: button('        ${AppString.cancel}       ')),
+                    GestureDetector(
+                      onTap: () async {
+                        final info = profile.data['data'];
+                        final result = await profileEdit.profileedit(
+                          firstname: info['firstname'],
+                          lastname: info['lastname'],
+                          email: info['email'],
+                          mobileno: info['mobileno'],
+                          change_password: 'true',
+                          old_password: oldPassword.text,
+                          password: newPassword.text,
+                          confirm_password: confirmPassword.text,
+                        );
+
+                        if (result['success'] == true && result['message'] != null) {
+                          ToastificationSuccess.Success(result['message']);
+                          Get.back();
+                        } else {
+                          if (result['errors'] != null) {
+                            final errors = result['errors'];
+                            if (errors.containsKey('old_password')) ToastificationError.Error(errors['old_password'][0]);
+                            if (errors.containsKey('password')) ToastificationError.Error(errors['password'][0]);
+                            if (errors.containsKey('confirm_password')) ToastificationError.Error(errors['confirm_password'][0]);
+                            if (errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
+                            if (errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
+                            if (errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
+                          } else {
+                            ToastificationError.Error(result['message'] ?? 'Unknown error occurred');
+                          }
+                        }
+                      },
+                      child: button('       ${AppString.submit}         '),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
