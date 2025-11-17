@@ -25,29 +25,10 @@ class Wallet extends StatelessWidget {
         width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
-          if (wallet.isLoading.value) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (Get.isDialogOpen != true) {
-                Get.dialog(
-                  Center(child: Lottie.asset(AppJson.loading2)),
-                   barrierDismissible: false,
-                );
-              }
-            });
-            return Scaffold(backgroundColor: Colors.transparent);
-          } else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (Get.isDialogOpen == true) {
-                Get.back();
-              }
-            });
-
-            if(wallet.data.isEmpty){
-              return Center(child: Lottie.asset(AppJson.noData));
-            }
-
+            final walletData = wallet.data;
+            final historyList = walletData['userWalletHistory'];
+            if(walletData.isEmpty){return Center(child: Lottie.asset(AppJson.noData));}
             final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-
             return SafeArea(
               child: horizontalpadding(
                 child: SingleChildScrollView(
@@ -94,27 +75,27 @@ class Wallet extends StatelessWidget {
                             Divider(color: AppColor.dividercolor),
                             SizedBox(
                               height: Get.height * 0.55,
-                              child:(wallet.data != null)
+                              child:(historyList.isNotEmpty)
                                   ? ListView.builder(
-                                itemCount: wallet.data['userWalletHistory'].length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final history = wallet.data['userWalletHistory'][index];
-                                  final orderData = history['OrderData'];
+                                      itemCount: historyList.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        final history = wallet.data['userWalletHistory'][index];
+                                        final orderData = history['OrderData'];
 
-                                  return Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(history['refunddate'].toString()),
-                                        Text(orderData.isNotEmpty ? orderData[0]['grossamt'].toString() : '-'),
-                                        Text(orderData.isNotEmpty ? orderData[0]['netamount'].toString() : '-'),
-                                        Text(history['balance'].toString()),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              )
+                                        return Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(history['refunddate'].toString()),
+                                              Text(orderData.isNotEmpty ? orderData[0]['grossamt'].toString() : '-'),
+                                              Text(orderData.isNotEmpty ? orderData[0]['netamount'].toString() : '-'),
+                                              Text(history['balance'].toString()),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    )
                                   : Center(child: Lottie.asset(AppJson.noData)),
                             ),
                           ],
@@ -125,7 +106,7 @@ class Wallet extends StatelessWidget {
                 ),
               ),
             );
-          }},
+          },
         ),
       ),
     );

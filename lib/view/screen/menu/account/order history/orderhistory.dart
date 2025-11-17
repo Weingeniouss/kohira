@@ -23,27 +23,8 @@ class Orderhistory extends StatelessWidget {
         height: Get.height, width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
         child:  Obx(() {
-            if (order.order.isLoading.value) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen != true) {
-                  Get.dialog(
-                    Center(child: Lottie.asset(AppJson.loading2)),
-                    barrierDismissible: false,
-                  );
-                }
-              });
-              return Scaffold(backgroundColor: Colors.transparent);
-            } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (Get.isDialogOpen == true) {
-                  Get.back();
-                }
-              });
-
-              if(order.order.data['orders'] == null){
-                return Center(child: Lottie.asset(AppJson.noData));
-              }
-
+              final oderData = order.order.data['orders'];
+              if(oderData.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
               return horizontalpadding(
                 child: Column(
                   children: [
@@ -65,7 +46,7 @@ class Orderhistory extends StatelessWidget {
                     // Order List
                     Expanded(
                       child: ListView.builder(
-                        itemCount: order.order.data['orders'].length,
+                        itemCount: oderData.length,
                         itemBuilder: (BuildContext context, int index) {
                           final item = order.order.data['orders'][index];
                           return Column(
@@ -92,7 +73,6 @@ class Orderhistory extends StatelessWidget {
                 ),
               );
             }
-          },
         ),
       ),
     );
