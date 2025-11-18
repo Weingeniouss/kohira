@@ -156,7 +156,7 @@ class _OverstoreState extends State<Overstore> {
                 horizontalpadding(child: searchField(onSubmitted: (val) => over.submitval(val),textInputAction: TextInputAction.search)),
                 SizedBox(height: Get.height / 150),
                 SizedBox(
-                  height: Get.height / 7,
+                  height: Get.height * 0.16,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: city.length + 1,

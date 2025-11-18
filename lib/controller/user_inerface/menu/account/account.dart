@@ -95,7 +95,7 @@ class ChangePassword {
             borderRadius: BorderRadius.circular(5),
           ),
           content: Container(
-            height: Get.height / 2.85,
+            height: Get.height * 0.40,
             width: Get.width,
             decoration: BoxDecoration(color: AppColor.white_color),
             child: Column(
@@ -107,7 +107,7 @@ class ChangePassword {
                 inputField(controller: oldPassword, hintText: AppString.oldpassword,isVis: true),
                 inputField(controller: newPassword, hintText: AppString.newpassword,isVis: true),
                 inputField(controller: confirmPassword, hintText: AppString.confirmpassword,isVis: true),
-                SizedBox(height: Get.height / 80),
+                SizedBox(height: Get.height / 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -78,7 +78,7 @@ class Subcategorys extends StatelessWidget {
     return Obx(() {
       return Scaffold(
         appBar: Appbar(lefticon: AppIcon.left, hedingname_2: subUI.currentSubcategoryName.value.toUpperCase()),
-        bottomNavigationBar: SafeArea(
+        bottomNavigationBar: (subUI.subcategrory.isLoading.value) ?  null : SafeArea(
           child: Container(
             decoration: BoxDecoration(color: AppColor.white_color),
             height: Get.height * 0.07,

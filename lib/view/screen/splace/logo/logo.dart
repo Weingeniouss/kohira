@@ -37,7 +37,7 @@ class Logo extends StatelessWidget {
                         Image.asset(AppLogo.logo, scale: 10),
                         SizedBox(height: Get.height / 20),
                         Image.asset(AppTextImage.necklace, scale: 4),
-                        SizedBox(height: Get.height / 2),
+                        SizedBox(height: Get.height * 0.47),
                       ],
                     ),
                   ],
