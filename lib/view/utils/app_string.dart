@@ -150,7 +150,7 @@ class AppString {
     //Cart
     static const shoppingcart = 'Shopping Cart';
     static const CartTotal = 'Cart Total';
-    static const Over = 'Over Store';
+    static const Our = 'Our Store';
     static const OverStoreDetails = 'Over Details';
     static const myCart = 'My Cart';
     static const subTotal = 'Sub Total';

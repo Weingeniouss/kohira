@@ -46,7 +46,7 @@ class _OverstoreState extends State<Overstore> {
         appBar: Appbar(
           prefixicon: AppIcon.menu,
           prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
-          hedingname: AppString.Over,
+          hedingname: AppString.Our,
           suffixicon_1: AppIcon.like,
           suffixicon_2: AppIcon.shop,
         ),

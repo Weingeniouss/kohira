@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../../../API/menu/category/subcategrory/subCategrory.dart';
 
 class SubcetegroryUIController extends GetxController {
-  final subcategrory = Get.put(Subcategrory(), permanent: false);
+  final subcategrory = Get.put(Subcategrory(), permanent: true);
   final ScrollController scrollController = ScrollController();
   var currentSubcategoryName = ''.obs;
 

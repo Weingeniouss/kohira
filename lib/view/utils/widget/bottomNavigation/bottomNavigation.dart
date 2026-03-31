@@ -40,6 +40,7 @@ class Bottom extends StatelessWidget {
         );
       }
      return  Scaffold(
+       backgroundColor: AppColor.white_color,
       bottomNavigationBar: SafeArea(
         child: Container(
           height: Get.height * 0.075,
@@ -51,7 +52,7 @@ class Bottom extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              //Defult home Sccrren
+              //Default home Screen
               InkWell(
                 onTap: onTap ?? bottamSelect.indexOne,
                 child: bottamIcon(
@@ -87,13 +88,13 @@ class Bottom extends StatelessWidget {
                 ),
               ),
 
-              //Over Store
+              //Our Store
               InkWell(
                 onTap: bottamSelect.indexFour,
                 child: bottamIcon(
                   context: context,
                   icon: AppIcon.location,
-                  name: AppString.Over,
+                  name: AppString.Our,
                   onTap: bottamSelect.indexFour,
                   condition: bottamSelect.selectindex.value == 3,
                 ),

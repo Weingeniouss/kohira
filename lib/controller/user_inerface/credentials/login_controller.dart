@@ -11,8 +11,8 @@ class LoginController extends GetxController {
   var email_type = false.obs;
   var password_type = false.obs;
 
-  TextEditingController email_controller = TextEditingController();
-  TextEditingController password_controller = TextEditingController();
+  TextEditingController email_controller = TextEditingController(text: "vats.mehta01@gmail.com");
+  TextEditingController password_controller = TextEditingController(text: "VatsWT@135");
 
   void SiginTab(widget) {
     if (email_controller.text.isEmpty && password_controller.text.isEmpty)
