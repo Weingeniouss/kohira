@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, prefer_const_constructors_in_immutables
+// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, deprecated_member_use, prefer_const_constructors_in_immutables
 
 // drawerIcon(icon: AppIcon.bracelet, text: AppString.bracelet, color: AppColor.white_color),
 // drawerIcon(icon: AppIcon.collection, text: AppString.collection, color: AppColor.white_color),
@@ -698,7 +698,7 @@ class _DrawersState extends State<Drawers> {
                         ),
 
                         //CustomJewellery
-                        (tokans?.isEmpty ?? true) ?  SizedBox() : drawerIcon(
+                        (tokans.isEmpty ?? true) ?  SizedBox() : drawerIcon(
                           icon: AppIcon.custom,
                            color: AppColor.white_color,
                            text: AppString.customJewellery,
@@ -716,7 +716,7 @@ class _DrawersState extends State<Drawers> {
                         }),
 
                         //Logout
-                        (tokans?.isEmpty ?? true)
+                        (tokans.isEmpty ?? true)
                              ? drawerIcon(icon: AppIcon.Logout, text: AppString.Login, onTap: () => Get.off(() => Login()))
                              : drawerIcon(icon: AppIcon.Logout, text: AppString.Logout, onTap: () => logoutUser()),
                         SizedBox(height: Get.height * 0.030),

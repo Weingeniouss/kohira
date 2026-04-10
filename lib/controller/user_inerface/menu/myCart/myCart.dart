@@ -1,5 +1,5 @@
 
-// ignore_for_file: file_names, prefer_const_constructors, strict_top_level_inference, avoid_print
+// ignore_for_file: dead_null_aware_expression, file_names, prefer_const_constructors, strict_top_level_inference, avoid_print
 
 // class MyCartValueChange extends GetxController {
 //   var hasDialogShownOnce = false.obs;
@@ -146,7 +146,7 @@ class MyCartValueChange extends GetxController {
   var tax = 0.0.obs;
 
   var itemCounts = <int>[].obs;
-  bool get isGuestUser => (tokans?.isEmpty ?? true);
+  bool get isGuestUser => (tokans.isEmpty ?? true);
   RxList<JewelryItem> existingItems = <JewelryItem>[].obs;
 
   // Store pending updates for each cart item

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print, unused_import, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, body_might_complete_normally_nullable, deprecated_member_use, non_constant_identifier_names, must_be_immutable, prefer_typing_uninitialized_variables, strict_top_level_inference
+// ignore_for_file: annotate_overrides, override_on_non_overriding_member, prefer_const_constructors, use_key_in_widget_constructors, avoid_unnecessary_containers, avoid_print, unused_import, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, body_might_complete_normally_nullable, deprecated_member_use, non_constant_identifier_names, must_be_immutable, prefer_typing_uninitialized_variables, strict_top_level_inference
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
@@ -10,7 +10,8 @@ import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter
 import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
 import 'package:kohira/controller/API/menu/others/drawer/Jewellery_list.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/subcetegroy/filter_fuction.dart';
-import 'package:kohira/view/screen/menu/category/showproduct.dart' show Showproduct;
+import 'package:kohira/view/screen/menu/category/showproduct.dart'
+    show Showproduct;
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -42,7 +43,7 @@ import '../../../utils/widget/inputField.dart';
 //   }
 // }
 
-class Subcategorys extends StatelessWidget {
+class Subcategorys extends StatefulWidget {
   String? subcategrorys;
   String? subcategory_slug;
   String? collection_id;
@@ -63,76 +64,110 @@ class Subcategorys extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final subUI = Get.put(
+  State<Subcategorys> createState() => _SubcategorysState();
+}
+
+class _SubcategorysState extends State<Subcategorys> {
+  @override
+  late SubcetegroryUIController subUI;
+  @override
+  void initState() {
+    super.initState();
+    subUI = Get.put(
       SubcetegroryUIController(
-        subcategrorys: subcategrorys,
-        subcategory_slug: subcategory_slug,
-        collection_id: collection_id,
-        subcategrorysname: subcategrorysname,
-        metal_type: metal_type,
-        price_min: price_min,
-        price_max: price_max,
+        subcategrorys: widget.subcategrorys,
+        subcategory_slug: widget.subcategory_slug,
+        collection_id: widget.collection_id,
+        subcategrorysname: widget.subcategrorysname,
+        metal_type: widget.metal_type,
+        price_min: widget.price_min,
+        price_max: widget.price_max,
       ),
+      tag: widget.subcategory_slug,
     );
+    loadData();
+  }
+  void loadData() {
+    subUI.subcategrory.resetPagination();
+    subUI.subcategrory.subcategroryuser(
+      category_slug: widget.subcategrorys,
+      subcategory_slug: widget.subcategory_slug,
+      collection_id: widget.collection_id,
+      metal_type: widget.metal_type,
+      price_min: widget.price_min,
+      price_max: widget.price_max,
+    );
+  }
+
+  @override
+  void dispose() {
+    Get.delete<SubcetegroryUIController>(tag: widget.subcategory_slug);
+    super.dispose();
+  }
+
+  Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
+        backgroundColor: AppColor.white_color,
         appBar: Appbar(lefticon: AppIcon.left, hedingname_2: subUI.currentSubcategoryName.value.toUpperCase()),
-        bottomNavigationBar: (subUI.subcategrory.isLoading.value) ?  null : SafeArea(
-          child: Container(
-            decoration: BoxDecoration(color: AppColor.white_color),
-            height: Get.height * 0.07,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Storebay().storebay(context, subcategrorys: subcategrorys.toString(), subcategory_slug: subcategory_slug.toString()),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 40,vertical: 10),
-                        color: AppColor.white_color,
-                        child: Row(
-                          children: [
-                            Icon(Icons.sort,color: AppColor.glodcolor),
-                            SizedBox(width: Get.width / 60),
-                            Text(AppString.sortbay,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                          ],
-                        ),
+        bottomNavigationBar: (subUI.subcategrory.isLoading.value)
+            ? null
+            : SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(color: AppColor.white_color),
+                  height: Get.height * 0.07,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Storebay().storebay(context, subcategrorys: widget.subcategrorys.toString(), subcategory_slug: widget.subcategory_slug.toString()),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                              color: AppColor.white_color,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.sort, color: AppColor.glodcolor),
+                                  SizedBox(width: Get.width / 60),
+                                  Text(AppString.sortbay, style: TextStyle(fontSize: Get.width / 25, color: AppColor.glodcolor)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Text("|", style: TextStyle(color: AppColor.graycolor)),
+                          GestureDetector(
+                            onTap: () => ShowBottam().showbottam(
+                                context,
+                                category_slug: widget.subcategrorys.toString(),
+                                subcategrorys: widget.subcategory_slug.toString(),
+                                subcategrorysname: widget.subcategrorysname.toString(),
+                                onCategoryNameChanged: (newName) {subUI.updateSubcategoryName(newName); // Add this line
+                              },
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 47, vertical: 10),
+                              color: AppColor.white_color,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.filter_alt_outlined, color: AppColor.glodcolor),
+                                  SizedBox(width: Get.width / 60),
+                                  Text(AppString.filter, style: TextStyle(fontSize: Get.width / 25, color: AppColor.glodcolor)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text("|",style: TextStyle(color: AppColor.graycolor)),
-                    GestureDetector(
-                      onTap: () => ShowBottam().showbottam(
-                        context,
-                        category_slug: subcategrorys.toString(),
-                        subcategrorys: subcategory_slug.toString(),
-                        subcategrorysname: subcategrorysname.toString(),
-                        onCategoryNameChanged: (newName) {
-                          subUI.updateSubcategoryName(newName); // Add this line
-                        },
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 47,vertical: 10),
-                        color: AppColor.white_color,
-                        child: Row(
-                          children: [
-                            Icon(Icons.filter_alt_outlined,color: AppColor.glodcolor),
-                            SizedBox(width: Get.width / 60),
-                            Text(AppString.filter,style: TextStyle(fontSize: Get.width / 25,color: AppColor.glodcolor)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
         body: Container(
-          height: Get.height, width: Get.width, color: AppColor.white_color,
+          height: Get.height,
+          width: Get.width,
+          color: AppColor.white_color,
           child: Obx(() {
             if (subUI.subcategrory.isLoading.value && subUI.subcategrory.data.isEmpty) {
               return horizontalpadding(
@@ -212,89 +247,94 @@ class Subcategorys extends StatelessWidget {
                   backgroundColor: AppColor.white_color,
                   onRefresh: () async {
                     subUI.subcategrory.resetPagination();
-                    await subUI.subcategrory.subcategroryuser(category_slug: subcategrorys,subcategory_slug: subcategory_slug);
+                    await subUI.subcategrory.subcategroryuser(category_slug: widget.subcategrorys, subcategory_slug: widget.subcategory_slug);
                   },
                   child: Column(
                     children: [
                       SizedBox(height: Get.height / 50),
 
                       //Search Start
-                      searchField(
-                          onChanged: (value){
-                            subUI.subcategrory.handleSearch(value);
-                            subUI.subcategrory.update();
-                          }
-                      ),
+                      searchField(onChanged: (value) {
+                        subUI.subcategrory.handleSearch(value);
+                        subUI.subcategrory.update();
+                      }),
 
                       //Search End
                       SizedBox(height: Get.height / 50),
                       (subUI.subcategrory.data.isEmpty)
                           ? Expanded(child: Center(child: Lottie.asset(AppJson.noData)))
                           : Expanded(
-                        child: GridView.builder(
-                          controller: subUI.scrollController,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: Get.height / 50,
-                            crossAxisSpacing: Get.width / 50,
-                            childAspectRatio: 0.8,
-                          ),
-                          itemCount: subUI.subcategrory.data.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index < subUI.subcategrory.data.length) {
-                              final subcategrorys = subUI.subcategrory.data[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  print('Id :- ${subcategrorys['id']}');
-                                  print('Slug :- ${subcategrorys['slug']}');
-                                  Get.to(() => Showproduct(slug: subcategrorys['slug'], categoryslug: subcategrorys.toString()));
-                                  print('Title :- ${subcategrorys.toString()}');
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AspectRatio(
-                                      aspectRatio: 1,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(image: NetworkImage(subcategrorys['default_image']), fit: BoxFit.cover),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: Get.height / 150),
-                                    Text(
-                                      subcategrorys['title'],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora'),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    Text(
-                                      indianFormat.format(double.parse(subcategrorys['discount']?.toString() ?? '0') > 0 ? subcategrorys['offer_price'] : subcategrorys['setting_price']),
-                                      style: TextStyle(
-                                        fontSize: Get.height / 70,
-                                        fontFamily: 'Lora', color: AppColor.pink_color,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
+                              child: GridView.builder(
+                                controller: subUI.scrollController,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: Get.height / 50,
+                                  crossAxisSpacing: Get.width / 50,
+                                  childAspectRatio: 0.8,
                                 ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                      (subUI.subcategrory.hasMore.value && subUI.subcategrory.isLoading.value)
+                                itemCount: subUI.subcategrory.data.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index < subUI.subcategrory.data.length) {
+                                    final subcategrorys = subUI.subcategrory.data[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        print('Id :- ${subcategrorys['id']}');
+                                        print('Slug :- ${subcategrorys['slug']}');
+                                        Get.to(() => Showproduct(slug: subcategrorys['slug'], categoryslug: subcategrorys.toString()));
+                                        print('Title :- ${subcategrorys.toString()}');
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio: 1,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(subcategrorys['default_image']),
+                                                    fit: BoxFit.cover),
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: Get.height / 150),
+                                          Text(
+                                            subcategrorys['title'],
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: Get.height / 70, fontFamily: 'Lora'),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          Text(
+                                            indianFormat.format(double.parse(subcategrorys['discount']?.toString() ?? '0') > 0
+                                                ? subcategrorys['offer_price']
+                                                : subcategrorys['setting_price']),
+                                            style: TextStyle(
+                                              fontSize: Get.height / 70,
+                                              fontFamily: 'Lora',
+                                              color: AppColor.pink_color,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                      (subUI.subcategrory.hasMore.value &&
+                              subUI.subcategrory.isLoading.value)
                           ? Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Center(
-                          child: SizedBox(
-                            height: 30, width: 30,
-                            child: CircularProgressIndicator(strokeWidth: 3.5, color: AppColor.pink_color, backgroundColor: Colors.grey.shade200),
-                          ),
-                        ),
-                      )
+                              padding: EdgeInsets.all(16),
+                              child: Center(
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(strokeWidth: 3.5, color: AppColor.pink_color, backgroundColor: Colors.grey.shade200),
+                                ),
+                              ),
+                            )
                           : SizedBox.shrink(),
                     ],
                   ),

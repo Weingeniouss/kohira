@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
+// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, deprecated_member_use, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -122,7 +122,7 @@ class _BuynowState extends State<Buynow> {
               //   myCart.initializeItemCounts();
               // }
 
-              final bool isGuest = (tokans?.isEmpty ?? true);
+              final bool isGuest = (tokans.isEmpty ?? true);
               final fetch = isGuest ? myCart.witoutlogin.data['carts'] ?? [] :  myCart.fetchcart.data['carts'] ?? [];
 
               if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));

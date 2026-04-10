@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors, unused_import, unnecessary_null_comparison, deprecated_member_use
+// ignore_for_file: dead_null_aware_expression, non_constant_identifier_names, avoid_unnecessary_containers, prefer_const_constructors, unused_import, unnecessary_null_comparison, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,7 +31,7 @@ PreferredSizeWidget Appbar({
   final appbarsize = Get.height * 0.09;
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
-  final bool isGuest = (tokans?.isEmpty ?? true);
+  final bool isGuest = (tokans.isEmpty ?? true);
   if(isGuest){
     cartCount = pref!.getString('count') ?? '0';
     wishCount = pref!.getString('wishcount') ?? '0';

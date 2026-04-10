@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
+// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, avoid_print
 // Registered a new Firebase ios app on Firebase project kohira-2ac25.
 // Firebase configuration file lib\firebase_options.dart generated successfully with the following Firebase apps:
 //
@@ -18,7 +18,7 @@ import 'firebase_options.dart';
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final bool isGuest = (tokans?.isEmpty ?? true);
+  final bool isGuest = (tokans.isEmpty ?? true);
   pref = await SharedPreferences.getInstance();
 
   if(isGuest){

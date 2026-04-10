@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference
+// ignore_for_file: dead_null_aware_expression, strict_top_level_inference
 
 import 'package:get/get.dart';
 import 'package:kohira/modal/menu/category/subcategory/addtowish.dart';
@@ -16,7 +16,7 @@ class WishlistController extends GetxController {
   final count = Get.put(CountController());
 
   var wishlistItems = <dynamic>[].obs;
-  final bool isGuestUser = (tokans?.isEmpty ?? true);
+  final bool isGuestUser = (tokans.isEmpty ?? true);
   RxList<JewelryItemWish> existingItemswish = <JewelryItemWish>[].obs;
 
   @override

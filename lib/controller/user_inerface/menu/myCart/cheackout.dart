@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, camel_case_types, avoid_print
+// ignore_for_file: unused_local_variable, prefer_const_constructors, deprecated_member_use, camel_case_types, avoid_print
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -62,29 +62,25 @@ class Cheackout_Controller extends GetxController {
      );
 
      // ensure data exists
-     if (processpayment.data != null) {
-       // safe parse of code (could be int or string)
-       final dynamic codeRaw = processpayment.data['code'];
-       final int code = (codeRaw is int)
-           ? codeRaw
-           : int.tryParse(codeRaw?.toString() ?? '') ?? 0;
+     // safe parse of code (could be int or string)
+     final dynamic codeRaw = processpayment.data['code'];
+     final int code = (codeRaw is int)
+         ? codeRaw
+         : int.tryParse(codeRaw?.toString() ?? '') ?? 0;
 
-       // safe extraction of gatewayUrl
-       final String? gatewayUrlRaw = processpayment.data['gatewayUrl']?.toString();
-       if (gatewayUrlRaw != null && gatewayUrlRaw.isNotEmpty) {
-         final Uri? url = Uri.tryParse(gatewayUrlRaw);
-         if (url != null) {
-           await launchUrl(url, mode: LaunchMode.externalApplication);
-         } else {
-           ToastificationError.Error('Invalid payment URL');
-         }
+     // safe extraction of gatewayUrl
+     final String? gatewayUrlRaw = processpayment.data['gatewayUrl']?.toString();
+     if (gatewayUrlRaw != null && gatewayUrlRaw.isNotEmpty) {
+       final Uri? url = Uri.tryParse(gatewayUrlRaw);
+       if (url != null) {
+         await launchUrl(url, mode: LaunchMode.externalApplication);
        } else {
-         ToastificationError.Error('Payment gateway URL not provided');
+         ToastificationError.Error('Invalid payment URL');
        }
      } else {
-       ToastificationError.Error('Payment failed: no response');
+       ToastificationError.Error('Payment gateway URL not provided');
      }
-   } catch (e, st) {
+      } catch (e, st) {
      if (kDebugMode) print('Payment error: $e\n$st');
      ToastificationError.Error('Payment failed. Try again.');
    }finally{

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unused_local_variable, unnecessary_null_comparison, unused_import, prefer_const_literals_to_create_immutables, avoid_print
+// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names, deprecated_member_use, unused_local_variable, unnecessary_null_comparison, unused_import, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -109,7 +109,7 @@ class Checkout extends StatelessWidget {
                 // var remaining = wallet.data['myWalletAmount'] - myCart.subTotal.value;
                 // var totalprice  = myCart.subTotal.value + myCart.fetchcart.data['global_tax']['globaltaxcharge'];
 
-                final bool isGuest = (tokans?.isEmpty ?? true);
+                final bool isGuest = (tokans.isEmpty ?? true);
                 final fetch = isGuest ? myCart.witoutlogin.data['carts'] ?? [] :  myCart.fetchcart.data['carts'] ?? [];
 
                 if (fetch.isEmpty) return Center(child: Lottie.asset(AppJson.noData));

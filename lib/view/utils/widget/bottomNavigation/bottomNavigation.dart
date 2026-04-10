@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, unnecessary_import, file_names, deprecated_member_use
+// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, unnecessary_import, file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -101,7 +101,7 @@ class Bottom extends StatelessWidget {
               ),
 
               //Account
-              (tokans?.isEmpty ?? true)
+              (tokans.isEmpty ?? true)
                   ? bottamIcon(
                     context: context,
                     icon: AppIcon.account,

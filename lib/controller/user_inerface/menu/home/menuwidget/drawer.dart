@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
+// ignore_for_file: dead_null_aware_expression, unused_field, strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -305,7 +305,7 @@ class CustomJewelleryUI extends GetxController{
                         searchController: shapeController,
                         value: selectedShape,
                         items: filter?.shape ?? [],
-                        displayText: (item) => item?.name ?? 'Select Shape',
+                        displayText: (item) => item.name ?? 'Select Shape',
                         hintText: 'Choose Shape',
                         onChanged: (BraceletSize? selectedItem) {
                           if (selectedItem != null) {
@@ -322,7 +322,7 @@ class CustomJewelleryUI extends GetxController{
                         searchController: colorController,
                         value: selectcolor,
                         items: filter?.color ?? [],
-                        displayText: (item) => item?.name ?? 'Select Color',
+                        displayText: (item) => item.name ?? 'Select Color',
                         hintText: 'Choose Color',
                         onChanged: (BraceletSize? selectedItem) {
                           if (selectedItem != null) {
@@ -339,7 +339,7 @@ class CustomJewelleryUI extends GetxController{
                         searchController: clarityController,
                         value: selectedClarity,
                         items: clarity.clarityData,
-                        displayText: (item) => item?.name ?? 'Select Clarity',
+                        displayText: (item) => item.name ?? 'Select Clarity',
                         hintText: 'Choose Clarity',
                         onChanged: (ClarityItem? selectedItem) {
                           if (selectedItem != null) {
@@ -398,7 +398,7 @@ class CustomJewelleryUI extends GetxController{
                         searchController: shapeController,
                         value: selectedShape_edit,
                         items: filter?.shape ?? [],
-                        displayText: (item) => item?.name ?? 'Select Shape',
+                        displayText: (item) => item.name ?? 'Select Shape',
                         hintText: 'Choose Shape',
                         onChanged: (BraceletSize? selectedItem) {
                           selectedShape_edit.value = selectedItem;
@@ -412,7 +412,7 @@ class CustomJewelleryUI extends GetxController{
                         searchController: colorController,
                         value: selectcolor_edit,
                         items: filter?.color ?? [],
-                        displayText: (item) => item?.name ?? 'Select Color',
+                        displayText: (item) => item.name ?? 'Select Color',
                         hintText: 'Choose Color',
                         onChanged: (BraceletSize? selectedItem) {
                           selectcolor_edit.value = selectedItem;
@@ -426,7 +426,7 @@ class CustomJewelleryUI extends GetxController{
                         searchController: clarityController,
                         value: selectedClarity_edit,
                         items: clarity.clarityData,
-                        displayText: (item) => item?.name ?? 'Select Clarity',
+                        displayText: (item) => item.name ?? 'Select Clarity',
                         hintText: 'Choose Clarity',
                         onChanged: (ClarityItem? selectedItem) {
                           selectedClarity_edit.value = selectedItem;

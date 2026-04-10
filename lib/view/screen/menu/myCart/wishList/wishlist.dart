@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, deprecated_member_use
+// ignore_for_file: invalid_use_of_protected_member, dead_null_aware_expression, prefer_const_constructors, avoid_print, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,7 +24,7 @@ class WishlistScreen extends StatelessWidget {
   WishlistScreen({super.key});
   final wish = Get.put(WishlistController());
   final wishguest = Get.put(WishcartControllet());
-  final bool isGuest = (tokans?.isEmpty ?? true);
+  final bool isGuest = (tokans.isEmpty ?? true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +92,7 @@ class WishlistScreen extends StatelessWidget {
             );
           }
 
-          final bool isGuest = (tokans?.isEmpty ?? true);
+          final bool isGuest = (tokans.isEmpty ?? true);
 
           final wishlists = isGuest ? wish.withoutloginWish.data['wishlists'] : wish.fetchwishlist.data['wishlists'];
 
