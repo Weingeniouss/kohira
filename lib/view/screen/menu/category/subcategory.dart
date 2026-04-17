@@ -147,10 +147,7 @@ class _SubcategorysState extends State<Subcategorys> {
                               },
                             ),
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 47,
-                                vertical: 10,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 47, vertical: 10),
                               color: AppColor.white_color,
                               child: Row(
                                 children: [
