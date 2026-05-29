@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:get/get.dart';
+import 'package:kohira/view/screen/credentials/otp.dart';
 import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
-import '../../../../view/screen/credentials/login.dart';
 import '../../../../view/utils/app_constants.dart';
 
 class LogoController extends GetxController {
@@ -14,7 +14,7 @@ class LogoController extends GetxController {
     Future.delayed(Duration(seconds: 2), () {
       if (!navigated) {
         navigated = true;
-        Get.offAll(() => (islogin) ?  Bottom() : Login());
+        Get.offAll(() => (islogin) ?  Bottom() : Otp());
       }
     });
   }

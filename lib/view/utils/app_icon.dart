@@ -13,6 +13,10 @@ class AppIcon {
   //storicon
   static const allstore = 'asset/icon/storeicon/AllStores.svg';
 
+  //otp
+  static const india = 'asset/icon/otp/India.png';
+  static const whatsapp = 'asset/icon/otp/whatsapp.png';
+
   //otherIcon
   static const facebook = 'asset/icon/otherIcon/facebook.svg';
   static const google = 'asset/icon/otherIcon/google.svg';

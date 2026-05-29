@@ -42,6 +42,9 @@ class AppString {
   static const Apply = 'Apply';
 
   //credentials
+  //Otp
+  static const newtoKohira = 'New to Kohira? Create an account or login if you already have one';
+
   //Login
   static const subsignin = 'If you have a Kohira customer account please sign in';
   static const hintemail = 'Enter Your Email';
