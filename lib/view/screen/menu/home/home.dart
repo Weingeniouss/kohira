@@ -54,6 +54,7 @@ class Home extends StatelessWidget {
           suffixicon_1: AppIcon.like,
           suffixicon_2: AppIcon.shop,
         ),
+
         drawer: Drawers(),
         body: Container(
           width: Get.width,
