@@ -44,6 +44,7 @@ class AppString {
   //credentials
   //Otp
   static const newtoKohira = 'New to Kohira? Create an account or login if you already have one';
+  static const verifyotp = 'Verify otp...';
 
   //Login
   static const subsignin = 'If you have a Kohira customer account please sign in';

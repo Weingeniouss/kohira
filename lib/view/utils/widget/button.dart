@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../app_color.dart';
 import 'app_size_text.dart';
 
-Widget button(String? text, {double? fontSize, EdgeInsetsGeometry? padding}) {
+Widget button(dynamic content, {double? fontSize, EdgeInsetsGeometry? padding}) {
   return Container(
     padding: padding ?? EdgeInsets.all(15),
     decoration: BoxDecoration(
@@ -13,7 +13,11 @@ Widget button(String? text, {double? fontSize, EdgeInsetsGeometry? padding}) {
       // color: AppColor.pink_color,
       color: AppColor.black_color,
     ),
-    child: Center(child: buttontext(text, fontSize: fontSize)),
+    child: Center(
+      child: content is String
+          ? buttontext(content, fontSize: fontSize)
+          : content,
+    ),
   );
 }
 

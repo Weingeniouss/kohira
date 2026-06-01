@@ -9,11 +9,11 @@ class GoogleUrl{
 
 class AppUrl {
   //local
-  // static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
+  static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
 
   //staging
-  static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  // static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'https://api.weingenious.in/kohira/api';
 
   //Live
@@ -26,6 +26,10 @@ class AppUrl {
   static const forgetpassword = '$baseurl/forgot-password';
   static const country = '$baseurl/country';
   static const state = '$baseurl/state';
+
+  //Otp
+  static const otp = '$baseurl/send-otp';
+  static const verifyotp = '$baseurl/verify-otp';
 
   //Counting
   static const count = '$baseurl/count-wish-cart';

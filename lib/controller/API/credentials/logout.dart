@@ -18,7 +18,10 @@ class Logout extends GetxController {
       isLoading(true);
       final url = Uri.parse(AppUrl.logout);
       print('Sending To Url :- $url');
-      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final response = await http.post(url, headers: {
+        ApiHeaders.heading: ApiHeaders.peramitters,
+        ApiHeaders.authorization: tokans
+      });
       if (response.statusCode == 200 || response.statusCode == 201) {
         logoutData.value = jsonDecode(response.body);
         log('Logout Data :- ${logoutData.value}');
