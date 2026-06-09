@@ -16,7 +16,7 @@ class Homejewelry extends GetxController{
       final responce = await dio.get(url);
       print('Sending to url :- $url');
       if(responce.statusCode == 200 || responce.statusCode == 201){
-        homejewelrydata.value = responce.data;
+        homejewelrydata.assignAll(responce.data);
         print('home Jewellery data:- $homejewelrydata');
       }else{
         throw{

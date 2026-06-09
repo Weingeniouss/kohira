@@ -179,6 +179,14 @@ class localdatabase {
     // }
   }
 
+  void saveToken(String token) {
+    pref!.setString('tokan', token);
+    tokans = pref!.getString('tokan') ?? '';
+    pref!.setBool('login', true);
+    islogin = pref!.getBool('login') ?? false;
+    print('Saved Token :- $tokans');
+  }
+
   Future logout() async{
     Logout().logout();
    await pref!.setBool('login', false);

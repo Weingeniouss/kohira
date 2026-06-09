@@ -37,6 +37,8 @@ class AppUrl {
      //Menu
       //home
       static const categories = '$baseurl/home/categories';
+      static const homeDashbord = '$baseurl/home/dashboard';
+      static const homepage_JewelryList = '$baseurl/homepage-JewelryList';
       static const slider = '$baseurl/home/slider';
       static const homecollcation = '$baseurl/home/collections';
       static const homecJewelry = '$baseurl/home/Jewelry';

@@ -97,27 +97,30 @@ Widget searchField({
 })
 {
   return Container(
-    height: Get.height * 0.05,
+    height: Get.height * 0.06,
     decoration: BoxDecoration(
-      border: Border.all(color: AppColor.textfild_color),
+      border: Border.all(color: AppColor.pink_color ),
       borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
     ),
-    child: Center(
-      child: TextField(
-        textInputAction: textInputAction,
-        focusNode: focusNode,
-        readOnly: readOnly ?? false,
-        onTap: onTap,
-        onChanged: onChanged,
-        onSubmitted: onSubmitted,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: Get.height / 80),
-          prefixIcon: Icon(Icons.search, color: AppColor.hintColor),
-          hintText: AppString.Searchs,
-          hintStyle: TextStyle(color: AppColor.hintColor),
-          disabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
+    child: Padding(
+      padding: EdgeInsets.only(left: Get.width * 0.030),
+      child: Center(
+        child: TextField(
+          textInputAction: textInputAction,
+          focusNode: focusNode,
+          readOnly: readOnly ?? false,
+          onTap: onTap,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: Get.height / 80),
+            suffixIcon: Icon(Icons.search, color: AppColor.hintColor),
+            hintText: AppString.Searchs,
+            hintStyle: TextStyle(color: AppColor.hintColor),
+            disabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+          ),
         ),
       ),
     ),

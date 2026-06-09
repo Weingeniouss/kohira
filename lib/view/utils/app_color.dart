@@ -7,7 +7,9 @@ class AppColor {
   static Color grey_color = Color(0xff757575);
   static Color black_color = Color(0xff000000);
   static Color textfild_color = Color(0xffDFDFDF);
-  static Color pink_color = Color(0xffF37D78);
+  static Color brown_color = Color(0xff603A40);
+  // static Color pink_color = Color(0xffF37D78);
+  static Color pink_color = Color(0xffEE6983);
   static Color othersub_color = Color(0xff999999);
   static Color green_color = Color(0xff208E53);
   static Color Appbercolor = Color(0xffF5EFE9);
@@ -23,6 +25,7 @@ class AppColor {
   static Color showcontainercolor = Color(0xffF6F4F2);
   static Color showcontainertextcolor = Color(0xff555353);
   static Color htmlbackgroud = Color(0xfff9f9f9);
+  static Color textgray = Color(0xff656565);
 
   //Loding State Color
   static Color lodingcolor = Colors.grey.shade300;

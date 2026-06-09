@@ -5,8 +5,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/app_string.dart';
 import '../../../view/utils/app_encryption.dart';
 import '../../../view/utils/app_url.dart';
+import '../../../view/utils/widget/bottomNavigation/bottomNavigation.dart';
+import '../../database/local/localstore.dart';
 
 class OtpController extends GetxController {
   var isLoading = false.obs;
@@ -90,7 +93,7 @@ class VerifyOtpController extends GetxController {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonResponse = jsonDecode(response.body);
-        log('Verify Otp Raw Response :- $jsonResponse');
+        log('${AppString.rawResponse} :- $jsonResponse');
 
         if (jsonResponse['success'] == true) {
           final decryptedData = AppEncryption.decryptResponse(
@@ -100,9 +103,22 @@ class VerifyOtpController extends GetxController {
 
           if (decryptedData != null) {
             verifyOtpData.value = decryptedData;
-            log('Decrypted Verify Otp Data :- ${verifyOtpData.value}');
+            log('${AppString.decryptedData} :- ${verifyOtpData.value}');
+
+            // Try to find the token in different possible locations
+            String? token = verifyOtpData.value['token'] ??
+                verifyOtpData.value['data']?['token'] ??
+                verifyOtpData.value['access_token'];
+
+            if (token != null) {
+              localdatabase().saveToken(token);
+              log(AppString.navigatingtoHome);
+              Get.offAll(() => Bottom());
+            } else {
+              log(AppString.decryption);
+            }
           } else {
-            log('Decryption failed');
+            log(AppString.decryptionfailed);
           }
         }
       } else {

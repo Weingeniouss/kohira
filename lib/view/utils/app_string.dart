@@ -5,6 +5,13 @@ class AppString {
   //Error
   static const fild = 'Please Fild All Error !';
 
+  //Controller
+  static const navigatingtoHome = 'Token saved successfully. Navigating to Home...';
+  static const decryption = 'Error: Decryption succeeded but no token was found in the data.';
+  static const decryptionfailed = 'Decryption failed: Signature was valid but payload could not be decrypted.';
+  static const rawResponse = 'Verify Otp Raw Response';
+  static const decryptedData = 'Decrypted Data Content';
+
   //Button
   static const google = 'google';
   static const facebook = 'facebook';
@@ -73,6 +80,18 @@ class AppString {
   //Menu
    //home
     static const matter_heading = 'Wear What Matter';
+    static const gold_Mine = 'Gold Mine';
+    static const num = '10 + 1';
+    static const monthlyPlan = 'Monthly Plan';
+    static const installments = '(Pay 10 installments & enjoy 100% savings on the 11th month!)';
+    static const enrollNow = 'Enroll Now';
+    static const celebrate = 'Celebrate Every Moment Perfectly';
+    static const elegance = 'Celebrate every moment with elegance. Timeless designs crafted to perfection. Jewelry that makes every occasion shine.';
+    static const gifts = 'THOUGHTFUL GIFTS, MADE SIMPLE';
+    static const withPride = 'Worn with Pride - Kohira on Instagram';
+    static const customersWear = 'See how our customers wear Kohira for weddings, everyday elegance, and every moment in between. Tag @kohiradiamonds to be featured.';
+    static const lovedCollections = 'Our Most Loved Collections';
+    static const boldEngagement = 'From bold engagement rings to iconic everyday essentials - these are Kohiras most celebrated pieces Type IIA diamonds. Timeless designs Made for those who demand the best';
 
      //Drawer
      static const bracelet = 'Bracelet';
