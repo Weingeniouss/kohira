@@ -41,7 +41,7 @@ class Home extends StatelessWidget {
               Silder(),
               productList(),
               plan(),
-              // instagramVideo(),
+              instagramVideo(),
               benner(),
               storeSliderBanner(),
               lovedCollection(),
