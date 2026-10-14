@@ -9,11 +9,12 @@ class GoogleUrl{
 
 class AppUrl {
   //local
-  static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
+  // static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
 
   //staging
   // static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  static const baseurl = 'https://kohira-api.weingenious.in/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'https://api.weingenious.in/kohira/api';
 
   //Live
@@ -40,6 +41,7 @@ class AppUrl {
       static const homeDashbord = '$baseurl/home/dashboard';
       static const homepage_JewelryList = '$baseurl/homepage-JewelryList';
       static const slider = '$baseurl/home/slider';
+      static const offerbanner = '$baseurl/home/offerbanner';
       static const homecollcation = '$baseurl/home/collections';
       static const homecJewelry = '$baseurl/home/Jewelry';
 

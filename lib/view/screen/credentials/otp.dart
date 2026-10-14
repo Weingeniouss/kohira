@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/API/credentials/otp.dart';
+import 'package:kohira/controller/user_inerface/credentials/otp_controller.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/widget/button.dart';
@@ -14,14 +14,12 @@ import '../../utils/app_logo.dart';
 import '../../utils/app_string.dart';
 
 class Otp extends StatelessWidget {
-  const Otp({super.key});
+  Otp({super.key});
+
+  final OtpUiController controller = Get.put(OtpUiController());
 
   @override
   Widget build(BuildContext context) {
-    final firstNameController = TextEditingController();
-    final lastNameController = TextEditingController();
-    final mobileController = TextEditingController();
-    final otpController = TextEditingController();
     return Scaffold(
       body: Container(
         height: Get.height,
@@ -32,15 +30,10 @@ class Otp extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: Get.height * 0.150),
+                SizedBox(height: Get.height * 0.180),
                 logo(),
-                SizedBox(height: Get.height * 0.065),
-                signIn(
-                  firstNameController: firstNameController,
-                  lastNameController: lastNameController,
-                  mobileController: mobileController,
-                  otpController: otpController,
-                ),
+                SizedBox(height: Get.height * 0.075),
+                signIn(controller: controller),
               ],
             ),
           ),
@@ -50,18 +43,9 @@ class Otp extends StatelessWidget {
   }
 }
 
-Widget logo() {
-  return Image.asset(AppLogo.logo, scale: 10);
-}
+Widget logo() => Image.asset(AppLogo.logo, scale: 10);
 
-Widget signIn({
-  required TextEditingController firstNameController,
-  required TextEditingController lastNameController,
-  required TextEditingController mobileController,
-  required TextEditingController otpController,
-}) {
-  final otp = Get.put(OtpController());
-  final verifyOtp = Get.put(VerifyOtpController());
+Widget signIn({required OtpUiController controller}) {
   return Container(
     width: Get.width,
     decoration: BoxDecoration(
@@ -77,34 +61,12 @@ Widget signIn({
       ],
     ),
     child: Padding(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(20),
       child: Column(
         children: [
           hedingText(),
-          textfield(
-            firstNameController: firstNameController,
-            lastNameController: lastNameController,
-            mobileController: mobileController,
-          ),
-          buttonWidget(
-            onTap: () {
-              otp.otpSubmit(
-                countrycode: '+91',
-                firstname: firstNameController.text,
-                lastname: lastNameController.text,
-                mobileno: mobileController.text,
-              );
-            },
-            verifyonTap: () {
-              verifyOtp.verifyOtp(
-                mobileno: mobileController.text,
-                otp_code: otpController.text,
-              );
-            },
-            setOtp: (pin) {
-              otpController.text = pin;
-            },
-          ),
+          textfield(controller: controller),
+          buttonWidget(controller: controller),
         ],
       ),
     ),
@@ -119,84 +81,80 @@ Widget hedingText() {
       Text(
         AppString.signin,
         style: TextStyle(
-          fontSize: Get.width * 0.055,
+          fontSize: Get.width * 0.059,
           fontFamily: 'Lora',
           fontWeight: FontWeight.w700,
         ),
       ),
-      SizedBox(height: Get.height * 0.005),
+      SizedBox(height: Get.height * 0.009),
       Text(
         AppString.newtoKohira,
         style: TextStyle(
           fontFamily: 'Zapf',
-          fontSize: Get.width * 0.038,
+          fontSize: Get.width * 0.040,
         ),
       ),
+      SizedBox(height: Get.height * 0.005),
     ],
   );
 }
 
-Widget textfield({
-  required TextEditingController firstNameController,
-  required TextEditingController lastNameController,
-  required TextEditingController mobileController,
-}) {
-  return Column(
-    children: [
-      Row(
-        children: [
-          Expanded(
-            child: inputField(
-              controller: firstNameController,
-              hintText: AppString.firstname,
-            ),
-          ),
-          SizedBox(width: Get.width * 0.05),
-          Expanded(
-            child: inputField(
-              controller: lastNameController,
-              hintText: AppString.lastname,
-            ),
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          Image.asset(AppIcon.whatsapp, width: Get.width * 0.07),
-          SizedBox(width: Get.width * 0.02),
-          Image.asset(AppIcon.india, width: Get.width * 0.07),
-          SizedBox(width: Get.width * 0.02),
-          Text('+91'),
-          SizedBox(width: Get.width * 0.03),
-          Expanded(
-            child: inputField(
-              maxLength: 10,
-              textInputType: TextInputType.number,
-              controller: mobileController,
-              hintText: AppString.hintmobile,
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: Get.height * 0.015),
-    ],
-  );
-}
-
-Widget buttonWidget({
-  void Function()? onTap,
-  void Function()? verifyonTap,
-  void Function(String)? setOtp,
-  OtpFieldController? otpFieldController,
-}) {
-  final otp = Get.find<OtpController>();
-  final verifyOtp = Get.find<VerifyOtpController>();
+Widget textfield({required OtpUiController controller}) {
   return Obx(() {
-    return otp.otpDataShow['status'] == true
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: inputField(
+                controller: controller.firstNameController,
+                hintText: AppString.firstname,
+                empty: controller.firstnameType.value,
+              ),
+            ),
+            SizedBox(width: Get.width * 0.05),
+            Expanded(
+              child: inputField(
+                controller: controller.lastNameController,
+                hintText: AppString.lastname,
+                empty: controller.lastnameType.value,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: Get.height * 0.005),
+        Row(
+          children: [
+            Image.asset(AppIcon.whatsapp, width: Get.width * 0.07),
+            SizedBox(width: Get.width * 0.02),
+            Image.asset(AppIcon.india, width: Get.width * 0.07),
+            SizedBox(width: Get.width * 0.02),
+            Text(AppString.defaultCountryCode),
+            SizedBox(width: Get.width * 0.03),
+            Expanded(
+              child: inputField(
+                maxLength: 10,
+                textInputType: TextInputType.number,
+                controller: controller.mobileController,
+                hintText: AppString.hintmobile,
+                empty: controller.mobileType.value,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: Get.height * 0.020),
+      ],
+    );
+  });
+}
+
+Widget buttonWidget({required OtpUiController controller}) {
+  return Obx(() {
+    return controller.otpApi.otpDataShow['status'] == true
         ? Column(
             children: [
               OTPTextField(
-                controller: otpFieldController,
+                controller: controller.otpFieldController,
                 length: 6,
                 width: Get.width,
                 fieldWidth: 45,
@@ -204,46 +162,50 @@ Widget buttonWidget({
                 textFieldAlignment: MainAxisAlignment.spaceAround,
                 fieldStyle: FieldStyle.box,
                 onChanged: (pin) {
-                  print("Changed: $pin");
-                  if (setOtp != null) setOtp(pin);
+                  controller.otpController.text = pin;
                 },
                 onCompleted: (pin) {
-                  print("Completed: $pin");
-                  if (setOtp != null) setOtp(pin);
+                  controller.otpController.text = pin;
                 },
               ),
               SizedBox(height: Get.height * 0.020),
               GestureDetector(
-                onTap: verifyOtp.isLoading.value ? null : verifyonTap,
+                onTap: controller.verifyOtpApi.isLoading.value
+                    ? null
+                    : controller.verifyOtpCode,
                 child: button(
-                  verifyOtp.isLoading.value ? 'Verifying...' : 'Verify otp...',
-                  fontSize: Get.width * 0.033,
-                  padding: EdgeInsets.all(10),
+                  controller.verifyOtpApi.isLoading.value
+                      ? AppString.verifying
+                      : AppString.verifyotp,
+                  fontSize: Get.width * 0.040,
+                  padding: EdgeInsets.all(14),
                 ),
               ),
               SizedBox(height: Get.height * 0.015),
-              Obx(() => otp.minutes.value == 0 && otp.seconds.value == 0
+              Obx(() => controller.otpApi.minutes.value == 0 &&
+                      controller.otpApi.seconds.value == 0
                   ? TextButton(
                       onPressed: () {
-                        otp.minutes.value = 10;
-                        otp.seconds.value = 0;
-                        otp.startTimer();
+                        controller.otpApi.minutes.value = 10;
+                        controller.otpApi.seconds.value = 0;
+                        controller.otpApi.startTimer();
                       },
-                      child: const Text('Resend OTP'),
+                      child: Text(AppString.resendOtp),
                     )
                   : Text(
-                      'Resend OTP in ${otp.minutes.value}:${otp.seconds.value.toString().padLeft(2, '0')}',
+                      '${AppString.resendOtpIn} ${controller.otpApi.minutes.value}:${controller.otpApi.seconds.value.toString().padLeft(2, '0')}',
                     ))
             ],
           )
         : GestureDetector(
-            onTap: otp.isLoading.value ? null : onTap,
+            onTap:
+                controller.otpApi.isLoading.value ? null : controller.submitOtp,
             child: button(
-              otp.isLoading.value
-                  ? 'Please Wait...'
+              controller.otpApi.isLoading.value
+                  ? AppString.pleaseWait
                   : AppString.submit.toUpperCase(),
-              fontSize: Get.width * 0.033,
-              padding: EdgeInsets.all(10),
+              fontSize: Get.width * 0.040,
+              padding: EdgeInsets.all(14),
             ),
           );
   });

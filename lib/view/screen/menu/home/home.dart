@@ -1,16 +1,19 @@
 // ignore_for_file: strict_top_level_inference, prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, avoid_print, use_build_context_synchronously
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:kohira/controller/user_inerface/menu/home/menuwidget/homedashbord.dart';
-import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
-import 'package:kohira/view/utils/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/API/menu/home/homejewelry.dart';
+import 'package:kohira/controller/API/menu/home/offer_banner.dart';
+import 'package:kohira/controller/API/menu/home/slider.dart';
+import 'package:kohira/controller/user_inerface/menu/home/menuwidget/homedashbord.dart';
+import 'package:kohira/view/screen/menu/category/showproduct.dart';
+import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
+import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_image.dart';
 import 'package:kohira/view/utils/app_string.dart';
-import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../utils/app_icon.dart';
-import '../../../utils/app_json.dart';
 import '../../../utils/app_logo.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/horizontalpading.dart';
@@ -38,11 +41,14 @@ class Home extends StatelessWidget {
           child: Column(
             children: [
               sarchfild(),
-              Silder(),
+              // Silder(),
               productList(),
               plan(),
-              instagramVideo(),
+              offerBannerList(),
+              // instagramVideo(),
               benner(),
+              jewelrySection1(),
+              jewelrySection2(),
               storeSliderBanner(),
               lovedCollection(),
               gifts(),
@@ -82,45 +88,175 @@ Widget sarchfild() {
 
 //Slider
 Widget Silder() {
+  final sliderCtrl = Get.put(SliderCalling());
   final homedashbord = Get.find<Homedashbord>();
+
   return Obx(() {
-    final isLoading = homedashbord.isLoading.value;
-    final silderValue = homedashbord.homeDashborData['mainSliderDetail'];
-    if (isLoading) {
-      return Center(child: Lottie.asset(AppJson.loading2, height: 50));
+    final isLoading = sliderCtrl.isLoading.value;
+    final sliderDataList = sliderCtrl.data;
+
+    if (isLoading && sliderDataList.isEmpty) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.35,
+          width: Get.width,
+          margin: EdgeInsets.symmetric(vertical: Get.height / 50),
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
     }
-    final sliderData = silderValue as List<dynamic>?;
-    if (sliderData == null || sliderData.isEmpty) {
+
+    if (sliderDataList.isNotEmpty) {
+      return Column(
+        children: [
+          SizedBox(height: Get.height / 50),
+          CarouselSlider.builder(
+            itemCount: sliderDataList.length,
+            itemBuilder: (BuildContext context, int index, int realIndex) {
+              final sliderItem = sliderDataList[index];
+              final String mobileImg = sliderItem.mobileImg ?? '';
+              final String mainImg = sliderItem.image ?? '';
+              final String urlToUse =
+                  mobileImg.isNotEmpty ? mobileImg : mainImg;
+              final String imageType =
+                  (sliderItem.imageType ?? '').toLowerCase();
+              final bool isVideo = imageType == 'video' ||
+                  urlToUse.toLowerCase().endsWith('.mp4') ||
+                  urlToUse.toLowerCase().contains('.mp4');
+
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (isVideo)
+                    VideoPlayerMenu(videoUrl: urlToUse)
+                  else
+                    Image.network(
+                      urlToUse,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Text("Image load failed"),
+                        );
+                      },
+                    ),
+                ],
+              );
+            },
+            options: CarouselOptions(
+              autoPlay: true,
+              viewportFraction: 1,
+              height: Get.height * 0.35,
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Fallback to homedashbord data if slideruser list is empty
+    final silderValue =
+        homedashbord.homeDashborData['mainSliderDetail'] as List<dynamic>?;
+    if (silderValue == null || silderValue.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return Column(
+      children: [
+        SizedBox(height: Get.height / 50),
+        CarouselSlider.builder(
+          itemCount: silderValue.length,
+          itemBuilder: (BuildContext context, int index, int realIndex) {
+            final sliderItem = silderValue[index];
+            final String mobileImg =
+                (sliderItem['mobile_img'] ?? '').toString();
+            final String mainImg = (sliderItem['image'] ?? '').toString();
+            final String urlToUse = mobileImg.isNotEmpty ? mobileImg : mainImg;
+            final String imageType =
+                (sliderItem['image_type'] ?? '').toString().toLowerCase();
+
+            final bool isVideo = imageType == 'video' ||
+                urlToUse.toLowerCase().endsWith('.mp4') ||
+                urlToUse.toLowerCase().contains('.mp4');
+
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                if (isVideo)
+                  VideoPlayerMenu(videoUrl: urlToUse)
+                else
+                  Image.network(
+                    urlToUse,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Text("Image load failed"),
+                      );
+                    },
+                  ),
+              ],
+            );
+          },
+          options: CarouselOptions(
+            autoPlay: true,
+            viewportFraction: 1,
+            height: Get.height * 0.35,
+          ),
+        ),
+      ],
+    );
+  });
+}
+
+//Offer Banner List
+Widget offerBannerList() {
+  final offerBannerCtrl = Get.put(OfferBannerCalling());
+  return Obx(() {
+    final isLoading = offerBannerCtrl.isLoading.value;
+    final banners = offerBannerCtrl.offerBanners;
+    if (isLoading && banners.isEmpty) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.22,
+          width: Get.width,
+          margin: EdgeInsets.symmetric(vertical: Get.height / 50),
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+    }
+    if (banners.isEmpty) {
       return SizedBox.shrink();
     }
     return Column(
       children: [
         SizedBox(height: Get.height / 50),
         CarouselSlider.builder(
-          itemCount: sliderData.length,
+          itemCount: banners.length,
           itemBuilder: (BuildContext context, int index, int realIndex) {
-            final sliderItem = sliderData[index];
+            final banner = banners[index];
+            final imageUrl =
+                (banner.mobileImg != null && banner.mobileImg!.isNotEmpty)
+                    ? banner.mobileImg!
+                    : (banner.image ?? '');
+
             return Stack(
               fit: StackFit.expand,
               children: [
                 Image.network(
-                  sliderItem['image'] ?? '',
+                  imageUrl,
                   fit: BoxFit.cover,
-                  loadingBuilder: (context, child, progress) {
-                    if (progress == null) return child;
-                    return Center(
-                      child: Lottie.asset(
-                        AppJson.loading2,
-                        height: 30,
-                        width: 30,
-                      ),
-                    );
-                  },
+                  width: Get.width,
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
-                      child: Text(
-                        "Image load failed",
-                      ),
+                      child: Text("Image load failed"),
                     );
                   },
                 ),
@@ -130,9 +266,330 @@ Widget Silder() {
           options: CarouselOptions(
             autoPlay: true,
             viewportFraction: 1,
-            height: Get.height * 0.25,
+            height: Get.height * 0.22,
           ),
         ),
+      ],
+    );
+  });
+}
+
+// Jewelry Section 1
+Widget jewelrySection1() {
+  final homejewelry = Get.put(Homejewelry());
+  return Obx(() {
+    final isLoading = homejewelry.isLoading.value;
+    final model = homejewelry.sectionsData.value;
+    final section1 = model?.data?.section1;
+
+    if (isLoading && section1 == null) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.28,
+          margin: EdgeInsets.symmetric(
+            vertical: Get.height * 0.02,
+            horizontal: 10,
+          ),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 4,
+            itemBuilder: (context, index) => Container(
+              width: Get.width * 0.40,
+              margin: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final items = section1?.items ?? [];
+    final String mobileImg = (section1?.mobileImg ?? '').trim();
+    final String mainImg = (section1?.image ?? '').trim();
+    final String bannerUrl = mobileImg.isNotEmpty ? mobileImg : mainImg;
+
+    if (items.isEmpty && bannerUrl.isEmpty) return SizedBox.shrink();
+
+    final title =
+        section1?.title ?? section1?.titleEn ?? "Most Thoughtful Gifts";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (bannerUrl.isNotEmpty) ...[
+          SizedBox(height: Get.height * 0.015),
+          Image.network(
+            bannerUrl,
+            width: Get.width,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const SizedBox.shrink(),
+          ),
+        ],
+        SizedBox(height: Get.height * 0.02),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: Get.width * 0.05,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Zapf',
+              color: AppColor.brown_color,
+            ),
+          ),
+        ),
+        SizedBox(height: Get.height * 0.01),
+        if (items.isNotEmpty)
+          SizedBox(
+            height: Get.height * 0.28,
+            child: ListView.builder(
+              itemCount: items.length,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final imgUrl =
+                    (item.allImages != null && item.allImages!.isNotEmpty)
+                        ? (item.allImages![0].thumb ?? '')
+                        : '';
+                return GestureDetector(
+                  onTap: () {
+                    if (item.slug != null) {
+                      Get.to(
+                        () => Showproduct(
+                          slug: item.slug!,
+                          categoryslug: item.title ?? '',
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: Get.width * 0.40,
+                    margin: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColor.pink_color.withOpacity(0.3),
+                      ),
+                      boxShadow: kElevationToShadow[2],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Image.network(
+                              imgUrl,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.image_not_supported),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          item.title ?? '',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: Get.width * 0.030,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.black_color,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "₹ ${item.settingPrice ?? 0}",
+                          style: TextStyle(
+                            fontSize: Get.width * 0.032,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.pink_color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        SizedBox(height: Get.height * 0.02),
+      ],
+    );
+  });
+}
+
+// Jewelry Section 2
+Widget jewelrySection2() {
+  final homejewelry = Get.put(Homejewelry());
+  return Obx(() {
+    final isLoading = homejewelry.isLoading.value;
+    final model = homejewelry.sectionsData.value;
+    final section2 = model?.data?.section2;
+
+    if (isLoading && section2 == null) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.28,
+          margin:
+              EdgeInsets.symmetric(vertical: Get.height * 0.02, horizontal: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 4,
+            itemBuilder: (context, index) => Container(
+              width: Get.width * 0.40,
+              margin: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final items = section2?.items ?? [];
+    final String mobileImg = (section2?.mobileImg ?? '').trim();
+    final String mainImg = (section2?.image ?? '').trim();
+    final String bannerUrl = mobileImg.isNotEmpty ? mobileImg : mainImg;
+
+    if (items.isEmpty && bannerUrl.isEmpty) return SizedBox.shrink();
+
+    final title =
+        section2?.title ?? section2?.titleEn ?? "New Timeless Editorial";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (bannerUrl.isNotEmpty) ...[
+          SizedBox(height: Get.height * 0.015),
+          Image.network(
+            bannerUrl,
+            width: Get.width,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
+        SizedBox(height: Get.height * 0.02),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: Get.width * 0.05,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Zapf',
+              color: AppColor.brown_color,
+            ),
+          ),
+        ),
+        if (section2?.descriptionEn != null &&
+            section2!.descriptionEn!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              section2.descriptionEn!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: Get.width * 0.030,
+                color: AppColor.textgray,
+              ),
+            ),
+          ),
+        ],
+        SizedBox(height: Get.height * 0.01),
+        if (items.isNotEmpty)
+          SizedBox(
+            height: Get.height * 0.28,
+            child: ListView.builder(
+              itemCount: items.length,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final imgUrl =
+                    (item.allImages != null && item.allImages!.isNotEmpty)
+                        ? (item.allImages![0].thumb ?? '')
+                        : '';
+                return GestureDetector(
+                  onTap: () {
+                    if (item.slug != null) {
+                      Get.to(
+                        () => Showproduct(
+                          slug: item.slug!,
+                          categoryslug: item.title ?? '',
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: Get.width * 0.40,
+                    margin: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: AppColor.pink_color.withOpacity(0.3),
+                      ),
+                      boxShadow: kElevationToShadow[2],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Image.network(
+                              imgUrl,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.image_not_supported),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          item.title ?? '',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: Get.width * 0.030,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.black_color,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "₹ ${item.settingPrice ?? 0}",
+                          style: TextStyle(
+                            fontSize: Get.width * 0.032,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.pink_color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        SizedBox(height: Get.height * 0.02),
       ],
     );
   });
@@ -143,36 +600,110 @@ Widget productList() {
   final homedashbord = Get.find<Homedashbord>();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
-    final productLists =
-        homedashbord.homeDashborData['maindesignledjewelleryDetail'];
-    if (isLoading) {
-      return Center(
-        child: Lottie.asset(
-          AppJson.loading2,
-          height: 50,
+    final model = homedashbord.dashboardData.value;
+    final listFromModel = model?.maindesignledjewelleryDetail;
+
+    if (isLoading && (listFromModel == null || listFromModel.isEmpty)) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height / 2.8,
+          margin: EdgeInsets.symmetric(vertical: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 4,
+            itemBuilder: (context, index) => Container(
+              width: Get.width * 0.35,
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
         ),
       );
     }
-    final productList = productLists as List<dynamic>?;
-    if (productLists == null || productLists.isEmpty) {
-      return SizedBox.shrink();
+
+    final productList = listFromModel ?? [];
+    if (productList.isEmpty) {
+      final productLists = homedashbord
+          .homeDashborData['maindesignledjewelleryDetail'] as List<dynamic>?;
+      if (productLists == null || productLists.isEmpty) {
+        return SizedBox.shrink();
+      }
+      return Column(
+        children: [
+          SizedBox(
+            height: Get.height / 2.8,
+            child: ListView.builder(
+              itemCount: productLists.length,
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                final product = productLists[index];
+                final String imgUrl =
+                    (product['mobile_img'] ?? product['image'] ?? '')
+                        .toString();
+                final String title = (product['title_en'] ?? '').toString();
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColor.white_color,
+                          border: Border.all(
+                            color: AppColor.pink_color.withOpacity(0.5),
+                          ),
+                          image: DecorationImage(
+                            image: NetworkImage(imgUrl),
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            Get.width * 0.025,
+                          ),
+                          boxShadow: kElevationToShadow[2],
+                        ),
+                        padding: EdgeInsets.all(50),
+                      ),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: AppColor.brown_color,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
     }
+
     return Column(
       children: [
         SizedBox(
           height: Get.height / 2.8,
           child: ListView.builder(
-            itemCount: productList?.length,
+            itemCount: productList.length,
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
-              final product = productList![index];
+              final product = productList[index];
+              final String imgUrl =
+                  (product.mobileImg != null && product.mobileImg!.isNotEmpty)
+                      ? product.mobileImg!
+                      : (product.image ?? '');
+              final String title = product.titleEn ?? '';
               return Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    //Frist row
                     Container(
                       decoration: BoxDecoration(
                         color: AppColor.white_color,
@@ -180,9 +711,7 @@ Widget productList() {
                           color: AppColor.pink_color.withOpacity(0.5),
                         ),
                         image: DecorationImage(
-                          image: NetworkImage(
-                            product['mobile_img'],
-                          ),
+                          image: NetworkImage(imgUrl),
                         ),
                         borderRadius: BorderRadius.circular(
                           Get.width * 0.025,
@@ -192,33 +721,7 @@ Widget productList() {
                       padding: EdgeInsets.all(50),
                     ),
                     Text(
-                      product['title_en'],
-                      style: TextStyle(
-                        color: AppColor.brown_color,
-                      ),
-                    ),
-
-                    SizedBox(height: Get.height * 0.015),
-
-                    //Second Row
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColor.white_color,
-                        border: Border.all(
-                          color: AppColor.pink_color.withOpacity(0.5),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(product['mobile_img']),
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          Get.width * 0.025,
-                        ),
-                        boxShadow: kElevationToShadow[2],
-                      ),
-                      padding: EdgeInsets.all(50),
-                    ),
-                    Text(
-                      product['title_en'],
+                      title,
                       style: TextStyle(
                         color: AppColor.brown_color,
                       ),
@@ -318,12 +821,43 @@ Widget benner() {
   final homedashbord = Get.find<Homedashbord>();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
-    final productLists = homedashbord.homeDashborData['goldMineBanner'];
-    if (isLoading) {
-      return Center(child: Lottie.asset(AppJson.loading2, height: 50));
+    final model = homedashbord.dashboardData.value;
+    final goldMineBanners = model?.goldMineBanner;
+
+    if (isLoading && (goldMineBanners == null || goldMineBanners.isEmpty)) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.25,
+          width: Get.width,
+          margin: EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
     }
-    final productList = productLists as List<dynamic>?;
-    if (productLists == null || productLists.isEmpty) {
+
+    if (goldMineBanners != null && goldMineBanners.isNotEmpty) {
+      final imgUrl = (goldMineBanners[0].mobileImg != null &&
+              goldMineBanners[0].mobileImg!.isNotEmpty)
+          ? goldMineBanners[0].mobileImg!
+          : (goldMineBanners[0].image ?? '');
+      return Container(
+        padding: EdgeInsets.all(160),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(imgUrl),
+          ),
+        ),
+      );
+    }
+
+    final rawLists =
+        homedashbord.homeDashborData['goldMineBanner'] as List<dynamic>?;
+    if (rawLists == null || rawLists.isEmpty) {
       return SizedBox.shrink();
     }
     return Container(
@@ -331,7 +865,7 @@ Widget benner() {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: NetworkImage(
-            productList![0]['mobile_img'],
+            rawLists[0]['mobile_img'] ?? rawLists[0]['image'] ?? '',
           ),
         ),
       ),
@@ -343,20 +877,88 @@ Widget instagramVideo() {
   final homedashbord = Get.find<Homedashbord>();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
-    final productLists =
-        homedashbord.homeDashborData['mainhomepagesinstareelDetail'];
-    if (isLoading) {
-      return Center(
-        child: Lottie.asset(
-          AppJson.loading2,
-          height: 50,
+    final model = homedashbord.dashboardData.value;
+    final reels = model?.mainhomepagesinstareelDetail;
+
+    if (isLoading && (reels == null || reels.isEmpty)) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.40,
+          margin: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (context, index) => Container(
+              width: Get.width * 0.45,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
         ),
       );
     }
-    final productList = productLists as List<dynamic>?;
-    if (productList == null || productList.isEmpty) {
-      return SizedBox.shrink();
+
+    final reelList = reels ?? [];
+    if (reelList.isEmpty) {
+      final rawReels = homedashbord
+          .homeDashborData['mainhomepagesinstareelDetail'] as List<dynamic>?;
+      if (rawReels == null || rawReels.isEmpty) {
+        return SizedBox.shrink();
+      }
+      return Column(
+        children: [
+          Text(
+            AppString.withPride,
+            style: TextStyle(
+              fontFamily: 'Zapf',
+              fontSize: Get.width * 0.06,
+            ),
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            AppString.customersWear,
+            style: TextStyle(
+              fontSize: Get.width * 0.030,
+              color: AppColor.textgray,
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+          CarouselSlider.builder(
+            itemCount: rawReels.length,
+            itemBuilder: (BuildContext context, int index, int realIndex) {
+              final product = rawReels[index];
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: VideoPlayerMenu(videoUrl: product['image'] ?? ''),
+                ),
+              );
+            },
+            options: CarouselOptions(
+              height: Get.height * 0.40,
+              autoPlay: true,
+              viewportFraction: 0.45,
+              enableInfiniteScroll: true,
+              autoPlayInterval: Duration(seconds: 3),
+              autoPlayAnimationDuration: Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              enlargeCenterPage: false,
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+        ],
+      );
     }
+
     return Column(
       children: [
         Text(
@@ -376,9 +978,9 @@ Widget instagramVideo() {
         ),
         SizedBox(height: Get.height * 0.02),
         CarouselSlider.builder(
-          itemCount: productList.length,
+          itemCount: reelList.length,
           itemBuilder: (BuildContext context, int index, int realIndex) {
-            final product = productList[index];
+            final product = reelList[index];
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
@@ -386,7 +988,7 @@ Widget instagramVideo() {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: VideoPlayerMenu(videoUrl: product['image'] ?? ''),
+                child: VideoPlayerMenu(videoUrl: product.image ?? ''),
               ),
             );
           },
@@ -411,19 +1013,85 @@ Widget storeSliderBanner() {
   final homedashbord = Get.find<Homedashbord>();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
-    final productLists = homedashbord.homeDashborData['editorialbannerDetail'];
-    if (isLoading) {
-      return Center(
-        child: Lottie.asset(
-          AppJson.loading2,
-          height: 50,
+    final model = homedashbord.dashboardData.value;
+    final editorialList = model?.editorialbannerDetail;
+
+    if (isLoading && (editorialList == null || editorialList.isEmpty)) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.40,
+          margin: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (context, index) => Container(
+              width: Get.width * 0.45,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
         ),
       );
     }
-    final productList = productLists as List<dynamic>?;
-    if (productLists == null || productLists.isEmpty) {
-      return SizedBox.shrink();
+
+    final productList = editorialList ?? [];
+    if (productList.isEmpty) {
+      final rawEditorial = homedashbord.homeDashborData['editorialbannerDetail']
+          as List<dynamic>?;
+      if (rawEditorial == null || rawEditorial.isEmpty) {
+        return SizedBox.shrink();
+      }
+      return Column(
+        children: [
+          Text(
+            AppString.celebrate,
+            style: TextStyle(
+              fontFamily: 'Zapf',
+              fontSize: Get.width * 0.06,
+            ),
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            AppString.elegance,
+            style: TextStyle(
+              fontSize: Get.width * 0.030,
+              color: AppColor.textgray,
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+          SizedBox(
+            height: Get.height * 0.40,
+            child: ListView.builder(
+              itemCount: rawEditorial.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                final product = rawEditorial[index];
+                return Container(
+                  width: Get.width * 0.45,
+                  margin: EdgeInsets.only(right: 5, left: 7),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: NetworkImage(product['image']),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+        ],
+      );
     }
+
     return Column(
       children: [
         Text(
@@ -445,7 +1113,7 @@ Widget storeSliderBanner() {
         SizedBox(
           height: Get.height * 0.40,
           child: ListView.builder(
-            itemCount: productList!.length,
+            itemCount: productList.length,
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             scrollDirection: Axis.horizontal,
@@ -457,7 +1125,7 @@ Widget storeSliderBanner() {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: NetworkImage(product['image']),
+                    image: NetworkImage(product.image ?? ''),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -471,23 +1139,89 @@ Widget storeSliderBanner() {
   });
 }
 
-Widget lovedCollection(){
+Widget lovedCollection() {
   final homedashbord = Get.find<Homedashbord>();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
-    final productLists = homedashbord.homeDashborData['categories'];
-    if (isLoading) {
-      return Center(
-        child: Lottie.asset(
-          AppJson.loading2,
-          height: 50,
+    final model = homedashbord.dashboardData.value;
+    final categoryList = model?.categories;
+
+    if (isLoading && (categoryList == null || categoryList.isEmpty)) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.40,
+          margin: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (context, index) => Container(
+              width: Get.width * 0.45,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
         ),
       );
     }
-    final productList = productLists as List<dynamic>?;
-    if (productLists == null || productLists.isEmpty) {
-      return SizedBox.shrink();
+
+    final productList = categoryList ?? [];
+    if (productList.isEmpty) {
+      final rawCategories =
+          homedashbord.homeDashborData['categories'] as List<dynamic>?;
+      if (rawCategories == null || rawCategories.isEmpty) {
+        return SizedBox.shrink();
+      }
+      return Column(
+        children: [
+          Text(
+            AppString.lovedCollections,
+            style: TextStyle(
+              fontFamily: 'Zapf',
+              fontSize: Get.width * 0.06,
+            ),
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            AppString.boldEngagement,
+            style: TextStyle(
+              fontSize: Get.width * 0.030,
+              color: AppColor.textgray,
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+          SizedBox(
+            height: Get.height * 0.40,
+            child: ListView.builder(
+              itemCount: rawCategories.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                final product = rawCategories[index];
+                return Container(
+                  width: Get.width * 0.45,
+                  margin: EdgeInsets.only(right: 5, left: 7),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: NetworkImage(product['image']),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: Get.height * 0.02),
+        ],
+      );
     }
+
     return Column(
       children: [
         Text(
@@ -509,7 +1243,7 @@ Widget lovedCollection(){
         SizedBox(
           height: Get.height * 0.40,
           child: ListView.builder(
-            itemCount: productList!.length,
+            itemCount: productList.length,
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             scrollDirection: Axis.horizontal,
@@ -521,7 +1255,7 @@ Widget lovedCollection(){
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: NetworkImage(product['image']),
+                    image: NetworkImage(product.image ?? ''),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -547,939 +1281,3 @@ Widget gifts() {
     ),
   );
 }
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:get/get.dart';
-// import 'package:intl/intl.dart';
-// import 'package:kohira/controller/user_inerface/menu/home/home.dart';
-// import 'package:kohira/controller/user_inerface/menu/home/menuwidget/homedashbord.dart';
-// import 'package:kohira/view/screen/menu/home/Search.dart';
-// import 'package:kohira/view/utils/app_color.dart';
-// import 'package:kohira/view/utils/app_icon.dart';
-// import 'package:kohira/view/utils/app_json.dart';
-// import 'package:kohira/view/utils/app_logo.dart';
-// import 'package:kohira/view/utils/widget/aapbar.dart';
-// import 'package:kohira/view/utils/widget/horizontalpading.dart';
-// import 'package:lottie/lottie.dart';
-// import 'package:shimmer/shimmer.dart';
-// import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-// import 'package:carousel_slider/carousel_slider.dart';
-// import '../../../utils/app_String.dart';
-// import '../../../utils/widget/inputField.dart';
-// import '../../../utils/widget/video.dart';
-// import '../category/showproduct.dart';
-// import '../category/subcategory.dart';
-// import 'menuwidget/drawer.dart';
-
-// class Home extends StatelessWidget {
-//   final home = Get.put(HomeController());
-//   final homeDashbord = Get.put(Homedashbord());
-//   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-//   Home({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     return PopScope(
-//       canPop: false,
-//       onPopInvoked: (bool didPop) async {
-//         if (didPop) return;
-//         final bool shouldPop = await showDialog(
-//           context: context,
-//           builder: (context) => AlertDialog(
-//             title: Text('Exit App?'),
-//             actions: [
-//               TextButton(
-//                 onPressed: () => Navigator.of(context).pop(false),
-//                 child: Text('No'),
-//               ),
-//               TextButton(
-//                 onPressed: () => Navigator.of(context).pop(true),
-//                 child: Text('Yes'),
-//               ),
-//             ],
-//           ),
-//         ) ?? false;
-//         if (shouldPop) Navigator.of(context).pop();
-//       },
-//       child: Scaffold(
-//         key: scaffoldKey,
-//         appBar: Appbar(
-//           prefixicon: AppIcon.menu,
-//           prefixonTap: () => scaffoldKey.currentState?.openDrawer(),
-//           logo: AppLogo.logo,
-//           suffixicon_1: AppIcon.like,
-//           suffixicon_2: AppIcon.shop,
-//         ),
-//         drawer: Drawers(),
-//         body: Container(
-//           width: Get.width,
-//           height: Get.height,
-//           decoration: BoxDecoration(color: AppColor.white_color),
-//           child: Obx(() {
-//               if (home.collection.data.isEmpty) {
-//                 return SingleChildScrollView(
-//                   child: horizontalpadding(
-//                     child: Column(
-//                       children: [
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: Container(
-//                             height: Get.height * 0.05,
-//                             decoration: BoxDecoration(
-//                               color: AppColor.white_color,
-//                               border: Border.all(color: AppColor.textfild_color),
-//                               borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
-//                             ),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: Container(
-//                             height: Get.height * 0.45,
-//                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.white_color),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: Container(
-//                             height: Get.height * 0.015,
-//                             width: Get.width / 5,
-//                             decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(8)),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: SizedBox(
-//                             height: Get.height * 0.23,
-//                             child: ListView.builder(
-//                               scrollDirection: Axis.horizontal,
-//                               itemBuilder: (BuildContext context, int index) {
-//                                 return Container(
-//                                   margin: EdgeInsets.only(right: 8),
-//                                   padding: EdgeInsets.all(5),
-//                                   decoration: BoxDecoration(border: Border.all(color: AppColor.white_color), borderRadius: BorderRadius.circular(12)),
-//                                   child: Column(
-//                                     crossAxisAlignment: CrossAxisAlignment.start,
-//                                     children: [
-//                                       Container(
-//                                         padding: EdgeInsets.all(45),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                       SizedBox(height: Get.height / 150),
-//                                       Container(
-//                                         width: Get.width / 6,
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                       SizedBox(height: Get.height / 150),
-//                                       Container(
-//                                         width: Get.width / 9,
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                       SizedBox(height: Get.height / 150),
-//                                       Container(
-//                                         width: Get.width / 13,
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 );
-//                               },
-//                             ),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                       ],
-//                     ),
-//                   ),
-//                 );
-//               }
-//               final rings = home.homejewelry.homejewelrydata['data']?['most_loved_engagement_rings'];
-//               if (rings == null || (rings is List && rings.isEmpty)) {
-//                 return SingleChildScrollView(
-//                   child: horizontalpadding(
-//                     child: Column(
-//                       children: [
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: Container(
-//                             height: Get.height * 0.05,
-//                             decoration: BoxDecoration(
-//                               color: AppColor.white_color,
-//                               border: Border.all(color: AppColor.textfild_color),
-//                               borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
-//                             ),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: Container(
-//                             height: Get.height * 0.45,
-//                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.white_color),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: Container(
-//                             height: Get.height * 0.015,
-//                             width: Get.width / 5,
-//                             decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(8)),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                         Shimmer.fromColors(
-//                           baseColor: AppColor.lodingcolor,
-//                           highlightColor: AppColor.highlightColor,
-//                           child: SizedBox(
-//                             height: Get.height * 0.23,
-//                             child: ListView.builder(
-//                               scrollDirection: Axis.horizontal,
-//                               itemBuilder: (BuildContext context, int index) {
-//                                 return Container(
-//                                   margin: EdgeInsets.only(right: 8),
-//                                   padding: EdgeInsets.all(5),
-//                                   decoration: BoxDecoration(border: Border.all(color: AppColor.white_color), borderRadius: BorderRadius.circular(12)),
-//                                   child: Column(
-//                                     crossAxisAlignment: CrossAxisAlignment.start,
-//                                     children: [
-//                                       Container(
-//                                         padding: EdgeInsets.all(45),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                       SizedBox(height: Get.height / 150),
-//                                       Container(
-//                                         width: Get.width / 6,
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                       SizedBox(height: Get.height / 150),
-//                                       Container(
-//                                         width: Get.width / 9,
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                       SizedBox(height: Get.height / 150),
-//                                       Container(
-//                                         width: Get.width / 13,
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 );
-//                               },
-//                             ),
-//                           ),
-//                         ),
-//                         SizedBox(height: Get.height / 50),
-//                       ],
-//                     ),
-//                   ),
-//                 );
-//               }
-//               final section = home.homecollction.data['3']?['collection_section_3'];
-//               if (section == null) {
-//                 return SingleChildScrollView(
-//                   child: horizontalpadding(
-//                     child: Column(
-//                     children: [
-//                       SizedBox(height: Get.height / 50),
-//                       Shimmer.fromColors(
-//                         baseColor: AppColor.lodingcolor,
-//                         highlightColor: AppColor.highlightColor,
-//                         child: Container(
-//                           height: Get.height * 0.05,
-//                           decoration: BoxDecoration(
-//                             color: AppColor.white_color,
-//                             border: Border.all(color: AppColor.textfild_color),
-//                             borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: Get.height / 50),
-//                       Shimmer.fromColors(
-//                         baseColor: AppColor.lodingcolor,
-//                         highlightColor: AppColor.highlightColor,
-//                         child: Container(
-//                           height: Get.height * 0.45,
-//                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(Get.width / 50), color: AppColor.white_color),
-//                         ),
-//                       ),
-//                       SizedBox(height: Get.height / 50),
-//                       Shimmer.fromColors(
-//                         baseColor: AppColor.lodingcolor,
-//                         highlightColor: AppColor.highlightColor,
-//                         child: Container(
-//                           height: Get.height * 0.015,
-//                           width: Get.width / 5,
-//                           decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(8)),
-//                         ),
-//                       ),
-//                       SizedBox(height: Get.height / 50),
-//                       Shimmer.fromColors(
-//                         baseColor: AppColor.lodingcolor,
-//                         highlightColor: AppColor.highlightColor,
-//                         child: SizedBox(
-//                           height: Get.height * 0.23,
-//                           child: ListView.builder(
-//                             scrollDirection: Axis.horizontal,
-//                             itemBuilder: (BuildContext context, int index) {
-//                               return Container(
-//                                 margin: EdgeInsets.only(right: 8),
-//                                 padding: EdgeInsets.all(5),
-//                                 decoration: BoxDecoration(border: Border.all(color: AppColor.white_color), borderRadius: BorderRadius.circular(12)),
-//                                 child: Column(
-//                                   crossAxisAlignment: CrossAxisAlignment.start,
-//                                   children: [
-//                                     Container(
-//                                       padding: EdgeInsets.all(45),
-//                                       decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                     ),
-//                                     SizedBox(height: Get.height / 150),
-//                                     Container(
-//                                       width: Get.width / 6,
-//                                       padding: EdgeInsets.all(10),
-//                                       decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                     ),
-//                                     SizedBox(height: Get.height / 150),
-//                                     Container(
-//                                       width: Get.width / 9,
-//                                       padding: EdgeInsets.all(10),
-//                                       decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                     ),
-//                                     SizedBox(height: Get.height / 150),
-//                                     Container(
-//                                       width: Get.width / 13,
-//                                       padding: EdgeInsets.all(10),
-//                                       decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(12)),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               );
-//                             },
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: Get.height / 50),
-//                     ],
-//                   ),
-//                   ),
-//                 );
-//               }
-//               if(home.homejewelry.homejewelrydata.isEmpty){
-//                 return Center(child:SvgPicture.asset(AppJson.noData));
-//               }
-//               final indianFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-//               return SingleChildScrollView(
-//                 scrollDirection: Axis.vertical,
-//                 child: Column(
-//                   children: [
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //SearchBar Start
-//                     horizontalpadding(child: searchField(readOnly: true, onTap: () => Get.to(Search()))),
-//                     //SearchBar End
-//
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //CarouselSlider Start
-//                     (home.slider.data.isEmpty)
-//                         ? SizedBox()
-//                         : SizedBox(
-//                             child: Column(
-//                               children: [
-//                                 CarouselSlider.builder(
-//                                   carouselController: home.pagecontroller,
-//                                   options: CarouselOptions(
-//                                     viewportFraction: 1,
-//                                     height: Get.height * 0.45,
-//                                     autoPlay: false,
-//                                     onPageChanged: home.changeCarouselIndex,
-//                                   ),
-//                                   itemCount: home.slider.data.length,
-//                                   itemBuilder: (BuildContext context, int index, int realIndex) {
-//                                     final sliderlist = home.slider.data[index];
-//                                     if (sliderlist.imageType == 'image') {
-//                                       return Stack(
-//                                         fit: StackFit.expand,
-//                                         children: [
-//                                           Image.network(
-//                                             sliderlist.image ?? '',
-//                                             fit: BoxFit.cover,
-//                                             loadingBuilder: (context, child, progress) {
-//                                               if (progress == null) return child;
-//                                               return Center(child: Lottie.asset(AppJson.loading2, height: 30, width: 30));
-//                                             },
-//                                             errorBuilder: (context, error, stackTrace) {
-//                                               return Center(child: Text("Image load failed"));
-//                                             },
-//                                           ),
-//                                           Container(
-//                                             color: Colors.black.withOpacity(0.1),
-//                                             child: Padding(
-//                                               padding: EdgeInsets.all(Get.width / 15),
-//                                               child: Column(
-//                                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                                 children: [
-//                                                   Column(
-//                                                     children: [
-//                                                       Text(sliderlist.titleEn.toString(), style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 26)),
-//                                                       SizedBox(height: Get.width / 80),
-//                                                       Text(
-//                                                         (sliderlist.subtitle == null) ? '' : sliderlist.subtitle.toString(),
-//                                                         style: TextStyle(
-//                                                           color: AppColor.white_color,
-//                                                           fontSize: Get.width / 15,
-//                                                         ),
-//                                                       ),
-//                                                     ],
-//                                                   ),
-//                                                   Align(
-//                                                     alignment: getAlignmentFromTextPosition(sliderlist.textposition),
-//                                                     child: TextButton(
-//                                                       onPressed: () {},
-//                                                       child: Container(
-//                                                         padding: EdgeInsets.only(bottom: Get.size.height / 150),
-//                                                         decoration: BoxDecoration(
-//                                                           border: Border(bottom: BorderSide(color: AppColor.pink_color, width: 2.0)),
-//                                                         ),
-//                                                         child: Text('Embraae Your Royal Glow', style: TextStyle(color: AppColor.pink_color, fontSize: Get.width / 25)),
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                 ],
-//                                               ),
-//                                             ),
-//                                           )
-//                                         ],
-//                                       );
-//                                     } else if (sliderlist.imageType == 'video') {
-//                                       return Stack(children: [
-//                                         VideoPlayerMenu(videoUrl: sliderlist.image ?? ''),
-//                                         Container(
-//                                           color: Colors.black.withOpacity(0.1),
-//                                           width: Get.width,
-//                                           child: Padding(
-//                                             padding: EdgeInsets.all(Get.width / 15),
-//                                             child: Column(
-//                                               crossAxisAlignment: CrossAxisAlignment.start,
-//                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                               children: [
-//                                                 Column(
-//                                                   children: [
-//                                                     Text(sliderlist.titleEn.toString(), style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 26)),
-//                                                     SizedBox(height: Get.width / 80),
-//                                                     Text(
-//                                                       (sliderlist.subtitle == null) ? '' : sliderlist.subtitle.toString(),
-//                                                       style: TextStyle(color: AppColor.white_color, fontSize: Get.width / 15),
-//                                                     ),
-//                                                   ],
-//                                                 ),
-//                                                 Align(
-//                                                   alignment: getAlignmentFromTextPosition(sliderlist.textposition),
-//                                                   child: TextButton(
-//                                                     onPressed: () {},
-//                                                     child: Container(
-//                                                       padding: EdgeInsets.only(bottom: Get.size.height / 150),
-//                                                       decoration: BoxDecoration(
-//                                                         border: Border(bottom: BorderSide(color: AppColor.pink_color, width: 2.0)),
-//                                                       ),
-//                                                       child: Text('Embraae Your Royal Glow', style: TextStyle(color: AppColor.pink_color, fontSize: Get.width / 25)),
-//                                                     ),
-//                                                   ),
-//                                                 ),
-//                                               ],
-//                                             ),
-//                                           ),
-//                                         )
-//                                       ]);
-//                                     } else {
-//                                       return Center(child: Text("Unsupported content"));
-//                                     }
-//                                   },
-//                                 ),
-//                                 SizedBox(height: Get.height / 60),
-//                                 AnimatedSmoothIndicator(
-//                                   activeIndex: home.activeIndex.value,
-//                                   count: home.slider.data.length,
-//                                   effect: ExpandingDotsEffect(
-//                                     dotHeight: 10,
-//                                     dotWidth: 10,
-//                                     activeDotColor: AppColor.pink_color,
-//                                     dotColor: AppColor.Appbercolor,
-//                                   ),
-//                                   onDotClicked: (index) => home.pagecontroller.animateToPage(index),
-//                                 ),
-//                                 SizedBox(height: Get.height / 60),
-//                               ],
-//                             ),
-//                           ),
-//                     //CarouselSlider End
-//
-//                     SizedBox(height: Get.height / 80),
-//
-//                     //Categorieslist Start
-//                     (home.categories.data.isEmpty)
-//                         ? SizedBox()
-//                         : Container(
-//                             decoration: BoxDecoration(color: AppColor.spicalcontainer),
-//                             child: Padding(
-//                               padding: EdgeInsets.symmetric(vertical: Get.height / 50),
-//                               child: Column(
-//                                 children: [
-//                                   horizontalpadding(
-//                                     child: Align(
-//                                       alignment: AlignmentGeometry.topLeft,
-//                                       child: Text(
-//                                         AppString.matter_heading,
-//                                         style: TextStyle(
-//                                           fontSize: Get.width * 0.060,
-//                                           fontFamily: 'Zapf',
-//                                           fontWeight: FontWeight.w600,
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ),
-//                                   Padding(
-//                                     padding: EdgeInsets.symmetric(vertical: Get.height * 0.02),
-//                                     child: SizedBox(
-//                                       height: Get.height * 0.25,
-//                                       child: ListView.builder(
-//                                         itemCount: home.categories.data.length,
-//                                         scrollDirection: Axis.horizontal,
-//                                         itemBuilder: (BuildContext context, int index) {
-//                                           final categorieslist = home.categories.data[index];
-//                                           return GestureDetector(
-//                                             onTap: () {
-//                                               categorieslist.slug;
-//                                               categorieslist.name;
-//                                               print("categorieslist :- ${categorieslist.slug}");
-//                                               Get.to(
-//                                                 () => Subcategorys(
-//                                                   subcategrorys: categorieslist.slug.toString(),
-//                                                   subcategrorysname: categorieslist.name.toString(),
-//                                                 ),
-//                                               );
-//                                             },
-//                                             child: Column(
-//                                               children: [
-//                                                 Container(
-//                                                   width: Get.width * 0.45,
-//                                                   height: Get.height * 0.20,
-//                                                   margin: EdgeInsets.only(left: Get.width * 0.04),
-//                                                   decoration: BoxDecoration(
-//                                                     border: Border.all(color: Colors.transparent),
-//                                                     borderRadius: BorderRadius.circular(Get.width / 50),
-//                                                     image: DecorationImage(
-//                                                       image: NetworkImage(categorieslist.image ?? ''),
-//                                                       fit: BoxFit.cover,
-//                                                     ),
-//                                                   ),
-//                                                 ),
-//                                                 SizedBox(height: Get.height / 150),
-//                                                 SizedBox(
-//                                                   width: Get.width * 0.25,
-//                                                   child: Text(
-//                                                     categorieslist.name.toString().length > 25 ? '${categorieslist.name.toString().substring(0, 10)}...' : categorieslist.name.toString(),
-//                                                     textAlign: TextAlign.center,
-//                                                     style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500),
-//                                                   ),
-//                                                 ),
-//                                               ],
-//                                             ),
-//                                           );
-//                                         },
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ),
-//                     //Categorieslist End
-//
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //section 1 start
-//                     Container(
-//                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
-//                       child: Padding(
-//                         padding: EdgeInsets.all(10),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text(
-//                               home.homecollction.data['2']?['collection_section_2']?['name'] ?? '',
-//                               style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.060, fontFamily: 'Zapf'),
-//                             ),
-//                             SizedBox(height: Get.height / 50),
-//                             Text(
-//                               home.homecollction.data['2']?['collection_section_2']?['description'] ?? '',
-//                               maxLines: home.kohiraDiamonds.value ? null : 3,
-//                               overflow: home.kohiraDiamonds.value ? TextOverflow.visible : TextOverflow.ellipsis,
-//                               style: TextStyle(color: AppColor.hintColor, fontSize: Get.width / 29),
-//                             ),
-//                             GestureDetector(
-//                               onTap: home.toggleKohiraDiamonds,
-//                               child: Text(
-//                                 home.kohiraDiamonds.value ? 'See Less' : 'See More',
-//                                 style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.bold),
-//                               ),
-//                             ),
-//                             Image.network(home.homecollction.data['2']?['collection_section_2']['images']?[0] ?? '')
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     //section 1 End
-//
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //Most Loverd Engagement Rings Start
-//                     Container(
-//                       width: Get.width,
-//                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
-//                       child: Padding(
-//                         padding: EdgeInsets.symmetric(vertical: Get.height / 50),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Padding(
-//                               padding: EdgeInsets.all(10),
-//                               child: Text('Most Loved Engagement Rings', style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.060, fontFamily: 'Zapf')),
-//                             ),
-//                             SizedBox(height: Get.height / 80),
-//                             SizedBox(
-//                               height: Get.height * 0.30,
-//                               child: ListView.builder(
-//                                 scrollDirection: Axis.horizontal,
-//                                 itemCount: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'].length,
-//                                 itemBuilder: (BuildContext context, int index) {
-//                                   final image = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['allImages'][0]['thumb'];
-//                                   final title = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'];
-//                                   final price = home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['setting_price'];
-//                                   return GestureDetector(
-//                                     onTap: (){
-//                                       Get.to(() => Showproduct(
-//                                         slug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['slug'],
-//                                         categoryslug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'],
-//                                       ));
-//                                     },
-//                                     child: Column(
-//                                       crossAxisAlignment: CrossAxisAlignment.start,
-//                                       children: [
-//                                         Container(
-//                                           margin: EdgeInsets.only(right: 4),
-//                                           padding: EdgeInsets.all(5),
-//                                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-//                                           child: Column(
-//                                             mainAxisAlignment: MainAxisAlignment.center,
-//                                             crossAxisAlignment: CrossAxisAlignment.center,
-//                                             children: [
-//                                               Image.network(image,width: 150,height: 150),
-//                                               SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
-//                                               SizedBox(height: Get.height / 150),
-//                                               Row(
-//                                                 children: [
-//                                                   Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w600,fontSize: Get.width / 28)),
-//                                                   SizedBox(width: Get.width / 8),
-//                                                 ],
-//                                               ),
-//                                             ],
-//                                           ),
-//                                         ),
-//                                         // Row(
-//                                         //   children: [
-//                                         //     SizedBox(width: Get.width / 60),
-//                                         //     Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
-//                                         //   ],
-//                                         // ),
-//                                       ],
-//                                     ),
-//                                   );
-//                                 },
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     //Most Loverd Engagement Rings End
-//
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //section 2 start
-//                     Container(
-//                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
-//                       child: Padding(
-//                         padding: EdgeInsets.all(10),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 Text(
-//                                   section['name'] ?? '',
-//                                   style: TextStyle(
-//                                     fontWeight: FontWeight.w500,
-//                                     fontSize: Get.width * 0.060,
-//                                     fontFamily: 'Zapf',
-//                                   ),
-//                                 ),
-//                                 SizedBox(height: Get.height / 50),
-//                                 Text(
-//                                   section['description'] ?? '',
-//                                   maxLines: home.dreemJewwlry.value ? null : 3,
-//                                   overflow: home.dreemJewwlry.value ? TextOverflow.visible : TextOverflow.ellipsis,
-//                                   style: TextStyle(
-//                                     color: AppColor.hintColor,
-//                                     fontSize: Get.width / 29,
-//                                   ),
-//                                 ),
-//                                 SizedBox(height: 8),
-//                                 GestureDetector(
-//                                   onTap: home.toggleDreemJewwlry,
-//                                   child: Text(
-//                                     home.dreemJewwlry.value ? 'See Less' : 'See More',
-//                                     style: TextStyle(
-//                                       color: AppColor.pink_color,
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                             SizedBox(height: Get.height / 40),
-//                             AspectRatio(
-//                               aspectRatio: 9 / 10,
-//                               child: VideoPlayerMenuSecond(videoUrl: section['video']),
-//                             ),
-//                             SizedBox(height: Get.height / 40),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     //section 2 End
-//
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //Featurd Jewellery Start
-//                     Container(
-//                       width: Get.width,
-//                       decoration: BoxDecoration(color: AppColor.spicalcontainer),
-//                       child: Padding(
-//                         padding: EdgeInsets.symmetric(vertical: Get.height / 50),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Padding(
-//                               padding:EdgeInsets.all(10),
-//                               child: Text('Featured Jewellery', style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.060, fontFamily: 'Zapf')),
-//                             ),
-//                             SizedBox(
-//                               height: Get.height * 0.30,
-//                               child: ListView.builder(
-//                                 scrollDirection: Axis.horizontal,
-//                                 itemCount: home.homejewelry.homejewelrydata['data']['new_arrivals'].length,
-//                                 itemBuilder: (BuildContext context, int index) {
-//                                   final image = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['allImages'][0]['thumb'];
-//                                   final title = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['title'];
-//                                   final price = home.homejewelry.homejewelrydata['data']['new_arrivals'][index]['setting_price'];
-//                                   return GestureDetector(
-//                                     onTap: (){
-//                                       Get.to(() => Showproduct(
-//                                         slug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['slug'],
-//                                         categoryslug: home.homejewelry.homejewelrydata['data']['most_loved_engagement_rings'][index]['title'],
-//                                       ));
-//                                     },
-//                                     child: Column(
-//                                       crossAxisAlignment: CrossAxisAlignment.start,
-//                                       children: [
-//                                         Container(
-//                                           margin: EdgeInsets.only(right: 4),
-//                                           padding: EdgeInsets.all(5),
-//                                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-//                                           child: Column(
-//                                             mainAxisAlignment: MainAxisAlignment.center,
-//                                             crossAxisAlignment: CrossAxisAlignment.center,
-//                                             children: [
-//                                               Image.network(image,width: 150,height: 150),
-//                                               SizedBox(width:Get.width / 3,child: Text(title,style: TextStyle(fontSize: Get.width / 32, color: AppColor.hintColor, fontWeight: FontWeight.w500))),
-//                                               SizedBox(height: Get.height / 150),
-//                                               Row(
-//                                                 children: [
-//                                                   Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w600,fontSize: Get.width / 28)),
-//                                                   SizedBox(width: Get.width / 7),
-//                                                 ],
-//                                               ),
-//                                             ],
-//                                           ),
-//                                         ),
-//                                         // Row(
-//                                         //   children: [
-//                                         //     SizedBox(width: Get.width / 60),
-//                                         //     Text(indianFormat.format(price) ,style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500)),
-//                                         //   ],
-//                                         // ),
-//                                       ],
-//                                     ),
-//                                   );
-//                                 },
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     //Featurd Jewellery End
-//
-//                     SizedBox(height: Get.height / 50),
-//
-//                     //Only Kohira Information Start
-//                     Container(
-//                       decoration: BoxDecoration(color: AppColor.hintColor2),
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         children: [
-//                           Padding(
-//                             padding: EdgeInsets.all(10),
-//                             child: Column(
-//                               children: [
-//                                 Text(
-//                                   home.homecollction.data['4']?['collection_section_4']?['name'] ?? '',
-//                                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.050, fontFamily: 'Zapf'),
-//                                 ),
-//                                 SizedBox(height: Get.height / 80),
-//                                 Text(
-//                                   home.homecollction.data['4']?['collection_section_4']?['description'] ?? '',
-//                                   style: TextStyle(color: AppColor.hintColor, fontSize: Get.width / 29),
-//                                 ),
-//                                 SizedBox(height: Get.height / 80),
-//                                 Text(
-//                                   textAlign: TextAlign.center,
-//                                   home.homecollction.data['4']?['collection_section_4']?['sub_title'] ?? '',
-//                                   style: TextStyle(fontSize: Get.width * 0.050, fontFamily: 'Lora'),
-//                                 ),
-//                                 SizedBox(height: Get.height / 80),
-//                                 Text(
-//                                   home.homecollction.data['4']?['collection_section_4']?['sub_description'] ?? '',
-//                                   style: TextStyle(color: AppColor.hintColor, fontSize: Get.width / 29),
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                           Image.network(home.homecollction.data['4']?['collection_section_4']['images'][0] ?? ''),
-//                           Padding(
-//                             padding: EdgeInsets.all(20),
-//                             child: Column(
-//                               children: [
-//                                 Row(
-//                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                   children: [
-//                                     SizedBox(
-//                                       width: Get.width / 3,
-//                                       child: Text(
-//                                         textAlign: TextAlign.center,
-//                                         home.homecollction.data['4']?['collection_section_4']?['detail'][0]['title'] ?? '',
-//                                         style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.040),
-//                                       ),
-//                                     ),
-//                                     SizedBox(height: 100, child: VerticalDivider(color: AppColor.dividercolor, thickness: 2, width: 80)),
-//                                     SizedBox(
-//                                       width: Get.width / 3,
-//                                       child: Text(
-//                                         textAlign: TextAlign.center,
-//                                         home.homecollction.data['4']?['collection_section_4']?['detail'][1]['title'] ?? '',
-//                                         style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.040),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                                 SizedBox(height: Get.height / 50),
-//                                 Divider(color: AppColor.dividercolor),
-//                                 SizedBox(height: Get.height / 50),
-//                                 Row(
-//                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                   children: [
-//                                     SizedBox(
-//                                       width: Get.width / 3,
-//                                       child: Text(
-//                                          textAlign: TextAlign.center,
-//                                          home.homecollction.data['4']?['collection_section_4']?['detail'][2]['title'] ?? '',
-//                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.040,
-//                                         ),
-//                                       ),
-//                                     ),
-//                                     SizedBox(height: 100, child: VerticalDivider(color: AppColor.dividercolor, thickness: 2, width: 80)),
-//                                     SizedBox(
-//                                       width: Get.width / 3,
-//                                       child: Text(
-//                                         textAlign: TextAlign.center,
-//                                         home.homecollction.data['4']?['collection_section_4']?['detail'][3]['title'] ?? '',
-//                                         style: TextStyle(fontWeight: FontWeight.w500, fontSize: Get.width * 0.040),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ],
-//                             ),
-//                           )
-//                         ],
-//                       ),
-//                     ),
-//                     //Only kohira Information End
-//                     SizedBox(height: Get.height / 50),
-//                   ],
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-// //Set Alignment
-//   Alignment getAlignmentFromTextPosition(String? position) {
-//     switch (position) {
-//       case 'top-left':
-//         return Alignment.topLeft;
-//       case 'top-center':
-//         return Alignment.topCenter;
-//       case 'top-right':
-//         return Alignment.topRight;
-//       case 'center-left':
-//         return Alignment.centerLeft;
-//       case 'center':
-//         return Alignment.center;
-//       case 'center-right':
-//         return Alignment.centerRight;
-//       case 'bottom-left':
-//         return Alignment.bottomLeft;
-//       case 'bottom-center':
-//         return Alignment.bottomCenter;
-//       case 'bottom-right':
-//         return Alignment.bottomRight;
-//       default:
-//         return Alignment.center;
-//     }
-//   }
-// }

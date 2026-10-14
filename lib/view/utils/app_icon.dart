@@ -77,6 +77,7 @@ class AppIcon {
           static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
           static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
           static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
+          static const ring_size = 'asset/icon/drawericon/ring_size.svg';
 
   //Paymants
   static const carts = 'asset/icon/payments/card.svg';

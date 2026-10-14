@@ -5,10 +5,12 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kohira/modal/credentials/otp.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import '../../../view/utils/app_encryption.dart';
 import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/bottomNavigation/bottomNavigation.dart';
+import '../../../view/utils/widget/pop.dart';
 import '../../database/local/localstore.dart';
 
 class OtpController extends GetxController {
@@ -54,6 +56,8 @@ class OtpController extends GetxController {
     try {
       isLoading.value = true;
       final url = Uri.parse(AppUrl.otp);
+      print('Sending To url :- $url');
+      log('Sending To url :- $url');
       final body = {
         'firstname': firstname ?? '',
         'lastname': lastname ?? '',
@@ -64,11 +68,16 @@ class OtpController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         otpDataShow.value = jsonDecode(response.body);
         log('Otp Data :- ${otpDataShow.value}');
+        final model = VerifyOtpModel.fromJson(otpDataShow.value);
+        if (model.status == false && model.message != null) {
+          ToastificationError.Error(model.message!);
+        }
       } else {
         throw Exception('Otp failed: ${response.statusCode}');
       }
     } catch (e) {
       print('Otp Error: $e');
+      ToastificationError.Error('Otp Error: $e');
     } finally {
       isLoading.value = false;
     }
@@ -86,48 +95,72 @@ class VerifyOtpController extends GetxController {
     try {
       isLoading.value = true;
       final url = Uri.parse(AppUrl.verifyotp);
+      print('Sending To url :- $url');
+      log('Sending To url :- $url');
       final body = {
         'mobileno': mobileno ?? '',
         'otp_code': otp_code ?? '',
       };
       final response = await http.post(url, body: body);
+      final jsonResponse = jsonDecode(response.body);
+      log('${AppString.rawResponse} :- $jsonResponse');
+
+      final otpModel = VerifyOtpModel.fromJson(jsonResponse);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonResponse = jsonDecode(response.body);
-        log('${AppString.rawResponse} :- $jsonResponse');
+        if (otpModel.status == true || otpModel.success == true) {
+          final dataObj = jsonResponse['data'];
+          if (dataObj != null && dataObj is Map && dataObj.containsKey('payload')) {
+            final decryptedData = AppEncryption.decryptResponse(
+              dataObj['payload'],
+              dataObj['signature'],
+            );
 
-        if (jsonResponse['success'] == true) {
-          final decryptedData = AppEncryption.decryptResponse(
-            jsonResponse['data']['payload'],
-            jsonResponse['data']['signature'],
-          );
+            if (decryptedData != null) {
+              verifyOtpData.value = decryptedData;
+              log('${AppString.decryptedData} :- ${verifyOtpData.value}');
 
-          if (decryptedData != null) {
-            verifyOtpData.value = decryptedData;
-            log('${AppString.decryptedData} :- ${verifyOtpData.value}');
+              String? token = verifyOtpData.value['token'] ??
+                  verifyOtpData.value['data']?['token'] ??
+                  verifyOtpData.value['access_token'];
 
-            // Try to find the token in different possible locations
-            String? token = verifyOtpData.value['token'] ??
-                verifyOtpData.value['data']?['token'] ??
-                verifyOtpData.value['access_token'];
-
-            if (token != null) {
-              localdatabase().saveToken(token);
-              log(AppString.navigatingtoHome);
-              Get.offAll(() => Bottom());
+              if (token != null) {
+                localdatabase().saveToken(token);
+                log(AppString.navigatingtoHome);
+                if (otpModel.message != null && otpModel.message!.isNotEmpty) {
+                  ToastificationSuccess.Success(otpModel.message!);
+                }
+                Get.offAll(() => Bottom());
+              } else {
+                log(AppString.decryption);
+              }
             } else {
-              log(AppString.decryption);
+              log(AppString.decryptionfailed);
             }
+          } else if (dataObj != null && dataObj is Map && dataObj['token'] != null) {
+            String token = dataObj['token'];
+            localdatabase().saveToken(token);
+            if (otpModel.message != null && otpModel.message!.isNotEmpty) {
+              ToastificationSuccess.Success(otpModel.message!);
+            }
+            Get.offAll(() => Bottom());
           } else {
-            log(AppString.decryptionfailed);
+            ToastificationSuccess.Success(otpModel.message ?? "Verified");
+            Get.offAll(() => Bottom());
           }
+        } else {
+          // Status / success is false (e.g. "Invalid or expired OTP")
+          ToastificationError.Error(otpModel.message ?? "Invalid or expired OTP");
         }
       } else {
-        throw Exception('Verify Otp failed: ${response.statusCode}');
+        ToastificationError.Error(otpModel.message ?? "Verify Otp failed: ${response.statusCode}");
       }
     } catch (e) {
       print('Verify Otp Error: $e');
+      ToastificationError.Error("Invalid or expired OTP");
     } finally {
       isLoading.value = false;
     }
   }
 }
+

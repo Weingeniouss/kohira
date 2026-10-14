@@ -29,8 +29,7 @@ class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
         _controller.setVolume(0.0); // Mute video
         _controller.setLooping(true);
         _controller.play();
-        setState(() {
-        });
+        setState(() {});
       });
   }
 
@@ -42,7 +41,6 @@ class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
 
   @override
   Widget build(BuildContext context) {
-
     //Loading
 
     // if (!_isReady) {
@@ -72,7 +70,8 @@ class VideoPlayerMenuContainer extends StatefulWidget {
   const VideoPlayerMenuContainer({super.key, required this.videoUrl});
 
   @override
-  _VideoPlayerMenuContainerState createState() => _VideoPlayerMenuContainerState();
+  _VideoPlayerMenuContainerState createState() =>
+      _VideoPlayerMenuContainerState();
 }
 
 class _VideoPlayerMenuContainerState extends State<VideoPlayerMenuContainer> {
@@ -349,41 +348,43 @@ class _VideoPlayerMenuSecondState extends State<VideoPlayerMenuSecond> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     if (_showControls)
-                    // Progress Slider
-                    Row(
-                      children: [
-                        // Current time
-                        Text(
-                          _formatDuration(_currentPosition),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                      // Progress Slider
+                      Row(
+                        children: [
+                          // Current time
+                          Text(
+                            _formatDuration(_currentPosition),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
 
-                        Expanded(
-                          child: Slider(
-                            value: _videoDuration.inSeconds > 0 ? _currentPosition.inSeconds / _videoDuration.inSeconds : 0,
-                            onChanged: _seekToPosition,
-                            min: 0.0,
-                            max: 1.0,
-                            activeColor: Colors.white,
-                            inactiveColor: Colors.white.withOpacity(0.3),
+                          Expanded(
+                            child: Slider(
+                              value: _videoDuration.inSeconds > 0
+                                  ? _currentPosition.inSeconds /
+                                      _videoDuration.inSeconds
+                                  : 0,
+                              onChanged: _seekToPosition,
+                              min: 0.0,
+                              max: 1.0,
+                              activeColor: Colors.white,
+                              inactiveColor: Colors.white.withOpacity(0.3),
+                            ),
                           ),
-                        ),
 
-                        // Total time
-                        Text(
-                          _formatDuration(_videoDuration),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                          // Total time
+                          Text(
+                            _formatDuration(_videoDuration),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
                     // Additional controls (visible only when controls are shown)
                     if (_showControls)

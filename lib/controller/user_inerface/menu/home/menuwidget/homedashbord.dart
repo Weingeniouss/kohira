@@ -4,11 +4,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kohira/controller/service/menu/home/homedashbord.dart';
+import 'package:kohira/modal/menu/home/dashboard.dart';
 import 'package:kohira/view/utils/app_url.dart';
 
 class Homedashbord extends GetxController {
   var isLoading = false.obs;
   var homeDashborData = {}.obs;
+  var dashboardData = Rxn<HomeDashboardModel>();
 
   @override
   void onInit() {
@@ -19,8 +22,13 @@ class Homedashbord extends GetxController {
   Future<void> homedashbord() async {
     try {
       isLoading.value = true;
+      final model = await HomeDashboardService().fetchHomeDashboard();
+      if (model != null) {
+        dashboardData.value = model;
+      }
+
       final uri = Uri.parse(AppUrl.homeDashbord);
-      final response = await http.get(uri,headers: {});
+      final response = await http.get(uri);
       if (response.statusCode == 200 || response.statusCode == 201) {
         homeDashborData.assignAll(jsonDecode(response.body));
         log("homeDashbord :- $homeDashborData");

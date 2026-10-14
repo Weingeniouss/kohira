@@ -52,8 +52,20 @@ class AppString {
   //Otp
   static const newtoKohira = 'New to Kohira? Create an account or login if you already have one';
   static const verifyotp = 'Verify otp...';
+  static const verifying = 'Verifying...';
+  static const resendOtp = 'Resend OTP';
+  static const resendOtpIn = 'Resend OTP in';
+  static const pleaseWait = 'Please Wait...';
+  static const defaultCountryCode = '+91';
 
   //Login
+  static const noInternetConnection = 'No Internet Connection';
+  static const retry = 'Retry';
+  static const errorFillAll = 'Error, Please fill All';
+  static const errorFillPassword = 'Error, Please fill Password';
+  static const errorFillEmail = 'Error, Please fill Email';
+  static const loading = 'Loading...';
+  static const or = 'Or';
   static const subsignin = 'If you have a Kohira customer account please sign in';
   static const hintemail = 'Enter Your Email';
   static const email = 'Email Address';
@@ -88,6 +100,9 @@ class AppString {
     static const celebrate = 'Celebrate Every Moment Perfectly';
     static const elegance = 'Celebrate every moment with elegance. Timeless designs crafted to perfection. Jewelry that makes every occasion shine.';
     static const gifts = 'THOUGHTFUL GIFTS, MADE SIMPLE';
+    static const mostThoughtfulGifts = 'Most Thoughtful Gifts';
+    static const newTimelessEditorial = 'New Timeless Editorial';
+    static const imageLoadFailed = 'Image load failed';
     static const withPride = 'Worn with Pride - Kohira on Instagram';
     static const customersWear = 'See how our customers wear Kohira for weddings, everyday elegance, and every moment in between. Tag @kohiradiamonds to be featured.';
     static const lovedCollections = 'Our Most Loved Collections';
