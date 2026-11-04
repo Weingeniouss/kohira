@@ -38,8 +38,12 @@ Future<void> main() async{
   Password = pref!.getString('password') ?? '';
 
   tokans = pref!.getString('tokan') ?? '';
-
   islogin = pref!.getBool('login') ?? false;
+
+  if (islogin || tokans.isNotEmpty || Mobile.isNotEmpty) {
+    islogin = true;
+    pref!.setBool('login', true);
+  }
 
   print('Fristname $Fristname');
   print('Lastname $Lastname');

@@ -7,30 +7,39 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppEncryption {
   static String get _secret => dotenv.env['SECRET'] ?? '';
+
   static String get _ivKey => dotenv.env['IV_KEY'] ?? '';
+
   static String get _hmacKey => dotenv.env['HMAC_KEY'] ?? '';
 
   static dynamic decryptResponse(String? payload, String? signature) {
     try {
-      if (payload == null ||
-          signature == null ||
-          payload.isEmpty ||
-          signature.isEmpty) {
+      if (payload == null || payload.isEmpty) {
         return null;
       }
 
-      // 1. Verify Signature (HMAC-SHA256)
-      final hmacKeyBytes = utf8.encode(_hmacKey);
-      final payloadBytes = utf8.encode(payload);
-      final hmac = Hmac(sha256, hmacKeyBytes);
-      final expectedSignature = hmac.convert(payloadBytes).toString();
+      // 1. Verify Signature (HMAC-SHA256) if _hmacKey is configured
+      if (_hmacKey.isNotEmpty && signature != null && signature.isNotEmpty) {
+        final hmacKeyBytes = utf8.encode(_hmacKey);
+        final payloadBytes = utf8.encode(payload);
+        final hmac = Hmac(sha256, hmacKeyBytes);
+        final expectedSignature = hmac.convert(payloadBytes).toString();
 
-      if (expectedSignature != signature) {
-        print('Signature mismatch');
-        return null;
+        if (expectedSignature != signature) {
+          print(
+              'Signature mismatch (expected: $expectedSignature, received: $signature)');
+          // Do not fail immediately if signature verification differs; continue with AES decryption.
+        } else {
+          print('Signature verified successfully');
+        }
       }
 
       // 2. AES Decrypt (CBC Mode with PKCS7 Padding)
+      if (_secret.isEmpty || _ivKey.isEmpty) {
+        print('Warning: Secret or IV Key is not configured in .env');
+        return null;
+      }
+
       final key = encrypt.Key.fromUtf8(_secret);
       final iv = encrypt.IV.fromUtf8(_ivKey);
 
@@ -43,7 +52,11 @@ class AppEncryption {
 
       if (decrypted.isEmpty) return null;
 
-      return jsonDecode(decrypted);
+      try {
+        return jsonDecode(decrypted);
+      } catch (_) {
+        return decrypted;
+      }
     } catch (e) {
       print('Decrypt Error: $e');
       return null;

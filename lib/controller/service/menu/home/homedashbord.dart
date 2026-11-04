@@ -17,7 +17,7 @@ class HomeDashboardService {
           ApiHeaders.heading: ApiHeaders.peramitters,
           ApiHeaders.contect: ApiHeaders.peramitters,
         },
-      );
+      ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final dashboard = homeDashboardModelFromJson(response.body);

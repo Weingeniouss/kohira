@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kohira/modal/credentials/otp.dart';
@@ -75,9 +76,12 @@ class OtpController extends GetxController {
       } else {
         throw Exception('Otp failed: ${response.statusCode}');
       }
+    } on SocketException {
+      print('Otp Network Error: SocketException');
+      ToastificationError.Error('No internet connection or server unreachable.');
     } catch (e) {
       print('Otp Error: $e');
-      ToastificationError.Error('Otp Error: $e');
+      ToastificationError.Error('Network error. Please check internet connection.');
     } finally {
       isLoading.value = false;
     }
@@ -109,52 +113,69 @@ class VerifyOtpController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (otpModel.status == true || otpModel.success == true) {
+          String? token;
+
           final dataObj = jsonResponse['data'];
-          if (dataObj != null && dataObj is Map && dataObj.containsKey('payload')) {
+          if (dataObj != null &&
+              dataObj is Map &&
+              dataObj.containsKey('payload')) {
             final decryptedData = AppEncryption.decryptResponse(
-              dataObj['payload'],
-              dataObj['signature'],
+              dataObj['payload']?.toString(),
+              dataObj['signature']?.toString(),
             );
 
             if (decryptedData != null) {
-              verifyOtpData.value = decryptedData;
-              log('${AppString.decryptedData} :- ${verifyOtpData.value}');
+              if (decryptedData is Map) {
+                verifyOtpData.value = Map<String, dynamic>.from(decryptedData);
+                log('${AppString.decryptedData} :- ${verifyOtpData.value}');
 
-              String? token = verifyOtpData.value['token'] ??
-                  verifyOtpData.value['data']?['token'] ??
-                  verifyOtpData.value['access_token'];
-
-              if (token != null) {
-                localdatabase().saveToken(token);
-                log(AppString.navigatingtoHome);
-                if (otpModel.message != null && otpModel.message!.isNotEmpty) {
-                  ToastificationSuccess.Success(otpModel.message!);
-                }
-                Get.offAll(() => Bottom());
+                token = verifyOtpData.value['token'] ??
+                    verifyOtpData.value['data']?['token'] ??
+                    verifyOtpData.value['access_token'] ??
+                    verifyOtpData.value['auth_token'] ??
+                    verifyOtpData.value['user']?['token'] ??
+                    verifyOtpData.value['payload']?['token'];
               } else {
-                log(AppString.decryption);
+                log('Decrypted data: $decryptedData');
               }
             } else {
               log(AppString.decryptionfailed);
             }
-          } else if (dataObj != null && dataObj is Map && dataObj['token'] != null) {
-            String token = dataObj['token'];
-            localdatabase().saveToken(token);
-            if (otpModel.message != null && otpModel.message!.isNotEmpty) {
-              ToastificationSuccess.Success(otpModel.message!);
-            }
-            Get.offAll(() => Bottom());
-          } else {
-            ToastificationSuccess.Success(otpModel.message ?? "Verified");
-            Get.offAll(() => Bottom());
           }
+
+          // Fallback token extraction from raw response if not found in decrypted payload
+          token ??= jsonResponse['token'] ??
+              (dataObj is Map ? dataObj['token'] : null) ??
+              jsonResponse['access_token'] ??
+              (dataObj is Map ? dataObj['access_token'] : null);
+
+          // Save mobile number, token, and login state permanently to phone
+          localdatabase().savePhoneAndLogin(
+            mobile: mobileno,
+            token: token?.toString(),
+          );
+          log(AppString.navigatingtoHome);
+
+          if (otpModel.message != null && otpModel.message!.isNotEmpty) {
+            ToastificationSuccess.Success(otpModel.message!);
+          } else {
+            ToastificationSuccess.Success("OTP Verified Successfully");
+          }
+
+          // Always redirect to Home screen when success / status is true
+          Get.offAll(() => Bottom());
         } else {
           // Status / success is false (e.g. "Invalid or expired OTP")
-          ToastificationError.Error(otpModel.message ?? "Invalid or expired OTP");
+          ToastificationError.Error(
+              otpModel.message ?? "Invalid or expired OTP");
         }
       } else {
-        ToastificationError.Error(otpModel.message ?? "Verify Otp failed: ${response.statusCode}");
+        ToastificationError.Error(
+            otpModel.message ?? "Verify Otp failed: ${response.statusCode}");
       }
+    } on SocketException {
+      print('Verify Otp Network Error: SocketException');
+      ToastificationError.Error('No internet connection or server unreachable.');
     } catch (e) {
       print('Verify Otp Error: $e');
       ToastificationError.Error("Invalid or expired OTP");
@@ -163,4 +184,3 @@ class VerifyOtpController extends GetxController {
     }
   }
 }
-

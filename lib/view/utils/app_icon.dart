@@ -1,6 +1,15 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/material.dart';
+
 class AppIcon {
+  // Material Icons
+  static const IconData imageNotSupported = Icons.image_not_supported;
+  static const IconData starIcon = Icons.star;
+  static const IconData starBorderIcon = Icons.star_border;
+  static const IconData storefrontRoundedIcon = Icons.storefront_rounded;
+  static const IconData locationPinIcon = Icons.location_pin;
+
   //inputType
   static const mail = 'asset/icon/inputType/mail.svg';
   static const password = 'asset/icon/inputType/password.svg';

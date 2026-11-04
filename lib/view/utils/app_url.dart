@@ -41,6 +41,7 @@ class AppUrl {
       static const homeDashbord = '$baseurl/home/dashboard';
       static const homepage_JewelryList = '$baseurl/homepage-JewelryList';
       static const slider = '$baseurl/home/slider';
+      static const store_locations = '$baseurl/store-locations';
       static const offerbanner = '$baseurl/home/offerbanner';
       static const homecollcation = '$baseurl/home/collections';
       static const homecJewelry = '$baseurl/home/Jewelry';

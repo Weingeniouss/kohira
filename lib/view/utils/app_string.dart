@@ -107,6 +107,8 @@ class AppString {
     static const customersWear = 'See how our customers wear Kohira for weddings, everyday elegance, and every moment in between. Tag @kohiradiamonds to be featured.';
     static const lovedCollections = 'Our Most Loved Collections';
     static const boldEngagement = 'From bold engagement rings to iconic everyday essentials - these are Kohiras most celebrated pieces Type IIA diamonds. Timeless designs Made for those who demand the best';
+    static const customerReviewsTitle = 'CUSTOMER REVIEWS';
+    static const customerReviewsSubtitle = 'Customer Reviews highlight real experiences from people who chose our designs and loved them.';
 
      //Drawer
      static const bracelet = 'Bracelet';
@@ -269,4 +271,12 @@ class AppString {
           static const shippingaddress = 'Shipping Address';
           static const payments = 'Payments';
           static const paymentstype = 'Cards, Wallet, Netbanking, UPI';
+
+          //Home & Search
+          static const designLedJewellery = 'DESIGN LED JEWELLERY';
+          static const kohiraMasterpieces = 'Kohira’s Masterpieces in Focus';
+          static const timelessEditorialElegance = 'TIMELESS EDITORIAL ELEGANCE';
+          static const noTitle = 'No Title';
+          static const ourStores = 'Our Store Locations';
+          static const experienceKohira = 'Experience Kohira in person at a boutique near you';
 }

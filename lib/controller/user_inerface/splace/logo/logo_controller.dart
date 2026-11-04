@@ -11,10 +11,18 @@ class LogoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (pref != null) {
+      islogin = pref!.getBool('login') ?? false;
+      tokans = pref!.getString('tokan') ?? '';
+      Mobile = pref!.getString('mobile') ?? '';
+    }
+
+    final bool userLoggedIn = islogin || tokans.isNotEmpty || Mobile.isNotEmpty;
+
     Future.delayed(Duration(seconds: 2), () {
       if (!navigated) {
         navigated = true;
-        Get.offAll(() => (islogin) ?  Bottom() : Otp());
+        Get.offAll(() => (userLoggedIn) ? Bottom() : Otp());
       }
     });
   }

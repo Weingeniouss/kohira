@@ -182,19 +182,21 @@ Widget buttonWidget({required OtpUiController controller}) {
                 ),
               ),
               SizedBox(height: Get.height * 0.015),
-              Obx(() => controller.otpApi.minutes.value == 0 &&
-                      controller.otpApi.seconds.value == 0
-                  ? TextButton(
-                      onPressed: () {
-                        controller.otpApi.minutes.value = 10;
-                        controller.otpApi.seconds.value = 0;
-                        controller.otpApi.startTimer();
-                      },
-                      child: Text(AppString.resendOtp),
-                    )
-                  : Text(
-                      '${AppString.resendOtpIn} ${controller.otpApi.minutes.value}:${controller.otpApi.seconds.value.toString().padLeft(2, '0')}',
-                    ))
+              Obx(
+                () => controller.otpApi.minutes.value == 0 &&
+                        controller.otpApi.seconds.value == 0
+                    ? TextButton(
+                        onPressed: () {
+                          controller.otpApi.minutes.value = 10;
+                          controller.otpApi.seconds.value = 0;
+                          controller.otpApi.startTimer();
+                        },
+                        child: Text(AppString.resendOtp),
+                      )
+                    : Text(
+                        '${AppString.resendOtpIn} ${controller.otpApi.minutes.value}:${controller.otpApi.seconds.value.toString().padLeft(2, '0')}',
+                      ),
+              )
             ],
           )
         : GestureDetector(

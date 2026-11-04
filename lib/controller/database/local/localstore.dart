@@ -180,11 +180,28 @@ class localdatabase {
   }
 
   void saveToken(String token) {
-    pref!.setString('tokan', token);
-    tokans = pref!.getString('tokan') ?? '';
-    pref!.setBool('login', true);
-    islogin = pref!.getBool('login') ?? false;
+    pref?.setString('tokan', token);
+    tokans = pref?.getString('tokan') ?? token;
+    pref?.setBool('login', true);
+    islogin = true;
     print('Saved Token :- $tokans');
+  }
+
+  void savePhoneAndLogin({String? mobile, String? token}) {
+    pref?.setBool('login', true);
+    islogin = true;
+
+    if (mobile != null && mobile.trim().isNotEmpty) {
+      pref?.setString('mobile', mobile.trim());
+      Mobile = mobile.trim();
+    }
+
+    if (token != null && token.trim().isNotEmpty) {
+      pref?.setString('tokan', token.trim());
+      tokans = token.trim();
+    }
+
+    print('Saved Phone and Login State: islogin=$islogin, Mobile=$Mobile, tokans=$tokans');
   }
 
   Future logout() async{

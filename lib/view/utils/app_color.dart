@@ -30,4 +30,5 @@ class AppColor {
   //Loding State Color
   static Color lodingcolor = Colors.grey.shade300;
   static Color highlightColor = Colors.grey.shade100;
+  static Color reviewContainerColor = Color(0xFFFFEEF0);
 }
