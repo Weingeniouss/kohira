@@ -45,6 +45,7 @@ class AppUrl {
       static const offerbanner = '$baseurl/home/offerbanner';
       static const homecollcation = '$baseurl/home/collections';
       static const homecJewelry = '$baseurl/home/Jewelry';
+      static const homenewslist = '$baseurl/home/newslist';
 
       //drawer
       static const collection = '$baseurl/collections';

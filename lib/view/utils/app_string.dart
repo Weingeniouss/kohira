@@ -279,4 +279,6 @@ class AppString {
           static const noTitle = 'No Title';
           static const ourStores = 'Our Store Locations';
           static const experienceKohira = 'Experience Kohira in person at a boutique near you';
+          static const newsTitle = 'KOHIRA IN THE NEWS';
+          static const readMore = 'READ MORE';
 }

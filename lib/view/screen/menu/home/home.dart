@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/home/homejewelry.dart';
+import 'package:kohira/controller/API/menu/home/news_list.dart';
 import 'package:kohira/controller/API/menu/home/offer_banner.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/homedashbord.dart';
 import 'package:kohira/controller/user_inerface/menu/overStore/store_locations_controller.dart';
 import 'package:kohira/modal/menu/home/dashboard.dart';
@@ -62,6 +64,7 @@ class Home extends StatelessWidget {
               lovedCollection(),
               promise(),
               storeLocationsSection(),
+              horizontalpadding(child: newsListSection()),
             ],
           ),
         ),
@@ -2192,4 +2195,133 @@ Widget gifts() {
       ),
     ),
   );
+}
+
+Widget newsListSection() {
+  final newsController = Get.put(NewsListCalling());
+  return Obx(() {
+    if (newsController.isLoading.value && newsController.newsItems.isEmpty) {
+      return Shimmer.fromColors(
+        baseColor: AppColor.lodingcolor,
+        highlightColor: AppColor.highlightColor,
+        child: Container(
+          height: Get.height * 0.4,
+          margin: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      );
+    }
+
+    final items = newsController.newsItems;
+    if (items.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return Column(
+      children: [
+        SizedBox(height: Get.height * 0.02),
+        Text(
+          AppString.newsTitle,
+          style: TextStyle(
+            fontFamily: 'Zapf',
+            fontSize: Get.width * 0.06,
+            fontWeight: FontWeight.bold,
+            color: AppColor.brown_color,
+          ),
+        ),
+        SizedBox(height: Get.height * 0.02),
+        CarouselSlider.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index, realIndex) {
+            final item = items[index];
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(20),
+                border:
+                    Border.all(color: AppColor.dividercolor.withOpacity(0.6)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (item.imageLogo != null && item.imageLogo!.isNotEmpty)
+                    Image.network(
+                      item.imageLogo!,
+                      height: 50,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(AppIcon.imageNotSupported),
+                    )
+                  else
+                    SizedBox.shrink(),
+                  SizedBox(height: 8),
+                  Text(
+                    item.descriptionEn ?? '',
+                    textAlign: TextAlign.center,
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: Get.width * 0.038,
+                      color: AppColor.textgray,
+                      height: 1.4,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  if (item.buttonlink != null && item.buttonlink!.isNotEmpty)
+                    InkWell(
+                      onTap: () async {
+                        final url = Uri.parse(item.buttonlink!);
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url,
+                              mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: AppColor.black_color, width: 1.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          AppString.readMore,
+                          style: TextStyle(
+                            fontSize: Get.width * 0.035,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                            color: AppColor.black_color,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+          options: CarouselOptions(
+            height: Get.height * 0.42,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 4),
+            viewportFraction: 0.85,
+            enlargeCenterPage: true,
+          ),
+        ),
+        SizedBox(height: Get.height * 0.02),
+      ],
+    );
+  });
 }
