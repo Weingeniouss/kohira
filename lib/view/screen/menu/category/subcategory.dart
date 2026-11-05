@@ -447,8 +447,8 @@ class _SubcategorysState extends State<Subcategorys> {
                     ),
                     decoration: BoxDecoration(
                       color: AppColor.white_color,
-                      border: Border.all(color: AppColor.pink_color),
-                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: AppColor.grey_color),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -457,7 +457,7 @@ class _SubcategorysState extends State<Subcategorys> {
                           "Clear All",
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColor.pink_color,
+                            color: AppColor.grey_color,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -472,10 +472,9 @@ class _SubcategorysState extends State<Subcategorys> {
                 margin: EdgeInsets.only(right: 8),
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColor.pink_color.withOpacity(0.12),
-                  border:
-                      Border.all(color: AppColor.pink_color.withOpacity(0.5)),
-                  borderRadius: BorderRadius.circular(18),
+                  color: AppColor.spicalcontainer,
+                  border: Border.all(color: AppColor.textfild_color),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -484,7 +483,7 @@ class _SubcategorysState extends State<Subcategorys> {
                       chip['label']!,
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColor.pink_color,
+                        color: AppColor.black_color,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -496,7 +495,7 @@ class _SubcategorysState extends State<Subcategorys> {
                       child: Icon(
                         Icons.close,
                         size: 14,
-                        color: AppColor.pink_color,
+                        color: AppColor.grey_color,
                       ),
                     ),
                   ],

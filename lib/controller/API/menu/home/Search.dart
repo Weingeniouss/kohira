@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/dio_client.dart';

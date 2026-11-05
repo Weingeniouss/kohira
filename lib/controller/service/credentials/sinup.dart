@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names
 
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:kohira/view/utils/dio_client.dart';
 import '../../../modal/credentials/sinup.dart';
 import '../../../view/utils/app_url.dart';
