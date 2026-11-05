@@ -31,16 +31,18 @@ PreferredSizeWidget Appbar({
   final bottamSelect = Get.put(Bottamnavigation());
   final count = Get.put(CountController());
   final bool isGuest = (tokans.isEmpty ?? true);
+
   if (isGuest) {
     cartCount = pref!.getString('count') ?? '0';
     wishCount = pref!.getString('wishcount') ?? '0';
   }
+
+  final String? titleText = hedingname ?? hedingname_2;
+
   return PreferredSize(
     preferredSize: Size.fromHeight(appbarsize),
     child: Container(
-      decoration: BoxDecoration(
-        color: AppColor.white_color,
-      ),
+      color: AppColor.white_color,
       child: SafeArea(
         child: Container(
           height: appbarsize,
@@ -49,233 +51,79 @@ PreferredSizeWidget Appbar({
             boxShadow: kElevationToShadow[2],
           ),
           child: Stack(
+            alignment: Alignment.center,
             children: [
-              horizontalpadding(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget?>[
-                    // Prefix Icon
-                    (prefixicon != null && prefixonTap != null)
-                        ? GestureDetector(
-                            onTap: prefixonTap,
-                            child: Container(
-                              color: AppColor.white_color,
-                              padding: EdgeInsets.only(
-                                right: (suffixicon_1 == null &&
-                                        suffixicon_2 == null)
-                                    ? 1
-                                    : 0,
-                                bottom: 28,
-                                top: 25,
-                              ),
-                              child: SvgPicture.asset(prefixicon),
-                            ),
-                          )
-                        : null,
-
-                    // Left Icon
-                    // (lefticon != null)
-                    //     ? GestureDetector(
-                    //         onTap: () {
-                    //           if (onTaplefticon != null) {
-                    //             onTaplefticon();
-                    //           } else {
-                    //             Get.back();
-                    //           }
-                    //         },
-                    //         child: Container(
-                    //           color: AppColor.white_color,
-                    //           padding: EdgeInsets.only(
-                    //             right: 5,
-                    //             bottom: 28,
-                    //             top: 28,
-                    //           ),
-                    //           child: SvgPicture.asset(lefticon),
-                    //         ),
-                    //       )
-                    //     : SizedBox.shrink(),
-
-                    // (logo != null) ? SizedBox(width: Get.width / 7) : null,
-                    (logo != null) ? Image.asset(logo, scale: 15) : null,
-
-                    // SizedBox(),
-
-                    // Middle Heading
-                    (hedingname != null)
-                        ? Text(
-                            hedingname,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: Get.width / 23,
-                              fontWeight: FontWeight.w600,
-                              color: AppColor.pink_color,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-
-                    // Second Heading (when no hedingname)
-                    (hedingname_2 != null && hedingname == null)
-                        ? Expanded(
-                            child: Text(
-                              hedingname_2,
-                              softWrap: true,
-                              overflow: TextOverflow.visible,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: Get.width / 23,
-                                fontWeight: FontWeight.w600,
-                                color: AppColor.pink_color,
-                              ),
-                            ),
-                          )
-                        : null,
-
-                    SizedBox(width: Get.width * 0.20),
-
-                    // Wishlist + Cart
-                    (lefticon != null) ? null : SizedBox(),
-
-                    Row(
-                      children: [
-                        // Wishlist
-                        if (suffixicon_1 != null)
-                          Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              GestureDetector(
-                                onTap: () => Get.to(() => WishlistScreen()),
-                                child: Container(
-                                  color: AppColor.white_color,
-                                  padding: EdgeInsets.only(top: 20, bottom: 20),
-                                  child: SvgPicture.asset(suffixicon_1),
-                                ),
-                              ),
-                              (isGuest)
-                                  ? Positioned(
-                                      right: -10,
-                                      top: 8,
-                                      child: CircleAvatar(
-                                        radius: 10,
-                                        backgroundColor: AppColor.pink_color,
-                                        child: Text(
-                                          wishCount,
-                                          style: TextStyle(
-                                            color: AppColor.white_color,
-                                            fontSize: Get.width / 38,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Obx(() {
-                                      if (count.isLoading.value ||
-                                          count.data == null ||
-                                          count.data['wishlist'] == null ||
-                                          count.data['wishlist']['count'] ==
-                                              0) {
-                                        return SizedBox.shrink();
-                                      }
-                                      return Positioned(
-                                        right: -10,
-                                        top: 8,
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: AppColor.pink_color,
-                                          child: Text(
-                                            count.data['wishlist']['count']
-                                                .toString(),
-                                            style: TextStyle(
-                                              color: AppColor.white_color,
-                                              fontSize: Get.width / 38,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                            ],
-                          ),
-
-                        SizedBox(width: Get.width / 35),
-
-                        //Cart
-                        if (suffixicon_2 != null)
-                          Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Bottom();
-                                  bottamSelect.indexThree();
-                                  Get.back();
-                                  Get.back();
-                                },
-                                child: Container(
-                                  color: AppColor.white_color,
-                                  padding: EdgeInsets.only(top: 21, bottom: 21),
-                                  child: SvgPicture.asset(suffixicon_2),
-                                ),
-                              ),
-                              (isGuest)
-                                  ? Positioned(
-                                      right: -10,
-                                      top: 8,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Bottom();
-                                          bottamSelect.indexThree();
-                                          Get.back();
-                                          Get.back();
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: AppColor.pink_color,
-                                          child: Text(
-                                            cartCount,
-                                            style: TextStyle(
-                                              color: AppColor.white_color,
-                                              fontSize: Get.width / 38,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Obx(() {
-                                      if (count.isLoading.value ||
-                                          count.data == null ||
-                                          count.data['cart'] == null ||
-                                          count.data['cart']['count'] == 0) {
-                                        return SizedBox.shrink();
-                                      }
-                                      return Positioned(
-                                        right: -10,
-                                        top: 8,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Bottom();
-                                            bottamSelect.indexThree();
-                                            Get.back();
-                                            Get.back();
-                                          },
-                                          child: CircleAvatar(
-                                            radius: 10,
-                                            backgroundColor:
-                                                AppColor.pink_color,
-                                            child: Text(
-                                              count.data['cart']['count']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                color: AppColor.white_color,
-                                                fontSize: Get.width / 38,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                            ],
-                          ),
-                      ],
+              // 1. Perfectly Centered Title or Logo
+              if (titleText != null && titleText.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 70),
+                  child: Text(
+                    titleText,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: Get.width / 23,
+                      fontWeight: FontWeight.w600,
+                      color: AppColor.pink_color,
                     ),
-                  ].whereType<Widget>().toList(),
+                  ),
+                )
+              else if (logo != null)
+                Image.asset(logo, scale: 15),
+
+              // 2. Left Action Icons
+              Positioned(
+                left: 16,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (prefixicon != null && prefixonTap != null)
+                      GestureDetector(
+                        onTap: prefixonTap,
+                        child: Container(
+                          color: AppColor.white_color,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: SvgPicture.asset(prefixicon),
+                        ),
+                      ),
+                    if (lefticon != null)
+                      GestureDetector(
+                        onTap: () {
+                          if (onTaplefticon != null) {
+                            onTaplefticon();
+                          } else {
+                            Get.back();
+                          }
+                        },
+                        child: Container(
+                          color: AppColor.white_color,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: SvgPicture.asset(lefticon),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+              // 3. Right Action Icons (Wishlist & Cart)
+              Positioned(
+                right: 16,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Wishlist Icon
+                    if (suffixicon_1 != null)
+                      _buildWishlistIcon(suffixicon_1, isGuest, count),
+
+                    if (suffixicon_1 != null && suffixicon_2 != null)
+                      SizedBox(width: Get.width / 35),
+
+                    // Cart Icon
+                    if (suffixicon_2 != null)
+                      _buildCartIcon(
+                          suffixicon_2, isGuest, count, bottamSelect),
+                  ],
                 ),
               ),
             ],
@@ -283,5 +131,130 @@ PreferredSizeWidget Appbar({
         ),
       ),
     ),
+  );
+}
+
+Widget _buildWishlistIcon(
+    String iconPath, bool isGuest, CountController count) {
+  return Stack(
+    clipBehavior: Clip.none,
+    children: [
+      GestureDetector(
+        onTap: () => Get.to(() => WishlistScreen()),
+        child: Container(
+          color: AppColor.white_color,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: SvgPicture.asset(iconPath),
+        ),
+      ),
+      Positioned(
+        right: -8,
+        top: 4,
+        child: isGuest
+            ? CircleAvatar(
+                radius: 10,
+                backgroundColor: AppColor.pink_color,
+                child: Text(
+                  wishCount,
+                  style: TextStyle(
+                    color: AppColor.white_color,
+                    fontSize: Get.width / 38,
+                  ),
+                ),
+              )
+            : Obx(() {
+                if (count.isLoading.value ||
+                    count.data == null ||
+                    count.data['wishlist'] == null ||
+                    count.data['wishlist']['count'] == 0) {
+                  return const SizedBox.shrink();
+                }
+                return CircleAvatar(
+                  radius: 10,
+                  backgroundColor: AppColor.pink_color,
+                  child: Text(
+                    count.data['wishlist']['count'].toString(),
+                    style: TextStyle(
+                      color: AppColor.white_color,
+                      fontSize: Get.width / 38,
+                    ),
+                  ),
+                );
+              }),
+      ),
+    ],
+  );
+}
+
+Widget _buildCartIcon(String iconPath, bool isGuest, CountController count,
+    Bottamnavigation bottamSelect) {
+  return Stack(
+    clipBehavior: Clip.none,
+    children: [
+      GestureDetector(
+        onTap: () {
+          Bottom();
+          bottamSelect.indexThree();
+          Get.back();
+          Get.back();
+        },
+        child: Container(
+          color: AppColor.white_color,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: SvgPicture.asset(iconPath),
+        ),
+      ),
+      Positioned(
+        right: -8,
+        top: 4,
+        child: isGuest
+            ? GestureDetector(
+                onTap: () {
+                  Bottom();
+                  bottamSelect.indexThree();
+                  Get.back();
+                  Get.back();
+                },
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: AppColor.pink_color,
+                  child: Text(
+                    cartCount,
+                    style: TextStyle(
+                      color: AppColor.white_color,
+                      fontSize: Get.width / 38,
+                    ),
+                  ),
+                ),
+              )
+            : Obx(() {
+                if (count.isLoading.value ||
+                    count.data == null ||
+                    count.data['cart'] == null ||
+                    count.data['cart']['count'] == 0) {
+                  return const SizedBox.shrink();
+                }
+                return GestureDetector(
+                  onTap: () {
+                    Bottom();
+                    bottamSelect.indexThree();
+                    Get.back();
+                    Get.back();
+                  },
+                  child: CircleAvatar(
+                    radius: 10,
+                    backgroundColor: AppColor.pink_color,
+                    child: Text(
+                      count.data['cart']['count'].toString(),
+                      style: TextStyle(
+                        color: AppColor.white_color,
+                        fontSize: Get.width / 38,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+      ),
+    ],
   );
 }

@@ -2,10 +2,11 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 
 class JewellerydetailCall extends GetxController {
@@ -15,16 +16,19 @@ class JewellerydetailCall extends GetxController {
   Future<void> jewellerydetailservices({required String slug}) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse("${AppUrl.jewelleryDetail}/$slug");
+      final url = "${AppUrl.jewelleryDetail}/$slug";
       print("Sending request to: $url");
-      final response = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final response = await DioClient.dio.get(
+        url,
+        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
+        data.value = jsonDecode(response.data.toString());
         log('Jewellery detail :- $data');
       } else {
-        'Jewellery detail Error :- ${response.statusCode}, ${response.body}';
-        ToastificationError.Error("Jewellery detail Error :- ${response.statusCode}, ${response.body}");
+        'Jewellery detail Error :- ${response.statusCode}, ${response.data}';
+        ToastificationError.Error("Jewellery detail Error :- ${response.statusCode}, ${response.data}");
       }
     } catch (e) {
       ToastificationError.Error("Jewellery detail Error :- $e");

@@ -1,4 +1,3 @@
-
 // ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:kohira/view/screen/menu/over%20Store/overStoredetails.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -19,7 +19,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
-import 'package:http/http.dart' as http;
 
 class Overstore extends StatefulWidget {
   const Overstore({super.key});
@@ -208,12 +207,9 @@ class _OverstoreState extends State<Overstore> {
                       final cityname = details['store_city']['cityname'];
                       final image =  details['store_image_path'];
 
-                      // Extract latitude and longitude from your data
-                      // You'll need to adjust these based on your API response structure
                       final double lat = double.tryParse(details['latitude']?.toString() ?? '0') ?? 0;
                       final double lng = double.tryParse(details['longitude']?.toString() ?? '0') ?? 0;
 
-                      // Safety: if seePeraList is not long enough, expand it
                       if (over.seePeraList.length < stores['allstoreList'].length) {
                         over.seePeraList = List.filled(stores['allstoreList'].length, false);
                       }
@@ -343,12 +339,11 @@ Widget buildCityImage(String url) {
   }
 
   if (url.toLowerCase().endsWith(".svg")) {
-    // For SVG we validate before showing
     return FutureBuilder<bool>(
       future: _isValidSvg(url),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _defaultCityIcon(); // show placeholder while loading
+          return _defaultCityIcon();
         }
         if (snapshot.hasData && snapshot.data == true) {
           return SvgPicture.network(
@@ -358,13 +353,12 @@ Widget buildCityImage(String url) {
             placeholderBuilder: (context) => _defaultCityIcon(),
           );
         } else {
-          return _defaultCityIcon(); // fallback if invalid
+          return _defaultCityIcon();
         }
       },
     );
   }
 
-  // Otherwise treat as normal image
   return Image.network(
     url,
     height: 60,
@@ -382,13 +376,11 @@ Widget _defaultCityIcon() {
   );
 }
 
-/// check if given URL returns a valid SVG response
 Future<bool> _isValidSvg(String url) async {
   try {
-    final res = await http.get(Uri.parse(url));
+    final res = await DioClient.dio.get(url);
     if (res.statusCode == 200) {
-      final body = res.body.toLowerCase();
-      // crude check: svg file should contain `<svg`
+      final body = res.data.toString().toLowerCase();
       return body.contains("<svg");
     }
   } catch (e) {

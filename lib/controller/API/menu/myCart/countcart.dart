@@ -3,14 +3,15 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/dio_client.dart';
 import '../../../../view/utils/API_headers.dart';
 import '../../../../view/utils/app_url.dart';
 import '../../../../view/utils/app_constants.dart';
 import '../../../../view/utils/widget/pop.dart';
 
-class CountCart extends GetxController{
+class CountCart extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
@@ -20,13 +21,12 @@ class CountCart extends GetxController{
     String? ringsize,
     String? metal_type,
     String? metal_stamp,
-    String? sideDiaGrpId
-  })
-  async{
-    try{
+    String? sideDiaGrpId,
+  }) async {
+    try {
       isLoading.value = true;
 
-      final url = Uri.parse(AppUrl.countcart);
+      final url = AppUrl.countcart;
       final body = {
         if (jewelryid != null) 'jewelryid': jewelryid,
         if (qty != null) 'qty': qty.toString(),
@@ -34,27 +34,35 @@ class CountCart extends GetxController{
         if (metal_type != null) 'metal_type': metal_type,
         if (metal_stamp != null) 'metal_stamp': metal_stamp,
         if (sideDiaGrpId != null) 'sideDiaGrpId': sideDiaGrpId,
-      }..removeWhere((key,value) => value == null);
+      }..removeWhere((key, value) => value == null);
 
-      final responses = await http.post(url,body: body,headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final responses = await DioClient.dio.post(
+        url,
+        data: body,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
+      );
       print('Sending request to: $url');
       print('Countingcart body :- $body');
 
-      if(responses.statusCode == 200 || responses.statusCode == 201){
-        data.value = jsonDecode(responses.body);
+      if (responses.statusCode == 200 || responses.statusCode == 201) {
+        data.value = jsonDecode(responses.data.toString());
         log("CountCart data :- $data");
-        // ToastificationSuccess.Success(data['message']);
-      }else{
-        throw{
-          'Fetchcart data Error This :- ${responses.statusCode}, ${responses.body}',
-          print('CountCart data this :- ${responses.statusCode}, ${responses.body}'),
-          ToastificationError.Error("CountCart data this :- ${responses.statusCode}, ${responses.body}"),
+      } else {
+        throw {
+          'Fetchcart data Error This :- ${responses.statusCode}, ${responses.data}',
+          print('CountCart data this :- ${responses.statusCode}, ${responses.data}'),
+          ToastificationError.Error("CountCart data this :- ${responses.statusCode}, ${responses.data}"),
         };
       }
-    }catch(e){
+    } catch (e) {
       print("Fetchcart data Error This :- $e");
       ToastificationError.Error("Fetchcart data Error This :- $e");
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }

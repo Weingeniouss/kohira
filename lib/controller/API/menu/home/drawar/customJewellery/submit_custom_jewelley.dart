@@ -2,13 +2,14 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart' as dio_pkg;
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/dio_client.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 
-class SubmitCustomJewelley extends GetxController{
+class SubmitCustomJewelley extends GetxController {
   var isLoading = false.obs;
   var customData = {}.obs;
 
@@ -48,13 +49,12 @@ class SubmitCustomJewelley extends GetxController{
     final String? token,
     final String? captcha,
   }) async {
-    final apiUrl = Uri.parse(AppUrl.addcustom);
+    final apiUrl = AppUrl.addcustom;
     print('📤 Sending To Url :- $apiUrl');
 
     try {
       isLoading(true);
 
-      // ✅ Step 1: Build sideStone list dynamically
       List<Map<String, dynamic>> sideStoneData = [];
       if (shape != null && color != null) {
         for (int i = 0; i < shape.length; i++) {
@@ -68,8 +68,7 @@ class SubmitCustomJewelley extends GetxController{
 
       print('💎 sideStone Data :- ${jsonEncode(sideStoneData)}');
 
-      // ✅ Step 2: Build request body (same spelling)
-      final body = {
+      final Map<String, dynamic> formMap = {
         'jewelrytype': jewelrytype,
         'subcategory_id': subcategory_id,
         'userid': userid,
@@ -96,45 +95,41 @@ class SubmitCustomJewelley extends GetxController{
         'diamMaxSelectedCarat': diamMaxSelectedCarat,
         'sideStoneSelect': sideStoneSelect,
         'currency_id': currency_id,
-        'captcha' : captcha,
+        'captcha': captcha,
         'sideStone': jsonEncode(sideStoneData),
       }..removeWhere((key, value) => value == null);
 
-      print('📦 Final Body (Cleaned) :- $body');
-
-      // ✅ Step 3: Create Multipart Request
-      var request = http.MultipartRequest('POST', apiUrl);
-      request.fields.addAll(body.map((key, value) => MapEntry(key, value.toString())));
-
-      // ✅ Step 4: Add Image & Video (if exist)
       if (image != null) {
-        request.files.add(await http.MultipartFile.fromPath('image', image.path));
+        formMap['image'] = await dio_pkg.MultipartFile.fromFile(image.path);
       }
       if (video != null) {
-        request.files.add(await http.MultipartFile.fromPath('video', video.path));
+        formMap['video'] = await dio_pkg.MultipartFile.fromFile(video.path);
       }
 
-      // ✅ Step 5: Add headers
-      request.headers.addAll({
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${token ?? ""}',
-        ApiHeaders.heading: ApiHeaders.peramitters,
-      });
+      final formData = dio_pkg.FormData.fromMap(formMap);
 
-      // ✅ Step 6: Send request
-      print('🚀 Uploading request...');
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
+      print('🚀 Uploading request with Dio...');
+      final response = await DioClient.dio.post(
+        apiUrl,
+        data: formData,
+        options: dio_pkg.Options(
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${token ?? ""}',
+            ApiHeaders.heading: ApiHeaders.peramitters,
+          },
+        ),
+      );
 
       print('📩 Status Code: ${response.statusCode}');
-      print('📩 Response Body: ${response.body}');
+      print('📩 Response Body: ${response.data}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        customData.value = jsonDecode(response.body);
+        customData.value = jsonDecode(response.data.toString());
         print('✅ Custom Jewellery Response :- $customData');
         ToastificationSuccess.Success(customData.value['message']);
       } else {
-        throw Exception('${response.statusCode}, ${response.body}');
+        throw Exception('${response.statusCode}, ${response.data}');
       }
     } catch (e) {
       print('❌ Error sending custom jewellery request :- $e');

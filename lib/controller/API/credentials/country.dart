@@ -3,11 +3,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import '../../../modal/credentials/country.dart';
 import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/pop.dart';
@@ -42,7 +43,6 @@ class CountryCalling extends GetxController {
   }
 }
 
-
 class StateCalling extends GetxController {
   var isLoading = false.obs;
   var states = <dynamic>[].obs;
@@ -51,20 +51,22 @@ class StateCalling extends GetxController {
   Future<void> stateList(String countryid) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.state);
+      final url = AppUrl.state;
       final body = {'countryid': countryid};
 
-      final response = await http.post(
+      final response = await DioClient.dio.post(
         url,
-        body: body,
-        headers: {
-          ApiHeaders.heading: ApiHeaders.peramitters,
-          ApiHeaders.authorization: tokans,
-        },
+        data: body,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(response.data.toString());
         log("Raw State API Response: $data");
 
         if (data != null && data["states"] != null) {
@@ -78,7 +80,7 @@ class StateCalling extends GetxController {
 
         log("State List :- ${states.value}");
       } else {
-        throw 'State Value Error :- ${response.statusCode}, ${response.body}';
+        throw 'State Value Error :- ${response.statusCode}, ${response.data}';
       }
     } catch (e) {
       print('State Value Error :- $e');

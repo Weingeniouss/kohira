@@ -3,11 +3,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/controller/service/menu/home/homedashbord.dart';
 import 'package:kohira/modal/menu/home/dashboard.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 
 class Homedashbord extends GetxController {
   var isLoading = false.obs;
@@ -45,10 +45,10 @@ class Homedashbord extends GetxController {
         dashboardData.value = model;
       }
 
-      final uri = Uri.parse(AppUrl.homeDashbord);
-      final response = await http.get(uri).timeout(const Duration(seconds: 15));
+      final url = AppUrl.homeDashbord;
+      final response = await DioClient.dio.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final bodyString = response.body;
+        final bodyString = response.data.toString();
         homeDashborData.assignAll(jsonDecode(bodyString));
         pref?.setString('cached_home_dashboard', bodyString);
         log("homeDashbord :- $homeDashborData");
@@ -94,10 +94,10 @@ class HomepageJewelryList extends GetxController {
       if (homeJewelryListData.isEmpty) {
         isLoading.value = true;
       }
-      final uri = Uri.parse(AppUrl.homepage_JewelryList);
-      final response = await http.get(uri).timeout(const Duration(seconds: 15));
+      final url = AppUrl.homepage_JewelryList;
+      final response = await DioClient.dio.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final bodyString = response.body;
+        final bodyString = response.data.toString();
         homeJewelryListData.assignAll(jsonDecode(bodyString));
         pref?.setString('cached_home_jewelry_list', bodyString);
         log("homeJewelryListData :- $homeJewelryListData");

@@ -2,13 +2,13 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import '../../../../view/utils/app_url.dart';
 
-//Fetch items
 class FetchcartCalling extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
@@ -17,19 +17,25 @@ class FetchcartCalling extends GetxController {
     try {
       isLoading.value = true;
 
-      final url = Uri.parse('${AppUrl.cart}?flag=${flag ?? ''}&qty=${qty ?? ''}&cart=${cart ?? ''}&type=${type ?? ''}');
+      final url = '${AppUrl.cart}?flag=${flag ?? ''}&qty=${qty ?? ''}&cart=${cart ?? ''}&type=${type ?? ''}';
       print('Sending request to: $url');
-      final responses = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final responses = await DioClient.dio.get(
+        url,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
+      );
 
       if (responses.statusCode == 200 || responses.statusCode == 201) {
-        data.value = jsonDecode(responses.body);
+        data.value = jsonDecode(responses.data.toString());
         log('Fetchcart data :- $data');
-        // ToastificationSuccess.Success(data['message']);
       } else {
         throw {
-          'Fetchcart data Error This :- ${responses.statusCode}, ${responses.body}',
-          print('CountCart data this :- ${responses.statusCode}, ${responses.body}'),
-          // handleHttpError(responses.statusCode),
+          'Fetchcart data Error This :- ${responses.statusCode}, ${responses.data}',
+          print('CountCart data this :- ${responses.statusCode}, ${responses.data}'),
         };
       }
     } catch (e) {

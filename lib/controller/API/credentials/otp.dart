@@ -5,9 +5,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/modal/credentials/otp.dart';
 import 'package:kohira/view/utils/app_string.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import '../../../view/utils/app_encryption.dart';
 import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/bottomNavigation/bottomNavigation.dart';
@@ -56,7 +56,7 @@ class OtpController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.otp);
+      final url = AppUrl.otp;
       print('Sending To url :- $url');
       log('Sending To url :- $url');
       final body = {
@@ -65,9 +65,9 @@ class OtpController extends GetxController {
         'mobileno': mobileno ?? '',
         'countrycode': countrycode ?? '',
       };
-      final response = await http.post(url, body: body);
+      final response = await DioClient.dio.post(url, data: body);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        otpDataShow.value = jsonDecode(response.body);
+        otpDataShow.value = jsonDecode(response.data.toString());
         log('Otp Data :- ${otpDataShow.value}');
         final model = VerifyOtpModel.fromJson(otpDataShow.value);
         if (model.status == false && model.message != null) {
@@ -98,15 +98,15 @@ class VerifyOtpController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.verifyotp);
+      final url = AppUrl.verifyotp;
       print('Sending To url :- $url');
       log('Sending To url :- $url');
       final body = {
         'mobileno': mobileno ?? '',
         'otp_code': otp_code ?? '',
       };
-      final response = await http.post(url, body: body);
-      final jsonResponse = jsonDecode(response.body);
+      final response = await DioClient.dio.post(url, data: body);
+      final jsonResponse = jsonDecode(response.data.toString());
       log('${AppString.rawResponse} :- $jsonResponse');
 
       final otpModel = VerifyOtpModel.fromJson(jsonResponse);
@@ -143,13 +143,11 @@ class VerifyOtpController extends GetxController {
             }
           }
 
-          // Fallback token extraction from raw response if not found in decrypted payload
           token ??= jsonResponse['token'] ??
               (dataObj is Map ? dataObj['token'] : null) ??
               jsonResponse['access_token'] ??
               (dataObj is Map ? dataObj['access_token'] : null);
 
-          // Save mobile number, token, and login state permanently to phone
           localdatabase().savePhoneAndLogin(
             mobile: mobileno,
             token: token?.toString(),
@@ -162,10 +160,8 @@ class VerifyOtpController extends GetxController {
             ToastificationSuccess.Success("OTP Verified Successfully");
           }
 
-          // Always redirect to Home screen when success / status is true
           Get.offAll(() => Bottom());
         } else {
-          // Status / success is false (e.g. "Invalid or expired OTP")
           ToastificationError.Error(
               otpModel.message ?? "Invalid or expired OTP");
         }

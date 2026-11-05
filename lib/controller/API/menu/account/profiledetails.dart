@@ -2,11 +2,12 @@
 
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 
 class ProfiledetailsController extends GetxController {
   var isLoading = false.obs;
@@ -24,7 +25,7 @@ class ProfiledetailsController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.profileDetail);
+      final url = AppUrl.profileDetail;
       print('Sending request to: $url');
       final body = {
         'firstname': firstname,
@@ -37,28 +38,27 @@ class ProfiledetailsController extends GetxController {
         'confirm_password': confirm_password,
       }..removeWhere((key, value) => value == null);
       print('Sending request profiledetail :- $body');
-      final responce = await http.post(
+      final responce = await DioClient.dio.post(
         url,
-        body: body,
-        headers: {
-          ApiHeaders.heading: ApiHeaders.multipart,
-          ApiHeaders.authorization: tokans,
-        },
+        data: body,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.multipart,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
       );
       if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.body);
+        data.value = jsonDecode(responce.data.toString());
         print("Profile Detail : $data");
       } else {
         throw {
-          'Profile Detail this Error :- ${responce.statusCode}, ${responce.body}',
-          print('CountCart data this :- ${responce.statusCode}, ${responce.body}'),
-          // ToastificationError.Error(data['message']),
-          // handleHttpError(responce.statusCode),
+          'Profile Detail this Error :- ${responce.statusCode}, ${responce.data}',
+          print('CountCart data this :- ${responce.statusCode}, ${responce.data}'),
         };
       }
     } catch (e) {
       print("Profile Detail this Error :- $e");
-      // ToastificationError.Error('$e');
     } finally {
       isLoading.value = false;
     }

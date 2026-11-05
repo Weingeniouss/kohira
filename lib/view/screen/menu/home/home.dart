@@ -26,14 +26,51 @@ import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/video.dart';
 import 'Search.dart';
 
-class Home extends StatelessWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final homedashbord = Get.put(Homedashbord());
-
+class Home extends StatefulWidget {
   Home({super.key});
+
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    Get.put(Homedashbord());
+    Get.put(OfferBannerCalling());
+    Get.put(Homejewelry());
+    Get.put(StoreLocationsController());
+    Get.put(NewsListCalling());
+    Get.put(HomepageJewelryList());
+  }
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> homeSections = [
+      sarchfild(),
+      mainSlider(),
+      horizontalpadding(child: productList()),
+      plan(),
+      Silder(),
+      instagramVideo(),
+      benner(),
+      gifts(),
+      jewelrySection2(),
+      jewelrySection1(),
+      horizontalpadding(child: storeSliderBanner()),
+      horizontalpadding(child: timelessEditorialSection()),
+      horizontalpadding(child: newsStorySection()),
+      horizontalpadding(child: educationSection()),
+      offerBannerList(),
+      horizontalpadding(child: customerReviews()),
+      lovedCollection(),
+      promise(),
+      storeLocationsSection(),
+      horizontalpadding(child: newsListSection()),
+    ];
+
     return Scaffold(
       key: scaffoldKey,
       appBar: aapbar(scaffoldKey),
@@ -42,31 +79,13 @@ class Home extends StatelessWidget {
         height: Get.height,
         width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              sarchfild(),
-              mainSlider(),
-              horizontalpadding(child: productList()),
-              plan(),
-              Silder(),
-              instagramVideo(),
-              benner(),
-              gifts(),
-              jewelrySection2(),
-              jewelrySection1(),
-              horizontalpadding(child: storeSliderBanner()),
-              horizontalpadding(child: timelessEditorialSection()),
-              horizontalpadding(child: newsStorySection()),
-              horizontalpadding(child: educationSection()),
-              offerBannerList(),
-              horizontalpadding(child: customerReviews()),
-              lovedCollection(),
-              promise(),
-              storeLocationsSection(),
-              horizontalpadding(child: newsListSection()),
-            ],
-          ),
+        child: ListView.builder(
+          itemCount: homeSections.length,
+          addAutomaticKeepAlives: true,
+          addRepaintBoundaries: true,
+          itemBuilder: (context, index) {
+            return RepaintBoundary(child: homeSections[index]);
+          },
         ),
       ),
     );
@@ -243,7 +262,7 @@ Widget Silder() {
 
 //Offer Banner List
 Widget offerBannerList() {
-  final offerBannerCtrl = Get.put(OfferBannerCalling());
+  final offerBannerCtrl = Get.find<OfferBannerCalling>();
   return Obx(() {
     final isLoading = offerBannerCtrl.isLoading.value;
     final banners = offerBannerCtrl.offerBanners;
@@ -306,7 +325,9 @@ Widget offerBannerList() {
 
 // Jewelry Section 1
 Widget jewelrySection1() {
-  final homejewelry = Get.put(Homejewelry());
+  final homejewelry = Get.isRegistered<Homejewelry>()
+      ? Get.find<Homejewelry>()
+      : Get.put(Homejewelry());
   return Obx(() {
     final isLoading = homejewelry.isLoading.value;
     final model = homejewelry.sectionsData.value;
@@ -459,7 +480,9 @@ Widget jewelrySection1() {
 
 // Jewelry Section 2
 Widget jewelrySection2() {
-  final homejewelry = Get.put(Homejewelry());
+  final homejewelry = Get.isRegistered<Homejewelry>()
+      ? Get.find<Homejewelry>()
+      : Get.put(Homejewelry());
   return Obx(() {
     final isLoading = homejewelry.isLoading.value;
     final model = homejewelry.sectionsData.value;
@@ -1770,7 +1793,7 @@ Widget promise() {
 }
 
 Widget storeLocationsSection() {
-  final storeController = Get.put(StoreLocationsController());
+  final storeController = Get.find<StoreLocationsController>();
   return Obx(() {
     final isLoading = storeController.isLoading.value;
     final states = storeController.storeLocations;
@@ -2198,7 +2221,7 @@ Widget gifts() {
 }
 
 Widget newsListSection() {
-  final newsController = Get.put(NewsListCalling());
+  final newsController = Get.find<NewsListCalling>();
   return Obx(() {
     if (newsController.isLoading.value && newsController.newsItems.isEmpty) {
       return Shimmer.fromColors(
