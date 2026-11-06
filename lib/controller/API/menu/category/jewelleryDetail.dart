@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:kohira/modal/menu/category/jewelleryDetail.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/dio_client.dart';
@@ -11,6 +12,8 @@ import 'package:kohira/view/utils/widget/pop.dart';
 
 class JewellerydetailCall extends GetxController {
   var isLoading = false.obs;
+  var detailModel = Rxn<JewelleryDetailModel>();
+  var detailData = Rxn<JewelleryDetailData>();
   var data = {}.obs;
 
   Future<void> jewellerydetailservices({required String slug}) async {
@@ -24,11 +27,14 @@ class JewellerydetailCall extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.data.toString());
+        final decoded = jsonDecode(response.data.toString());
+        data.value = decoded;
+        detailModel.value = JewelleryDetailModel.fromJson(decoded);
+        detailData.value = detailModel.value?.data;
         log('Jewellery detail :- $data');
       } else {
-        'Jewellery detail Error :- ${response.statusCode}, ${response.data}';
-        ToastificationError.Error("Jewellery detail Error :- ${response.statusCode}, ${response.data}");
+        ToastificationError.Error(
+            "Jewellery detail Error :- ${response.statusCode}, ${response.data}");
       }
     } catch (e) {
       ToastificationError.Error("Jewellery detail Error :- $e");
