@@ -2,11 +2,12 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 
 class Overstore_Controller extends GetxController {
   var isLoading = false.obs;
@@ -15,18 +16,26 @@ class Overstore_Controller extends GetxController {
   Future<void> overStore({String? page, String? search, String? store_city_id}) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.store);
+      final url = AppUrl.store;
       print('Sending request to: $url');
       final body = {
-        if (page != null)  'page': page,
+        if (page != null) 'page': page,
         if (search != null) 'search': search,
         if (store_city_id != null) 'store_city_id': store_city_id,
-      }..removeWhere((key,value) => value == null);
+      }..removeWhere((key, value) => value == null);
       print('Store body :- $body');
-      final response = await http.post(url, body: body, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final response = await DioClient.dio.post(
+        url,
+        data: body,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
+      );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
-        // log('Over Store :- ${data.value}');
+        data.value = jsonDecode(response.data.toString());
       }
     } catch (e) {
       print('Over Store :- $e');

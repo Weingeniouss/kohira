@@ -2,12 +2,13 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import 'package:kohira/view/utils/errorcode.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
@@ -27,7 +28,7 @@ class Wishlist extends GetxController {
     String? metal_type,
     String? metal_stamp,
     String? sideDiaGrpId,
-    required String tokan
+    required String tokan,
   }) async {
     try {
       isLoading.value = true;
@@ -36,7 +37,7 @@ class Wishlist extends GetxController {
         barrierDismissible: false,
       );
 
-      final url = Uri.parse(AppUrl.wishlist);
+      final url = AppUrl.wishlist;
       print("Sending request to: $url");
 
       final body = {
@@ -50,21 +51,23 @@ class Wishlist extends GetxController {
 
       print('Wishlist body :- $body');
 
-      final response = await http.post(
+      final response = await DioClient.dio.post(
         url,
-        headers: {
-          ApiHeaders.heading: ApiHeaders.peramitters,
-          ApiHeaders.authorization: tokan
-        },
-        body: body,
+        data: body,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokan,
+          },
+        ),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
+        data.value = jsonDecode(response.data.toString());
         log('Add to wishlist response :- $data');
         ToastificationSuccess.Success(data['message']);
       } else {
-        throw 'Add to wishlist Error :- ${response.body}, ${response.statusCode}';
+        throw 'Add to wishlist Error :- ${response.data}, ${response.statusCode}';
       }
     } catch (e) {
       print('Add to wishlist Error :- $e');
@@ -77,57 +80,73 @@ class Wishlist extends GetxController {
 }
 
 //FetchWish List
-class FetchWishtlist extends GetxController{
+class FetchWishtlist extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future fechwishlist()async{
-    try{
+  Future fechwishlist() async {
+    try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.wishlist);
+      final url = AppUrl.wishlist;
       print("Sending Request To :- $url");
-      final responce = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
-      if(responce.statusCode == 200 || responce.statusCode == 201){
-        data.value = jsonDecode(responce.body);
+      final responce = await DioClient.dio.get(
+        url,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
+      );
+      if (responce.statusCode == 200 || responce.statusCode == 201) {
+        data.value = jsonDecode(responce.data.toString());
         log("Wishlist data :- ${data.value}");
-      }else{
-        throw{
-          'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
-          // handleHttpError(responce.statusCode),
+      } else {
+        throw {
+          'Wishlist data Error :- ${responce.statusCode}, ${responce.data}',
         };
       }
-    }catch(e){
+    } catch (e) {
       print('Wishlist data Error :- $e');
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }
 }
 
 //Delet WishList
-class DeletWishtlist extends GetxController{
+class DeletWishtlist extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
-  Future deletwishlist({required String id})async{
-    try{
+  Future deletwishlist({required String id}) async {
+    try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.wishlistdelete);
-      final body = {'id' : id};
+      final url = AppUrl.wishlistdelete;
+      final body = {'id': id};
       print("Sending Request To :- $url");
       print("Sending Request To delet Wishlist :- $body");
-      final responce = await http.post(url,body: body, headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
-      if(responce.statusCode == 200 || responce.statusCode == 201){
-        data.value = jsonDecode(responce.body);
+      final responce = await DioClient.dio.post(
+        url,
+        data: body,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans,
+          },
+        ),
+      );
+      if (responce.statusCode == 200 || responce.statusCode == 201) {
+        data.value = jsonDecode(responce.data.toString());
         log("Wishlist data :- ${data.value}");
-      }else{
-        throw{
-          'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
+      } else {
+        throw {
+          'Wishlist data Error :- ${responce.statusCode}, ${responce.data}',
           handleHttpError(responce.statusCode),
         };
       }
-    }catch(e){
+    } catch (e) {
       print('Wishlist data Error :- $e');
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }

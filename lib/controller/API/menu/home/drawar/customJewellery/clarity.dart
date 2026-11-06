@@ -3,10 +3,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 
 class ClarityItem {
   final String? slug;
@@ -44,21 +45,23 @@ class Clarity extends GetxController {
   Future<void> clarity() async {
     try {
       isLoading(true);
-      final url = Uri.parse(AppUrl.clarity);
+      final url = AppUrl.clarity;
       print('Sending To Url :- $url');
-      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final response = await DioClient.dio.post(
+        url,
+        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        clarity_data(jsonDecode(response.body));
-        final responseData = jsonDecode(response.body);
-         final List<dynamic> dataList = responseData['data'] ?? [];
+        final responseData = jsonDecode(response.data.toString());
+        clarity_data(responseData);
+        final List<dynamic> dataList = responseData['data'] ?? [];
 
-        // Convert to proper typed list
-        clarityData.value = dataList.map((item) =>
-          ClarityItem.fromJson(item)).toList();
+        clarityData.value =
+            dataList.map((item) => ClarityItem.fromJson(item)).toList();
         log('Sending to clarity Data :- $clarity_data');
       } else {
-        throw Exception('${response.statusCode}, ${response.body}');
+        throw Exception('${response.statusCode}, ${response.data}');
       }
     } catch (e) {
       print('Sending to clarity Data Error :- $e');

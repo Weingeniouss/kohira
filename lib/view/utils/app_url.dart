@@ -13,7 +13,8 @@ class AppUrl {
   //   static const baseurl = 'http://192.168.1.178:8888/kohira-next-lara/api';
 
   //staging
-  static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  // static const baseurl = 'https://api.weingenious.in/kohira/lmda-ctrl-zeta-layer';
+  static const baseurl = 'https://kohira-api.weingenious.in/lmda-ctrl-zeta-layer';
   //   static const baseurl = 'https://api.weingenious.in/kohira/api';
 
   //Live
@@ -27,15 +28,24 @@ class AppUrl {
   static const country = '$baseurl/country';
   static const state = '$baseurl/state';
 
+  //Otp
+  static const otp = '$baseurl/send-otp';
+  static const verifyotp = '$baseurl/verify-otp';
+
   //Counting
   static const count = '$baseurl/count-wish-cart';
 
      //Menu
       //home
       static const categories = '$baseurl/home/categories';
+      static const homeDashbord = '$baseurl/home/dashboard';
+      static const homepage_JewelryList = '$baseurl/homepage-JewelryList';
       static const slider = '$baseurl/home/slider';
+      static const store_locations = '$baseurl/store-locations';
+      static const offerbanner = '$baseurl/home/offerbanner';
       static const homecollcation = '$baseurl/home/collections';
       static const homecJewelry = '$baseurl/home/Jewelry';
+      static const homenewslist = '$baseurl/home/newslist';
 
       //drawer
       static const collection = '$baseurl/collections';

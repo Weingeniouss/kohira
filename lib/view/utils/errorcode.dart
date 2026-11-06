@@ -1,8 +1,10 @@
-
-
 import 'package:kohira/view/utils/widget/pop.dart';
 
-void handleHttpError(int statusCode) {
+void handleHttpError(int? statusCode) {
+  if (statusCode == null) {
+    ToastificationError.Error("Unexpected Error: An unknown error occurred.");
+    return;
+  }
   switch (statusCode) {
     case 400:
       ToastificationError.Error("Bad Request (400): The server could not understand the request.");

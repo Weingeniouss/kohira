@@ -5,6 +5,13 @@ class AppString {
   //Error
   static const fild = 'Please Fild All Error !';
 
+  //Controller
+  static const navigatingtoHome = 'Token saved successfully. Navigating to Home...';
+  static const decryption = 'Error: Decryption succeeded but no token was found in the data.';
+  static const decryptionfailed = 'Decryption failed: Signature was valid but payload could not be decrypted.';
+  static const rawResponse = 'Verify Otp Raw Response';
+  static const decryptedData = 'Decrypted Data Content';
+
   //Button
   static const google = 'google';
   static const facebook = 'facebook';
@@ -42,7 +49,23 @@ class AppString {
   static const Apply = 'Apply';
 
   //credentials
+  //Otp
+  static const newtoKohira = 'New to Kohira? Create an account or login if you already have one';
+  static const verifyotp = 'Verify otp...';
+  static const verifying = 'Verifying...';
+  static const resendOtp = 'Resend OTP';
+  static const resendOtpIn = 'Resend OTP in';
+  static const pleaseWait = 'Please Wait...';
+  static const defaultCountryCode = '+91';
+
   //Login
+  static const noInternetConnection = 'No Internet Connection';
+  static const retry = 'Retry';
+  static const errorFillAll = 'Error, Please fill All';
+  static const errorFillPassword = 'Error, Please fill Password';
+  static const errorFillEmail = 'Error, Please fill Email';
+  static const loading = 'Loading...';
+  static const or = 'Or';
   static const subsignin = 'If you have a Kohira customer account please sign in';
   static const hintemail = 'Enter Your Email';
   static const email = 'Email Address';
@@ -69,6 +92,23 @@ class AppString {
   //Menu
    //home
     static const matter_heading = 'Wear What Matter';
+    static const gold_Mine = 'Gold Mine';
+    static const num = '10 + 1';
+    static const monthlyPlan = 'Monthly Plan';
+    static const installments = '(Pay 10 installments & enjoy 100% savings on the 11th month!)';
+    static const enrollNow = 'Enroll Now';
+    static const celebrate = 'Celebrate Every Moment Perfectly';
+    static const elegance = 'Celebrate every moment with elegance. Timeless designs crafted to perfection. Jewelry that makes every occasion shine.';
+    static const gifts = 'THOUGHTFUL GIFTS, MADE SIMPLE';
+    static const mostThoughtfulGifts = 'Most Thoughtful Gifts';
+    static const newTimelessEditorial = 'New Timeless Editorial';
+    static const imageLoadFailed = 'Image load failed';
+    static const withPride = 'Worn with Pride - Kohira on Instagram';
+    static const customersWear = 'See how our customers wear Kohira for weddings, everyday elegance, and every moment in between. Tag @kohiradiamonds to be featured.';
+    static const lovedCollections = 'Our Most Loved Collections';
+    static const boldEngagement = 'From bold engagement rings to iconic everyday essentials - these are Kohiras most celebrated pieces Type IIA diamonds. Timeless designs Made for those who demand the best';
+    static const customerReviewsTitle = 'CUSTOMER REVIEWS';
+    static const customerReviewsSubtitle = 'Customer Reviews highlight real experiences from people who chose our designs and loved them.';
 
      //Drawer
      static const bracelet = 'Bracelet';
@@ -231,4 +271,14 @@ class AppString {
           static const shippingaddress = 'Shipping Address';
           static const payments = 'Payments';
           static const paymentstype = 'Cards, Wallet, Netbanking, UPI';
+
+          //Home & Search
+          static const designLedJewellery = 'DESIGN LED JEWELLERY';
+          static const kohiraMasterpieces = 'Kohira’s Masterpieces in Focus';
+          static const timelessEditorialElegance = 'TIMELESS EDITORIAL ELEGANCE';
+          static const noTitle = 'No Title';
+          static const ourStores = 'Our Store Locations';
+          static const experienceKohira = 'Experience Kohira in person at a boutique near you';
+          static const newsTitle = 'KOHIRA IN THE NEWS';
+          static const readMore = 'READ MORE';
 }

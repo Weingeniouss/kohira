@@ -9,6 +9,12 @@ class SliderCalling extends GetxController {
   var isLoading = false.obs;
   var data = <MainSliderDetail>[].obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    slideruser();
+  }
+
   Future<void> slideruser() async {
     try {
       isLoading.value = true;

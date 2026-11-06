@@ -5,7 +5,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/dio_client.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 
 class SearchProduct extends GetxController {
@@ -46,7 +46,7 @@ class SearchProduct extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.search);
+      final url = AppUrl.search;
 
       final body = {
         'search': search,
@@ -70,10 +70,10 @@ class SearchProduct extends GetxController {
         'page': page,
       }..removeWhere((key, value) => value == null);
 
-      final response = await http.post(url, body: body);
+      final response = await DioClient.dio.post(url, data: body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(response.data.toString());
         data.value = json['data'];
         ToastificationSuccess.Success(data.value['message']);
       } else {

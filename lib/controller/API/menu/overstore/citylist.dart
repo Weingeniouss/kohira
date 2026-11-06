@@ -3,32 +3,36 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/dio_client.dart';
 
-class Citylist extends GetxController{
-  var isLoading =  false.obs;
+class Citylist extends GetxController {
+  var isLoading = false.obs;
   var data = {}.obs;
 
-  Future<void> citylist()async{
-    try{
+  Future<void> citylist() async {
+    try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.storecity);
-      final response = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters});
+      final url = AppUrl.storecity;
+      final response = await DioClient.dio.get(
+        url,
+        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
+      );
 
-      if(response.statusCode == 200 || response.statusCode == 201){
-        data.value = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        data.value = jsonDecode(response.data.toString());
         log("Citylist Data :-  ${data.value}");
-      }else{
-        throw{
-          'Citylist Data Error :-  ${response.body}, ${response.statusCode}'
+      } else {
+        throw {
+          'Citylist Data Error :-  ${response.data}, ${response.statusCode}'
         };
       }
-    }catch(e){
+    } catch (e) {
       print('Citylist Data Error :- $e');
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }

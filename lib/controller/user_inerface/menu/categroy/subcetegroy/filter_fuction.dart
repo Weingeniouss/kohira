@@ -168,6 +168,9 @@ class ShowBottam {
     required String subcategrorysname,
     required Function(String) onCategoryNameChanged,
   }) {
+    if (jewelleryfilter.data.isEmpty && !jewelleryfilter.isLoading.value) {
+      jewelleryfilter.jewellerylist();
+    }
     showModalBottomSheet(
       elevation: 0,
       context: context,
@@ -324,22 +327,26 @@ class ShowBottam {
                                   //     );
                                   //   }).toList(),
                                   // )),
-                                  Obx((){
+                                  Obx(() {
+                                    final metalTypeList = jewelleryfilter.data['data']?['Metal_Type'] as List? ?? [];
+                                    if (metalTypeList.isEmpty) {
+                                      return SizedBox.shrink();
+                                    }
                                     return SizedBox(
                                       height: Get.height / 25,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemCount: jewelleryfilter.data['data']['Metal_Type'].length,
+                                        itemCount: metalTypeList.length,
                                         itemBuilder: (BuildContext context, int index) {
-                                          final jewellery = jewelleryfilter.data['data']['Metal_Type'][index];
-                                          final String jewelleryName = jewellery['name'];
+                                          final jewellery = metalTypeList[index];
+                                          final String jewelleryName = jewellery['name'] ?? '';
                                           final isSelected = filtertab.selectedMetalType.value == jewellery['slug'];
                                           return GestureDetector(
                                             onTap: () {
                                               filtertab.setMetalType(jewellery['slug']);
-                                              setState((){});
+                                              setState(() {});
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(2),

@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names
 
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:kohira/view/utils/dio_client.dart';
 import '../../../modal/credentials/sinup.dart';
 import '../../../view/utils/app_url.dart';
 
@@ -19,9 +19,9 @@ class SinupService {
     required String login_type,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse(AppUrl.sinup),
-        body: {
+      final response = await DioClient.dio.post(
+        AppUrl.sinup,
+        data: {
           'firstname': firstname,
           'lastname': lastname,
           'email': email,
@@ -31,12 +31,12 @@ class SinupService {
           'captcha': captcha,
           'countrycode': countrycode,
           'country_shortname': country_shortname,
-          'login_type':login_type,
+          'login_type': login_type,
         },
       );
       print(AppUrl.sinup);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
+        final jsonData = json.decode(response.data.toString());
         return Sinup.fromJson(jsonData);
       } else {
         print('Signup failed with status: ${response.statusCode}');

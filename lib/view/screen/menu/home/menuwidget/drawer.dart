@@ -97,8 +97,6 @@ class _DrawersState extends State<Drawers> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredCategories = category.filterData.value!.data.where((item) => ![7, 8, 9].contains(item.id)).toList();
-    final filteredCategories2 = category.filterData.value!.data.where((item) => ![1, 2, 3, 4, 5, 6].contains(item.id)).toList();
     return Drawer(
       width: Get.width * 0.650,
       elevation: 0,
@@ -114,12 +112,23 @@ class _DrawersState extends State<Drawers> {
             Expanded(
               child: SingleChildScrollView(
                 child: Obx(() {
-                  if (category.filterData.value == null) {
-                    return Scaffold(body: Center(child: Lottie.asset(AppJson.noData)));
+                  if (category.filterData.value == null || category.filterData.value?.data == null) {
+                    return Center(child: Lottie.asset(AppJson.noData));
                   }
-                  return Obx(() {
-                    return Column(
-                      children: [
+
+                  final filteredCategories = category.filterData.value!.data.where((item) => ![7, 8, 9].contains(item.id)).toList();
+                  final filteredCategories2 = category.filterData.value!.data.where((item) => ![1, 2, 3, 4, 5, 6].contains(item.id)).toList();
+
+                  final collectionData = collection.data['data'];
+                  final List collectionList = (collectionData is List) ? collectionData : [];
+
+                  final jewelleryFilterData = jewelleryfilter.data['data'];
+                  final List metalTypeList = (jewelleryFilterData != null && jewelleryFilterData['Metal_Type'] is List)
+                      ? (jewelleryFilterData['Metal_Type'] as List)
+                      : [];
+
+                  return Column(
+                    children: [
 
                         //List of Categories
                         horizontalpadding(
@@ -403,9 +412,9 @@ class _DrawersState extends State<Drawers> {
                             children: [
                                ListView.builder(
                                   shrinkWrap: true, physics: NeverScrollableScrollPhysics(),
-                                  itemCount: collection.data['data'].length > 6 ? 6 : collection.data['data'].length,
+                                  itemCount: collectionList.length > 6 ? 6 : collectionList.length,
                                   itemBuilder: (BuildContext context, int index) {
-                                    final collctions = collection.data['data'][index];
+                                    final collctions = collectionList[index];
                                     return Padding(
                                       padding: EdgeInsets.only(left: Get.width / 10),
                                       child: GestureDetector(
@@ -425,7 +434,7 @@ class _DrawersState extends State<Drawers> {
                                                 SizedBox(width: Get.width * 0.015),
                                                 SizedBox(
                                                   width: Get.width / 3,
-                                                  child: Text(collctions['name'].toUpperCase(), style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
+                                                  child: Text((collctions['name'] ?? '').toString().toUpperCase(), style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w400)),
                                                 ),
                                               ],
                                             ),
@@ -434,12 +443,13 @@ class _DrawersState extends State<Drawers> {
                                       ),
                                     );
                                 }),
-                               Padding(
+                               if (collectionList.isNotEmpty)
+                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width / 10),
                                   child: GestureDetector(
                                     onTap: () {
                                       Get.to(() => Subcategorys(
-                                        subcategrorys: collection.data['data'].toString(),
+                                        subcategrorys: collectionList.toString(),
                                         subcategrorysname: AppString.collection_product,
                                       ), transition: Transition.rightToLeft, duration: Duration(milliseconds: 600));
                                     },
@@ -458,7 +468,7 @@ class _DrawersState extends State<Drawers> {
                                               Text("*"),
                                               SizedBox(width: Get.width * 0.015),
                                               Text(
-                                                "View All (${collection.data['data'].length})",
+                                                "View All (${collectionList.length})",
                                                 style: TextStyle(
                                                   fontSize: Get.width * 0.030,
                                                   fontWeight: FontWeight.w500,
@@ -495,10 +505,10 @@ class _DrawersState extends State<Drawers> {
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: jewelleryfilter.data['data']['Metal_Type'].length,
+                                itemCount: metalTypeList.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final jewellery = jewelleryfilter.data['data']['Metal_Type'][index];
-                                  final String jewelleryName = jewellery['name'];
+                                  final jewellery = metalTypeList[index];
+                                  final String jewelleryName = (jewellery['name'] ?? '').toString();
                                   return Padding(
                                     padding: EdgeInsets.only(left: Get.width / 10),
                                     child: GestureDetector(
@@ -511,9 +521,8 @@ class _DrawersState extends State<Drawers> {
                                             Row(
                                               children: [
                                                 jewelleryColorContainer(jewelleryName),
-                                                // Container(decoration: BoxDecoration(color: getJewelleryColor(jewelleryName)), padding: EdgeInsets.all(10)),
                                                 SizedBox(width: Get.width * 0.015),
-                                                SizedBox(width: Get.width / 3, child: Text(jewellery['name'].toUpperCase())),
+                                                SizedBox(width: Get.width / 3, child: Text(jewelleryName.toUpperCase())),
                                               ],
                                             ),
                                             SizedBox(height: Get.height * 0.015),
@@ -524,11 +533,11 @@ class _DrawersState extends State<Drawers> {
                                   );
                                 },
                               ),
-                              if (jewelleryfilter.data['data']['Metal_Type'].length > 6)
+                              if (metalTypeList.length > 6)
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width / 10),
                                   child: GestureDetector(
-                                    onTap: () => Get.to(() => Subcategorys(subcategrorys: jewelleryfilter.data['data']['Metal_Type']['slug'].toString(), subcategrorysname: AppString.product),transition: Transition.rightToLeft, duration: Duration(milliseconds: 600)),
+                                    onTap: () => Get.to(() => Subcategorys(subcategrorys: metalTypeList.toString(), subcategrorysname: AppString.product),transition: Transition.rightToLeft, duration: Duration(milliseconds: 600)),
                                     child: horizontalpadding(
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -541,7 +550,7 @@ class _DrawersState extends State<Drawers> {
                                               Text("*"),
                                               SizedBox(width: Get.width * 0.015),
                                               Text(
-                                                "View All (${jewelleryfilter.data['data']['Metal_Type'].length})",
+                                                "View All (${metalTypeList.length})",
                                                 style: TextStyle(fontSize: Get.width * 0.030, fontWeight: FontWeight.w500, color: AppColor.white_color),
                                               ),
                                             ],
@@ -722,7 +731,6 @@ class _DrawersState extends State<Drawers> {
                         SizedBox(height: Get.height * 0.030),
                       ],
                     );
-                  });
                 }),
               ),
             )

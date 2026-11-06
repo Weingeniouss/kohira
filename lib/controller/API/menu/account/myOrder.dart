@@ -1,13 +1,13 @@
-
 // ignore_for_file: avoid_print, invalid_use_of_protected_member, file_names
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 
 class MyOrderController extends GetxController {
   var isLoading = false.obs;
@@ -16,16 +16,23 @@ class MyOrderController extends GetxController {
   Future myOrder() async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.order);
+      final url = AppUrl.order;
       print("Sending Requset to :- $url");
-      final responce = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final responce = await DioClient.dio.get(
+        url,
+        options: Options(
+          headers: {
+            ApiHeaders.heading: ApiHeaders.peramitters,
+            ApiHeaders.authorization: tokans
+          },
+        ),
+      );
 
       if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.body);
+        data.value = jsonDecode(responce.data.toString());
         log("myOrder Details :- ${data.value}");
       } else {
-        'myOrder Details Error This :- ${responce.statusCode}, ${responce.body}';
-        // handleHttpError(responce.statusCode);
+        'myOrder Details Error This :- ${responce.statusCode}, ${responce.data}';
       }
     } catch (e) {
       print("myOrder Details Error This :- $e");

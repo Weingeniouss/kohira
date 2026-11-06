@@ -26,7 +26,9 @@ class Login extends StatelessWidget {
   LoginController validation = Get.put(LoginController());
   LoginCalling login = Get.put(LoginCalling());
   final internetController = Get.put(InternetCheckerController());
+
   Login({super.key});
+
   @override
   Widget build(BuildContext context) {
     ever(login.isLoading, (isLoading) {
@@ -38,192 +40,37 @@ class Login extends StatelessWidget {
         }
       });
     });
+
     return Obx(() {
-      if(!internetController.isConnected.value){
-        return  Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.wifi_off, size: 80, color: AppColor.pink_color),
-                SizedBox(height: Get.height / 50),
-                Text("No Internet Connection", style: TextStyle(fontSize: Get.width / 20,color: AppColor.pink_color)),
-                SizedBox(height: Get.height / 50),
-                ElevatedButton(
-                  onPressed: () => internetController.retryConnection(),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColor.pink_color),
-                  child: Text("Retry", style: TextStyle(color: Colors.white)),
-                ),
-              ],
-            ),
-          ),
-        );
+      if (!internetController.isConnected.value) {
+        return NoInternetWidget();
       }
-      // void logins() {
-      //   hasInternetConnection().then((connected) {
-      //     if (!connected) {
-      //       ToastificationError.Error('No Internet Connection! Conncet the Internet then try Agen !!');
-      //       return;
-      //     } else {
-      //       if (validation.email_controller.value.text.isEmpty && validation.password_controller.value.text.isEmpty) {
-      //         ToastificationError.Error("Error, Please fill All");
-      //         validation.email_type.value = true;
-      //         validation.password_type.value = true;
-      //         return;
-      //       } else if (validation.password_controller.value.text.isEmpty) {
-      //         ToastificationError.Error("Error, Please fill Password");
-      //         validation.password_type.value = true;
-      //         validation.email_type.value = false;
-      //         return;
-      //       } else if (validation.email_controller.value.text.isEmpty) {
-      //         ToastificationError.Error("Error, Please fill Email");
-      //         validation.email_type.value = true;
-      //         validation.password_type.value = false;
-      //         return;
-      //       } else {
-      //         validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
-      //         localdatabase().loginstrore(email: validation.email_controller.text, password: validation.password_controller.text);
-      //       }
-      //     }
-      //   });
-      // }
+
       return Scaffold(
         body: Container(
-          height: Get.height, width: Get.width,
+          height: Get.height,
+          width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: SafeArea(
             child: horizontalpadding(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      setLogo(),
-                    ],
-                  ),
-                  title_text(AppString.signin),
-                  SizedBox(height: Get.height / 80),
-                  sub_titel_text(AppString.subsignin),
-                  SizedBox(height: Get.height / 20),
-
-                  //Inputfild
+                  LoginHeaderWidget(),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          inputField(
-                            hintText: AppString.hintemail,
-                            icon: AppIcon.mail,
-                            controller: validation.email_controller,
-                            empty: validation.email_type.value,
-                          ),
-                          inputField(
-                            hintText: AppString.hintpassword,
-                            icon: AppIcon.password,
-                            controller: validation.password_controller,
-                            empty: validation.password_type.value,
-                            isVis: true,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () => Get.to(() => Forgetpassword()),
-                                child: forgetpassword(AppString.forgetPassword),
-                              ),
-                            ],
-                          ),
+                          LoginFormFieldsWidget(),
                           SizedBox(height: Get.height / 20),
-
-                          //button
-                          GestureDetector(
-                            onTap: (){
-                              if (validation.email_controller.value.text.isEmpty && validation.password_controller.value.text.isEmpty) {
-                                ToastificationError.Error("Error, Please fill All");
-                                validation.email_type.value = true;
-                                validation.password_type.value = true;
-                                return;
-                              } else if (validation.password_controller.value.text.isEmpty) {
-                                ToastificationError.Error("Error, Please fill Password");
-                                validation.password_type.value = true;
-                                validation.email_type.value = false;
-                                return;
-                              } else if (validation.email_controller.value.text.isEmpty) {
-                                ToastificationError.Error("Error, Please fill Email");
-                                validation.email_type.value = true;
-                                validation.password_type.value = false;
-                                return;
-                              } else {
-                                validation.SiginTab(login.loginUser(validation.email_controller.text, validation.password_controller.text));
-                                localdatabase().loginstrore(email: validation.email_controller.text, password: validation.password_controller.text);
-                              }
-                            },
-                            child: button((validation.login.isLoading.value) ? 'Loading...': AppString.signin),
-                          ),
+                          LoginSubmitButton(),
                           SizedBox(height: Get.height / 40),
-
-                          //Or
-                          Row(
-                            children: [
-                              Expanded(child: Divider(color: AppColor.textfild_color)),
-                              SizedBox(width: Get.width / 20),
-                              Text('Or', style: TextStyle(color: AppColor.othersub_color, fontSize: Get.width * 0.04)),
-                              SizedBox(width: Get.width / 20),
-                              Expanded(child: Divider(color: AppColor.textfild_color)),
-                            ],
-                          ),
+                          OrDividerWidget(),
                           SizedBox(height: Get.height / 30),
-
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     company_button(AppString.google, AppIcon.google),
-                          //     company_button(AppString.facebook, AppIcon.facebook),
-                          //   ],
-                          // ),
-
                           SizedBox(height: Get.height / 50),
-                          GestureDetector(
-                            onTap: () => Get.off(() => Bottom()),
-                            child: Text(
-                              AppString.continues,
-                              style: TextStyle(color: AppColor.pink_color, fontSize: Get.width * 0.040, fontWeight: FontWeight.w500),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          ContinueButtonWidget(),
                         ],
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-        bottomNavigationBar: SafeArea(
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => Signup(),
-                duration: Duration(milliseconds: 800),
-                curve: Curves.easeInOut,
-                transition: Transition.rightToLeft,
-              );
-            },
-            child: Container(
-              height: Get.height * 0.050,
-              decoration: BoxDecoration(color: AppColor.white_color),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(AppString.donthaveanaccount, style: TextStyle(fontSize: Get.width * 0.04)),
-                  SizedBox(width: Get.width / 100),
-                  Text(
-                    AppString.signUp,
-                    style: TextStyle(
-                      fontSize: Get.width * 0.04,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.pink_color,
                     ),
                   ),
                 ],
@@ -231,7 +78,207 @@ class Login extends StatelessWidget {
             ),
           ),
         ),
+        bottomNavigationBar: SignUpBottomNavBar(),
       );
     });
+  }
+
+  /// Widget to display when there is no internet connection
+  Widget NoInternetWidget() {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off, size: 80, color: AppColor.pink_color),
+            SizedBox(height: Get.height / 50),
+            Text(
+              AppString.noInternetConnection,
+              style: TextStyle(
+                fontSize: Get.width / 20,
+                color: AppColor.pink_color,
+              ),
+            ),
+            SizedBox(height: Get.height / 50),
+            ElevatedButton(
+              onPressed: () => internetController.retryConnection(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.pink_color,
+              ),
+              child:
+                  Text(AppString.retry, style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Header section with logo, title, and subtitle
+  Widget LoginHeaderWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            setLogo(),
+          ],
+        ),
+        title_text(AppString.signin),
+        SizedBox(height: Get.height / 80),
+        sub_titel_text(AppString.subsignin),
+        SizedBox(height: Get.height / 20),
+      ],
+    );
+  }
+
+  /// Input fields section (Email, Password, Forgot Password)
+  Widget LoginFormFieldsWidget() {
+    return Obx(() {
+      return Column(
+        children: [
+          inputField(
+            hintText: AppString.hintemail,
+            icon: AppIcon.mail,
+            controller: validation.email_controller,
+            empty: validation.email_type.value,
+          ),
+          inputField(
+            hintText: AppString.hintpassword,
+            icon: AppIcon.password,
+            controller: validation.password_controller,
+            empty: validation.password_type.value,
+            isVis: true,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () => Get.to(() => Forgetpassword()),
+                child: forgetpassword(AppString.forgetPassword),
+              ),
+            ],
+          ),
+        ],
+      );
+    });
+  }
+
+  /// Sign-in button widget with form validation and submit logic
+  Widget LoginSubmitButton() {
+    return Obx(() {
+      var email = validation.email_controller.value.text;
+      var password = validation.password_controller.value.text;
+      return GestureDetector(
+        onTap: () {
+          if (email.isEmpty && password.isEmpty) {
+            ToastificationError.Error(AppString.errorFillAll);
+            validation.email_type.value = true;
+            validation.password_type.value = true;
+            return;
+          } else if (password.isEmpty) {
+            ToastificationError.Error(AppString.errorFillPassword);
+            validation.password_type.value = true;
+            validation.email_type.value = false;
+            return;
+          } else if (email.isEmpty) {
+            ToastificationError.Error(AppString.errorFillEmail);
+            validation.email_type.value = true;
+            validation.password_type.value = false;
+            return;
+          } else {
+            validation.SiginTab(
+              login.loginUser(
+                email,
+                password,
+              ),
+            );
+            localdatabase().loginstrore(
+              email: email,
+              password: password,
+            );
+          }
+        },
+        child: button(
+          validation.login.isLoading.value
+              ? AppString.loading
+              : AppString.signin,
+        ),
+      );
+    });
+  }
+
+  /// 'Or' divider line widget
+  Widget OrDividerWidget() {
+    return Row(
+      children: [
+        Expanded(child: Divider(color: AppColor.textfild_color)),
+        SizedBox(width: Get.width / 20),
+        Text(
+          AppString.or,
+          style: TextStyle(
+            color: AppColor.othersub_color,
+            fontSize: Get.width * 0.04,
+          ),
+        ),
+        SizedBox(width: Get.width / 20),
+        Expanded(child: Divider(color: AppColor.textfild_color)),
+      ],
+    );
+  }
+
+  /// 'Continue' button widget
+  Widget ContinueButtonWidget() {
+    return GestureDetector(
+      onTap: () => Get.off(() => Bottom()),
+      child: Text(
+        AppString.continues,
+        style: TextStyle(
+          color: AppColor.pink_color,
+          fontSize: Get.width * 0.040,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  /// Bottom navigation bar widget containing Sign Up option
+  Widget SignUpBottomNavBar() {
+    return SafeArea(
+      child: GestureDetector(
+        onTap: () {
+          Get.to(
+            () => Signup(),
+            duration: Duration(milliseconds: 800),
+            curve: Curves.easeInOut,
+            transition: Transition.rightToLeft,
+          );
+        },
+        child: Container(
+          height: Get.height * 0.050,
+          decoration: BoxDecoration(color: AppColor.white_color),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                AppString.donthaveanaccount,
+                style: TextStyle(fontSize: Get.width * 0.04),
+              ),
+              SizedBox(width: Get.width / 100),
+              Text(
+                AppString.signUp,
+                style: TextStyle(
+                  fontSize: Get.width * 0.04,
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.pink_color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

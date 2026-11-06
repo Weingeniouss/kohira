@@ -1,6 +1,15 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/material.dart';
+
 class AppIcon {
+  // Material Icons
+  static const IconData imageNotSupported = Icons.image_not_supported;
+  static const IconData starIcon = Icons.star;
+  static const IconData starBorderIcon = Icons.star_border;
+  static const IconData storefrontRoundedIcon = Icons.storefront_rounded;
+  static const IconData locationPinIcon = Icons.location_pin;
+
   //inputType
   static const mail = 'asset/icon/inputType/mail.svg';
   static const password = 'asset/icon/inputType/password.svg';
@@ -12,6 +21,10 @@ class AppIcon {
 
   //storicon
   static const allstore = 'asset/icon/storeicon/AllStores.svg';
+
+  //otp
+  static const india = 'asset/icon/otp/India.png';
+  static const whatsapp = 'asset/icon/otp/whatsapp.png';
 
   //otherIcon
   static const facebook = 'asset/icon/otherIcon/facebook.svg';
@@ -73,6 +86,7 @@ class AppIcon {
           static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
           static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
           static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
+          static const ring_size = 'asset/icon/drawericon/ring_size.svg';
 
   //Paymants
   static const carts = 'asset/icon/payments/card.svg';
