@@ -31,6 +31,7 @@ class AppString {
   static const update = 'Update';
   static const whatsapp = 'Whatsapp';
   static const viewAll = 'View All';
+  static const signInToExplore = 'Sign In to Explore';
 
   //check points
   static const notarobot = "I'm Not a Robot";
@@ -40,6 +41,8 @@ class AppString {
   static const signin = 'Sign In';
   static const clear = 'Clear';
   static const details = 'Details';
+  static const guestUser = 'Guest User';
+  static const tapToLogin = 'Tap to Login / Sign Up';
 
   //Bottam
   static const home = 'Home';
@@ -114,6 +117,9 @@ class AppString {
   static const customerReviewsSubtitle = 'Customer Reviews highlight real experiences from people who chose our designs and loved them.';
 
   //Drawer
+  static const engagementRings = 'Engagement Rings';
+  static const forHim = 'For Him';
+  static const pendant = 'Pendants';
   static const bracelet = 'Bracelet';
   static const collection_product = 'Collection Products';
   static const collection = 'Collection';
@@ -131,9 +137,16 @@ class AppString {
   static const Wallet = 'Wallet';
   static const HelpCenter = 'Help Center';
   static const PrivacyPolicy = 'Privacy Policy';
+  static const aboutUs = 'About Us';
+  static const faqs = 'FAQs';
+  static const shippingPolicy = 'Shipping Policy';
+  static const returnPolicy = 'Return Policy';
+  static const termsCondition = 'Terms & Condition';
+  static const locateOurStores = 'Locate Our Stores';
   static const customJewellery = 'Custom Jewellery';
   static const Logout = 'Logout';
   static const Login = 'Login';
+
   //CustomJewellery
   static const jewelery_Type = 'Choose Jewelry Type *';
   static const jewelery_Subcategory = 'Choose Subcategory *';
@@ -333,4 +346,19 @@ class AppString {
   static const experienceKohira = 'Experience Kohira in person at a boutique near you';
   static const newsTitle = 'KOHIRA IN THE NEWS';
   static const readMore = 'READ MORE';
+
+  //Category Menu Detail
+  static const whiteGold = 'White Gold';
+  static const yellowGold = 'Yellow Gold';
+  static const roseGold = 'Rose Gold';
+  static const yellowGoldAndWhiteGold = 'Yellow Gold\nAnd White Gold';
+  static const roseGoldAndWhiteGold = 'Rose Gold and\nWhite Gold';
+  static const byMetalsAndStamps = 'By Metals & Stamps';
+  static const byPriceRange = 'By Price Range';
+  static const below10k = 'Below ₹10000';
+  static const price10kTo20k = '₹10001-₹20000';
+  static const price20kTo30k = '₹20001-₹30000';
+  static const price30kTo40k = '₹30001-₹40000';
+  static const price40kTo50k = '₹40001-₹50000';
+  static const above50k = '₹50001 and above';
 }

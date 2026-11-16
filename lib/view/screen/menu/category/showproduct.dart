@@ -433,48 +433,34 @@ class Showproduct extends StatelessWidget {
                 Positioned(
                   top: 12,
                   right: 12,
-                  child: GestureDetector(
-                    onTap: () => _handleWishlistToggle(jewellery),
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
+                  child: Obx(() {
+                    final isLiked = wish.isItemWishlisted(jewellery['id'].toString());
+                    return GestureDetector(
+                      onTap: () => wish.toggleWishlist(jewellery),
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColor.white_color,
+                          shape: BoxShape.circle,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: SvgPicture.asset(
+                          isLiked ? AppIcon.heart : AppIcon.like,
+                          width: 22,
+                          height: 22,
+                          colorFilter: isLiked
+                              ? ColorFilter.mode(AppColor.pink_color, BlendMode.srcIn)
+                              : null,
+                        ),
                       ),
-                      child: (isGuest)
-                          ? FutureBuilder<List<JewelryItemWish>>(
-                              future: localdatabase.getJewelryItemsWish(),
-                              builder: (context, snapshot) {
-                                final exists = snapshot.hasData &&
-                                    snapshot.data!.any((item) =>
-                                        item.jewelryId ==
-                                        jewellery['id'].toString());
-                                return SvgPicture.asset(
-                                  exists ? AppIcon.heart : AppIcon.like,
-                                  width: 22,
-                                  height: 22,
-                                  color: exists ? AppColor.pink_color : null,
-                                );
-                              },
-                            )
-                          : (count.data['wishlist']?['jewelry_ids']
-                                      ?.contains(jewellery['id']) ??
-                                  false)
-                              ? SvgPicture.asset(AppIcon.heart,
-                                  width: 22,
-                                  height: 22,
-                                  color: AppColor.pink_color)
-                              : SvgPicture.asset(AppIcon.like,
-                                  width: 22, height: 22),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
 
                 // Bottom Overlay Bar with 3 Trust Icons

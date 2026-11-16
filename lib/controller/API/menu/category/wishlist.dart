@@ -29,13 +29,16 @@ class Wishlist extends GetxController {
     String? metal_stamp,
     String? sideDiaGrpId,
     required String tokan,
+    bool showDialog = true,
   }) async {
     try {
       isLoading.value = true;
-      Get.dialog(
-        Center(child: Lottie.asset(AppJson.loading2)),
-        barrierDismissible: false,
-      );
+      if (showDialog) {
+        Get.dialog(
+          Center(child: Lottie.asset(AppJson.loading2)),
+          barrierDismissible: false,
+        );
+      }
 
       final url = AppUrl.wishlist;
       print("Sending request to: $url");
@@ -65,16 +68,17 @@ class Wishlist extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         data.value = jsonDecode(response.data.toString());
         log('Add to wishlist response :- $data');
-        ToastificationSuccess.Success(data['message']);
+        if (data['message'] != null && data['message'].toString().isNotEmpty) {
+          ToastificationSuccess.Success(data['message']);
+        }
       } else {
         throw 'Add to wishlist Error :- ${response.data}, ${response.statusCode}';
       }
     } catch (e) {
       print('Add to wishlist Error :- $e');
-      ToastificationSuccess.Success('$e');
     } finally {
       isLoading.value = false;
-      if (Get.isDialogOpen == true) Get.back();
+      if (showDialog && Get.isDialogOpen == true) Get.back();
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter
 import 'package:kohira/controller/API/menu/category/subcategrory/subCategrory.dart';
 import 'package:kohira/controller/API/menu/others/drawer/Jewellery_list.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/subcetegroy/filter_fuction.dart';
+import 'package:kohira/controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import 'package:kohira/view/screen/menu/category/filter_screen.dart';
 import 'package:kohira/view/screen/menu/category/showproduct.dart'
     show Showproduct;
@@ -53,6 +54,7 @@ class Subcategorys extends StatefulWidget {
 
 class _SubcategorysState extends State<Subcategorys> {
   late SubcetegroryUIController subUI;
+  final wishController = Get.put(WishlistController());
 
   @override
   void initState() {
@@ -67,7 +69,7 @@ class _SubcategorysState extends State<Subcategorys> {
         price_min: widget.price_min,
         price_max: widget.price_max,
       ),
-      tag: widget.subcategory_slug,
+      tag: widget.subcategory_slug ?? widget.subcategrorys ?? widget.metal_type ?? widget.collection_id,
     );
     loadData();
   }
@@ -86,7 +88,9 @@ class _SubcategorysState extends State<Subcategorys> {
 
   @override
   void dispose() {
-    Get.delete<SubcetegroryUIController>(tag: widget.subcategory_slug);
+    Get.delete<SubcetegroryUIController>(
+      tag: widget.subcategory_slug ?? widget.subcategrorys ?? widget.metal_type ?? widget.collection_id,
+    );
     super.dispose();
   }
 
@@ -607,6 +611,7 @@ class _SubcategorysState extends State<Subcategorys> {
     final price = discount > 0 ? item['offer_price'] : item['setting_price'];
     final couponType =
         item['coupon_type']?.toString().capitalizeFirst ?? 'Labour';
+    final itemId = item['id'].toString();
 
     return GestureDetector(
       onTap: () {
@@ -647,17 +652,55 @@ class _SubcategorysState extends State<Subcategorys> {
             ),
             SizedBox(height: Get.height / 150),
           ],
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(item['default_image']),
-                  fit: BoxFit.cover,
+          Stack(
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(item['default_image']),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(12),
               ),
-            ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Obx(() {
+                  final isLiked = wishController.isItemWishlisted(itemId);
+                  return GestureDetector(
+                    onTap: () {
+                      wishController.toggleWishlist(item);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColor.white_color,
+                        shape: BoxShape.circle,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: SvgPicture.asset(
+                        isLiked ? AppIcon.heart : AppIcon.like,
+                        width: 18,
+                        height: 18,
+                        colorFilter: isLiked
+                            ? ColorFilter.mode(AppColor.pink_color, BlendMode.srcIn)
+                            : null,
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
           ),
           SizedBox(height: Get.height / 150),
           Text(
