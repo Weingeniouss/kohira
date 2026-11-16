@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names
 
 import 'package:get/get.dart';
+import '../../../../modal/menu/category/subcategory/addtowish.dart';
 
 class ShowproductController extends GetxController {
   var selectindex = 0.obs;
@@ -19,6 +20,12 @@ class ShowproductController extends GetxController {
   var graycolor = false.obs;
   var isInitialized = false.obs;
   var diamondQualityInitialized = false.obs;
+
+  // Wishlist reactive states
+  var isWishlistedGuest = false.obs;
+  var isWishlisted = false.obs;
+  var existingItemsWish = <JewelryItemWish>[].obs;
+  var savewishlist = <String>[].obs;
 
   // Accordion toggle states
   var productdetails = false.obs;
@@ -328,27 +335,34 @@ class ShowproductController extends GetxController {
     for (var variant in variants) {
       if (variant is! Map<String, dynamic>) continue;
 
-      if (variant.containsKey('total_carat')) {
-        final carat = variant['total_carat'];
-        if (carat is num && seen.add(carat.toDouble())) {
-          uniqueCarats.add(carat.toDouble());
-        }
-      } else if (diamondType != null &&
-          variant.containsKey('jewelry_diamonds')) {
-        final diamonds = variant['jewelry_diamonds'];
-        if (diamonds is List) {
-          for (var diamond in diamonds) {
-            if (diamond is Map<String, dynamic> &&
-                (diamond['diamondtype']?.toLowerCase() ==
-                    diamondType.toLowerCase())) {
-              final carat = diamond['carat'];
-              if (carat is num && seen.add(carat.toDouble())) {
-                uniqueCarats.add(carat.toDouble());
-              }
+      num? caratNum;
+      if (variant['all_total_carat'] != null &&
+          variant['all_total_carat'] is num) {
+        caratNum = variant['all_total_carat'] as num;
+      } else if (variant['total_carat'] != null &&
+          variant['total_carat'] is num) {
+        caratNum = variant['total_carat'] as num;
+      }
+
+      if (caratNum != null && seen.add(caratNum.toDouble())) {
+        uniqueCarats.add(caratNum.toDouble());
+      }
+
+      final diamonds = variant['jewelry_diamonds'];
+      if (diamonds is List) {
+        for (var diamond in diamonds) {
+          if (diamond is Map<String, dynamic>) {
+            final c = diamond['carat'] ?? diamond['totalweight'];
+            if (c is num && c > 0 && seen.add(c.toDouble())) {
+              uniqueCarats.add(c.toDouble());
             }
           }
         }
       }
+    }
+
+    if (uniqueCarats.isEmpty) {
+      return [0.30, 0.50, 0.75, 1.00, 1.50, 2.00, 3.00];
     }
 
     uniqueCarats.sort();
@@ -366,20 +380,12 @@ class ShowproductController extends GetxController {
       if (variant is! Map<String, dynamic>) continue;
 
       double? variantCarat;
-      if (diamondType == null) {
-        variantCarat = (variant['total_carat'] as num?)?.toDouble();
-      } else {
-        final diamonds = variant['jewelry_diamonds'] as List?;
-        if (diamonds != null) {
-          for (var diamond in diamonds) {
-            if (diamond is Map<String, dynamic> &&
-                diamond['diamondtype']?.toLowerCase() ==
-                    diamondType.toLowerCase()) {
-              variantCarat = (diamond['carat'] as num?)?.toDouble();
-              break;
-            }
-          }
-        }
+      if (variant['all_total_carat'] != null &&
+          variant['all_total_carat'] is num) {
+        variantCarat = (variant['all_total_carat'] as num).toDouble();
+      } else if (variant['total_carat'] != null &&
+          variant['total_carat'] is num) {
+        variantCarat = (variant['total_carat'] as num).toDouble();
       }
 
       if (variantCarat == null) continue;
@@ -403,56 +409,9 @@ class ShowproductController extends GetxController {
       matchedVariant ??= variant;
     }
 
-    if (matchedVariant == null) {
-      double? closestDiff;
-      for (final variant in variants) {
-        if (variant is! Map<String, dynamic>) continue;
-
-        double? variantCarat;
-        if (diamondType == null) {
-          variantCarat = (variant['total_carat'] as num?)?.toDouble();
-        } else {
-          final diamonds = variant['jewelry_diamonds'] as List?;
-          if (diamonds != null) {
-            for (var diamond in diamonds) {
-              if (diamond is Map<String, dynamic> &&
-                  diamond['diamondtype']?.toLowerCase() ==
-                      diamondType.toLowerCase()) {
-                variantCarat = (diamond['carat'] as num?)?.toDouble();
-                break;
-              }
-            }
-          }
-        }
-
-        if (variantCarat == null) continue;
-
-        final diff = (variantCarat - selectedCarat).abs();
-        if (diff <= 0.1 && (closestDiff == null || diff < closestDiff)) {
-          closestDiff = diff;
-          matchedVariant = variant;
-        }
-      }
-    }
-
     final finalVariant = matchedVariant ?? variants.first;
     selectedMetalType.value = finalVariant['metal_type']?['paraname'];
     selectedMetalStamp.value = finalVariant['metal_stamp']?['paraname'];
-
-    if (diamondType != null) {
-      final diamonds = finalVariant['jewelry_diamonds'] as List?;
-      if (diamonds != null) {
-        for (var diamond in diamonds) {
-          if (diamond is Map<String, dynamic> &&
-              diamond['diamondtype']?.toLowerCase() ==
-                  diamondType.toLowerCase()) {
-            selectedDiamondQuality.value =
-                '${diamond['color']} ${diamond['clarity']}';
-            break;
-          }
-        }
-      }
-    }
   }
 
   void resetState() {
@@ -470,6 +429,10 @@ class ShowproductController extends GetxController {
     graycolor.value = false;
     isInitialized.value = false;
     diamondQualityInitialized.value = false;
+    isWishlistedGuest.value = false;
+    isWishlisted.value = false;
+    existingItemsWish.clear();
+    savewishlist.clear();
     productdetails.value = false;
     centerdiamondDetails.value = false;
     metal.value = false;

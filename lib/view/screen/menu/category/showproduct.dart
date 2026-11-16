@@ -11,15 +11,17 @@ import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/showproduct_controller.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
-import 'package:kohira/view/screen/credentials/login.dart';
+import 'package:kohira/modal/menu/category/recommendedJewelleryList.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_constants.dart';
 import 'package:kohira/view/utils/app_json.dart';
+import 'package:kohira/view/utils/app_string.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/video.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
@@ -28,27 +30,23 @@ import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.d
 import '../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import '../../../../modal/menu/category/subcategory/addtocart.dart';
 import '../../../../modal/menu/category/subcategory/addtowish.dart';
-import '../../../utils/app_String.dart';
 import '../../../utils/app_icon.dart';
-import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../../../utils/widget/pop.dart';
 
-class Showproduct extends StatefulWidget {
+class Showproduct extends StatelessWidget {
   final String slug;
   final String categoryslug;
 
-  const Showproduct(
-      {super.key, required this.slug, required this.categoryslug});
+  Showproduct({
+    super.key,
+    required this.slug,
+    required this.categoryslug,
+  });
 
-  @override
-  State<Showproduct> createState() => _ShowproductState();
-}
-
-class _ShowproductState extends State<Showproduct> {
   final bool isGuest = (tokans.isEmpty ?? true);
 
-  // Controllers
+  // GetX Controllers
   final productController = Get.put(ShowproductController());
   final bottamSelect = Get.put(Bottamnavigation());
   final jewellerydetail = Get.put(JewellerydetailCall());
@@ -61,49 +59,83 @@ class _ShowproductState extends State<Showproduct> {
   final userguest = Get.put(CartControllor());
   final wishguest = Get.put(WishcartControllet());
 
-  List<String> savewishlist = [];
-  bool isWishlisted = false;
-  bool isWishlistedGuest = false;
-  List<JewelryItemWish> existingItemsWish = [];
-
-  String? ringsizeid;
-
-  @override
-  void initState() {
-    super.initState();
+  void initializeData() {
     productController.resetState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      jewellerydetail.jewellerydetailservices(slug: widget.slug);
-      recommendedjewellerylist.recommendedjewellerylistFuction(
-          slug: widget.slug);
-      count.counting();
-      initializeWishlistStatus();
-    });
+    jewellerydetail.jewellerydetailservices(slug: slug);
+    recommendedjewellerylist.recommendedjewellerylistFuction(slug: slug);
+    count.counting();
+    initializeWishlistStatus();
   }
 
   void initializeWishlistStatus() async {
     if (isGuest) {
       List<JewelryItemWish> currentItemswish =
           await localdatabase.getJewelryItemsWish();
-      final jewelryId = jewellerydetail.data['data']['id'].toString();
+      final jewelryId =
+          jewellerydetail.data['data']?['id']?.toString() ?? '';
       final exists =
           currentItemswish.any((item) => item.jewelryId == jewelryId);
 
-      setState(() {
-        isWishlistedGuest = exists;
-        existingItemsWish = currentItemswish;
-      });
+      productController.isWishlistedGuest.value = exists;
+      productController.existingItemsWish.value = currentItemswish;
+    }
+  }
+
+  void _launchWhatsapp(String title, String sku) async {
+    final message =
+        Uri.encodeComponent("Hello! I am interested in $title (SKU: $sku).");
+    final whatsappUrl = Uri.parse("https://wa.me/917851005200?text=$message");
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initializeData();
+    });
+
     return Scaffold(
-      appBar: Appbar(
-        lefticon: AppIcon.left,
-        hedingname: AppString.productdetails,
-        suffixicon_1: AppIcon.like,
-        suffixicon_2: AppIcon.shop,
+      backgroundColor: AppColor.white_color,
+      appBar: AppBar(
+        backgroundColor: AppColor.white_color,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColor.black_color),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          AppString.details,
+          style: TextStyle(
+            color: AppColor.pink_color,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Lora',
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.phone_outlined, color: AppColor.black_color),
+            onPressed: () => _launchWhatsapp("Jewelry", slug),
+          ),
+          IconButton(
+            icon:
+                Icon(Icons.shopping_bag_outlined, color: AppColor.black_color),
+            onPressed: () {
+              Bottom();
+              bottamSelect.indexThree();
+            },
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color: AppColor.textfild_color,
+            height: 1.0,
+          ),
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Obx(() {
@@ -134,7 +166,7 @@ class _ShowproductState extends State<Showproduct> {
           final variants = jewellery['variants'] ?? [];
           final allRingSizes = jewellery['allRingSize'] ?? [];
 
-          // Initialize selections in controller
+          // Initialize selections in GetX controller
           productController.initSelections(jewellery);
 
           final uniqueMetalStamps =
@@ -180,44 +212,46 @@ class _ShowproductState extends State<Showproduct> {
               '₹ ${NumberFormat('#,##0.00', 'en_IN').format(makingCharge)}';
           final diamoinds =
               '₹ ${NumberFormat('#,##0.00', 'en_IN').format(diamondPrice)}';
-          final totals = '₹ ${NumberFormat('#,##0.00', 'en_IN').format(total)}';
+          final totals =
+              '₹ ${NumberFormat('#,##0.00', 'en_IN').format(total)}';
 
           final diamondList = currentVariant?['jewelry_diamonds'] ?? [];
           final allImages = currentVariant?['allImages'] ?? [];
           final video = currentVariant?['video'] ?? [];
 
-          final list = recommendedjewellerylist.data['data'];
-
-          String getShapeText() {
-            try {
-              return currentVariant!['jewelry_diamonds']?[1]?['shape']
-                      ?['paraname'] ??
-                  'N/A';
-            } catch (e) {
-              return 'N/A';
-            }
-          }
+          final freqItems = recommendedjewellerylist.freqBoughtItems;
+          final matchItems = recommendedjewellerylist.matchingItems;
+          final legacyList =
+              recommendedjewellerylist.data['data'] as List? ?? [];
 
           final indianFormat = NumberFormat.currency(
-              locale: 'en_IN', symbol: '₹', decimalDigits: 2);
+              locale: 'en_IN', symbol: '₹', decimalDigits: 0);
 
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: Get.height / 80),
-                  _buildImageGallery(allImages, video),
-                  SizedBox(height: Get.height / 80),
+                  // 1. Image Gallery with Overlaid Badges, Arrow Controls & Wishlist Icon
+                  _buildImageGallery(allImages, video, jewellery),
+                  SizedBox(height: 12),
+
                   horizontalpadding(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: Get.height / 50),
+                        // 2. Title, SKU, Price Row
                         _buildProductHeader(
                             currentVariant, jewellery, indianFormat),
-                        SizedBox(height: Get.height / 50),
+                        SizedBox(height: 16),
+
+                        // 3. Offers Coupon Box
+                        _buildOffersCard(),
+                        SizedBox(height: 16),
+
+                        // 4. Variant Selectors (Metal, Color Grid, Shapes, Diamond Size Grid, Diamond Quality, Ring Size)
                         _buildVariantOptions(
+                          jewellery: jewellery,
                           variants: variants,
                           uniqueMetalStamps: uniqueMetalStamps,
                           availableColors: availableColors,
@@ -226,41 +260,73 @@ class _ShowproductState extends State<Showproduct> {
                           diamondQualities: diamondQualities,
                           currentVariant: currentVariant,
                         ),
-                        SizedBox(height: Get.height / 50),
-                        _buildDescriptionSection(
-                            currentVariant?['description']),
-                        SizedBox(height: Get.height / 50),
+                        SizedBox(height: 20),
+
+                        // 5. Expandable Accordion Sections (Product Details, Side Diamond Details, Price Breakup)
                         _buildAccordionSections(
                           currentVariant: currentVariant,
+                          jewellery: jewellery,
                           totaldiamondsCenter: totaldiamondsCenter,
                           totalweightCenter: totalweightCenter,
                           totaldiamondsSide: totaldiamondsSide,
                           totalweightSide: totalweightSide,
-                          shapeText: getShapeText(),
-                          goldPrices: goldPrices,
-                          makingChargs: makingChargs,
-                          diamoinds: diamoinds,
-                          totals: totals,
+                          goldPrice: goldPrice,
+                          makingCharge: makingCharge,
+                          diamondPrice: diamondPrice,
+                          indianFormat: indianFormat,
                         ),
-                        SizedBox(height: Get.height / 50),
-                        _buildCustomerSupportInfo(),
-                        SizedBox(height: Get.height / 50),
-                        Divider(color: AppColor.textfild_color),
-                        SizedBox(height: Get.height / 50),
-                        _buildTrustBadges(),
-                        SizedBox(height: Get.height / 50),
-                        if (list != null) ...[
-                          Text(AppString.youMay,
-                              style: TextStyle(
-                                  fontFamily: 'Lora',
-                                  fontSize: Get.width * 0.045)),
-                          SizedBox(height: Get.height / 80),
-                        ],
+                        SizedBox(height: 16),
+
+                        // 6. Description Text with "Read More"
+                        _buildDescriptionSection(
+                            currentVariant?['description']),
+                        SizedBox(height: 20),
+
+                        // 7. Policy & Customer Service Card
+                        _buildPolicyCard(),
+                        SizedBox(height: 24),
                       ],
                     ),
                   ),
-                  if (list != null) _buildRecommendedProducts(list),
-                  SizedBox(height: Get.height / 80),
+
+                  // 8. Frequently Bought Together Carousel
+                  if (freqItems.isNotEmpty) ...[
+                    horizontalpadding(
+                      child: Text(
+                        "Frequently Bought Together",
+                        style: TextStyle(
+                          fontFamily: 'Lora',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black_color,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    _buildTypedRecommendedCarousel(freqItems, indianFormat),
+                    SizedBox(height: 24),
+                  ],
+
+                  // 9. Similar Designs / Matching Items Carousel
+                  if (matchItems.isNotEmpty || legacyList.isNotEmpty) ...[
+                    horizontalpadding(
+                      child: Text(
+                        AppString.similarDesigns,
+                        style: TextStyle(
+                          fontFamily: 'Lora',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black_color,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    matchItems.isNotEmpty
+                        ? _buildTypedRecommendedCarousel(
+                            matchItems, indianFormat)
+                        : _buildSimilarDesigns(legacyList, indianFormat),
+                    SizedBox(height: 24),
+                  ],
                 ],
               ),
             ),
@@ -270,364 +336,282 @@ class _ShowproductState extends State<Showproduct> {
     );
   }
 
-  // 1. Bottom Navigation Bar Widget (Add to Cart / Buy Now)
-  Widget _buildBottomNavigationBar(Map<String, dynamic> jewellery) {
-    return Container(
-      height: Get.height * 0.070,
-      color: AppColor.white_color,
-      child: horizontalpadding(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Add to cart
-            GestureDetector(
-              onTap: () async {
-                if (isGuest) {
-                  List<JewelryItem> currentItems =
-                      await localdatabase.getJewelryItems();
-                  currentItems.add(
-                    JewelryItem(
-                      jewelryId: jewellery['id'].toString(),
-                      ringSize:
-                          productController.selectedRingSizeId.value.toString(),
-                      qty: 1,
-                    ),
-                  );
-                  await localdatabase.saveJewelryItems(currentItems);
-                  Withoutlogin().withoutlogin(currentItems);
-
-                  userguest.cartcount.value = currentItems.length;
-                  pref!
-                      .setString('count', userguest.cartcount.value.toString());
-                  cartCount = pref!.getString('count') ?? '0';
-
-                  Withoutlogin().data['count'] = userguest.cartcount.value;
-                  existingItemsCart = currentItems;
-
-                  ToastificationSuccess.Success('Add To cart Suessfully');
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    myCart.loadCartData();
-                  });
-                  setState(() {});
-                } else {
-                  if (widget.categoryslug == 'rings' ||
-                      widget.categoryslug == 'engagement-rings') {
-                    if (productController.selectedRingSizeId.value == null &&
-                        productController.selectedRingSizeParaname.value ==
-                            null) {
-                      ToastificationError.Error('Please select ring size');
-                    } else {
-                      if (Addtocart().isLoading.value) {
-                        Get.dialog(
-                            Center(child: Lottie.asset(AppJson.loading2)));
-                      } else {
-                        Addtocart()
-                            .addtocartservice(
-                          jewelryid: jewellery['id'].toString(),
-                          ringsize: productController.selectedRingSizeId.value
-                              .toString(),
-                          tokan: tokans,
-                        )
-                            .then((_) {
-                          setState(() {
-                            count.counting();
-                            myCart.onInit();
-                          });
-                        });
-                      }
-                    }
-                  } else {
-                    if (Addtocart().isLoading.value) {
-                      Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                    } else {
-                      Addtocart()
-                          .addtocartservice(
-                        jewelryid: jewellery['id'].toString(),
-                        ringsize: "",
-                        tokan: tokans,
-                      )
-                          .then((_) {
-                        setState(() {
-                          count.counting();
-                          myCart.onInit();
-                        });
-                      });
-                    }
-                  }
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.105,
-                    vertical: Get.height * 0.015),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Get.width / 50),
-                  color: Colors.black,
-                ),
-                child: Text(AppString.addtocart,
-                    style: TextStyle(color: AppColor.white_color)),
-              ),
-            ),
-
-            // Buy Now
-            GestureDetector(
-              onTap: () async {
-                if (isGuest) {
-                  Get.offAll(() => Login());
-                } else {
-                  if (widget.categoryslug == 'rings' ||
-                      widget.categoryslug == 'engagement-rings') {
-                    if (productController.selectedRingSizeId.value == null &&
-                        productController.selectedRingSizeParaname.value ==
-                            null) {
-                      ToastificationError.Error('Please select ring size');
-                    } else {
-                      if (Addtocart().isLoading.value) {
-                        Get.dialog(
-                            Center(child: Lottie.asset(AppJson.loading2)));
-                      } else {
-                        await Addtocart().addtocartservice(
-                          jewelryid: jewellery['id'].toString(),
-                          ringsize: productController.selectedRingSizeId.value
-                              .toString(),
-                          tokan: tokans,
-                        );
-                        if (!mounted) return;
-                        setState(() {
-                          count.counting();
-                          myCart.onInit();
-                        });
-                        Bottom();
-                        bottamSelect.indexThree();
-                        Get.back();
-                        Get.back();
-                        Get.back();
-                      }
-                    }
-                  } else {
-                    if (Addtocart().isLoading.value) {
-                      Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-                    } else {
-                      await Addtocart().addtocartservice(
-                        jewelryid: jewellery['id'].toString(),
-                        ringsize: '',
-                        tokan: tokans,
-                      );
-                      if (!mounted) return;
-                      setState(() {
-                        count.counting();
-                        myCart.onInit();
-                      });
-                      Bottom();
-                      bottamSelect.indexThree();
-                      Get.back();
-                      Get.back();
-                      Get.back();
-                    }
-                  }
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.14, vertical: Get.height * 0.015),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Get.width / 50),
-                  color: Colors.black,
-                ),
-                child: Text(AppString.buynow,
-                    style: TextStyle(color: AppColor.white_color)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 2. Shimmer Loading Skeleton
-  Widget _buildShimmerLoading() {
-    return Shimmer.fromColors(
-      baseColor: AppColor.lodingcolor,
-      highlightColor: AppColor.highlightColor,
-      child: horizontalpadding(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: Get.height / 50),
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Get.width / 50),
-                    border: Border.all(color: AppColor.white_color)),
-                child: Container(
-                  height: Get.height * 0.50,
-                  decoration: BoxDecoration(
-                    color: AppColor.white_color,
-                    borderRadius: BorderRadius.circular(Get.width / 50),
-                  ),
-                ),
-              ),
-              SizedBox(height: Get.height / 80),
-              SizedBox(
-                height: Get.height / 8.5,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Get.width / 50),
-                          border: Border.all(color: AppColor.white_color)),
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Get.width / 50),
-                          color: AppColor.white_color,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: Get.height / 50),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 140, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: AppColor.white_color,
-                          borderRadius: BorderRadius.circular(Get.width / 50),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Get.height / 130),
-                  Row(
-                    children: [
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 120, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: AppColor.white_color,
-                          borderRadius: BorderRadius.circular(Get.width / 50),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: Get.height / 50),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // 3. Error State Widget
-  Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            "No product data available",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              jewellerydetail.jewellerydetailservices(slug: widget.slug);
-            },
-            child: Text("Retry"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 4. Image Gallery & Thumbnail Slider
-  Widget _buildImageGallery(List allImages, List video) {
+  // 1. Image Gallery Component with Arrows, Wishlist Icon & Overlay Badges
+  Widget _buildImageGallery(
+      List allImages, List video, Map<String, dynamic> jewellery) {
     return Obx(() {
       final selectindex = productController.selectindex.value;
       return Column(
         children: [
-          horizontalpadding(
-            child: Container(
-              height: video.isNotEmpty ? Get.height / 2 : null,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
-                border: Border.all(color: AppColor.textfild_color),
-              ),
-              child: selectindex < allImages.length
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(Get.width / 50),
-                      child: PhotoView(
-                        imageProvider:
-                            NetworkImage(allImages[selectindex]['feature']),
-                        backgroundDecoration:
-                            BoxDecoration(color: Colors.transparent),
-                        minScale: PhotoViewComputedScale.contained,
-                        maxScale: PhotoViewComputedScale.covered * 4,
-                        initialScale: PhotoViewComputedScale.covered,
-                        enableRotation: false,
+          Container(
+            height: Get.height * 0.42,
+            width: double.infinity,
+            color: Color(0xFFF9F9F9),
+            child: Stack(
+              children: [
+                // Image or Video Display
+                Positioned.fill(
+                  child: selectindex < allImages.length
+                      ? ClipRRect(
+                          child: PhotoView(
+                            imageProvider:
+                                NetworkImage(allImages[selectindex]['feature']),
+                            backgroundDecoration:
+                                BoxDecoration(color: Color(0xFFF9F9F9)),
+                            minScale: PhotoViewComputedScale.contained,
+                            maxScale: PhotoViewComputedScale.covered * 4,
+                            initialScale: PhotoViewComputedScale.contained,
+                            enableRotation: false,
+                          ),
+                        )
+                      : (video.isNotEmpty
+                          ? VideoPlayerMenuContainer(videoUrl: video[0]['path'])
+                          : Placeholder()),
+                ),
+
+                // Left Navigation Arrow
+                if (allImages.length > 1)
+                  Positioned(
+                    left: 12,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          if (selectindex > 0) {
+                            productController.selectindex.value--;
+                          } else {
+                            productController.selectindex.value =
+                                allImages.length - 1;
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            AppIcon.arrowBackIosNew,
+                            size: 18,
+                            color: Colors.black87,
+                          ),
+                        ),
                       ),
-                    )
-                  : (video.isNotEmpty
-                      ? horizontalpadding(
-                          child: VideoPlayerMenuContainer(
-                              videoUrl: video[0]['path']))
-                      : Placeholder()),
+                    ),
+                  ),
+
+                // Right Navigation Arrow
+                if (allImages.length > 1)
+                  Positioned(
+                    right: 12,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          if (selectindex < allImages.length - 1) {
+                            productController.selectindex.value++;
+                          } else {
+                            productController.selectindex.value = 0;
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(AppIcon.arrowForwardIos,
+                              size: 18, color: Colors.black87),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                // Top-Right Floating Wishlist Heart Button
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: GestureDetector(
+                    onTap: () => _handleWishlistToggle(jewellery),
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: (isGuest)
+                          ? FutureBuilder<List<JewelryItemWish>>(
+                              future: localdatabase.getJewelryItemsWish(),
+                              builder: (context, snapshot) {
+                                final exists = snapshot.hasData &&
+                                    snapshot.data!.any((item) =>
+                                        item.jewelryId ==
+                                        jewellery['id'].toString());
+                                return SvgPicture.asset(
+                                  exists ? AppIcon.heart : AppIcon.like,
+                                  width: 22,
+                                  height: 22,
+                                  color: exists ? AppColor.pink_color : null,
+                                );
+                              },
+                            )
+                          : (count.data['wishlist']?['jewelry_ids']
+                                      ?.contains(jewellery['id']) ??
+                                  false)
+                              ? SvgPicture.asset(AppIcon.heart,
+                                  width: 22,
+                                  height: 22,
+                                  color: AppColor.pink_color)
+                              : SvgPicture.asset(AppIcon.like,
+                                  width: 22, height: 22),
+                    ),
+                  ),
+                ),
+
+                // Bottom Overlay Bar with 3 Trust Icons
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.92),
+                      border: Border(
+                          top: BorderSide(
+                              color: AppColor.textfild_color, width: 0.5)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          children: [
+                            SvgPicture.asset(AppIcon.puzzle,
+                                width: 14, color: AppColor.pink_color),
+                            SizedBox(width: 4),
+                            Text(AppString.ethicalSourcing,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColor.black_color)),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(AppIcon.social,
+                                width: 14, color: AppColor.pink_color),
+                            SizedBox(width: 4),
+                            Text(AppString.igiCertified,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColor.black_color)),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(AppIcon.diamond,
+                                width: 14, color: AppColor.pink_color),
+                            SizedBox(width: 4),
+                            Text(AppString.bisHallmark,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColor.black_color)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: Get.height / 80),
+          SizedBox(height: 10),
+
+          // Horizontal Thumbnail Strip + 360° Rotate Button
           SizedBox(
-            height: Get.height * 0.11,
+            height: 64,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: allImages.length + video.length,
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              itemCount: allImages.length + (video.isNotEmpty ? 1 : 0) + 1,
               itemBuilder: (context, index) {
                 if (index < allImages.length) {
+                  final isSelected = selectindex == index;
                   return GestureDetector(
                     onTap: () => productController.selectindex.value = index,
                     child: Container(
-                      width: Get.width / 4.5,
-                      margin: EdgeInsets.only(left: Get.width / 25),
+                      width: 58,
+                      height: 58,
+                      margin: EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadiusDirectional.circular(Get.width / 50),
-                        border: Border.all(color: AppColor.textfild_color),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColor.pink_color
+                              : AppColor.textfild_color,
+                          width: isSelected ? 2 : 1,
+                        ),
                         image: DecorationImage(
-                            image: NetworkImage(allImages[index]['feature']),
-                            fit: BoxFit.cover),
+                          image: NetworkImage(allImages[index]['feature']),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (index <
+                    allImages.length + (video.isNotEmpty ? 1 : 0)) {
+                  return GestureDetector(
+                    onTap: () =>
+                        productController.selectindex.value = allImages.length,
+                    child: Container(
+                      width: 58,
+                      height: 58,
+                      margin: EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColor.textfild_color),
+                      ),
+                      child: Center(
+                        child: Icon(AppIcon.playCircleFill,
+                            color: AppColor.pink_color, size: 28),
                       ),
                     ),
                   );
                 } else {
-                  final videoIndex = index - allImages.length;
-                  return GestureDetector(
-                    onTap: () => productController.selectindex.value =
-                        allImages.length + videoIndex,
-                    child: Container(
-                      width: Get.width / 4.5,
-                      margin: EdgeInsets.only(
-                          right: Get.width / 50, left: Get.width / 50),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadiusDirectional.circular(Get.width / 50),
-                        border: Border.all(color: AppColor.textfild_color),
-                      ),
-                      child: Center(
-                          child: VideoPlayerMenuContainer(
-                              videoUrl: video[0]['path'])),
+                  return Container(
+                    width: 58,
+                    height: 58,
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.textfild_color),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(AppIcon.autorenew,
+                            size: 22, color: Colors.black87),
+                        SizedBox(height: 2),
+                        Text(
+                          AppString.threeSixty,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -639,173 +623,160 @@ class _ShowproductState extends State<Showproduct> {
     });
   }
 
-  // 5. Product Title, SKU, Wishlist Heart & Price
+  // 2. Product Header (Title, SKU, Price + Strikethrough)
   Widget _buildProductHeader(Map<String, dynamic>? currentVariant,
       Map<String, dynamic> jewellery, NumberFormat indianFormat) {
+    final settingPrice = currentVariant?['setting_price'] ?? 0;
+    final title =
+        currentVariant?['title'] ?? jewellery['title'] ?? 'Product Title';
+    final sku = currentVariant?['itemcode'] ?? jewellery['itemcode'] ?? 'N/A';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: Get.width / 1.5,
-                  child: Text(
-                    currentVariant?['title'] ?? 'Product Title',
-                    style: TextStyle(
-                        fontFamily: 'Lora', fontSize: Get.width * 0.045),
-                  ),
-                ),
-                SizedBox(height: Get.width / 50),
-                SizedBox(
-                  width: Get.width / 1.5,
-                  child: Text(
-                    'SKU: ${currentVariant?['itemcode'] ?? 'N/A'}',
-                    style: TextStyle(
-                        fontSize: Get.width * 0.040,
-                        color: AppColor.grey_color),
-                  ),
-                ),
-                SizedBox(height: Get.width / 50),
-              ],
-            ),
-            SizedBox(width: Get.width / 10),
-            // Wishlist Toggle Button
-            GestureDetector(
-              onTap: () async {
-                if (isGuest) {
-                  List<JewelryItemWish> currentItemswish =
-                      await localdatabase.getJewelryItemsWish();
-                  final jewelryId = jewellery['id'].toString();
-                  final exists = currentItemswish
-                      .any((item) => item.jewelryId == jewelryId);
-                  if (exists) {
-                    currentItemswish
-                        .removeWhere((item) => item.jewelryId == jewelryId);
-                    ToastificationSuccess.Success('Removed from Wishlist');
-                  } else {
-                    currentItemswish.add(
-                      JewelryItemWish(
-                        jewelryId: jewellery['id'].toString(),
-                        ringSize: productController.selectedRingSizeId.value
-                            .toString(),
-                        qty: 1,
-                      ),
-                    );
-                    ToastificationSuccess.Success('Added to Wishlist');
-                  }
-                  await localdatabase.saveJewelryItemsWish(currentItemswish);
-                  WithoutloginWishList().withoutloginwishlist(currentItemswish);
-
-                  wishguest.wishcount.value = currentItemswish.length;
-                  pref!.setString(
-                      'wishcount', wishguest.wishcount.value.toString());
-                  wishCount = pref!.getString('wishcount') ?? '0';
-
-                  setState(() {
-                    isWishlistedGuest = !exists;
-                  });
-                  existingItemsWish = currentItemswish;
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    wish.withoutloginWish
-                        .withoutloginwishlist(currentItemswish);
-                  });
-                  Get.forceAppUpdate();
-                  setState(() {});
-                } else {
-                  if (widget.categoryslug == 'rings' ||
-                      widget.categoryslug == 'engagement-rings') {
-                    if (productController.selectedRingSizeId.value == null &&
-                        productController.selectedRingSizeParaname.value ==
-                            null) {
-                      ToastificationError.Error('Please select ring size');
-                      return;
-                    }
-                  }
-
-                  if (wishlist.isLoading.value) {
-                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)),
-                        barrierDismissible: false);
-                    return;
-                  }
-
-                  try {
-                    Get.dialog(Center(child: Lottie.asset(AppJson.loading2)),
-                        barrierDismissible: false);
-                    await wishlist.wishlistservice(
-                      ringsize:
-                          productController.selectedRingSizeParaname.value,
-                      jewelryid: currentVariant?['id'].toString(),
-                      metal_stamp: isWishlisted
-                          ? productController.selectedMetalStamp.value
-                          : null,
-                      metal_type: productController.selectedMetalType.value,
-                      tokan: tokans,
-                    );
-                    Get.back();
-
-                    setState(() {
-                      isWishlisted = !isWishlisted;
-                    });
-
-                    count.counting();
-                    wish.fetchwishlist.fechwishlist();
-                  } catch (e) {
-                    Get.back();
-                    print('Wishlist error: $e');
-                  }
-                }
-              },
-              child: (isGuest)
-                  ? FutureBuilder<List<JewelryItemWish>>(
-                      future: localdatabase.getJewelryItemsWish(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final exists = snapshot.data!.any((item) =>
-                              item.jewelryId == jewellery['id'].toString());
-                          return SvgPicture.asset(
-                            exists ? AppIcon.heart : AppIcon.like,
-                            width: 30,
-                            height: 30,
-                            color: exists ? AppColor.pink_color : null,
-                          );
-                        }
-                        return SvgPicture.asset(AppIcon.like,
-                            width: 30, height: 30);
-                      },
-                    )
-                  : (count.data['wishlist']?['jewelry_ids']
-                              ?.contains(currentVariant?['id']) ??
-                          false)
-                      ? SvgPicture.asset(AppIcon.heart,
-                          width: 30, height: 30, color: AppColor.pink_color)
-                      : SvgPicture.asset(AppIcon.like, width: 30, height: 30),
-            ),
-          ],
+        // Product Title
+        Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Lora',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColor.black_color,
+            height: 1.3,
+          ),
         ),
+        SizedBox(height: 4),
+
+        // SKU Line
+        Text(
+          "${AppString.skuLabel} $sku",
+          style: TextStyle(
+            fontSize: 12,
+            color: AppColor.grey_color,
+          ),
+        ),
+        SizedBox(height: 8),
+
+        // Price Row
         Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              indianFormat.format(currentVariant?['setting_price']),
+              indianFormat.format(settingPrice),
               style: TextStyle(
-                  color: AppColor.pink_color,
-                  fontWeight: FontWeight.w600,
-                  fontSize: Get.width * 0.045),
+                color: AppColor.black_color,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(width: Get.width / 150),
-            Text("(inclusive of all taxes)",
-                style: TextStyle(color: AppColor.grey_color)),
+            SizedBox(width: 8),
+            Text(
+              indianFormat.format(settingPrice),
+              style: TextStyle(
+                color: AppColor.pink_color.withOpacity(0.8),
+                fontSize: 14,
+                decoration: TextDecoration.lineThrough,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ],
     );
   }
 
-  // 6. Variant Options (Metal Stamp, Color, Shape, Carat, Ring Size, Diamond Quality)
+  // 3. Offers Coupon Box
+  Widget _buildOffersCard() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(AppString.offersLabel,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.black_color)),
+            Text(AppString.viewAll,
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.pink_color)),
+          ],
+        ),
+        SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Color(0xFFFFF7F8),
+            borderRadius: BorderRadius.circular(8),
+            border: Border(
+              left: BorderSide(color: AppColor.pink_color, width: 4.0),
+              top: BorderSide(color: Color(0xFFFDE8EC), width: 1.0),
+              right: BorderSide(color: Color(0xFFFDE8EC), width: 1.0),
+              bottom: BorderSide(color: Color(0xFFFDE8EC), width: 1.0),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text("KOHIRA253510",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black_color)),
+                  SizedBox(width: 8),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFFDE8EC),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text("On Diamond & Making Charges",
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: AppColor.pink_color,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 6),
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(fontSize: 12, color: AppColor.grey_color),
+                  children: [
+                    TextSpan(text: "Use Code "),
+                    TextSpan(
+                        text: "KOHIRA253510",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black_color)),
+                    TextSpan(
+                        text: " & get 30% off on orders above ₹50,000 ... "),
+                    TextSpan(
+                        text: AppString.readMore,
+                        style: TextStyle(
+                            color: AppColor.pink_color,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 4. Variant Selection & Action Buttons (Add To Cart + Whatsapp)
   Widget _buildVariantOptions({
+    required Map<String, dynamic> jewellery,
     required List variants,
     required List<String> uniqueMetalStamps,
     required Map<String, bool> availableColors,
@@ -816,7 +787,6 @@ class _ShowproductState extends State<Showproduct> {
   }) {
     return Obx(() {
       final selectedMetalStamp = productController.selectedMetalStamp.value;
-      final selectedMetalType = productController.selectedMetalType.value;
       final selectedShape = productController.selectedShape.value;
       final selectedDiamondQuality =
           productController.selectedDiamondQuality.value;
@@ -827,771 +797,474 @@ class _ShowproductState extends State<Showproduct> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Metal Stamp Selection
+          // 1. Metal Stamp Selector
+          Text(
+            AppString.metalLabel,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColor.black_color,
+            ),
+          ),
+          SizedBox(height: 8),
           Row(
-            children: [
-              Text('Metal:',
-                  style: TextStyle(
-                      fontSize: Get.width * 0.040,
-                      fontWeight: FontWeight.w500)),
-              SizedBox(width: 10),
-              Expanded(
-                child: SizedBox(
-                  height: 40,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: uniqueMetalStamps.length,
-                    itemBuilder: (context, index) {
-                      final stamp = uniqueMetalStamps[index];
-                      final isSelected = selectedMetalStamp == stamp;
+            children: uniqueMetalStamps.map((stamp) {
+              final isSelected = selectedMetalStamp == stamp;
+              final displayStamp = stamp.toUpperCase().endsWith('KT')
+                  ? stamp.toUpperCase()
+                  : "${stamp.replaceAll('k', '').toUpperCase()} KT";
 
-                      return GestureDetector(
-                        onTap: () {
-                          productController.selectMetalStamp(stamp, variants);
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          margin: EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: isSelected
-                                    ? Colors.amber
-                                    : AppColor.textfild_color),
-                            color: isSelected
-                                ? Colors.amber.withOpacity(0.1)
-                                : Colors.transparent,
-                          ),
-                          child: Center(
-                            child: Text(
-                              stamp,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: Get.width / 30,
-                                color: isSelected ? Colors.amber : Colors.black,
-                              ),
-                            ),
-                          ),
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => productController.selectMetalStamp(
+                      stamp, variants),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    margin: EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColor.pink_color
+                            : AppColor.textfild_color,
+                        width: isSelected ? 1.5 : 1.0,
+                      ),
+                      color: isSelected
+                          ? Color(0xFFFFF7F8)
+                          : AppColor.white_color,
+                    ),
+                    child: Center(
+                      child: Text(
+                        displayStamp,
+                        style: TextStyle(
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w400,
+                          fontSize: 12,
+                          color: isSelected
+                              ? AppColor.pink_color
+                              : AppColor.black_color,
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: Get.height / 50),
-
-          // Color Selection
-          Row(
-            children: [
-              Text('Color:',
-                  style: TextStyle(
-                      fontSize: Get.width * 0.040,
-                      fontWeight: FontWeight.w500)),
-              SizedBox(width: Get.width / 50),
-              if (availableColors['Yellow Gold'] ?? false) ...[
-                _buildColorButton(
-                  border: BoxBorder.all(color: AppColor.glodcolor),
-                  color: AppColor.glodcolor,
-                  isSelected: goldcolor,
-                  onTap: () =>
-                      productController.updateColorState('Yellow Gold'),
-                ),
-                SizedBox(width: Get.width / 80),
-              ],
-              if (availableColors['Rose Gold'] ?? false) ...[
-                _buildColorButton(
-                  border: BoxBorder.all(color: AppColor.rosegoldcolor),
-                  color: AppColor.rosegoldcolor,
-                  isSelected: rosegoldcolor,
-                  onTap: () => productController.updateColorState('Rose Gold'),
-                ),
-                SizedBox(width: Get.width / 80),
-              ],
-              if (availableColors['White Gold'] ?? false) ...[
-                _buildColorButton(
-                  border: BoxBorder.all(color: AppColor.graycolor),
-                  color: AppColor.graycolor,
-                  isSelected: graycolor,
-                  onTap: () => productController.updateColorState('White Gold'),
-                ),
-              ],
-            ],
-          ),
-          SizedBox(height: Get.height / 50),
-
-          // Diamond Shape Selector
-          if (uniqueShapes.isNotEmpty) ...[
-            Row(
-              children: [
-                Text(
-                  'Shape:',
-                  style: TextStyle(
-                    fontSize: Get.width * 0.040,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: Get.width / 50),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: uniqueShapes.map((shape) {
-                        bool isSelected = selectedShape != null &&
-                            selectedShape['id'] == shape['id'];
-                        return GestureDetector(
-                          onTap: () => productController.filterVariantsByShape(
-                            shape: shape,
-                            diamondType: 'center',
-                            variants: variants,
-                          ),
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: isSelected ? Colors.amber : Colors.grey,
-                                width: isSelected ? 2 : 1,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: EdgeInsets.all(8),
-                            child: Image.network(shape['image'],
-                                width: 40, height: 40),
-                          ),
-                        );
-                      }).toList(),
+                      ),
                     ),
                   ),
                 ),
-              ],
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 16),
+
+          // 2. Metal Color Grid Cards
+          Text(
+            AppString.metalColorLabel,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColor.black_color,
             ),
-            SizedBox(height: Get.height / 50),
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              if (availableColors['Yellow Gold'] ?? false)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () =>
+                        productController.updateColorState('Yellow Gold'),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      margin: EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: goldcolor
+                            ? Color(0xFFFFF7F8)
+                            : AppColor.white_color,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: goldcolor
+                              ? AppColor.pink_color
+                              : AppColor.textfild_color,
+                          width: goldcolor ? 1.5 : 1.0,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: AppColor.glodcolor, radius: 10),
+                          SizedBox(height: 4),
+                          Text('Yellow Gold',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: goldcolor
+                                      ? FontWeight.bold
+                                      : FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              if (availableColors['Rose Gold'] ?? false)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () =>
+                        productController.updateColorState('Rose Gold'),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      margin: EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: rosegoldcolor
+                            ? Color(0xFFFFF7F8)
+                            : AppColor.white_color,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: rosegoldcolor
+                              ? AppColor.pink_color
+                              : AppColor.textfild_color,
+                          width: rosegoldcolor ? 1.5 : 1.0,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: AppColor.rosegoldcolor,
+                              radius: 10),
+                          SizedBox(height: 4),
+                          Text('Rose Gold',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: rosegoldcolor
+                                      ? FontWeight.bold
+                                      : FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              if (availableColors['White Gold'] ?? false)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () =>
+                        productController.updateColorState('White Gold'),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: graycolor
+                            ? Color(0xFFFFF7F8)
+                            : AppColor.white_color,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: graycolor
+                              ? AppColor.pink_color
+                              : AppColor.textfild_color,
+                          width: graycolor ? 1.5 : 1.0,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: AppColor.graycolor, radius: 10),
+                          SizedBox(height: 4),
+                          Text('White Gold',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: graycolor
+                                      ? FontWeight.bold
+                                      : FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: 16),
+
+          // 3. Diamond Shape Selector Cards
+          if (uniqueShapes.isNotEmpty) ...[
+            Text(
+              AppString.diamondShapeLabel,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.black_color),
+            ),
+            SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: uniqueShapes.map((shape) {
+                  bool isSelected = selectedShape != null &&
+                      selectedShape['id'] == shape['id'];
+                  return GestureDetector(
+                    onTap: () => productController.filterVariantsByShape(
+                      shape: shape,
+                      diamondType: 'center',
+                      variants: variants,
+                    ),
+                    child: Container(
+                      width: 75,
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      margin: EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColor.pink_color
+                              : AppColor.textfild_color,
+                          width: isSelected ? 1.5 : 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(6),
+                        color: isSelected
+                            ? Color(0xFFFFF7F8)
+                            : AppColor.white_color,
+                      ),
+                      child: Column(
+                        children: [
+                          Image.network(shape['image'],
+                              width: 24, height: 24),
+                          SizedBox(height: 4),
+                          Text(
+                            shape['paraname'] ?? '',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isSelected
+                                  ? AppColor.pink_color
+                                  : AppColor.black_color,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(height: 16),
           ],
 
-          // Carat Weight
+          // 4. Center Diamond Size / Carat Grid
           if (productController
               .getUniqueCarats(variants, diamondType: 'center')
               .isNotEmpty) ...[
-            Row(
-              children: [
-                Text('Carat Weight : ',
-                    style: TextStyle(
-                        fontSize: Get.width * 0.040,
-                        fontWeight: FontWeight.w500)),
-                SizedBox(width: Get.width / 50),
-                Expanded(
-                  child: SizedBox(
-                    height: Get.height / 20,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: productController
-                          .getUniqueCarats(variants, diamondType: 'center')
-                          .length,
-                      itemBuilder: (context, index) {
-                        final carat = productController.getUniqueCarats(
-                            variants,
-                            diamondType: 'center')[index];
-                        final isSelected =
-                            currentVariant?['total_carat'] == carat;
-
-                        return Padding(
-                          padding: EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            color: WidgetStatePropertyAll(
-                                Colors.amber.withOpacity(0.1)),
-                            label: Text(
-                                '${carat.toStringAsFixed(3).replaceAll(RegExp(r'\.0+$'), '')} ct',
-                                style: TextStyle(color: Colors.amber)),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              if (selected) {
-                                productController.filterVariantsByCarat(carat,
-                                    diamondType: 'center', variants: variants);
-                              }
-                            },
-                            backgroundColor: Colors.amber.withOpacity(0.1),
-                            selectedColor: Colors.amber.withOpacity(0.1),
-                            shape: StadiumBorder(
-                                side: BorderSide(
-                                    color: Colors.amber, width: 1.5)),
-                          ),
-                        );
-                      },
+            Text(
+              AppString.centerDiamondSizeLabel,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.black_color),
+            ),
+            SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: productController
+                  .getUniqueCarats(variants, diamondType: 'center')
+                  .map((carat) {
+                final isSelected = currentVariant?['total_carat'] == carat;
+                return GestureDetector(
+                  onTap: () => productController.filterVariantsByCarat(
+                      carat,
+                      diamondType: 'center',
+                      variants: variants),
+                  child: Container(
+                    width: (Get.width - 48) / 3,
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Color(0xFFFFF7F8)
+                          : AppColor.white_color,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColor.pink_color
+                            : AppColor.textfild_color,
+                        width: isSelected ? 1.5 : 1.0,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        carat.toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w400,
+                          color: isSelected
+                              ? AppColor.pink_color
+                              : AppColor.black_color,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                );
+              }).toList(),
             ),
-            SizedBox(height: Get.height / 50),
+            SizedBox(height: 16),
           ],
 
-          // Ring Size
+          // 5. Diamond Quality Selector (2 Pills)
+          if (diamondQualities.isNotEmpty) ...[
+            Text(
+              AppString.diamondQualityLabel,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.black_color),
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: diamondQualities.map((quality) {
+                final isSelected = selectedDiamondQuality == quality;
+
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      productController.selectedDiamondQuality.value = quality;
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      margin: EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColor.pink_color
+                              : AppColor.textfild_color,
+                          width: isSelected ? 1.5 : 1.0,
+                        ),
+                        color: isSelected
+                            ? Color(0xFFFFF7F8)
+                            : AppColor.white_color,
+                      ),
+                      child: Center(
+                        child: Text(
+                          quality,
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.w400,
+                            fontSize: 13,
+                            color: isSelected
+                                ? AppColor.pink_color
+                                : AppColor.black_color,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 16),
+          ],
+
+          // 6. Ring Size Dropdown & Size Guide
           if (allRingSizes.isNotEmpty) ...[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Ring Size:',
-                    style: TextStyle(
-                        fontSize: Get.width * 0.040,
-                        fontWeight: FontWeight.w500)),
-                SizedBox(width: Get.width / 50),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.textfild_color),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: DropdownButton<String>(
-                    hint: Text(""),
-                    menuMaxHeight: Get.height / 5,
-                    borderRadius: BorderRadius.circular(Get.width / 50),
-                    value: productController.selectedRingSizeParaname.value,
-                    items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
-                      return DropdownMenuItem<String>(
-                        value: ring['paraname'].toString(),
-                        child: Text(ring['paraname'].toString()),
-                        onTap: () => productController
-                            .selectedRingSizeId.value = ring['id'].toString(),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      productController.selectedRingSizeParaname.value = value;
-                    },
-                    underline: SizedBox(),
-                    icon: SizedBox(),
+                Text(
+                  AppString.ringSizeLabel,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.black_color),
+                ),
+                Text(
+                  AppString.sizeGuide,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColor.pink_color,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(width: Get.width / 50),
-                Text('Find Ring Size'),
               ],
             ),
-            SizedBox(height: Get.height / 50),
-          ],
-
-          // Diamond Quality Selection
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Diamond Quality:',
-                  style: TextStyle(
-                      fontSize: Get.width * 0.040,
-                      fontWeight: FontWeight.w500)),
-              SizedBox(width: Get.width / 40),
-              Expanded(
-                child: SizedBox(
-                  height: 40,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: diamondQualities.length,
-                    itemBuilder: (context, index) {
-                      final quality = diamondQualities[index];
-                      final isSelected = selectedDiamondQuality == quality;
-
-                      return GestureDetector(
-                        onTap: () {
-                          productController.selectedDiamondQuality.value =
-                              quality;
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          margin: EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: isSelected
-                                    ? Colors.amber
-                                    : AppColor.textfild_color),
-                            color: isSelected
-                                ? Colors.amber.withOpacity(0.1)
-                                : Colors.transparent,
-                          ),
-                          child: Center(
-                              child: Text(quality,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: Get.width / 30,
-                                      color: isSelected
-                                          ? Colors.amber
-                                          : Colors.black))),
-                        ),
-                      );
-                    },
-                  ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColor.textfild_color),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  menuMaxHeight: 180,
+                  value: productController.selectedRingSizeParaname.value,
+                  items: allRingSizes.map<DropdownMenuItem<String>>((ring) {
+                    return DropdownMenuItem<String>(
+                      value: ring['paraname'].toString(),
+                      child: Text("${ring['paraname']} (16.88 mm)",
+                          style: TextStyle(fontSize: 13)),
+                      onTap: () => productController
+                          .selectedRingSizeId.value = ring['id'].toString(),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    productController.selectedRingSizeParaname.value = value;
+                  },
+                  icon: Icon(AppIcon.keyboardArrowDown, size: 20),
                 ),
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 16),
+          ],
         ],
       );
     });
   }
 
-  // 7. Product Description Text
-  Widget _buildDescriptionSection(String? description) {
-    if (description == null || description.isEmpty) return SizedBox.shrink();
-    return Text(
-      description,
-      style: TextStyle(color: AppColor.grey_color, fontSize: Get.width * 0.035),
-    );
-  }
-
-  // 8. Accordion Details Sections
+  // 5. Accordion Expandable Sections (Product Details, Side Diamond Details, Price Breakup)
   Widget _buildAccordionSections({
     required Map<String, dynamic>? currentVariant,
+    required Map<String, dynamic> jewellery,
     required String? totaldiamondsCenter,
     required String? totalweightCenter,
     required String? totaldiamondsSide,
     required String? totalweightSide,
-    required String shapeText,
-    required String goldPrices,
-    required String makingChargs,
-    required String diamoinds,
-    required String totals,
+    required double goldPrice,
+    required double makingCharge,
+    required double diamondPrice,
+    required NumberFormat indianFormat,
   }) {
     return Obx(() {
       final productdetails = productController.productdetails.value;
       final sidediamondDetails = productController.sidediamondDetails.value;
-      final centerdiamondDetails = productController.centerdiamondDetails.value;
-      final metal = productController.metal.value;
       final priceBreakup = productController.priceBreakup.value;
 
       return Column(
         children: [
-          // Product Details Accordion
-          GestureDetector(
+          // 1. Product Details Accordion
+          _buildAccordionCard(
+            title: AppString.productDetailsHeader,
+            isOpen: productdetails,
             onTap: () => productController.toggleProductDetails(),
-            child: Container(
-              color: AppColor.white_color,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Product details',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                        Text(productdetails ? '-' : '+',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    ),
-                    Divider(color: AppColor.dividercolor),
-                    AnimatedCrossFade(
-                      firstChild: SizedBox.shrink(),
-                      secondChild: Column(
-                        children: [
-                          SizedBox(height: Get.height / 150),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Product Code :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(currentVariant?['itemcode'] ?? 'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Category :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['metal_type']?['slug'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Product Weight(apx) :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  "${currentVariant?['metalweight'].toString()} gram",
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          if (currentVariant?['total_carat'] != null)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Diamond Weight(apx) :',
-                                    style:
-                                        TextStyle(color: AppColor.grey_color)),
-                                Text(currentVariant!['total_carat'].toString(),
-                                    style:
-                                        TextStyle(color: AppColor.grey_color)),
-                              ],
-                            ),
-                          SizedBox(height: Get.height / 100),
-                        ],
-                      ),
-                      crossFadeState: productdetails
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: _buildProductDetailsCard(currentVariant, jewellery),
           ),
-          SizedBox(height: Get.height / 150),
 
-          // Side Diamond Details Accordion
-          GestureDetector(
+          // 2. Side Diamond Details Accordion
+          _buildAccordionCard(
+            title: AppString.sideDiamondDetailsHeader,
+            isOpen: sidediamondDetails,
             onTap: () => productController.toggleSideDiamondDetails(),
-            child: Container(
-              color: AppColor.white_color,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Side Diamond Details',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                        Text(sidediamondDetails ? '-' : '+',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    ),
-                    Divider(color: AppColor.dividercolor),
-                    AnimatedCrossFade(
-                      firstChild: SizedBox.shrink(),
-                      secondChild: Column(
-                        children: [
-                          SizedBox(height: Get.height / 150),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Color :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['jewelry_diamonds']?[0]
-                                          ?['color'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Clarity :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['jewelry_diamonds']?[0]
-                                          ?['clarity'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Shape :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(shapeText,
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Pieces :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(totaldiamondsSide ?? '0',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total Weight :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(totalweightSide ?? '0',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          SizedBox(height: Get.height / 100),
-                        ],
-                      ),
-                      crossFadeState: sidediamondDetails
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: _buildSideDiamondCard(
+                currentVariant, totaldiamondsSide, totalweightSide),
           ),
-          SizedBox(height: Get.height / 150),
 
-          // Center Diamond Details Accordion
-          GestureDetector(
-            onTap: () => productController.toggleCenterDiamondDetails(),
-            child: Container(
-              color: AppColor.white_color,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Center Diamond Details',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                        Text(centerdiamondDetails ? '-' : '+',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    ),
-                    Divider(color: AppColor.dividercolor),
-                    AnimatedCrossFade(
-                      firstChild: SizedBox.shrink(),
-                      secondChild: Column(
-                        children: [
-                          SizedBox(height: Get.height / 150),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Shape :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['jewelry_diamonds']?[0]
-                                          ?['shape']?['paraname'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Color :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['jewelry_diamonds']?[0]
-                                          ?['color'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Clarity :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['jewelry_diamonds']?[0]
-                                          ?['clarity'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Pieces :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(totaldiamondsCenter ?? '0',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total Weight :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(totalweightCenter ?? '0',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          SizedBox(height: Get.height / 100),
-                        ],
-                      ),
-                      crossFadeState: centerdiamondDetails
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: Get.height / 150),
-
-          // Metal Accordion
-          GestureDetector(
-            onTap: () => productController.toggleMetal(),
-            child: Container(
-              color: AppColor.white_color,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Metal',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                        Text(metal ? '-' : '+',
-                            style: TextStyle(
-                                fontSize: Get.width * 0.040,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    ),
-                    Divider(color: AppColor.dividercolor),
-                    AnimatedCrossFade(
-                      firstChild: SizedBox.shrink(),
-                      secondChild: Column(
-                        children: [
-                          SizedBox(height: Get.height / 150),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Type :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['metal_type']?['paraname'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Stamp :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(
-                                  currentVariant?['metal_stamp']?['paraname'] ??
-                                      'N/A',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          SizedBox(height: Get.height / 100),
-                        ],
-                      ),
-                      crossFadeState: metal
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: Get.height / 150),
-
-          // Price Breakup Accordion
-          GestureDetector(
+          // 3. Price Breakup Accordion
+          _buildAccordionCard(
+            title: AppString.priceBreakUp,
+            isOpen: priceBreakup,
             onTap: () => productController.togglePriceBreakup(),
-            child: Container(
-              color: AppColor.white_color,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Price Breakup',
-                          style: TextStyle(
-                              fontSize: Get.width * 0.040,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          priceBreakup ? '-' : '+',
-                          style: TextStyle(
-                              fontSize: Get.width * 0.040,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    AnimatedCrossFade(
-                      firstChild: SizedBox.shrink(),
-                      secondChild: Column(
-                        children: [
-                          SizedBox(height: Get.height / 150),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Gold Price :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(goldPrices,
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Making Charges :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(makingChargs,
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Diamond Price :',
-                                  style: TextStyle(color: AppColor.grey_color)),
-                              Text(diamoinds,
-                                  style: TextStyle(color: AppColor.grey_color)),
-                            ],
-                          ),
-                          SizedBox(height: Get.height / 150),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total :-',
-                                  style: TextStyle(
-                                      color: AppColor.pink_color,
-                                      fontSize: Get.width / 24,
-                                      fontWeight: FontWeight.w600)),
-                              Text(totals,
-                                  style: TextStyle(
-                                      color: AppColor.pink_color,
-                                      fontSize: Get.width / 24,
-                                      fontWeight: FontWeight.w600)),
-                            ],
-                          ),
-                          SizedBox(height: Get.height / 100),
-                        ],
-                      ),
-                      crossFadeState: priceBreakup
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                    Divider(color: AppColor.textfild_color),
-                  ],
-                ),
-              ),
+            child: _buildPriceBreakupTable(
+              goldPrice: goldPrice,
+              makingCharge: makingCharge,
+              diamondPrice: diamondPrice,
+              currentVariant: currentVariant,
+              indianFormat: indianFormat,
             ),
           ),
         ],
@@ -1599,116 +1272,595 @@ class _ShowproductState extends State<Showproduct> {
     });
   }
 
-  // 9. Customer Support Info Icons & Text
-  Widget _buildCustomerSupportInfo() {
+  // Reusable Accordion Card Wrapper
+  Widget _buildAccordionCard({
+    required String title,
+    required bool isOpen,
+    required VoidCallback onTap,
+    required Widget child,
+  }) {
     return Column(
       children: [
-        Row(
-          children: [
-            SvgPicture.asset(AppIcon.support,
-                color: AppColor.graycolor, width: 28),
-            SizedBox(width: Get.width / 30),
-            Text('24 / 7 Customer Service Live Chat',
-                style: TextStyle(fontSize: Get.width / 28)),
-          ],
-        ),
-        SizedBox(height: Get.height / 150),
-        Row(
-          children: [
-            SvgPicture.asset(AppIcon.mobileIcon,
-                color: AppColor.graycolor, width: 28),
-            SizedBox(width: Get.width / 30),
-            SizedBox(
-              width: Get.width / 1.3,
-              child: Text('Call us at +917851005200 (9:30 AM to 8:00 PM)',
-                  style: TextStyle(fontSize: Get.width / 28)),
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 14),
+            color: AppColor.white_color,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.black_color,
+                  ),
+                ),
+                Icon(
+                  isOpen ? AppIcon.keyboardArrowUp : AppIcon.keyboardArrowDown,
+                  color: AppColor.black_color,
+                  size: 20,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-        Row(
-          children: [
-            SvgPicture.asset(AppIcon.mail,
-                color: AppColor.graycolor, width: 28),
-            SizedBox(width: Get.width / 30),
-            Text('Have a question? Send us an email',
-                style: TextStyle(fontSize: Get.width / 28)),
-          ],
+        if (isOpen) Padding(padding: EdgeInsets.only(bottom: 12), child: child),
+        Container(color: AppColor.textfild_color, height: 1.0),
+      ],
+    );
+  }
+
+  // Side Diamond Details Card
+  Widget _buildSideDiamondCard(Map<String, dynamic>? currentVariant,
+      String? totaldiamondsSide, String? totalweightSide) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Color(0xFFF9F9F9),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Color :', style: TextStyle(color: AppColor.grey_color)),
+              Text(
+                  currentVariant?['jewelry_diamonds']?[0]?['color'] ?? 'N/A',
+                  style: TextStyle(color: AppColor.grey_color)),
+            ],
+          ),
+          SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Clarity :', style: TextStyle(color: AppColor.grey_color)),
+              Text(
+                  currentVariant?['jewelry_diamonds']?[0]?['clarity'] ?? 'N/A',
+                  style: TextStyle(color: AppColor.grey_color)),
+            ],
+          ),
+          SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Pieces :', style: TextStyle(color: AppColor.grey_color)),
+              Text(totaldiamondsSide ?? '0',
+                  style: TextStyle(color: AppColor.grey_color)),
+            ],
+          ),
+          SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
+              Text(totalweightSide ?? '0',
+                  style: TextStyle(color: AppColor.grey_color)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 6. Product Description Section with "Read More"
+  Widget _buildDescriptionSection(String? description) {
+    final text = description ??
+        "Embrace The Captivating Glow Of The Square Radiance Halo Ring. This Exquisite Piece Features Brilliant Type IIA Lab Grown Diamonds...";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: TextSpan(
+            style: TextStyle(
+                fontSize: 13, color: AppColor.grey_color, height: 1.4),
+            children: [
+              TextSpan(text: text),
+              TextSpan(
+                text: " ${AppString.readMore}",
+                style: TextStyle(
+                  color: AppColor.pink_color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  // 10. Trust Badges (Ethical Sourcing, Lifetime Warranty, IGI Certified, BIS Hallmark)
-  Widget _buildTrustBadges() {
+  // 7. Policy & Customer Service Grey Card
+  Widget _buildPolicyCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color(0xFFF7F7F7),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: const [
+              Icon(AppIcon.autorenew, size: 22, color: Colors.black87),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  AppString.returnPolicyText,
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12),
+          Row(
+            children: const [
+              Icon(AppIcon.verifiedOutlined, size: 22, color: Colors.black87),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  AppString.buybackPolicyText,
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 14),
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: TextStyle(fontSize: 11, color: AppColor.grey_color),
+              children: const [
+                TextSpan(text: AppString.anyQuestionsText),
+                TextSpan(
+                    text: "+917851005200",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black87)),
+                TextSpan(text: AppString.supportTiming),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 8. Product Details Grid Card (Specs Grid Box)
+  Widget _buildProductDetailsCard(
+      Map<String, dynamic>? currentVariant, Map<String, dynamic> jewellery) {
+    final sku = currentVariant?['itemcode'] ?? jewellery['itemcode'] ?? 'N/A';
+    final metalStamp = currentVariant?['metal_stamp']?['paraname']
+            ?.toString()
+            .toUpperCase() ??
+        '9KT';
+    final metalType =
+        currentVariant?['metal_type']?['paraname']?.toString() ?? 'Yellow Gold';
+    final metalWeight = currentVariant?['metalweight']?.toString() ?? '4.35';
+
+    final diamonds = currentVariant?['jewelry_diamonds'] as List? ?? [];
+    final diamondCount = diamonds.isNotEmpty
+        ? (diamonds[0]['totaldiamonds']?.toString() ?? '51')
+        : '51';
+    final diamondClarity = diamonds.isNotEmpty
+        ? (diamonds[0]['clarity']?.toString() ?? 'SI IJ')
+        : 'SI IJ';
+    final totalCarat = currentVariant?['all_total_carat']?.toString() ??
+        currentVariant?['total_carat']?.toString() ??
+        '0.237';
+
+    final width = currentVariant?['width']?.toString() ??
+        jewellery['width']?.toString() ??
+        '7.22';
+    final height = currentVariant?['height']?.toString() ??
+        jewellery['height']?.toString() ??
+        '22.11';
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFF9F9F9),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColor.textfild_color),
+      ),
+      padding: EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppString.productDetailsHeader,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.black_color,
+                ),
+              ),
+              Text(
+                "${AppString.skuLabel} $sku",
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColor.grey_color,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12),
+
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColor.white_color,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Color(0xFFEEEEEE)),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(AppIcon.workspacePremiumOutlined,
+                          size: 20, color: Colors.black87),
+                      SizedBox(height: 4),
+                      Text(
+                        "$metalStamp $metalType",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        "$metalWeight Gram",
+                        style: TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        AppString.goldWeight,
+                        style: TextStyle(
+                            fontSize: 10, color: AppColor.grey_color),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColor.white_color,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Color(0xFFEEEEEE)),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(AppIcon.diamondOutlined,
+                          size: 20, color: Colors.black87),
+                      SizedBox(height: 4),
+                      Text(
+                        "$diamondCount $diamondClarity Diamonds",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        "$totalCarat Ct",
+                        style: TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        AppString.diamondWeight,
+                        style: TextStyle(
+                            fontSize: 10, color: AppColor.grey_color),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColor.white_color,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Color(0xFFEEEEEE)),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  "$metalWeight Gram",
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  AppString.productWeight,
+                  style: TextStyle(fontSize: 10, color: AppColor.grey_color),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColor.white_color,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Color(0xFFEEEEEE)),
+            ),
+            child: Column(
+              children: [
+                Icon(AppIcon.straightenOutlined,
+                    size: 20, color: Colors.black87),
+                SizedBox(height: 4),
+                Text(
+                  AppString.productDimensions,
+                  style: TextStyle(fontSize: 10, color: AppColor.grey_color),
+                ),
+                SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          "$height Mm",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        Text(AppString.heightLabel,
+                            style: TextStyle(
+                                fontSize: 10, color: AppColor.grey_color)),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          "$width Mm",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        Text(AppString.widthLabel,
+                            style: TextStyle(
+                                fontSize: 10, color: AppColor.grey_color)),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 9. Price Breakup Table Matrix
+  Widget _buildPriceBreakupTable({
+    required double goldPrice,
+    required double makingCharge,
+    required double diamondPrice,
+    required Map<String, dynamic>? currentVariant,
+    required NumberFormat indianFormat,
+  }) {
+    final metalStamp = currentVariant?['metal_stamp']?['paraname']
+            ?.toString()
+            .toUpperCase() ??
+        '9K';
+    final metalType =
+        currentVariant?['metal_type']?['paraname']?.toString() ?? 'Yellow Gold';
+    final metalWeight = currentVariant?['metalweight']?.toString() ?? '2.000';
+    final total = goldPrice + makingCharge + diamondPrice;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppString.headingMade,
-            style: TextStyle(fontFamily: 'Lora', fontSize: Get.width * 0.045)),
-        SizedBox(height: Get.height / 150),
-        Text(AppString.conceptMade,
-            style: TextStyle(
-                fontSize: Get.width * 0.035, color: AppColor.grey_color)),
-        SizedBox(height: Get.height / 50),
         Container(
           decoration: BoxDecoration(
-            color: AppColor.showcontainercolor,
-            borderRadius: BorderRadius.circular(Get.width / 80),
+            border: Border.all(color: AppColor.textfild_color),
+            borderRadius: BorderRadius.circular(6),
           ),
-          padding: EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          child: Table(
+            border: TableBorder.symmetric(
+              inside: BorderSide(color: AppColor.textfild_color, width: 1.0),
+            ),
+            columnWidths: const {
+              0: FlexColumnWidth(2.5),
+              1: FlexColumnWidth(1.8),
+              2: FlexColumnWidth(1.8),
+              3: FlexColumnWidth(2.0),
+            },
             children: [
-              Column(
-                children: [
-                  SvgPicture.asset(AppIcon.puzzle,
-                      color: AppColor.grey_color, width: 35),
-                  SizedBox(height: Get.height / 80),
-                  Text(
-                      textAlign: TextAlign.center,
-                      'Ethical\nSourcing',
-                      style: TextStyle(
-                          fontSize: Get.width / 28,
-                          color: AppColor.grey_color)),
+              TableRow(
+                decoration: BoxDecoration(color: Color(0xFFF7F7F7)),
+                children: const [
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.component,
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.rate,
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.weightHeader,
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.finalValue,
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
                 ],
               ),
-              Column(
-                children: [
-                  SvgPicture.asset(AppIcon.warranty,
-                      color: AppColor.grey_color, width: 35),
-                  SizedBox(height: Get.height / 80),
-                  Text(
-                      textAlign: TextAlign.center,
-                      'Lifetime\nWarranty',
-                      style: TextStyle(
-                          fontSize: Get.width / 28,
-                          color: AppColor.grey_color)),
+              TableRow(
+                children: const [
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("Gold", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("-", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("-", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("-", style: TextStyle(fontSize: 11))),
                 ],
               ),
-              Column(
+              TableRow(
                 children: [
-                  SvgPicture.asset(AppIcon.social,
-                      color: AppColor.grey_color, width: 35),
-                  SizedBox(height: Get.height / 80),
-                  Text(
-                      textAlign: TextAlign.center,
-                      'IGI Certified\nDiamonds',
-                      style: TextStyle(
-                          fontSize: Get.width / 28,
-                          color: AppColor.grey_color)),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("$metalStamp $metalType",
+                          style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("₹ 2,401/g", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("$metalWeight g",
+                          style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(indianFormat.format(goldPrice),
+                          style: TextStyle(fontSize: 11))),
                 ],
               ),
-              Column(
+              TableRow(
+                decoration: BoxDecoration(color: Color(0xFFFAFAFA)),
                 children: [
-                  SvgPicture.asset(AppIcon.diamond,
-                      color: AppColor.grey_color, width: 35),
-                  SizedBox(height: Get.height / 80),
-                  Text(
-                      textAlign: TextAlign.center,
-                      'BIS\nHallmark',
-                      style: TextStyle(
-                          fontSize: Get.width / 28,
-                          color: AppColor.grey_color)),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.totalGoldValue,
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("-", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("-", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(indianFormat.format(goldPrice),
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                ],
+              ),
+              TableRow(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.makingCharges,
+                          style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(indianFormat.format(makingCharge),
+                          style: TextStyle(fontSize: 11))),
+                ],
+              ),
+              TableRow(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.otherCharges,
+                          style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(indianFormat.format(50),
+                          style: TextStyle(fontSize: 11))),
+                ],
+              ),
+              TableRow(
+                decoration: BoxDecoration(color: Color(0xFFFAFAFA)),
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.subTotalLabel,
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w600))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(indianFormat.format(total),
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w600))),
+                ],
+              ),
+              TableRow(
+                decoration: BoxDecoration(color: Color(0xFFF5F5F5)),
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(AppString.grandTotal,
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("", style: TextStyle(fontSize: 11))),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(indianFormat.format(total),
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold))),
                 ],
               ),
             ],
@@ -1718,91 +1870,508 @@ class _ShowproductState extends State<Showproduct> {
     );
   }
 
-  // 11. Recommended Products Horizontal Carousel
-  Widget _buildRecommendedProducts(List list) {
+  // 10. Typed Recommended Items Carousel Widget
+  Widget _buildTypedRecommendedCarousel(
+      List<RecommendedItem> items, NumberFormat indianFormat) {
     return SizedBox(
-      height: Get.height * 0.25,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          double imageSize = constraints.maxHeight * 0.65;
-          double textHeight = constraints.maxHeight * 0.2;
-          double imageRadius = Get.width / 50;
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: list.length,
-            itemBuilder: (BuildContext context, int index) {
-              final recommended = list[index];
-              return GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  Get.back();
-                  print(recommended['slug']);
-                  Get.to(() => Showproduct(
-                        slug: recommended['slug'],
-                        categoryslug: '',
-                      ));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(
-                      left: Get.width / 25, right: Get.width / 50),
-                  width: Get.width * 0.35,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: imageSize,
-                        width: imageSize,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(recommended['second_image']),
+      height: 220,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+
+          return GestureDetector(
+            onTap: () {
+              Get.to(() => Showproduct(
+                    slug: item.slug,
+                    categoryslug: '',
+                  ));
+            },
+            child: Container(
+              width: 145,
+              margin: EdgeInsets.only(right: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 135,
+                    width: 145,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF9F9F9),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.textfild_color),
+                    ),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            item.displayImage,
+                            width: 145,
+                            height: 135,
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Center(child: Icon(AppIcon.brokenImage)),
                           ),
-                          borderRadius: BorderRadius.circular(imageRadius),
+                        ),
+                        Positioned(
+                          top: 6,
+                          right: 6,
+                          child: Icon(AppIcon.favoriteBorder,
+                              size: 16, color: Colors.black54),
+                        ),
+                        Positioned(
+                          left: 4,
+                          top: 0,
+                          bottom: 0,
+                          child: Center(
+                            child: Icon(AppIcon.arrowBackIos,
+                                size: 12, color: Colors.black45),
+                          ),
+                        ),
+                        Positioned(
+                          right: 4,
+                          top: 0,
+                          bottom: 0,
+                          child: Center(
+                            child: Icon(AppIcon.arrowForwardIos,
+                                size: 12, color: Colors.black45),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        indianFormat.format(item.settingPrice),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black_color,
                         ),
                       ),
-                      SizedBox(height: constraints.maxHeight * 0.05),
-                      SizedBox(
-                        height: textHeight,
-                        child: Text(
-                          recommended['title'],
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: AppColor.grey_color,
-                              fontSize: Get.width * 0.03),
+                      SizedBox(width: 4),
+                      Text(
+                        indianFormat.format(item.settingPrice),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppColor.pink_color.withOpacity(0.8),
+                          decoration: TextDecoration.lineThrough,
                         ),
                       ),
                     ],
                   ),
-                ),
-              );
-            },
+                  SizedBox(height: 2),
+                  Text(
+                    item.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColor.black_color,
+                      height: 1.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
     );
   }
-}
 
-// Color Selection Circle Button
-Widget _buildColorButton({
-  required Color color,
-  required bool isSelected,
-  required VoidCallback onTap,
-  required BoxBorder border,
-}) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: isSelected ? border : null,
+  // Legacy Recommended Items Carousel
+  Widget _buildSimilarDesigns(List list, NumberFormat indianFormat) {
+    return SizedBox(
+      height: 220,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          final recommended = list[index];
+          final title = recommended['title']?.toString() ?? '';
+          final settingPrice = recommended['setting_price'] ?? 17401;
+          final imgUrl =
+              recommended['second_image'] ?? recommended['image'] ?? '';
+
+          return GestureDetector(
+            onTap: () {
+              Get.to(() => Showproduct(
+                    slug: recommended['slug'] ?? '',
+                    categoryslug: '',
+                  ));
+            },
+            child: Container(
+              width: 145,
+              margin: EdgeInsets.only(right: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 135,
+                    width: 145,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF9F9F9),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.textfild_color),
+                    ),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            imgUrl,
+                            width: 145,
+                            height: 135,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Center(child: Icon(AppIcon.brokenImage)),
+                          ),
+                        ),
+                        Positioned(
+                          top: 6,
+                          right: 6,
+                          child: Icon(AppIcon.favoriteBorder,
+                              size: 16, color: Colors.black54),
+                        ),
+                        Positioned(
+                          left: 4,
+                          top: 0,
+                          bottom: 0,
+                          child: Center(
+                            child: Icon(AppIcon.arrowBackIos,
+                                size: 12, color: Colors.black45),
+                          ),
+                        ),
+                        Positioned(
+                          right: 4,
+                          top: 0,
+                          bottom: 0,
+                          child: Center(
+                            child: Icon(AppIcon.arrowForwardIos,
+                                size: 12, color: Colors.black45),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        indianFormat.format(settingPrice),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black_color,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        indianFormat.format(settingPrice),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppColor.pink_color.withOpacity(0.8),
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColor.black_color,
+                      height: 1.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
-      child: CircleAvatar(backgroundColor: color, radius: 16),
-    ),
-  );
+    );
+  }
+
+  // Helper method for Wishlist Toggle
+  void _handleWishlistToggle(Map<String, dynamic> jewellery) async {
+    if (isGuest) {
+      List<JewelryItemWish> currentItemswish =
+          await localdatabase.getJewelryItemsWish();
+      final jewelryId = jewellery['id'].toString();
+      final exists =
+          currentItemswish.any((item) => item.jewelryId == jewelryId);
+      if (exists) {
+        currentItemswish.removeWhere((item) => item.jewelryId == jewelryId);
+        ToastificationSuccess.Success(AppString.removedFromWishlist);
+      } else {
+        currentItemswish.add(
+          JewelryItemWish(
+            jewelryId: jewellery['id'].toString(),
+            ringSize: productController.selectedRingSizeId.value.toString(),
+            qty: 1,
+          ),
+        );
+        ToastificationSuccess.Success(AppString.addedToWishlist);
+      }
+      await localdatabase.saveJewelryItemsWish(currentItemswish);
+      WithoutloginWishList().withoutloginwishlist(currentItemswish);
+
+      wishguest.wishcount.value = currentItemswish.length;
+      pref!.setString('wishcount', wishguest.wishcount.value.toString());
+      wishCount = pref!.getString('wishcount') ?? '0';
+
+      productController.isWishlistedGuest.value = !exists;
+      productController.existingItemsWish.value = currentItemswish;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        wish.withoutloginWish.withoutloginwishlist(currentItemswish);
+      });
+    } else {
+      if (categoryslug == 'rings' || categoryslug == 'engagement-rings') {
+        if (productController.selectedRingSizeId.value == null &&
+            productController.selectedRingSizeParaname.value == null) {
+          ToastificationError.Error(AppString.pleaseSelectRingSize);
+          return;
+        }
+      }
+
+      if (wishlist.isLoading.value) {
+        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)),
+            barrierDismissible: false);
+        return;
+      }
+
+      try {
+        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)),
+            barrierDismissible: false);
+        await wishlist.wishlistservice(
+          ringsize: productController.selectedRingSizeParaname.value,
+          jewelryid: jewellery['id'].toString(),
+          metal_stamp: productController.isWishlisted.value
+              ? productController.selectedMetalStamp.value
+              : null,
+          metal_type: productController.selectedMetalType.value,
+          tokan: tokans,
+        );
+        Get.back();
+
+        productController.isWishlisted.value =
+            !productController.isWishlisted.value;
+
+        count.counting();
+        wish.fetchwishlist.fechwishlist();
+      } catch (e) {
+        Get.back();
+        print('Wishlist error: $e');
+      }
+    }
+  }
+
+  // Helper method for Add To Cart
+  void _handleAddToCart(Map<String, dynamic> jewellery) async {
+    if (isGuest) {
+      List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
+      currentItems.add(
+        JewelryItem(
+          jewelryId: jewellery['id'].toString(),
+          ringSize: productController.selectedRingSizeId.value.toString(),
+          qty: 1,
+        ),
+      );
+      await localdatabase.saveJewelryItems(currentItems);
+      Withoutlogin().withoutlogin(currentItems);
+
+      userguest.cartcount.value = currentItems.length;
+      pref!.setString('count', userguest.cartcount.value.toString());
+      cartCount = pref!.getString('count') ?? '0';
+
+      Withoutlogin().data['count'] = userguest.cartcount.value;
+      existingItemsCart = currentItems;
+
+      ToastificationSuccess.Success(AppString.addToCartSuccess);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        myCart.loadCartData();
+      });
+    } else {
+      if (categoryslug == 'rings' || categoryslug == 'engagement-rings') {
+        if (productController.selectedRingSizeId.value == null &&
+            productController.selectedRingSizeParaname.value == null) {
+          ToastificationError.Error(AppString.pleaseSelectRingSize);
+        } else {
+          if (Addtocart().isLoading.value) {
+            Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+          } else {
+            Addtocart()
+                .addtocartservice(
+              jewelryid: jewellery['id'].toString(),
+              ringsize: productController.selectedRingSizeId.value.toString(),
+              tokan: tokans,
+            )
+                .then((_) {
+              count.counting();
+              myCart.onInit();
+            });
+          }
+        }
+      } else {
+        if (Addtocart().isLoading.value) {
+          Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
+        } else {
+          Addtocart()
+              .addtocartservice(
+            jewelryid: jewellery['id'].toString(),
+            ringsize: "",
+            tokan: tokans,
+          )
+              .then((_) {
+            count.counting();
+            myCart.onInit();
+          });
+        }
+      }
+    }
+  }
+
+  // Bottom Action Bar (Fixed at bottom: Add To Cart & Whatsapp)
+  Widget _buildBottomNavigationBar(Map<String, dynamic> jewellery) {
+    return Container(
+      height: 54,
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColor.white_color,
+        border: Border(
+          top: BorderSide(color: AppColor.textfild_color, width: 1.0),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Add To Cart Button (Pink Solid)
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: () => _handleAddToCart(jewellery),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.pink_color,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              icon: Icon(AppIcon.shoppingCartOutlined,
+                  size: 18, color: Colors.white),
+              label: Text(
+                AppString.addtocart,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+
+          // Whatsapp Button (Green Solid)
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: () => _launchWhatsapp(
+                  jewellery['title']?.toString() ?? 'Jewelry',
+                  jewellery['itemcode']?.toString() ?? ''),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF4CAF50),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              icon: Icon(AppIcon.chatBubbleOutline,
+                  size: 18, color: Colors.white),
+              label: Text(
+                AppString.whatsapp,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Shimmer Skeleton
+  Widget _buildShimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: AppColor.lodingcolor,
+      highlightColor: AppColor.highlightColor,
+      child: horizontalpadding(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 16),
+              Container(
+                height: Get.height * 0.40,
+                decoration: BoxDecoration(
+                  color: AppColor.white_color,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              SizedBox(height: 12),
+              SizedBox(
+                height: 60,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  itemBuilder: (context, index) => Container(
+                    width: 60,
+                    margin: EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Error State Widget
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(AppIcon.errorOutline, size: 64, color: Colors.grey),
+          SizedBox(height: 16),
+          Text(
+            AppString.noProductData,
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              jewellerydetail.jewellerydetailservices(slug: slug);
+            },
+            child: Text(AppString.retry),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class CartControllor extends GetxController {

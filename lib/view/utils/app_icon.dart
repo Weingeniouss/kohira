@@ -9,6 +9,26 @@ class AppIcon {
   static const IconData starBorderIcon = Icons.star_border;
   static const IconData storefrontRoundedIcon = Icons.storefront_rounded;
   static const IconData locationPinIcon = Icons.location_pin;
+  static const IconData arrowBack = Icons.arrow_back;
+  static const IconData phoneOutlined = Icons.phone_outlined;
+  static const IconData shoppingBagOutlined = Icons.shopping_bag_outlined;
+  static const IconData arrowBackIosNew = Icons.arrow_back_ios_new;
+  static const IconData arrowForwardIos = Icons.arrow_forward_ios;
+  static const IconData arrowBackIos = Icons.arrow_back_ios;
+  static const IconData playCircleFill = Icons.play_circle_fill;
+  static const IconData autorenew = Icons.autorenew;
+  static const IconData shoppingCartOutlined = Icons.shopping_cart_outlined;
+  static const IconData chatBubbleOutline = Icons.chat_bubble_outline;
+  static const IconData keyboardArrowDown = Icons.keyboard_arrow_down;
+  static const IconData keyboardArrowUp = Icons.keyboard_arrow_up;
+  static const IconData workspacePremiumOutlined =
+      Icons.workspace_premium_outlined;
+  static const IconData diamondOutlined = Icons.diamond_outlined;
+  static const IconData straightenOutlined = Icons.straighten_outlined;
+  static const IconData favoriteBorder = Icons.favorite_border;
+  static const IconData verifiedOutlined = Icons.verified_outlined;
+  static const IconData errorOutline = Icons.error_outline;
+  static const IconData brokenImage = Icons.broken_image;
 
   //inputType
   static const mail = 'asset/icon/inputType/mail.svg';
@@ -42,7 +62,7 @@ class AppIcon {
 
   //AppbarIcon
   static const shop = 'asset/icon/appbaricon/shop.svg';
-  static const menu ='asset/icon/appbaricon/menu.svg';
+  static const menu = 'asset/icon/appbaricon/menu.svg';
   static const like = 'asset/icon/appbaricon/like.svg';
   static const left = 'asset/icon/appbaricon/left.svg';
   static const heart = 'asset/icon/appbaricon/heart.svg';
@@ -72,21 +92,24 @@ class AppIcon {
   static const HelpCenter = 'asset/icon/drawericon/Helpcenter.svg';
   static const PrivacyPolicy = 'asset/icon/drawericon/Privacy.svg';
   static const Logout = 'asset/icon/drawericon/logout.svg';
-      //customJewellery
-          static const appx_weight = 'asset/icon/drawericon/appx_weight.svg';
-          static const ethical = 'asset/icon/drawericon/ethical.svg';
-          static const jewellery_type = 'asset/icon/drawericon/jewellery_type.svg';
-          static const metal_type = 'asset/icon/drawericon/metal_type.svg';
-          static const remark = 'asset/icon/drawericon/remark.svg';
-          static const returns = 'asset/icon/drawericon/return.svg';
-          static const budget = 'asset/icon/drawericon/budget.svg';
-          static const cat_jewelry = 'asset/icon/drawericon/cat_jewelry.svg';
-          static const cat_necklace1 = 'asset/icon/drawericon/cat_necklace1.svg';
-          static const cat_necklace = 'asset/icon/drawericon/cat_necklace.svg';
-          static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
-          static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
-          static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
-          static const ring_size = 'asset/icon/drawericon/ring_size.svg';
+
+  //customJewellery & categories
+  static const appx_weight = 'asset/icon/drawericon/appx_weight.svg';
+  static const ethical = 'asset/icon/drawericon/ethical.svg';
+  static const jewellery_type = 'asset/icon/drawericon/jewellery_type.svg';
+  static const metal_type = 'asset/icon/drawericon/metal_type.svg';
+  static const remark = 'asset/icon/drawericon/remark.svg';
+  static const returns = 'asset/icon/drawericon/return.svg';
+  static const budget = 'asset/icon/drawericon/budget.svg';
+  static const cat_jewelry = 'asset/icon/drawericon/cat_jewelry.svg';
+  static const cat_necklace1 = 'asset/icon/drawericon/cat_necklace1.svg';
+  static const cat_necklace = 'asset/icon/drawericon/cat_necklace.svg';
+  static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
+  static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
+  static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
+  static const cat_earrings = 'asset/icon/drawericon/cat_earrings.svg';
+  static const cat_ring = 'asset/icon/drawericon/cat_ring.svg';
+  static const ring_size = 'asset/icon/drawericon/ring_size.svg';
 
   //Paymants
   static const carts = 'asset/icon/payments/card.svg';
