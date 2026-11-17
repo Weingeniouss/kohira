@@ -2,17 +2,18 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/errorcode.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../view/utils/app_json.dart';
+import 'package:kohira/api/api_call.dart';
 
 //Add WishList
 class Wishlist extends GetxController {
@@ -54,25 +55,17 @@ class Wishlist extends GetxController {
 
       print('Wishlist body :- $body');
 
-      final response = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokan,
-          },
-        ),
-      );
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.data.toString());
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('Add to wishlist response :- $data');
         if (data['message'] != null && data['message'].toString().isNotEmpty) {
           ToastificationSuccess.Success(data['message']);
         }
       } else {
-        throw 'Add to wishlist Error :- ${response.data}, ${response.statusCode}';
+        throw 'Add to wishlist Error :- ${response}, ${200}';
       }
     } catch (e) {
       print('Add to wishlist Error :- $e');
@@ -93,21 +86,13 @@ class FetchWishtlist extends GetxController {
       isLoading.value = true;
       final url = AppUrl.wishlist;
       print("Sending Request To :- $url");
-      final responce = await DioClient.dio.get(
-        url,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce = await ApiCall.getRequest(url, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Wishlist data :- ${data.value}");
       } else {
         throw {
-          'Wishlist data Error :- ${responce.statusCode}, ${responce.data}',
+          'Wishlist data Error :- ${200}, ${responce}',
         };
       }
     } catch (e) {
@@ -129,23 +114,15 @@ class DeletWishtlist extends GetxController {
       final body = {'id': id};
       print("Sending Request To :- $url");
       print("Sending Request To delet Wishlist :- $body");
-      final responce = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Wishlist data :- ${data.value}");
       } else {
         throw {
-          'Wishlist data Error :- ${responce.statusCode}, ${responce.data}',
-          handleHttpError(responce.statusCode),
+          'Wishlist data Error :- ${200}, ${responce}',
+          handleHttpError(200),
         };
       }
     } catch (e) {

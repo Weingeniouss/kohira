@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'package:dio/dio.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../modal/credentials/login.dart';
+import 'package:kohira/api/api_call.dart';
 
 class LoginService {
   Future<Login?> loginUser(String email, String password) async {
@@ -12,20 +13,18 @@ class LoginService {
     print("Sending request to: $url");
 
     try {
-      final response = await DioClient.dio.post(
-        url,
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: jsonEncode({'email': email, 'password': password}),
-      );
+      final response = await ApiCall.postRequest(url,
+          data: jsonEncode({'email': email, 'password': password}),
+          useAuth: false);
 
-      if (response.statusCode == 200) {
-        final login = loginFromJson(response.data.toString());
+      if (response != null) {
+        final login = loginFromJson(jsonEncode(response));
         print('Login success:- ${login.toJson()}');
         print('Login success: ${login.message}');
         return login;
       } else {
-        print('Login failed with status: ${response.statusCode}');
-        print('Response body: ${response.data}');
+        print('Login failed with status: ${200}');
+        print('Response body: ${response}');
         return null;
       }
     } catch (e) {

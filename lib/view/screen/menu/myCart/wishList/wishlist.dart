@@ -8,6 +8,7 @@ import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
@@ -107,12 +108,12 @@ class WishlistScreen extends StatelessWidget {
                       onTap: () {
                         if (fetch != null && fetch['slug'] != null) {
                           print(fetch['slug']);
-                          Get.to(() => Showproduct(
-                                slug: fetch['slug'],
-                                categoryslug: fetch['category'] != null
-                                    ? fetch['category']['slug']
-                                    : '',
-                              ));
+                          AppRoutes.toShowProduct(
+                            slug: fetch['slug'],
+                            categoryslug: fetch['category'] != null
+                                ? fetch['category']['slug']
+                                : '',
+                          );
                         }
                       },
                       child: Container(

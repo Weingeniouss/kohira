@@ -2,11 +2,12 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class MetalType {
   final int id;
@@ -50,13 +51,10 @@ class JewelleryList extends GetxController {
     try {
       isLoading.value = true;
       final url = AppUrl.jewellery_filter;
-      final response = await DioClient.dio.get(
-        url,
-        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
-      );
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.data.toString());
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('Jewellery List :- $data');
 
         final List<dynamic> metalTypesData = data['data']['Metal_Type'] ?? [];
@@ -69,7 +67,7 @@ class JewelleryList extends GetxController {
             .map((item) => MetalStamp.fromJson(Map<String, dynamic>.from(item)))
             .toList();
       } else {
-        throw Exception('Error Jewellery List: ${response.statusCode}, ${response.data}');
+        throw Exception('Error Jewellery List: ${200}, ${response}');
       }
     } catch (e) {
       log('Error Jewellery List: $e');

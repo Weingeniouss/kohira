@@ -2,12 +2,11 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
-import 'package:kohira/view/utils/dio_client.dart';
 
 import '../../../../../modal/menu/category/subcategory/filtercategory.dart';
 import '../../../../../view/utils/API_headers.dart';
 import '../../../../../view/utils/app_url.dart';
+import 'package:kohira/api/api_call.dart';
 
 class FilterCategoryService {
   Future<Filtercategory?> fetchFilter() async {
@@ -15,17 +14,14 @@ class FilterCategoryService {
       final url = AppUrl.filtercategory;
       print('Sending request to :- $url');
 
-      final response = await DioClient.dio.post(
-        url,
-        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
-      );
+      final response = await ApiCall.postRequest(url, useAuth: false);
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.data.toString());
+      if (response != null) {
+        final jsonData = json.decode(jsonEncode(response));
         log('FilterCategory $jsonData');
         return Filtercategory.fromJson(jsonData);
       } else {
-        print('Error: ${response.statusCode} - ${response.data}');
+        print('Error: ${200} - ${response}');
         return null;
       }
     } catch (e) {

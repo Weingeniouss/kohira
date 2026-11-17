@@ -2,12 +2,12 @@
 
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class ProfileEdit extends GetxController {
   var isLoading = false.obs;
@@ -42,21 +42,13 @@ class ProfileEdit extends GetxController {
 
       print('Sending request to Profile Edit:- $body');
 
-      final response = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
 
-      final responseData = jsonDecode(response.data.toString());
+      final responseData = jsonDecode(jsonEncode(response));
       print('Profile Edit Raw Response: $responseData');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response != null) {
         data.value = responseData;
         return responseData;
       } else {

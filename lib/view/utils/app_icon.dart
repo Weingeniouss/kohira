@@ -29,6 +29,10 @@ class AppIcon {
   static const IconData verifiedOutlined = Icons.verified_outlined;
   static const IconData errorOutline = Icons.error_outline;
   static const IconData brokenImage = Icons.broken_image;
+  static const IconData stars = Icons.stars;
+  static const IconData deleteOutlineRounded = Icons.delete_outline_rounded;
+  static const IconData checkCircleRounded = Icons.check_circle_rounded;
+  static const IconData arrowForwardIosRounded = Icons.arrow_forward_ios_rounded;
 
   //inputType
   static const mail = 'asset/icon/inputType/mail.svg';

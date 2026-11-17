@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
-import 'package:dio/dio.dart';
-import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../../modal/menu/home/news_list.dart';
+import 'package:kohira/api/api_call.dart';
+import 'dart:convert';
 
 class NewsListService {
   final url = AppUrl.homenewslist;
@@ -16,26 +16,18 @@ class NewsListService {
         'page_no': '1',
         'per_page': '12',
       };
-      final response = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.contect: ApiHeaders.peramitters,
-          },
-        ),
-      );
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      print("News List Response Status: ${response.statusCode}");
-      print("News List Response Body: ${response.data}");
+      print("News List Response Status: ${200}");
+      print("News List Response Body: ${response}");
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final newsListModel = newsListModelFromJson(response.data.toString());
+      if (response != null) {
+        final newsListModel = newsListModelFromJson(jsonEncode(response));
         print('News List Data fetched successfully');
         return newsListModel;
       } else {
-        print('News List Error status: ${response.statusCode}');
+        print('News List Error status: ${200}');
       }
     } catch (e) {
       print('News List Error: $e');

@@ -3,13 +3,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kohira/modal/menu/category/recommendedJewelleryList.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class Recommendedjewellerylist extends GetxController {
   var isLoading = false.obs;
@@ -24,13 +24,10 @@ class Recommendedjewellerylist extends GetxController {
 
       final url = '${AppUrl.recommendedJewelleryList}/$slug';
       print("Sending request to: $url");
-      final responses = await DioClient.dio.get(
-        url,
-        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
-      );
+      final responses = await ApiCall.getRequest(url, useAuth: false);
 
-      if (responses.statusCode == 200 || responses.statusCode == 201) {
-        final decoded = jsonDecode(responses.data.toString());
+      if (responses != null) {
+        final decoded = jsonDecode(jsonEncode(responses));
         data.value = decoded;
         model.value = RecommendedJewelleryListModel.fromJson(decoded);
         freqBoughtItems.value = model.value?.freqBoughtItems ?? [];
@@ -38,7 +35,7 @@ class Recommendedjewellerylist extends GetxController {
         log('recommendedjewellerylistFuction data :- $data');
       } else {
         ToastificationError.Error(
-            'RecommendedjewellerylistFuction data Error :- ${responses.data}, ${responses.statusCode}');
+            'RecommendedjewellerylistFuction data Error :- ${responses}, ${200}');
       }
     } catch (e) {
       print('RecommendedjewellerylistFuction data Error this :- $e');

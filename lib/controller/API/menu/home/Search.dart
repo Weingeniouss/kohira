@@ -5,8 +5,9 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class SearchProduct extends GetxController {
   var isLoading = false.obs;
@@ -70,14 +71,15 @@ class SearchProduct extends GetxController {
         'page': page,
       }..removeWhere((key, value) => value == null);
 
-      final response = await DioClient.dio.post(url, data: body);
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final json = jsonDecode(response.data.toString());
+      if (response != null) {
+        final json = jsonDecode(jsonEncode(response));
         data.value = json['data'];
         ToastificationSuccess.Success(data.value['message']);
       } else {
-        log("API Error: ${response.statusCode}");
+        log("API Error: ${200}");
       }
     } catch (e) {
       log("Search Error: $e");

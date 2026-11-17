@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import 'package:kohira/modal/menu/category/subcategory/filtercategory.dart';
-import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 
@@ -161,8 +161,8 @@ class CategoryMenuDetailScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColor.black_color),
-          onPressed: () => Get.back(),
+          icon: SvgPicture.asset(AppIcon.left),
+          onPressed: () => AppRoutes.back(),
         ),
         title: Text(
           categoryItem.name,
@@ -177,7 +177,7 @@ class CategoryMenuDetailScreen extends StatelessWidget {
           Stack(
             children: [
               IconButton(
-                icon: SvgPicture.asset(AppIcon.heart, width: 22, height: 22),
+                icon: SvgPicture.asset(AppIcon.like, width: 22, height: 22),
                 onPressed: () {
                   Bottom();
                   bottamSelect.indexTwo();
@@ -263,12 +263,10 @@ class CategoryMenuDetailScreen extends StatelessWidget {
                   final subItem = subcategories[index];
                   return GestureDetector(
                     onTap: () {
-                      Get.to(
-                        () => Subcategorys(
-                          subcategrorys: categoryItem.slug,
-                          subcategory_slug: subItem.slug,
-                          subcategrorysname: subItem.name,
-                        ),
+                      AppRoutes.toSubcategory(
+                        subcategrorys: categoryItem.slug,
+                        subcategory_slug: subItem.slug,
+                        subcategrorysname: subItem.name,
                       );
                     },
                     child: Container(
@@ -386,11 +384,11 @@ class CategoryMenuDetailScreen extends StatelessWidget {
                       children: stamps.map((stamp) {
                         return GestureDetector(
                           onTap: () {
-                            Get.to(() => Subcategorys(
-                                  subcategrorys: categoryItem.slug,
-                                  metal_type: row['slug'],
-                                  subcategrorysname: "${row['name']} ($stamp)",
-                                ));
+                            AppRoutes.toSubcategory(
+                              subcategrorys: categoryItem.slug,
+                              metal_type: row['slug'],
+                              subcategrorysname: "${row['name']} ($stamp)",
+                            );
                           },
                           child: Container(
                             width: 44,
@@ -441,12 +439,12 @@ class CategoryMenuDetailScreen extends StatelessWidget {
               children: priceRanges.map((price) {
                 return GestureDetector(
                   onTap: () {
-                    Get.to(() => Subcategorys(
-                          subcategrorys: categoryItem.slug,
-                          price_min: price['min'],
-                          price_max: price['max'],
-                          subcategrorysname: AppString.product,
-                        ));
+                    AppRoutes.toSubcategory(
+                      subcategrorys: categoryItem.slug,
+                      price_min: price['min'],
+                      price_max: price['max'],
+                      subcategrorysname: AppString.product,
+                    );
                   },
                   child: Container(
                     width: Get.width * 0.45,

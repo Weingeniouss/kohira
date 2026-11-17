@@ -3,11 +3,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class Subcategrory extends GetxController {
   var isLoading = false.obs;
@@ -124,13 +125,10 @@ class Subcategrory extends GetxController {
         if (userid != null && userid.isNotEmpty) 'userid': userid,
       }..removeWhere((key, value) => value == null || value.toString().isEmpty);
       print('Subcategory BODY:- $body');
-      final response = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = jsonDecode(response.data.toString());
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
+      if (response != null) {
+        final jsonData = jsonDecode(jsonEncode(response));
         final newItems = jsonData['data'] ?? [];
         if (newItems.isEmpty) {
           hasMore.value = false;
@@ -147,7 +145,7 @@ class Subcategrory extends GetxController {
         }
         log('Subcategrory Response: $jsonData');
       } else {
-        print('Subcategrory Error: ${response.statusCode}, ${response.data}');
+        print('Subcategrory Error: ${200}, ${response}');
       }
     } catch (e) {
       print('Subcategrory Exception: $e');

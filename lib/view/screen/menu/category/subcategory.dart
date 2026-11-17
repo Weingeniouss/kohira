@@ -16,6 +16,7 @@ import 'package:kohira/view/screen/menu/category/showproduct.dart'
     show Showproduct;
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/lodingstate.dart';
 import 'package:lottie/lottie.dart';
@@ -617,10 +618,10 @@ class _SubcategorysState extends State<Subcategorys> {
       onTap: () {
         print('Id :- ${item['id']}');
         print('Slug :- ${item['slug']}');
-        Get.to(() => Showproduct(
-              slug: item['slug'],
-              categoryslug: item.toString(),
-            ));
+        AppRoutes.toShowProduct(
+          slug: item['slug'],
+          categoryslug: item.toString(),
+        );
         print('Title :- ${item.toString()}');
       },
       child: Column(

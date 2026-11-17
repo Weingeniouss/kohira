@@ -2,12 +2,13 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../../view/utils/app_constants.dart';
+import 'package:kohira/api/api_call.dart';
 
 class Myorderdetails extends GetxController {
   var isLoading = false.obs;
@@ -19,23 +20,13 @@ class Myorderdetails extends GetxController {
       final url = '${AppUrl.orderdetail}$id/myorder';
       print("Sending Request To :- $url");
 
-      final response = await DioClient.dio.get(
-        url,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
+      final response = await ApiCall.getRequest(url, useAuth: true);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.data.toString());
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('My Order Details :- ${data.value}');
       } else {
-        throw {
-          'My Order Details Error this :- ${response.data}, ${response.statusCode}'
-        };
+        throw {'My Order Details Error this :- ${response}, ${200}'};
       }
     } catch (e) {
       print("My Order Details Error this :- $e");

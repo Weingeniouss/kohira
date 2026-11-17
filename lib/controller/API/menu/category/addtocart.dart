@@ -1,17 +1,18 @@
 // ignore_for_file: avoid_print, invalid_use_of_protected_member, non_constant_identifier_names, duplicate_ignore
 
 import 'dart:convert';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../view/utils/app_json.dart';
 import '../../../../view/utils/errorcode.dart';
+import 'package:kohira/api/api_call.dart';
 
 class Addtocart extends GetxController {
   var isLoading = false.obs;
@@ -47,14 +48,11 @@ class Addtocart extends GetxController {
 
       print('Request body: $body');
 
-      final responcse = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(headers: {ApiHeaders.authorization: tokan}),
-      );
+      final responcse =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      if (responcse.statusCode == 200 || responcse.statusCode == 201) {
-        data.value = jsonDecode(responcse.data.toString());
+      if (responcse != null) {
+        data.value = jsonDecode(jsonEncode(responcse));
         print('Addtocart to cart data :-  $data');
         print('Request body: $body');
         ToastificationSuccess.Success(data.value['message']);
@@ -64,9 +62,9 @@ class Addtocart extends GetxController {
         }
       } else {
         throw {
-          'Addtocart to cart data Error :- ${responcse.statusCode}, ${responcse.data}',
-          print('${responcse.statusCode}, ${data.value['message']}'),
-          handleHttpError(responcse.statusCode),
+          'Addtocart to cart data Error :- ${200}, ${responcse}',
+          print('${200}, ${data.value['message']}'),
+          handleHttpError(200),
         };
       }
     } catch (e) {

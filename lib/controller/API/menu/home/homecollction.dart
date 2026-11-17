@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class Homecollction extends GetxController {
   var isLoading = false.obs;
@@ -16,16 +17,17 @@ class Homecollction extends GetxController {
 
       final url = AppUrl.homecollcation;
       final body = {'section_no': section_no};
-      final response = await DioClient.dio.post(url, data: body);
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final decoded = jsonDecode(response.data.toString());
+      if (response != null) {
+        final decoded = jsonDecode(jsonEncode(response));
         data[section_no.toString()] = decoded;
         log("homecollction data :- $data");
       } else {
         throw {
-          'homecollction data Error :- ${response.data}, ${response.statusCode}',
-          print('homecollction data Error :- ${response.statusCode}'),
+          'homecollction data Error :- ${response}, ${200}',
+          print('homecollction data Error :- ${200}'),
         };
       }
     } catch (e) {

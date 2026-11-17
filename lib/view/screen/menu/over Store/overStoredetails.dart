@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/API/menu/overstore/overstoredetails.dart';
 import 'package:kohira/controller/user_inerface/menu/overStore/overStoredetails.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -19,18 +18,16 @@ import '../../../utils/widget/button.dart';
 class OverstoredetailsScreen extends StatelessWidget {
   final String slug;
   OverstoredetailsScreen({super.key, required this.slug});
-  final overstoredetails = Get.put(OverStoreDetails());
   late final overstorUi = Get.put(OverstoredetailsController(slug: slug));
   @override
   Widget build(BuildContext context) {
-    overstorUi.onInit();
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname_2: AppString.OverStoreDetails),
       body: Container(
         width: Get.width, height: Get.height,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
-          if (overstoredetails.isLoading.value) {
+          if (overstorUi.isLoading.value) {
             return Shimmer.fromColors(
               baseColor: AppColor.lodingcolor,
               highlightColor: AppColor.highlightColor,
@@ -122,8 +119,8 @@ class OverstoredetailsScreen extends StatelessWidget {
               ),
             );
           }
-          if (overstoredetails.overStoreDetailsData.isEmpty || overstoredetails.overStoreDetailsData['data'] == null) return const Center(child: Text('No Data Found'));
-          final storeDetail = overstoredetails.overStoreDetailsData['data']['storeDetail'];
+          if (overstorUi.overStoreDetailsData.isEmpty || overstorUi.overStoreDetailsData['data'] == null) return const Center(child: Text('No Data Found'));
+          final storeDetail = overstorUi.overStoreDetailsData['data']['storeDetail'];
           final image = storeDetail['store_image'];
           final imagetitle = storeDetail['store_title_image'];
           return SafeArea(

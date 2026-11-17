@@ -2,14 +2,15 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/errorcode.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 //Fetch
 class Fechaddresses extends GetxController {
@@ -21,22 +22,14 @@ class Fechaddresses extends GetxController {
       isLoading.value = true;
       final url = AppUrl.addressesfeach;
       print("Sending Request To :- $url");
-      final responce = await DioClient.dio.get(
-        url,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
+      final responce = await ApiCall.getRequest(url, useAuth: true);
 
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Addresses :- ${data.value}");
       } else {
         throw {
-          'Addresses Error this :-  ${responce.statusCode}, ${responce.data}',
+          'Addresses Error this :-  ${200}, ${responce}',
         };
       }
     } catch (e) {
@@ -57,22 +50,14 @@ class EditFechaddresses extends GetxController {
       isLoading.value = true;
       final url = "${AppUrl.addressesfeach}/$id";
       print("Sending Request To :- $url");
-      final responce = await DioClient.dio.get(
-        url,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce = await ApiCall.getRequest(url, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Addresses :- ${data.value}");
       } else {
         throw {
-          'Addresses Error this :-  ${responce.statusCode}, ${responce.data}',
-          handleHttpError(responce.statusCode),
+          'Addresses Error this :-  ${200}, ${responce}',
+          handleHttpError(200),
         };
       }
     } catch (e) {
@@ -112,36 +97,31 @@ class Addaddresses extends GetxController {
         if (firstname != null && firstname.isNotEmpty) 'firstname': firstname,
         if (lastname != null && lastname.isNotEmpty) 'lastname': lastname,
         if (email != null && email.isNotEmpty) 'email': email,
-        if (companyname != null && companyname.isNotEmpty) 'companyname': companyname,
+        if (companyname != null && companyname.isNotEmpty)
+          'companyname': companyname,
         if (address != null && address.isNotEmpty) 'address': address,
         if (city != null && city.isNotEmpty) 'city': city,
         if (state != null && state.isNotEmpty) 'state': state,
         if (country != null && country.isNotEmpty) 'country': country,
-        if (countrycode != null && countrycode.isNotEmpty) 'countrycode': countrycode,
+        if (countrycode != null && countrycode.isNotEmpty)
+          'countrycode': countrycode,
         if (zip != null && zip.isNotEmpty) 'zip': zip,
         if (mobileno != null && mobileno.isNotEmpty) 'mobileno': mobileno,
-        if (ip_address != null && ip_address.isNotEmpty) 'ip_address': ip_address,
+        if (ip_address != null && ip_address.isNotEmpty)
+          'ip_address': ip_address,
         if (isdefault != null) 'isdefault': isdefault,
       }..removeWhere((key, value) => value == null || value.toString().isEmpty);
       print("Sending Add_addresses body :- $body");
       print("Sending Request To :- $url");
-      final responce = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Addresses :- ${data.value}");
       } else {
         throw {
-          'Addresses Error this :-  ${responce.statusCode}, ${responce.data}',
-          handleHttpError(responce.statusCode),
+          'Addresses Error this :-  ${200}, ${responce}',
+          handleHttpError(200),
         };
       }
     } catch (e) {
@@ -161,23 +141,15 @@ class SetDeflutAddress extends GetxController {
       isLoading.value = true;
       final url = '${AppUrl.setdefault}/$id';
       print("Sending to Url :- $url");
-      final responce = await DioClient.dio.get(
-        url,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce = await ApiCall.getRequest(url, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log('SetDefult data :- ${data.value}');
         ToastificationSuccess.Success('Is Default Address Successfully');
       } else {
         throw {
-          'SetDefult data Error :- ${responce.statusCode}, ${responce.data}',
-          handleHttpError(responce.statusCode),
+          'SetDefult data Error :- ${200}, ${responce}',
+          handleHttpError(200),
         };
       }
     } catch (e) {
@@ -200,25 +172,17 @@ class DeletAddress extends GetxController {
       final body = {'id': id};
       print("Sending Request To :-  $url");
       print("Sending Request deleted body :- $body");
-      final responce = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans
-          },
-        ),
-      );
+      final responce =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
 
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Delet Address To :-  ${data.value}");
         ToastificationSuccess.Success(data['message']);
       } else {
         throw {
-          'Delet Address Error to :- ${responce.statusCode}, ${responce.data}',
-          handleHttpError(responce.statusCode),
+          'Delet Address Error to :- ${200}, ${responce}',
+          handleHttpError(200),
         };
       }
     } catch (e) {

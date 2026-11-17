@@ -5,9 +5,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/category/wishlist.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
+import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/screen/menu/myCart/myCart.dart';
 import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import '../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../controller/user_inerface/menu/home/home.dart';
 import '../../screen/menu/category/showproduct.dart';
@@ -84,7 +86,7 @@ PreferredSizeWidget Appbar({
                         child: Container(
                           color: AppColor.white_color,
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: SvgPicture.asset(prefixicon),
+                          child: SvgPicture.asset(prefixicon, width: 22, height: 22),
                         ),
                       ),
                     if (lefticon != null)
@@ -99,7 +101,7 @@ PreferredSizeWidget Appbar({
                         child: Container(
                           color: AppColor.white_color,
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: SvgPicture.asset(lefticon),
+                          child: SvgPicture.asset(lefticon, width: 22, height: 22),
                         ),
                       ),
                   ],
@@ -140,11 +142,11 @@ Widget _buildWishlistIcon(
     clipBehavior: Clip.none,
     children: [
       GestureDetector(
-        onTap: () => Get.to(() => WishlistScreen()),
+        onTap: () => AppRoutes.toWishlist(),
         child: Container(
           color: AppColor.white_color,
           padding: const EdgeInsets.symmetric(vertical: 12),
-          child: SvgPicture.asset(iconPath),
+          child: SvgPicture.asset(iconPath, width: 22, height: 22),
         ),
       ),
       Positioned(
@@ -188,20 +190,21 @@ Widget _buildWishlistIcon(
 
 Widget _buildCartIcon(String iconPath, bool isGuest, CountController count,
     Bottamnavigation bottamSelect) {
+  void navigateToCart() {
+    final myCart = Get.put(MyCartValueChange());
+    myCart.loadCartData();
+    AppRoutes.toCart();
+  }
+
   return Stack(
     clipBehavior: Clip.none,
     children: [
       GestureDetector(
-        onTap: () {
-          Bottom();
-          bottamSelect.indexThree();
-          Get.back();
-          Get.back();
-        },
+        onTap: navigateToCart,
         child: Container(
           color: AppColor.white_color,
           padding: const EdgeInsets.symmetric(vertical: 12),
-          child: SvgPicture.asset(iconPath),
+          child: SvgPicture.asset(iconPath, width: 22, height: 22),
         ),
       ),
       Positioned(
@@ -209,12 +212,7 @@ Widget _buildCartIcon(String iconPath, bool isGuest, CountController count,
         top: 4,
         child: isGuest
             ? GestureDetector(
-                onTap: () {
-                  Bottom();
-                  bottamSelect.indexThree();
-                  Get.back();
-                  Get.back();
-                },
+                onTap: navigateToCart,
                 child: CircleAvatar(
                   radius: 10,
                   backgroundColor: AppColor.pink_color,
@@ -235,12 +233,7 @@ Widget _buildCartIcon(String iconPath, bool isGuest, CountController count,
                   return const SizedBox.shrink();
                 }
                 return GestureDetector(
-                  onTap: () {
-                    Bottom();
-                    bottamSelect.indexThree();
-                    Get.back();
-                    Get.back();
-                  },
+                  onTap: navigateToCart,
                   child: CircleAvatar(
                     radius: 10,
                     backgroundColor: AppColor.pink_color,

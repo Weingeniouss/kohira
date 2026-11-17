@@ -7,12 +7,13 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:kohira/modal/credentials/otp.dart';
 import 'package:kohira/view/utils/app_string.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../view/utils/app_encryption.dart';
 import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../../../view/utils/widget/pop.dart';
 import '../../database/local/localstore.dart';
+import 'package:kohira/api/api_call.dart';
 
 class OtpController extends GetxController {
   var isLoading = false.obs;
@@ -65,23 +66,26 @@ class OtpController extends GetxController {
         'mobileno': mobileno ?? '',
         'countrycode': countrycode ?? '',
       };
-      final response = await DioClient.dio.post(url, data: body);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        otpDataShow.value = jsonDecode(response.data.toString());
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
+      if (response != null) {
+        otpDataShow.value = jsonDecode(jsonEncode(response));
         log('Otp Data :- ${otpDataShow.value}');
         final model = VerifyOtpModel.fromJson(otpDataShow.value);
         if (model.status == false && model.message != null) {
           ToastificationError.Error(model.message!);
         }
       } else {
-        throw Exception('Otp failed: ${response.statusCode}');
+        throw Exception('Otp failed: ${200}');
       }
     } on SocketException {
       print('Otp Network Error: SocketException');
-      ToastificationError.Error('No internet connection or server unreachable.');
+      ToastificationError.Error(
+          'No internet connection or server unreachable.');
     } catch (e) {
       print('Otp Error: $e');
-      ToastificationError.Error('Network error. Please check internet connection.');
+      ToastificationError.Error(
+          'Network error. Please check internet connection.');
     } finally {
       isLoading.value = false;
     }
@@ -105,13 +109,14 @@ class VerifyOtpController extends GetxController {
         'mobileno': mobileno ?? '',
         'otp_code': otp_code ?? '',
       };
-      final response = await DioClient.dio.post(url, data: body);
-      final jsonResponse = jsonDecode(response.data.toString());
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
+      final jsonResponse = jsonDecode(jsonEncode(response));
       log('${AppString.rawResponse} :- $jsonResponse');
 
       final otpModel = VerifyOtpModel.fromJson(jsonResponse);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response != null) {
         if (otpModel.status == true || otpModel.success == true) {
           String? token;
 
@@ -167,11 +172,12 @@ class VerifyOtpController extends GetxController {
         }
       } else {
         ToastificationError.Error(
-            otpModel.message ?? "Verify Otp failed: ${response.statusCode}");
+            otpModel.message ?? "Verify Otp failed: ${200}");
       }
     } on SocketException {
       print('Verify Otp Network Error: SocketException');
-      ToastificationError.Error('No internet connection or server unreachable.');
+      ToastificationError.Error(
+          'No internet connection or server unreachable.');
     } catch (e) {
       print('Verify Otp Error: $e');
       ToastificationError.Error("Invalid or expired OTP");

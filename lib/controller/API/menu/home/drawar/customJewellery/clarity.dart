@@ -3,11 +3,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class ClarityItem {
   final String? slug;
@@ -47,13 +47,10 @@ class Clarity extends GetxController {
       isLoading(true);
       final url = AppUrl.clarity;
       print('Sending To Url :- $url');
-      final response = await DioClient.dio.post(
-        url,
-        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
-      );
+      final response = await ApiCall.postRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = jsonDecode(response.data.toString());
+      if (response != null) {
+        final responseData = jsonDecode(jsonEncode(response));
         clarity_data(responseData);
         final List<dynamic> dataList = responseData['data'] ?? [];
 
@@ -61,7 +58,7 @@ class Clarity extends GetxController {
             dataList.map((item) => ClarityItem.fromJson(item)).toList();
         log('Sending to clarity Data :- $clarity_data');
       } else {
-        throw Exception('${response.statusCode}, ${response.data}');
+        throw Exception('${200}, ${response}');
       }
     } catch (e) {
       print('Sending to clarity Data Error :- $e');

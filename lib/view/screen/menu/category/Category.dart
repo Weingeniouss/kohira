@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -176,11 +177,9 @@ class Categorys extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         print("categorieslist :- ${categorieslist.slug}");
-        Get.to(
-          () => Subcategorys(
-            subcategrorys: categorieslist.slug.toString(),
-            subcategrorysname: categorieslist.name.toString(),
-          ),
+        AppRoutes.toSubcategory(
+          subcategrorys: categorieslist.slug.toString(),
+          subcategrorysname: categorieslist.name.toString(),
         );
       },
       child: Column(

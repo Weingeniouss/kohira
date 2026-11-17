@@ -2,13 +2,14 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../../view/utils/API_headers.dart';
 import '../../../../view/utils/app_url.dart';
 import '../../../../view/utils/app_constants.dart';
 import '../../../../view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class Deletcart extends GetxController {
   var isLoading = false.obs;
@@ -32,25 +33,18 @@ class Deletcart extends GetxController {
       print('Sending request to: $url');
       print('Deletcart sendingbody :- $body');
 
-      final responses = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
+      final responses =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
 
-      if (responses.statusCode == 200 || responses.statusCode == 201) {
-        data.value = jsonDecode(responses.data.toString());
+      if (responses != null) {
+        data.value = jsonDecode(jsonEncode(responses));
         log('Deletcart data :- $data');
       } else {
         throw {
-          'Deletcart data Error This :- ${responses.statusCode}, ${responses.data}',
-          print('Deletcart data this :- ${responses.statusCode}, ${responses.data}'),
-          ToastificationError.Error("CountCart data this :- ${responses.statusCode}, ${responses.data}"),
+          'Deletcart data Error This :- ${200}, ${responses}',
+          print('Deletcart data this :- ${200}, ${responses}'),
+          ToastificationError.Error(
+              "CountCart data this :- ${200}, ${responses}"),
         };
       }
     } catch (e) {

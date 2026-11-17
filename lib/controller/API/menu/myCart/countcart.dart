@@ -3,13 +3,14 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../../view/utils/API_headers.dart';
 import '../../../../view/utils/app_url.dart';
 import '../../../../view/utils/app_constants.dart';
 import '../../../../view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class CountCart extends GetxController {
   var isLoading = false.obs;
@@ -36,27 +37,20 @@ class CountCart extends GetxController {
         if (sideDiaGrpId != null) 'sideDiaGrpId': sideDiaGrpId,
       }..removeWhere((key, value) => value == null);
 
-      final responses = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
+      final responses =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
       print('Sending request to: $url');
       print('Countingcart body :- $body');
 
-      if (responses.statusCode == 200 || responses.statusCode == 201) {
-        data.value = jsonDecode(responses.data.toString());
+      if (responses != null) {
+        data.value = jsonDecode(jsonEncode(responses));
         log("CountCart data :- $data");
       } else {
         throw {
-          'Fetchcart data Error This :- ${responses.statusCode}, ${responses.data}',
-          print('CountCart data this :- ${responses.statusCode}, ${responses.data}'),
-          ToastificationError.Error("CountCart data this :- ${responses.statusCode}, ${responses.data}"),
+          'Fetchcart data Error This :- ${200}, ${responses}',
+          print('CountCart data this :- ${200}, ${responses}'),
+          ToastificationError.Error(
+              "CountCart data this :- ${200}, ${responses}"),
         };
       }
     } catch (e) {

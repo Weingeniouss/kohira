@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/home/homejewelry.dart';
 import 'package:kohira/controller/API/menu/home/news_list.dart';
 import 'package:kohira/controller/API/menu/home/offer_banner.dart';
+import 'package:kohira/controller/user_inerface/menu/home/home.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/homedashbord.dart';
 import 'package:kohira/controller/user_inerface/menu/overStore/store_locations_controller.dart';
@@ -26,29 +27,17 @@ import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/video.dart';
 import 'Search.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    super.initState();
-    Get.put(Homedashbord());
-    Get.put(OfferBannerCalling());
-    Get.put(Homejewelry());
-    Get.put(StoreLocationsController());
-    Get.put(NewsListCalling());
-    Get.put(HomepageJewelryList());
-  }
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : Get.put(HomeController());
+    homeController.callApiHome();
     final List<Widget> homeSections = [
       sarchfild(),
       mainSlider(),

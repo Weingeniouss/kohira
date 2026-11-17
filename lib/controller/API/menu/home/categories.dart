@@ -18,12 +18,13 @@ class CategoriesCalling extends GetxController {
         data.value = categories.category ?? [];
         print('category :- ${data.value}');
 
-         for (var category in data) {
-         print('ID: ${category.id}, Name: ${category.name}, Image: ${category.image}');
+        for (var category in data) {
+          print(
+              'ID: ${category.id}, Name: ${category.name}, Image: ${category.image}');
         }
 
         // Or print as JSON
-       print('JSON format: ${data.map((e) => e.toJson()).toList()}');
+        print('JSON format: ${data.map((e) => e.toJson()).toList()}');
 
         // ToastificationSuccess.Success("'Success', ${categories.message}");
         print("'Success', ${categories.message}");

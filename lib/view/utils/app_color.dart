@@ -59,4 +59,17 @@ class AppColor {
   static Color priceChipBorderColor = Color(0xFFF5D6DC);
   static Color black26 = Color(0x42000000);
   static Color black38 = Color(0x61000000);
+
+  // Checkout & Order Summary UI Colors
+  static Color borderGrey = Color(0xFFE0E0E0);
+  static Color lightDivider = Color(0xFFEEEEEE);
+  static Color containerBg = Color(0xFFF9F9F9);
+  static Color containerBgAlt = Color(0xFFFAFAFA);
+  static Color containerBgGrey = Color(0xFFF5F5F5);
+  static Color containerBorderAlt = Color(0xFFE8E8E8);
+  static Color successGreen = Color(0xFF4CAF50);
+  static Color strikeRed = Color(0xFFEC7063);
+  static Color starAmber = Colors.amber;
+  static Color shadowBlack12 = Colors.black12;
+  static Color stepperBg = Color(0xFFF7F7F7);
 }

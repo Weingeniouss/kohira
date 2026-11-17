@@ -2,13 +2,14 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/errorcode.dart';
+import 'package:kohira/api/api_call.dart';
 
 class Processpayment extends GetxController {
   var isLoading = false.obs;
@@ -86,26 +87,18 @@ class Processpayment extends GetxController {
         if (user_id != null) 'user_id': user_id,
         if (paymenttype != null) 'paymenttype': paymenttype,
       }..removeWhere((key, value) => value == null);
-      final response = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
       print('Sending request to: $url');
       print('Paymant body :- $body');
       print('Paymant tokans :- $tokans');
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.data.toString());
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log("Paymant Data :- ${data.value}");
       } else {
         throw {
-          'Paymant Error :-  ${response.data}, ${response.statusCode}',
-          handleHttpError(response.statusCode),
+          'Paymant Error :-  ${response}, ${200}',
+          handleHttpError(200),
         };
       }
     } catch (e) {

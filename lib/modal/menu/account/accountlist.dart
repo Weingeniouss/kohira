@@ -1,59 +1,48 @@
-import 'package:kohira/view/utils/app_icon.dart';
 
-List accountlist =[
+
+List accountlist = [
   {
-    'image' : AppIcon.Order,
-    'name': 'Order History',
+    'name': 'Kohira Coins',
+    'route_id': 'kohira_coins'
   },
   {
-    'image' : AppIcon.like,
-    'name': 'Wishlist',
+    'name': 'Gift Orders',
+    'route_id': 'gift_orders'
   },
   {
-    'image' : AppIcon.Wallet,
-    'name': 'Wallet',
+    'name': '10+1 Scheme',
+    'route_id': 'scheme'
   },
   {
-    'image' : AppIcon.Addresses,
-    'name': 'Addresses',
+    'name': 'About Us',
+    'route_id': 'about_us'
   },
   {
-    'image' : AppIcon.Addresses,
-    'name': 'Change Password',
+    'name': 'FAQs',
+    'route_id': 'faqs'
   },
   {
-    'image' : AppIcon.edit,
-    'name': 'Help Center',
+    'name': 'Rate Us',
+    'route_id': 'rate_us'
   },
   {
-    'image' : AppIcon.edit,
-    'name': 'Shipping & Delivery Policy',
+    'name': 'Shipping Policy',
+    'route_id': 'shipping_policy'
   },
   {
-    'image' : AppIcon.edit,
-    'name': 'Retry & Refund Policy',
+    'name': 'Return Policy',
+    'route_id': 'return_policy'
   },
   {
-    'image' : AppIcon.edit,
-    'name': 'Privacy Policy',
-  },{
-    'image' : AppIcon.edit,
     'name': 'Terms & Condition',
+    'route_id': 'terms_condition'
   },
   {
-    'image' : AppIcon.edit,
-    'name': 'Returns & Exchanges',
+    'name': 'Privacy Policy',
+    'route_id': 'privacy_policy'
   },
   {
-    'image' : AppIcon.edit,
-    'name': 'Warranty & jewellery claim',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Compliance policy',
-  },
-  {
-    'image' : AppIcon.Logout,
     'name': 'Logout',
+    'route_id': 'logout'
   },
 ];

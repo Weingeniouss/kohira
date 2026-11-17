@@ -7,18 +7,17 @@ import 'package:intl/intl.dart';
 import 'package:kohira/controller/API/menu/category/jewelleryDetail.dart'
     show JewellerydetailCall;
 import 'package:kohira/controller/API/menu/category/recommendedJewelleryList.dart';
-import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/showproduct_controller.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/modal/menu/category/recommendedJewelleryList.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/app_json.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/app_string.dart';
+import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/video.dart';
-import 'package:lottie/lottie.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,7 +30,6 @@ import '../../../../controller/user_inerface/menu/myCart/wishlist/wishlist.dart'
 import '../../../../modal/menu/category/subcategory/addtocart.dart';
 import '../../../../modal/menu/category/subcategory/addtowish.dart';
 import '../../../utils/app_icon.dart';
-import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../../../utils/widget/pop.dart';
 
 class Showproduct extends StatelessWidget {
@@ -71,8 +69,7 @@ class Showproduct extends StatelessWidget {
     if (isGuest) {
       List<JewelryItemWish> currentItemswish =
           await localdatabase.getJewelryItemsWish();
-      final jewelryId =
-          jewellerydetail.data['data']?['id']?.toString() ?? '';
+      final jewelryId = jewellerydetail.data['data']?['id']?.toString() ?? '';
       final exists =
           currentItemswish.any((item) => item.jewelryId == jewelryId);
 
@@ -98,51 +95,21 @@ class Showproduct extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColor.white_color,
-      appBar: AppBar(
-        backgroundColor: AppColor.white_color,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColor.black_color),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          AppString.details,
-          style: TextStyle(
-            color: AppColor.pink_color,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Lora',
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.phone_outlined, color: AppColor.black_color),
-            onPressed: () => _launchWhatsapp("Jewelry", slug),
-          ),
-          IconButton(
-            icon:
-                Icon(Icons.shopping_bag_outlined, color: AppColor.black_color),
-            onPressed: () {
-              Bottom();
-              bottamSelect.indexThree();
-            },
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Container(
-            color: AppColor.textfild_color,
-            height: 1.0,
-          ),
-        ),
+      appBar: Appbar(
+        lefticon: AppIcon.left,
+        hedingname_2: AppString.productdetails,
+        suffixicon_1: AppIcon.like,
+        suffixicon_2: AppIcon.shop,
       ),
       bottomNavigationBar: SafeArea(
         child: Obx(() {
-          if (jewellerydetail.isLoading.value || jewellerydetail.data == null) {
+          if (jewellerydetail.isLoading.value ||
+              jewellerydetail.data == null ||
+              jewellerydetail.data['data'] == null ||
+              jewellerydetail.data['data'] is! Map) {
             return SizedBox.shrink();
           } else {
-            final jewellery = jewellerydetail.data['data'] ?? {};
+            final jewellery = jewellerydetail.data['data'];
             return _buildBottomNavigationBar(jewellery);
           }
         }),
@@ -212,8 +179,7 @@ class Showproduct extends StatelessWidget {
               '₹ ${NumberFormat('#,##0.00', 'en_IN').format(makingCharge)}';
           final diamoinds =
               '₹ ${NumberFormat('#,##0.00', 'en_IN').format(diamondPrice)}';
-          final totals =
-              '₹ ${NumberFormat('#,##0.00', 'en_IN').format(total)}';
+          final totals = '₹ ${NumberFormat('#,##0.00', 'en_IN').format(total)}';
 
           final diamondList = currentVariant?['jewelry_diamonds'] ?? [];
           final allImages = currentVariant?['allImages'] ?? [];
@@ -337,8 +303,7 @@ class Showproduct extends StatelessWidget {
   }
 
   // 1. Image Gallery Component with Arrows, Wishlist Icon & Overlay Badges
-  Widget _buildImageGallery(
-      List allImages, List video, Map<String, dynamic> jewellery) {
+  Widget _buildImageGallery(List allImages, List video, dynamic jewellery) {
     return Obx(() {
       final selectindex = productController.selectindex.value;
       return Column(
@@ -434,7 +399,8 @@ class Showproduct extends StatelessWidget {
                   top: 12,
                   right: 12,
                   child: Obx(() {
-                    final isLiked = wish.isItemWishlisted(jewellery['id'].toString());
+                    final isLiked =
+                        wish.isItemWishlisted(jewellery['id'].toString());
                     return GestureDetector(
                       onTap: () => wish.toggleWishlist(jewellery),
                       child: Container(
@@ -455,7 +421,8 @@ class Showproduct extends StatelessWidget {
                           width: 22,
                           height: 22,
                           colorFilter: isLiked
-                              ? ColorFilter.mode(AppColor.pink_color, BlendMode.srcIn)
+                              ? ColorFilter.mode(
+                                  AppColor.pink_color, BlendMode.srcIn)
                               : null,
                         ),
                       ),
@@ -610,8 +577,8 @@ class Showproduct extends StatelessWidget {
   }
 
   // 2. Product Header (Title, SKU, Price + Strikethrough)
-  Widget _buildProductHeader(Map<String, dynamic>? currentVariant,
-      Map<String, dynamic> jewellery, NumberFormat indianFormat) {
+  Widget _buildProductHeader(
+      dynamic currentVariant, dynamic jewellery, NumberFormat indianFormat) {
     final settingPrice = currentVariant?['setting_price'] ?? 0;
     final title =
         currentVariant?['title'] ?? jewellery['title'] ?? 'Product Title';
@@ -718,8 +685,7 @@ class Showproduct extends StatelessWidget {
                           color: AppColor.black_color)),
                   SizedBox(width: 8),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: Color(0xFFFDE8EC),
                       borderRadius: BorderRadius.circular(4),
@@ -762,14 +728,14 @@ class Showproduct extends StatelessWidget {
 
   // 4. Variant Selection & Action Buttons (Add To Cart + Whatsapp)
   Widget _buildVariantOptions({
-    required Map<String, dynamic> jewellery,
+    required dynamic jewellery,
     required List variants,
     required List<String> uniqueMetalStamps,
     required Map<String, bool> availableColors,
     required List<Map<String, dynamic>> uniqueShapes,
     required List allRingSizes,
     required List<String> diamondQualities,
-    required Map<String, dynamic>? currentVariant,
+    required dynamic currentVariant,
   }) {
     return Obx(() {
       final selectedMetalStamp = productController.selectedMetalStamp.value;
@@ -802,8 +768,8 @@ class Showproduct extends StatelessWidget {
 
               return Expanded(
                 child: GestureDetector(
-                  onTap: () => productController.selectMetalStamp(
-                      stamp, variants),
+                  onTap: () =>
+                      productController.selectMetalStamp(stamp, variants),
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     margin: EdgeInsets.only(right: 8),
@@ -815,17 +781,15 @@ class Showproduct extends StatelessWidget {
                             : AppColor.textfild_color,
                         width: isSelected ? 1.5 : 1.0,
                       ),
-                      color: isSelected
-                          ? Color(0xFFFFF7F8)
-                          : AppColor.white_color,
+                      color:
+                          isSelected ? Color(0xFFFFF7F8) : AppColor.white_color,
                     ),
                     child: Center(
                       child: Text(
                         displayStamp,
                         style: TextStyle(
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.w400,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w400,
                           fontSize: 12,
                           color: isSelected
                               ? AppColor.pink_color
@@ -1004,8 +968,7 @@ class Showproduct extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Image.network(shape['image'],
-                              width: 24, height: 24),
+                          Image.network(shape['image'], width: 24, height: 24),
                           SizedBox(height: 4),
                           Text(
                             shape['paraname'] ?? '',
@@ -1049,17 +1012,14 @@ class Showproduct extends StatelessWidget {
                   .map((carat) {
                 final isSelected = currentVariant?['total_carat'] == carat;
                 return GestureDetector(
-                  onTap: () => productController.filterVariantsByCarat(
-                      carat,
-                      diamondType: 'center',
-                      variants: variants),
+                  onTap: () => productController.filterVariantsByCarat(carat,
+                      diamondType: 'center', variants: variants),
                   child: Container(
                     width: (Get.width - 48) / 3,
                     padding: EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? Color(0xFFFFF7F8)
-                          : AppColor.white_color,
+                      color:
+                          isSelected ? Color(0xFFFFF7F8) : AppColor.white_color,
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(
                         color: isSelected
@@ -1073,9 +1033,8 @@ class Showproduct extends StatelessWidget {
                         carat.toStringAsFixed(2),
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.w400,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w400,
                           color: isSelected
                               ? AppColor.pink_color
                               : AppColor.black_color,
@@ -1127,9 +1086,8 @@ class Showproduct extends StatelessWidget {
                         child: Text(
                           quality,
                           style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.w400,
+                            fontWeight:
+                                isSelected ? FontWeight.bold : FontWeight.w400,
                             fontSize: 13,
                             color: isSelected
                                 ? AppColor.pink_color
@@ -1185,8 +1143,8 @@ class Showproduct extends StatelessWidget {
                       value: ring['paraname'].toString(),
                       child: Text("${ring['paraname']} (16.88 mm)",
                           style: TextStyle(fontSize: 13)),
-                      onTap: () => productController
-                          .selectedRingSizeId.value = ring['id'].toString(),
+                      onTap: () => productController.selectedRingSizeId.value =
+                          ring['id'].toString(),
                     );
                   }).toList(),
                   onChanged: (value) {
@@ -1205,8 +1163,8 @@ class Showproduct extends StatelessWidget {
 
   // 5. Accordion Expandable Sections (Product Details, Side Diamond Details, Price Breakup)
   Widget _buildAccordionSections({
-    required Map<String, dynamic>? currentVariant,
-    required Map<String, dynamic> jewellery,
+    required dynamic currentVariant,
+    required dynamic jewellery,
     required String? totaldiamondsCenter,
     required String? totalweightCenter,
     required String? totaldiamondsSide,
@@ -1314,8 +1272,7 @@ class Showproduct extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Color :', style: TextStyle(color: AppColor.grey_color)),
-              Text(
-                  currentVariant?['jewelry_diamonds']?[0]?['color'] ?? 'N/A',
+              Text(currentVariant?['jewelry_diamonds']?[0]?['color'] ?? 'N/A',
                   style: TextStyle(color: AppColor.grey_color)),
             ],
           ),
@@ -1324,8 +1281,7 @@ class Showproduct extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Clarity :', style: TextStyle(color: AppColor.grey_color)),
-              Text(
-                  currentVariant?['jewelry_diamonds']?[0]?['clarity'] ?? 'N/A',
+              Text(currentVariant?['jewelry_diamonds']?[0]?['clarity'] ?? 'N/A',
                   style: TextStyle(color: AppColor.grey_color)),
             ],
           ),
@@ -1342,7 +1298,8 @@ class Showproduct extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Total Weight :', style: TextStyle(color: AppColor.grey_color)),
+              Text('Total Weight :',
+                  style: TextStyle(color: AppColor.grey_color)),
               Text(totalweightSide ?? '0',
                   style: TextStyle(color: AppColor.grey_color)),
             ],
@@ -1443,13 +1400,11 @@ class Showproduct extends StatelessWidget {
   }
 
   // 8. Product Details Grid Card (Specs Grid Box)
-  Widget _buildProductDetailsCard(
-      Map<String, dynamic>? currentVariant, Map<String, dynamic> jewellery) {
+  Widget _buildProductDetailsCard(dynamic currentVariant, dynamic jewellery) {
     final sku = currentVariant?['itemcode'] ?? jewellery['itemcode'] ?? 'N/A';
-    final metalStamp = currentVariant?['metal_stamp']?['paraname']
-            ?.toString()
-            .toUpperCase() ??
-        '9KT';
+    final metalStamp =
+        currentVariant?['metal_stamp']?['paraname']?.toString().toUpperCase() ??
+            '9KT';
     final metalType =
         currentVariant?['metal_type']?['paraname']?.toString() ?? 'Yellow Gold';
     final metalWeight = currentVariant?['metalweight']?.toString() ?? '4.35';
@@ -1503,7 +1458,6 @@ class Showproduct extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12),
-
           Row(
             children: [
               Expanded(
@@ -1532,8 +1486,8 @@ class Showproduct extends StatelessWidget {
                       ),
                       Text(
                         AppString.goldWeight,
-                        style: TextStyle(
-                            fontSize: 10, color: AppColor.grey_color),
+                        style:
+                            TextStyle(fontSize: 10, color: AppColor.grey_color),
                       ),
                     ],
                   ),
@@ -1566,8 +1520,8 @@ class Showproduct extends StatelessWidget {
                       ),
                       Text(
                         AppString.diamondWeight,
-                        style: TextStyle(
-                            fontSize: 10, color: AppColor.grey_color),
+                        style:
+                            TextStyle(fontSize: 10, color: AppColor.grey_color),
                       ),
                     ],
                   ),
@@ -1576,7 +1530,6 @@ class Showproduct extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10),
-
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(10),
@@ -1599,7 +1552,6 @@ class Showproduct extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -1662,10 +1614,9 @@ class Showproduct extends StatelessWidget {
     required Map<String, dynamic>? currentVariant,
     required NumberFormat indianFormat,
   }) {
-    final metalStamp = currentVariant?['metal_stamp']?['paraname']
-            ?.toString()
-            .toUpperCase() ??
-        '9K';
+    final metalStamp =
+        currentVariant?['metal_stamp']?['paraname']?.toString().toUpperCase() ??
+            '9K';
     final metalType =
         currentVariant?['metal_type']?['paraname']?.toString() ?? 'Yellow Gold';
     final metalWeight = currentVariant?['metalweight']?.toString() ?? '2.000';
@@ -2089,148 +2040,88 @@ class Showproduct extends StatelessWidget {
     );
   }
 
-  // Helper method for Wishlist Toggle
-  void _handleWishlistToggle(Map<String, dynamic> jewellery) async {
+  // Helper method for Add To Cart
+  void _handleAddToCart(dynamic jewellery) async {
+    final String? ringSize =
+        productController.selectedRingSizeId.value?.toString() ??
+            productController.selectedRingSizeParaname.value;
+
+    if (categoryslug == 'rings' || categoryslug == 'engagement-rings') {
+      if (ringSize == null || ringSize.isEmpty || ringSize == 'null') {
+        ToastificationError.Error(AppString.pleaseSelectRingSize);
+        return;
+      }
+    }
+
     if (isGuest) {
-      List<JewelryItemWish> currentItemswish =
-          await localdatabase.getJewelryItemsWish();
+      List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
       final jewelryId = jewellery['id'].toString();
-      final exists =
-          currentItemswish.any((item) => item.jewelryId == jewelryId);
-      if (exists) {
-        currentItemswish.removeWhere((item) => item.jewelryId == jewelryId);
-        ToastificationSuccess.Success(AppString.removedFromWishlist);
+      final existingIndex =
+          currentItems.indexWhere((item) => item.jewelryId == jewelryId);
+
+      if (existingIndex >= 0) {
+        final currentQty = currentItems[existingIndex].qty ?? 1;
+        currentItems[existingIndex] = JewelryItem(
+          jewelryId: jewelryId,
+          ringSize: ringSize,
+          qty: currentQty + 1,
+        );
       } else {
-        currentItemswish.add(
-          JewelryItemWish(
-            jewelryId: jewellery['id'].toString(),
-            ringSize: productController.selectedRingSizeId.value.toString(),
+        currentItems.add(
+          JewelryItem(
+            jewelryId: jewelryId,
+            ringSize: ringSize,
             qty: 1,
           ),
         );
-        ToastificationSuccess.Success(AppString.addedToWishlist);
-      }
-      await localdatabase.saveJewelryItemsWish(currentItemswish);
-      WithoutloginWishList().withoutloginwishlist(currentItemswish);
-
-      wishguest.wishcount.value = currentItemswish.length;
-      pref!.setString('wishcount', wishguest.wishcount.value.toString());
-      wishCount = pref!.getString('wishcount') ?? '0';
-
-      productController.isWishlistedGuest.value = !exists;
-      productController.existingItemsWish.value = currentItemswish;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        wish.withoutloginWish.withoutloginwishlist(currentItemswish);
-      });
-    } else {
-      if (categoryslug == 'rings' || categoryslug == 'engagement-rings') {
-        if (productController.selectedRingSizeId.value == null &&
-            productController.selectedRingSizeParaname.value == null) {
-          ToastificationError.Error(AppString.pleaseSelectRingSize);
-          return;
-        }
       }
 
-      if (wishlist.isLoading.value) {
-        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)),
-            barrierDismissible: false);
-        return;
-      }
-
-      try {
-        Get.dialog(Center(child: Lottie.asset(AppJson.loading2)),
-            barrierDismissible: false);
-        await wishlist.wishlistservice(
-          ringsize: productController.selectedRingSizeParaname.value,
-          jewelryid: jewellery['id'].toString(),
-          metal_stamp: productController.isWishlisted.value
-              ? productController.selectedMetalStamp.value
-              : null,
-          metal_type: productController.selectedMetalType.value,
-          tokan: tokans,
-        );
-        Get.back();
-
-        productController.isWishlisted.value =
-            !productController.isWishlisted.value;
-
-        count.counting();
-        wish.fetchwishlist.fechwishlist();
-      } catch (e) {
-        Get.back();
-        print('Wishlist error: $e');
-      }
-    }
-  }
-
-  // Helper method for Add To Cart
-  void _handleAddToCart(Map<String, dynamic> jewellery) async {
-    if (isGuest) {
-      List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
-      currentItems.add(
-        JewelryItem(
-          jewelryId: jewellery['id'].toString(),
-          ringSize: productController.selectedRingSizeId.value.toString(),
-          qty: 1,
-        ),
-      );
       await localdatabase.saveJewelryItems(currentItems);
-      Withoutlogin().withoutlogin(currentItems);
+      await myCart.witoutlogin.withoutlogin(currentItems);
 
       userguest.cartcount.value = currentItems.length;
       pref!.setString('count', userguest.cartcount.value.toString());
       cartCount = pref!.getString('count') ?? '0';
 
-      Withoutlogin().data['count'] = userguest.cartcount.value;
-      existingItemsCart = currentItems;
-
+      myCart.existingItems.value = currentItems;
       ToastificationSuccess.Success(AppString.addToCartSuccess);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        myCart.loadCartData();
-      });
+
+      await myCart.loadCartData();
+      AppRoutes.toCart();
     } else {
-      if (categoryslug == 'rings' || categoryslug == 'engagement-rings') {
-        if (productController.selectedRingSizeId.value == null &&
-            productController.selectedRingSizeParaname.value == null) {
-          ToastificationError.Error(AppString.pleaseSelectRingSize);
-        } else {
-          if (Addtocart().isLoading.value) {
-            Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-          } else {
-            Addtocart()
-                .addtocartservice(
-              jewelryid: jewellery['id'].toString(),
-              ringsize: productController.selectedRingSizeId.value.toString(),
-              tokan: tokans,
-            )
-                .then((_) {
-              count.counting();
-              myCart.onInit();
-            });
-          }
-        }
-      } else {
-        if (Addtocart().isLoading.value) {
-          Get.dialog(Center(child: Lottie.asset(AppJson.loading2)));
-        } else {
-          Addtocart()
-              .addtocartservice(
-            jewelryid: jewellery['id'].toString(),
-            ringsize: "",
-            tokan: tokans,
-          )
-              .then((_) {
-            count.counting();
-            myCart.onInit();
-          });
-        }
+      try {
+        final addCartApi = Get.put(Addtocart());
+        final String? selectedMetalType =
+            productController.selectedMetalType.value;
+        final String? selectedMetalStamp =
+            productController.selectedMetalStamp.value;
+
+        await addCartApi.addtocartservice(
+          jewelryid: jewellery['id'].toString(),
+          ringsize: ringSize ?? "",
+          metal_type:
+              (selectedMetalType != null && selectedMetalType.isNotEmpty)
+                  ? selectedMetalType
+                  : null,
+          metal_stamp:
+              (selectedMetalStamp != null && selectedMetalStamp.isNotEmpty)
+                  ? selectedMetalStamp
+                  : null,
+          qty: "1",
+          tokan: tokans,
+        );
+
+        await count.counting();
+        await myCart.loadCartData();
+        AppRoutes.toCart();
+      } catch (e) {
+        print('Add to cart error: $e');
       }
     }
   }
 
   // Bottom Action Bar (Fixed at bottom: Add To Cart & Whatsapp)
-  Widget _buildBottomNavigationBar(Map<String, dynamic> jewellery) {
+  Widget _buildBottomNavigationBar(dynamic jewellery) {
     return Container(
       height: 54,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

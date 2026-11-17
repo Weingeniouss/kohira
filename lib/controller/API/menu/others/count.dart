@@ -1,12 +1,13 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class CountController extends GetxController {
   var isLoading = false.obs;
@@ -16,19 +17,11 @@ class CountController extends GetxController {
     try {
       isLoading.value = true;
       final url = AppUrl.count;
-      final responce = await DioClient.dio.get(
-        url,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce = await ApiCall.getRequest(url, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
       } else {
-        throw {'Counting Error :- ${responce.statusCode}, ${responce.data}'};
+        throw {'Counting Error :- ${200}, ${responce}'};
       }
     } catch (e) {
       print("Counting Error :- $e");

@@ -3,38 +3,59 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../view/utils/app_url.dart';
-import '../../../API/menu/overstore/citylist.dart';
-import '../../../API/menu/overstore/overStore.dart';
+import 'package:kohira/api/api_call.dart';
+import 'package:kohira/view/utils/app_url.dart';
 
 class Overstore_Conteroller extends GetxController {
-  final store = Get.put(Overstore_Controller());
-  final citylist = Get.put(Citylist());
+  var isLoading = false.obs;
+  var storeData = {}.obs;
+  var cityListData = {}.obs;
+
   List<bool> seePeraList = [];
+
   @override
   void onInit() {
     super.onInit();
-    _initializeSeePeraList();
+    fetchStoreData();
+  }
 
-    ever(store.isLoading, (_) {
-      if (!store.isLoading.value) {
-        _initializeSeePeraList();
+  Future<void> fetchStoreData({String? search, String? storeCityId}) async {
+    try {
+      isLoading.value = true;
+
+      if (cityListData.isEmpty) {
+        final cityResponse = await ApiCall.fetchStoreCityData();
+        cityListData.value = cityResponse;
       }
-    });
+
+      final storeResponse = await ApiCall.fetchStoreData(search: search, storeCityId: storeCityId);
+      storeData.value = storeResponse;
+
+
+      _initializeSeePeraList();
+    } catch (e) {
+      print('Error fetching store data: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void _initializeSeePeraList() {
-    final allStores = store.data['data']?['allstoreList'] as List?;
+    final allStores = storeData['data']?['allstoreList'] as List?;
     seePeraList = List.filled(allStores?.length ?? 0, false);
-  }
-
-  void persee(int index) {
-    seePeraList[index] = !seePeraList[index];
     update();
   }
 
+  void persee(int index) {
+    if (index < seePeraList.length) {
+      seePeraList[index] = !seePeraList[index];
+      update();
+    }
+  }
+
   Future<void> openMapDirections(double lat, double lng, String label) async {
-    final String url = '${GoogleUrl.googlesarch}?api=1&query=$lat,$lng&query_place_id=$label';
+    final String url =
+        '${GoogleUrl.googlesarch}?api=1&query=$lat,$lng&query_place_id=$label';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     } else {
@@ -42,8 +63,11 @@ class Overstore_Conteroller extends GetxController {
     }
   }
 
-  Future submitval(val) async{
-   await store.overStore(search: val);
-    update();
+  Future submitval(val) async {
+    await fetchStoreData(search: val);
+  }
+
+  Future filterByCity(String cityId) async {
+    await fetchStoreData(storeCityId: cityId);
   }
 }

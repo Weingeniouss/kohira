@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart' as dio_pkg;
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class SubmitCustomJewelley extends GetxController {
   var isLoading = false.obs;
@@ -109,27 +110,18 @@ class SubmitCustomJewelley extends GetxController {
       final formData = dio_pkg.FormData.fromMap(formMap);
 
       print('🚀 Uploading request with Dio...');
-      final response = await DioClient.dio.post(
-        apiUrl,
-        data: formData,
-        options: dio_pkg.Options(
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${token ?? ""}',
-            ApiHeaders.heading: ApiHeaders.peramitters,
-          },
-        ),
-      );
+      final response =
+          await ApiCall.postRequest(apiUrl, data: formData, useAuth: false);
 
-      print('📩 Status Code: ${response.statusCode}');
-      print('📩 Response Body: ${response.data}');
+      print('📩 Status Code: ${200}');
+      print('📩 Response Body: ${response}');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        customData.value = jsonDecode(response.data.toString());
+      if (response != null) {
+        customData.value = jsonDecode(jsonEncode(response));
         print('✅ Custom Jewellery Response :- $customData');
         ToastificationSuccess.Success(customData.value['message']);
       } else {
-        throw Exception('${response.statusCode}, ${response.data}');
+        throw Exception('${200}, ${response}');
       }
     } catch (e) {
       print('❌ Error sending custom jewellery request :- $e');

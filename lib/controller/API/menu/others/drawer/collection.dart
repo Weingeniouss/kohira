@@ -2,11 +2,12 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../../../view/utils/API_headers.dart';
+import 'package:kohira/api/api_call.dart';
 
 class Collection extends GetxController {
   var isLoading = false.obs;
@@ -17,18 +18,13 @@ class Collection extends GetxController {
       isLoading.value = true;
       final url = AppUrl.collection;
       print('Sending To url :- $url');
-      final response = await DioClient.dio.get(
-        url,
-        options: Options(headers: {ApiHeaders.heading: ApiHeaders.peramitters}),
-      );
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.data.toString());
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('Collection data :- ${data.value}');
       } else {
-        throw {
-          'Collection Error :- ${response.statusCode}, ${response.data}'
-        };
+        throw {'Collection Error :- ${200}, ${response}'};
       }
     } catch (e) {
       log('Collection Error :- $e');

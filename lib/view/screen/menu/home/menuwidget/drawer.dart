@@ -6,10 +6,9 @@ import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/modal/menu/category/subcategory/filtercategory.dart';
 import 'package:kohira/view/screen/credentials/login.dart';
-import 'package:kohira/view/screen/menu/category/category_menu_detail_screen.dart';
-import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/customjewellery.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/app_string.dart';
 import '../../../../utils/app_constants.dart';
 import '../../account/privacy policy/privacy.dart';
@@ -25,7 +24,7 @@ class Drawers extends StatelessWidget {
   void _openCategoryDetail(BuildContext context, Datum cat) async {
     final scaffold = Scaffold.of(context);
     Navigator.of(context).pop();
-    await Get.to(() => CategoryMenuDetailScreen(categoryItem: cat));
+    await AppRoutes.toCategoryDetail(categoryItem: cat);
     scaffold.openDrawer();
   }
 
@@ -36,11 +35,9 @@ class Drawers extends StatelessWidget {
   ) async {
     final scaffold = Scaffold.of(context);
     Navigator.of(context).pop();
-    await Get.to(
-      () => Subcategorys(
-        subcategrorys: slug,
-        subcategrorysname: name,
-      ),
+    await AppRoutes.toSubcategory(
+      subcategrorys: slug,
+      subcategrorysname: name,
     );
     scaffold.openDrawer();
   }

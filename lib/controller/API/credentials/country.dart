@@ -3,16 +3,16 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
 import '../../../modal/credentials/country.dart';
 import '../../../view/utils/app_url.dart';
 import '../../../view/utils/widget/pop.dart';
 import '../../service/credentials/country.dart';
+import 'package:kohira/api/api_call.dart';
 
 class CountryCalling extends GetxController {
   var isLoading = false.obs;
@@ -54,19 +54,11 @@ class StateCalling extends GetxController {
       final url = AppUrl.state;
       final body = {'countryid': countryid};
 
-      final response = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.peramitters,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.data.toString());
+      if (response != null) {
+        final data = jsonDecode(jsonEncode(response));
         log("Raw State API Response: $data");
 
         if (data != null && data["states"] != null) {
@@ -80,7 +72,7 @@ class StateCalling extends GetxController {
 
         log("State List :- ${states.value}");
       } else {
-        throw 'State Value Error :- ${response.statusCode}, ${response.data}';
+        throw 'State Value Error :- ${200}, ${response}';
       }
     } catch (e) {
       print('State Value Error :- $e');

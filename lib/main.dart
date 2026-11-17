@@ -20,15 +20,7 @@ Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final bool isGuest = (tokans.isEmpty ?? true);
   pref = await SharedPreferences.getInstance();
-
-  if(isGuest){
-    cartCount = pref!.getString('count') ?? '0';
-    wishCount = pref!.getString('wishcount') ?? '0';
-    print('Guestuser Cartcount :- $cartCount');
-    print('Guestuser Wishcount :- $wishCount');
-  }
 
   Fristname = pref!.getString('fristname') ?? '';
   Lastname = pref!.getString('lastname') ?? '';
@@ -38,11 +30,21 @@ Future<void> main() async{
   Password = pref!.getString('password') ?? '';
 
   tokans = pref!.getString('tokan') ?? '';
-  islogin = pref!.getBool('login') ?? false;
+  islogin = (pref!.getBool('login') ?? false) && tokans.isNotEmpty;
 
-  if (islogin || tokans.isNotEmpty || Mobile.isNotEmpty) {
+  if (tokans.isNotEmpty) {
     islogin = true;
     pref!.setBool('login', true);
+  } else {
+    islogin = false;
+    pref!.setBool('login', false);
+  }
+
+  if (!islogin) {
+    cartCount = pref!.getString('count') ?? '0';
+    wishCount = pref!.getString('wishcount') ?? '0';
+    print('Guestuser Cartcount :- $cartCount');
+    print('Guestuser Wishcount :- $wishCount');
   }
 
   print('Fristname $Fristname');

@@ -2,12 +2,12 @@
 
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
-import 'package:kohira/view/utils/dio_client.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class ProfiledetailsController extends GetxController {
   var isLoading = false.obs;
@@ -38,23 +38,15 @@ class ProfiledetailsController extends GetxController {
         'confirm_password': confirm_password,
       }..removeWhere((key, value) => value == null);
       print('Sending request profiledetail :- $body');
-      final responce = await DioClient.dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            ApiHeaders.heading: ApiHeaders.multipart,
-            ApiHeaders.authorization: tokans,
-          },
-        ),
-      );
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.data.toString());
+      final responce =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         print("Profile Detail : $data");
       } else {
         throw {
-          'Profile Detail this Error :- ${responce.statusCode}, ${responce.data}',
-          print('CountCart data this :- ${responce.statusCode}, ${responce.data}'),
+          'Profile Detail this Error :- ${200}, ${responce}',
+          print('CountCart data this :- ${200}, ${responce}'),
         };
       }
     } catch (e) {

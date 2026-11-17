@@ -336,6 +336,22 @@ class AppString {
   static const shippingaddress = 'Shipping Address';
   static const payments = 'Payments';
   static const paymentstype = 'Cards, Wallet, Netbanking, UPI';
+  static const hideOrderSummary = 'Hide Order Summery';
+  static const showOrderSummary = 'Show Order Summery';
+  static const seeMoreDetails = 'See More Details';
+  static const seeLess = 'See Less';
+  static const giftWrapOrder = 'Gift wrap this order ?';
+  static const addPersonalisedNote = 'Add Personalised Note (Optional)';
+  static const typeSomethingHere = 'Type something here...';
+  static const savedAddress = 'Saved Address';
+  static const billingAddress = 'Billing Address';
+  static const india = 'India';
+  static const selectState = 'Select State';
+  static const sameAsBillingAddress = 'My delivery and billing addresses are same.';
+  static const useKohiraCoins = 'Use Kohira coins';
+  static const totalCost = 'Total Cost';
+  static const totalPayableAmount = 'Total Payable Amount';
+  static const proceedToPayment = 'Procced To Payment';
 
   //Home & Search
   static const designLedJewellery = 'DESIGN LED JEWELLERY';

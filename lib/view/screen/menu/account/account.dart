@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:get/get.dart';
 import 'package:kohira/controller/user_inerface/menu/account/account.dart';
 import 'package:kohira/modal/menu/account/accountlist.dart';
 import 'package:kohira/view/screen/menu/account/profile%20edit/profileedit.dart';
+import 'package:kohira/view/screen/menu/account/addresses/addresses.dart';
+import 'package:kohira/view/screen/menu/account/order%20history/orderhistory.dart';
+import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -21,14 +24,17 @@ import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 class Account extends StatelessWidget {
   final account = Get.put(AccountController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   Account({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        final Bottamnavigation bottomSelectController = Get.find<Bottamnavigation>();
+        final Bottamnavigation bottomSelectController =
+            Get.find<Bottamnavigation>();
         Bottom();
         bottomSelectController.indexOne();
       },
@@ -45,223 +51,298 @@ class Account extends StatelessWidget {
         body: Container(
           width: Get.width,
           height: Get.height,
-          decoration: BoxDecoration(color: AppColor.white_color),
+          color: AppColor.white_color,
           child: Obx(() {
             if (account.profileDetails.isLoading.value) {
-              return Shimmer.fromColors(
-                baseColor: AppColor.lodingcolor,
-                highlightColor: AppColor.highlightColor,
+              return _buildShimmerLoading();
+            }
+            if (account.profileDetails.data['data'] == null) {
+              return Center(child: Lottie.asset(AppJson.noData));
+            }
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  _buildTopGrid(),
+                  SizedBox(height: 15),
+                  _buildAccountList(context),
+                  SizedBox(height: 15),
+                  _buildContactFooter(),
+                  SizedBox(height: 15),
+                ],
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: AppColor.lodingcolor,
+      highlightColor: AppColor.highlightColor,
+      child: horizontalpadding(
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 15),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (_, __) => Container(
+                  height: 20,
+                  margin: EdgeInsets.symmetric(vertical: 15),
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopGrid() {
+    return horizontalpadding(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _buildGridCard(
+                  Icons.person,
+                  Colors.blue,
+                  'Profile',
+                  'Manage Your Account',
+                  () => Get.to(() => Profileedit()),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: _buildGridCard(
+                  Icons.inventory_2,
+                  Colors.orange,
+                  'Orders',
+                  'Track Your Order Status',
+                  () => Get.to(() => Orderhistory()),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildGridCard(
+                  Icons.favorite,
+                  Colors.pink,
+                  'Wishlist',
+                  'Your Most Loved Jewellery...',
+                  () => Get.to(() => WishlistScreen()),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: _buildGridCard(
+                  Icons.location_on,
+                  Colors.red,
+                  'Address',
+                  'Change Your Address',
+                  () => Get.to(() => Addresses()),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAccountList(BuildContext context) {
+    return horizontalpadding(
+      child: Container(
+        clipBehavior: Clip.antiAlias, // Clip for rounded corners
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: AppColor.borderGrey,
+          ),
+          boxShadow: kElevationToShadow[2],
+        ),
+        child: ListView.builder(
+          itemCount: accountlist.length,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+              return GestureDetector(
+                onTap: () => account.listButton(
+                  accountlist[index]['route_id'],
+                  context,
+                ),
                 child: horizontalpadding(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: Get.height / 50),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                width: Get.width / 3,
-                                decoration: BoxDecoration(
-                                  color: AppColor.white_color,
-                                  borderRadius: BorderRadius.circular(Get.width / 50),
-                                ),
-                              ),
-                              SizedBox(height: Get.height / 80),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                width: Get.width / 1.4,
-                                decoration: BoxDecoration(
-                                  color: AppColor.white_color,
-                                  borderRadius: BorderRadius.circular(Get.width / 50),
-                                ),
-                              ),
-                              SizedBox(height: Get.height / 80),
-                            ],
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          accountlist[index]['name'],
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
-                          Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                margin: EdgeInsets.symmetric(vertical: Get.height * 0.010),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: AppColor.white_color, width: 1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(6)),
-                                ),
-                              ),
-                              SizedBox(height: Get.height / 150),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Divider(color: AppColor.dividercolor),
-                      Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            return Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.symmetric(vertical: Get.height * 0.010),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: AppColor.white_color, width: 1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    decoration: BoxDecoration(color: AppColor.white_color, borderRadius: BorderRadius.circular(6)),
-                                  ),
-                                ),
-                                SizedBox(width: Get.width / 50),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: Get.width /5, vertical: Get.height /70),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColor.white_color,
-                                  ),
-                                )
-                              ],
-                            );
-                          },
                         ),
-                      ),
-                    ],
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey.shade600,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
-            }
-            if(account.profileDetails.data['data'] == null) Center(child: Lottie.asset(AppJson.noData));
-            final item = account.profileDetails.data['data'];
-              return Column(
-                children: [
-                  (account.profileDetails.data['data'] == null)  ? SizedBox() : Expanded(
-                    flex: 1,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () => Get.to(() => Profileedit()),
-                            child: horizontalpadding(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: Get.height / 40),
-                                      Row(
-                                        children: [
-                                           Text(item['firstname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
-                                           SizedBox(width: Get.width / 80),
-                                           Text(item['lastname'], style: TextStyle(fontWeight: FontWeight.w600, fontSize: Get.width / 24)),
-                                         ],
-                                        ),
-                                      Text(item['email'], style: TextStyle(color: AppColor.grey_color)),
-                                      SizedBox(height: Get.height / 50),
-                                    ],
-                                   ),
-                                  SvgPicture.asset(AppIcon.editing, width: 30, height: 30, color: AppColor.pink_color),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Divider(color: AppColor.dividercolor),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  //All items show
-                  // Expanded(
-                  //   flex: 5,
-                  //   child: horizontalpadding(
-                  //     child: ListView.builder(
-                  //       itemCount: accountlist.length,
-                  //       itemBuilder: (BuildContext context, int index) {
-                  //         return GestureDetector(
-                  //           onTap: () => account.listButton(index,context),
-                  //           child: Container(
-                  //             color: AppColor.white_color,
-                  //             child: Row(
-                  //               children: [
-                  //                 Container(
-                  //                   margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                  //                   decoration: BoxDecoration(
-                  //                     color: AppColor.pink_color,
-                  //                     borderRadius: BorderRadius.circular(Get.width / 50),
-                  //                   ),
-                  //                   padding: EdgeInsets.all(15),
-                  //                   child: SvgPicture.asset(
-                  //                     accountlist[index]['image'],
-                  //                     width: Get.width * 0.025,
-                  //                     height: Get.height * 0.025,
-                  //                     color: AppColor.white_color,
-                  //                   ),
-                  //                 ),
-                  //                 SizedBox(width: Get.width / 30),
-                  //                 Text(accountlist[index]['name'],style: TextStyle(fontSize: Get.width / 25)),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-
-                  //if(index 5 min  hlepCenter is hide)
-                  Expanded(
-                    flex: 5,
-                    child: horizontalpadding(
-                      child: ListView.builder(
-                        itemCount: accountlist.length -1,
-                        itemBuilder: (BuildContext context, int index) {
-
-                          // Skip index 4 by adjusting indices
-                          final adjustedIndex = index >= 5 ? index + 1 : index;
-
-                          return GestureDetector(
-                            onTap: () => account.listButton(adjustedIndex,context),
-                            child: Container(
-                              color: AppColor.white_color,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(vertical: Get.width * 0.020),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.pink_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
-                                    padding: EdgeInsets.all(15),
-                                    child: SvgPicture.asset(
-                                      accountlist[adjustedIndex]['image'],
-                                      width: Get.width * 0.025,
-                                      height: Get.height * 0.025,
-                                      color: AppColor.white_color,
-                                    ),
-                                  ),
-                                  SizedBox(width: Get.width / 30),
-                                  Text(accountlist[adjustedIndex]['name'],style: TextStyle(fontSize: Get.width / 25)),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              );
-            }
+            },
           ),
         ),
+      );
+  }
+
+  Widget _buildGridCard(
+    IconData icon,
+    Color iconColor,
+    String title,
+    String subtitle,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: iconColor, size: 28),
+            SizedBox(height: 10),
+            Text(
+              title,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactFooter() {
+    return horizontalpadding(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: AppColor.promoCardBg,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildContactOption(Icons.call_outlined, 'Call', () {}),
+            Container(width: 1, height: 60, color: Colors.black12),
+            _buildContactOption(Icons.mail_outline, 'Mail', () {}),
+            Container(width: 1, height: 60, color: Colors.black12),
+            _buildContactOption(null, 'WhatsApp', () {}, isWhatsApp: true),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactOption(IconData? icon, String label, VoidCallback onTap,
+      {bool isWhatsApp = false}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: isWhatsApp
+                ? Image.asset(AppIcon.whatsapp,
+                    width: 24, height: 24, color: Colors.black)
+                : Icon(icon, color: Colors.black, size: 24),
+          ),
+          SizedBox(height: 10),
+          Text(
+            label,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ],
       ),
     );
   }

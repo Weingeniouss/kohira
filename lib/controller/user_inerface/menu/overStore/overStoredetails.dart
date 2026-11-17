@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kohira/controller/API/menu/overstore/overstoredetails.dart';
+import 'dart:developer';
+import 'package:kohira/api/api_call.dart';
 
 class OverstoredetailsController extends GetxController {
   final String slug;
    OverstoredetailsController({required this.slug});
 
-  final overstoredetails = Get.put(OverStoreDetails());
+  var isLoading = false.obs;
+  var overStoreDetailsData = {}.obs;
+
   final String siteKey = "6Lcy6h8qAAAAAGiDEKlXSd1I80BOCgD5-hY3jnBF";
   final String baseUrl = "https://next.weingenious.in";
 
@@ -31,7 +34,20 @@ class OverstoredetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addPostFrameCallback((_) => overstoredetails.getOverStoreDetails(slug));
+    WidgetsBinding.instance.addPostFrameCallback((_) => getOverStoreDetails(slug));
+  }
+
+  Future<void> getOverStoreDetails(String slug) async {
+    try {
+      isLoading.value = true;
+      final response = await ApiCall.fetchStoreDetailsData(slug);
+      overStoreDetailsData.value = response;
+      log("Response Data: $response");
+    } catch (e) {
+      print("Exception in getOverStoreDetails: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> selectDate(BuildContext context) async {
