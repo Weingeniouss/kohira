@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/app_encryption.dart';
 import 'package:kohira/view/utils/dio_client.dart';
 
 class ApiService {
@@ -64,6 +65,45 @@ class ApiService {
         } else {
           responseData = jsonDecode(jsonEncode(response.data));
         }
+
+        // Auto-decrypt encrypted payload if present
+        if (responseData.containsKey('data') && responseData['data'] is Map) {
+          final dataMap = responseData['data'] as Map;
+          if (dataMap.containsKey('payload')) {
+            final decrypted = AppEncryption.decryptResponse(
+              dataMap['payload']?.toString(),
+              dataMap['signature']?.toString(),
+            );
+            if (decrypted != null) {
+              if (decrypted is Map) {
+                responseData['data'] = Map<String, dynamic>.from(decrypted);
+              } else if (decrypted is String) {
+                try {
+                  responseData['data'] = jsonDecode(decrypted);
+                } catch (_) {
+                  responseData['data'] = decrypted;
+                }
+              } else if (decrypted is List) {
+                responseData['data'] = {'items': decrypted};
+              }
+            }
+          }
+        } else if (responseData.containsKey('payload')) {
+          final decrypted = AppEncryption.decryptResponse(
+            responseData['payload']?.toString(),
+            responseData['signature']?.toString(),
+          );
+          if (decrypted != null) {
+            if (decrypted is Map) {
+              responseData = Map<String, dynamic>.from(decrypted);
+            } else if (decrypted is String) {
+              try {
+                responseData = jsonDecode(decrypted);
+              } catch (_) {}
+            }
+          }
+        }
+
         return responseData;
       } else {
         throw Exception('API Error: ${response.statusCode} - ${response.data}');

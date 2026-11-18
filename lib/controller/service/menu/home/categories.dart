@@ -19,7 +19,7 @@ class CategoriesModal {
         print('categories Data :- $categories');
         return categories;
       } else {
-        throw {'categories Data Error : - ${200}, ${responce}'};
+        throw {'categories Data Error : - ${200}, $responce'};
       }
     } catch (e) {
       print('categories Data Error :- $e');

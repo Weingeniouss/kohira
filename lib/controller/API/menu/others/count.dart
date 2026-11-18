@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:get/get.dart';
 
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/app_constants.dart';
 
 import 'package:kohira/api/api_call.dart';
 
@@ -21,7 +20,7 @@ class CountController extends GetxController {
       if (responce != null) {
         data.value = jsonDecode(jsonEncode(responce));
       } else {
-        throw {'Counting Error :- ${200}, ${responce}'};
+        throw {'Counting Error :- ${200}, $responce'};
       }
     } catch (e) {
       print("Counting Error :- $e");

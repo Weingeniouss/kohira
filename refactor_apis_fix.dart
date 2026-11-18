@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, unused_local_variable
+
 import 'dart:io';
 
 void main() async {
@@ -17,12 +19,10 @@ void main() async {
       bool updated = await fixFile(entity);
       if (updated) {
         count++;
-        print('Fixed: ${entity.path}');
       }
     }
   }
 
-  print('Total files fixed: $count');
 }
 
 Future<bool> fixFile(File file) async {
@@ -61,7 +61,7 @@ Future<bool> fixFile(File file) async {
     content = content.replaceAll(RegExp(r"if\s*\(\s*" + varName + r"\.statusCode\s*==\s*200.*?\)\s*\{"), "if ($varName != null) {");
 
     // Replace `$varName.data.toString()` with `jsonEncode($varName)`
-    content = content.replaceAll(varName + r".data.toString()", "jsonEncode(" + varName + ")");
+    content = content.replaceAll(varName + r".data.toString()", "jsonEncode($varName)");
 
     // Replace `$varName.data` with `$varName`
     content = content.replaceAll(varName + r".data", varName);

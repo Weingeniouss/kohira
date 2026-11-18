@@ -35,7 +35,7 @@ class Recommendedjewellerylist extends GetxController {
         log('recommendedjewellerylistFuction data :- $data');
       } else {
         ToastificationError.Error(
-            'RecommendedjewellerylistFuction data Error :- ${responses}, ${200}');
+            'RecommendedjewellerylistFuction data Error :- $responses, ${200}');
       }
     } catch (e) {
       print('RecommendedjewellerylistFuction data Error this :- $e');

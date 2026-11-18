@@ -6,9 +6,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import '../../../../view/utils/API_headers.dart';
 import '../../../../view/utils/app_url.dart';
-import '../../../../view/utils/app_constants.dart';
 import '../../../../view/utils/widget/pop.dart';
 import 'package:kohira/api/api_call.dart';
 
@@ -47,10 +45,10 @@ class CountCart extends GetxController {
         log("CountCart data :- $data");
       } else {
         throw {
-          'Fetchcart data Error This :- ${200}, ${responses}',
-          print('CountCart data this :- ${200}, ${responses}'),
+          'Fetchcart data Error This :- ${200}, $responses',
+          print('CountCart data this :- ${200}, $responses'),
           ToastificationError.Error(
-              "CountCart data this :- ${200}, ${responses}"),
+              "CountCart data this :- ${200}, $responses"),
         };
       }
     } catch (e) {

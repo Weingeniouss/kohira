@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/app_constants.dart';
 
 import 'package:kohira/view/utils/errorcode.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
@@ -65,7 +64,7 @@ class Wishlist extends GetxController {
           ToastificationSuccess.Success(data['message']);
         }
       } else {
-        throw 'Add to wishlist Error :- ${response}, ${200}';
+        throw 'Add to wishlist Error :- $response, ${200}';
       }
     } catch (e) {
       print('Add to wishlist Error :- $e');
@@ -92,7 +91,7 @@ class FetchWishtlist extends GetxController {
         log("Wishlist data :- ${data.value}");
       } else {
         throw {
-          'Wishlist data Error :- ${200}, ${responce}',
+          'Wishlist data Error :- ${200}, $responce',
         };
       }
     } catch (e) {
@@ -121,7 +120,7 @@ class DeletWishtlist extends GetxController {
         log("Wishlist data :- ${data.value}");
       } else {
         throw {
-          'Wishlist data Error :- ${200}, ${responce}',
+          'Wishlist data Error :- ${200}, $responce',
           handleHttpError(200),
         };
       }

@@ -68,7 +68,11 @@ class Drawers extends StatelessWidget {
                     radius: 22,
                     backgroundColor: AppColor.white_color,
                     child: Text(
-                      "G",
+                      isGuest
+                          ? "G"
+                          : (Fristname.isNotEmpty
+                              ? Fristname[0].toUpperCase()
+                              : "U"),
                       style: TextStyle(
                         color: AppColor.pink_color,
                         fontSize: 20,
@@ -91,7 +95,9 @@ class Drawers extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppString.guestUser,
+                            isGuest
+                                ? AppString.guestUser
+                                : "$Fristname $Lastname".trim(),
                             style: TextStyle(
                               color: AppColor.white_color,
                               fontSize: 16,
@@ -100,7 +106,9 @@ class Drawers extends StatelessWidget {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            AppString.tapToLogin,
+                            isGuest
+                                ? AppString.tapToLogin
+                                : (Email.isNotEmpty ? Email : Mobile),
                             style: TextStyle(
                               color: AppColor.white_color.withOpacity(0.7),
                               fontSize: 13,

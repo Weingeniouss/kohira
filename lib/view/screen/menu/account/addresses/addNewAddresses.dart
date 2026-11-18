@@ -147,7 +147,7 @@ class AddNewAddresses extends StatelessWidget {
                                 }).toList(),
                                 onChanged: (newValue) => AddAddress.countryCalling(newValue),
                                 dropdownStyleData: DropdownStyleData(offset: Offset(0, -10), maxHeight: Get.height / 3, decoration: BoxDecoration(color: AppColor.white_color)),
-                                iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
+                                iconStyleData: IconStyleData(icon: Icon(AppIcon.keyboardArrowDownOutlined, color: AppColor.dividercolor), iconSize: 24),
                                 dropdownSearchData: DropdownSearchData(
                                   searchController: AddAddress.searchController,
                                   searchInnerWidgetHeight: 40,
@@ -192,7 +192,7 @@ class AddNewAddresses extends StatelessWidget {
                               }).toList(),
                               onChanged: (newValue) => AddAddress.stateCalling(newValue),
                               dropdownStyleData: DropdownStyleData(offset: Offset(0, -10), maxHeight: Get.height / 3, decoration: BoxDecoration(color: AppColor.white_color)),
-                              iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
+                              iconStyleData: IconStyleData(icon: Icon(AppIcon.keyboardArrowDownOutlined, color: AppColor.dividercolor), iconSize: 24),
                               dropdownSearchData: DropdownSearchData(
                                 searchController: AddAddress.statesearchController,
                                 searchInnerWidgetHeight: 40,

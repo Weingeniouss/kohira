@@ -24,7 +24,7 @@ class LoginService {
         return login;
       } else {
         print('Login failed with status: ${200}');
-        print('Response body: ${response}');
+        print('Response body: $response');
         return null;
       }
     } catch (e) {

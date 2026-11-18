@@ -11,7 +11,7 @@ class Overstore_Controller extends GetxController {
   var data = {}.obs;
 
   Future<void> overStore(
-      {String? page, String? search, String? store_city_id}) async {
+      {String? page, String? search, String? store_city_id, String? city}) async {
     try {
       isLoading.value = true;
       final url = AppUrl.store;
@@ -19,9 +19,14 @@ class Overstore_Controller extends GetxController {
       final body = {
         if (page != null) 'page': page,
         if (search != null) 'search': search,
-        if (store_city_id != null) 'store_city_id': store_city_id,
+        if (store_city_id != null && store_city_id.isNotEmpty) ...{
+          'store_city_id': store_city_id,
+          'city_id': store_city_id,
+        },
+        if (city != null && city.isNotEmpty) 'city': city,
       };
 
+      print('Fetching store data with body: $body');
       final response = await ApiService.postApi(url, data: body);
       data.value = response;
     } catch (e) {

@@ -19,7 +19,7 @@ class CategroryModal {
         print('categrory data :- $categrory');
         return categrory;
       } else {
-        throw {'categrory Data Error : - ${200}, ${responce}'};
+        throw {'categrory Data Error : - ${200}, $responce'};
       }
     } catch (e) {
       print('categrory Data Error :- $e');

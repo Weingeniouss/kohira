@@ -20,7 +20,7 @@ class JewelleryFilterService {
         log('Jewellery = $jsonData');
         return JewelleryFilterModel.fromJson(jsonData);
       } else {
-        print('Error: ${200} - ${response}');
+        print('Error: ${200} - $response');
         return null;
       }
     } catch (e) {

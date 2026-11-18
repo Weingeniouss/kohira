@@ -189,6 +189,14 @@ class HomeController extends GetxController {
     if (_controllersInitialized) return;
     _controllersInitialized = true;
 
+    _initializeHomeControllers();
+    // _initializeCategoryControllers();
+    // _initializeCartControllers();
+    // _initializeOverStoreControllers();
+    // _initializeAccountControllers();
+  }
+
+  void _initializeHomeControllers() {
     categories = Get.isRegistered<CategoriesCalling>()
         ? Get.find<CategoriesCalling>()
         : Get.put(CategoriesCalling());
@@ -216,123 +224,14 @@ class HomeController extends GetxController {
     homepageJewelryList = Get.isRegistered<HomepageJewelryList>()
         ? Get.find<HomepageJewelryList>()
         : Get.put(HomepageJewelryList());
-    storeLocations = Get.isRegistered<StoreLocationsController>()
+     storeLocations = Get.isRegistered<StoreLocationsController>()
         ? Get.find<StoreLocationsController>()
         : Get.put(StoreLocationsController());
-
-    wish = Get.isRegistered<WishlistController>()
-        ? Get.find<WishlistController>()
-        : Get.put(WishlistController());
-
-    profileDetails = Get.isRegistered<ProfiledetailsController>()
-        ? Get.find<ProfiledetailsController>()
-        : Get.put(ProfiledetailsController());
-    account = Get.isRegistered<AccountController>()
-        ? Get.find<AccountController>()
-        : Get.put(AccountController());
-    order = Get.isRegistered<OrderhistoryControll>()
-        ? Get.find<OrderhistoryControll>()
-        : Get.put(OrderhistoryControll());
-    myorderdetails = Get.isRegistered<Myorderdetails>()
-        ? Get.find<Myorderdetails>()
-        : Get.put(Myorderdetails());
-    profileEdit = Get.isRegistered<ProfileEdit>()
-        ? Get.find<ProfileEdit>()
-        : Get.put(ProfileEdit());
-    fech = Get.isRegistered<Fechaddresses>()
-        ? Get.find<Fechaddresses>()
-        : Get.put(Fechaddresses());
-    editFechaddresses = Get.isRegistered<EditFechaddresses>()
-        ? Get.find<EditFechaddresses>()
-        : Get.put(EditFechaddresses());
-    addaddresses = Get.isRegistered<Addaddresses>()
-        ? Get.find<Addaddresses>()
-        : Get.put(Addaddresses());
-    setDeflutAddress = Get.isRegistered<SetDeflutAddress>()
-        ? Get.find<SetDeflutAddress>()
-        : Get.put(SetDeflutAddress());
-    deletAddress = Get.isRegistered<DeletAddress>()
-        ? Get.find<DeletAddress>()
-        : Get.put(DeletAddress());
-    wallet = Get.isRegistered<WalletController>()
-        ? Get.find<WalletController>()
-        : Get.put(WalletController());
-
-    myCart = Get.isRegistered<MyCartValueChange>()
-        ? Get.find<MyCartValueChange>()
-        : Get.put(MyCartValueChange());
-    fetchcartCalling = Get.isRegistered<FetchcartCalling>()
-        ? Get.find<FetchcartCalling>()
-        : Get.put(FetchcartCalling());
-    countCart = Get.isRegistered<CountCart>()
-        ? Get.find<CountCart>()
-        : Get.put(CountCart());
-    deletcart = Get.isRegistered<Deletcart>()
-        ? Get.find<Deletcart>()
-        : Get.put(Deletcart());
-    processpayment = Get.isRegistered<Processpayment>()
-        ? Get.find<Processpayment>()
-        : Get.put(Processpayment());
-    withoutlogin = Get.isRegistered<Withoutlogin>()
-        ? Get.find<Withoutlogin>()
-        : Get.put(Withoutlogin());
-    withoutloginWishList = Get.isRegistered<WithoutloginWishList>()
-        ? Get.find<WithoutloginWishList>()
-        : Get.put(WithoutloginWishList());
-
-    count = Get.isRegistered<CountController>()
-        ? Get.find<CountController>()
-        : Get.put(CountController());
-
-    jewellery = Get.isRegistered<Jewelleryfilter>()
-        ? Get.find<Jewelleryfilter>()
-        : Get.put(Jewelleryfilter());
-    category = Get.isRegistered<JewelleryFilterCategory>()
-        ? Get.find<JewelleryFilterCategory>()
-        : Get.put(JewelleryFilterCategory());
-    jewelleryfilter = Get.isRegistered<JewelleryList>()
-        ? Get.find<JewelleryList>()
-        : Get.put(JewelleryList());
-    categoryCalling = Get.isRegistered<CategoryCalling>()
-        ? Get.find<CategoryCalling>()
-        : Get.put(CategoryCalling());
-
-    jewellerydetailCall = Get.isRegistered<JewellerydetailCall>()
-        ? Get.find<JewellerydetailCall>()
-        : Get.put(JewellerydetailCall());
-    recommendedjewellerylist = Get.isRegistered<Recommendedjewellerylist>()
-        ? Get.find<Recommendedjewellerylist>()
-        : Get.put(Recommendedjewellerylist());
-    addtocart = Get.isRegistered<Addtocart>()
-        ? Get.find<Addtocart>()
-        : Get.put(Addtocart());
-
-    customorder = Get.isRegistered<Customorder>()
-        ? Get.find<Customorder>()
-        : Get.put(Customorder());
-    clarity =
-        Get.isRegistered<Clarity>() ? Get.find<Clarity>() : Get.put(Clarity());
-    submitCustomJewelley = Get.isRegistered<SubmitCustomJewelley>()
-        ? Get.find<SubmitCustomJewelley>()
-        : Get.put(SubmitCustomJewelley());
-
-    store = Get.isRegistered<Overstore_Controller>()
-        ? Get.find<Overstore_Controller>()
-        : Get.put(Overstore_Controller());
-    citylist = Get.isRegistered<Citylist>()
-        ? Get.find<Citylist>()
-        : Get.put(Citylist());
-    overStoreDetails = Get.isRegistered<OverStoreDetails>()
-        ? Get.find<OverStoreDetails>()
-        : Get.put(OverStoreDetails());
-
-    collection = Get.isRegistered<Collection>()
-        ? Get.find<Collection>()
-        : Get.put(Collection());
-    subcategrory = Get.isRegistered<Subcategrory>()
-        ? Get.find<Subcategrory>()
-        : Get.put(Subcategrory());
   }
+
+
+
+
 
   void _loadInitialData() {
     if (!_isLoading.value) {

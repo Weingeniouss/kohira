@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, equal_keys_in_map, unused_local_variable, file_names, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
+// ignore_for_file: unnecessary_brace_in_string_interps, prefer_typing_uninitialized_variables, equal_keys_in_map, unused_local_variable, file_names, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
 
 import 'dart:async';
 import 'dart:convert';

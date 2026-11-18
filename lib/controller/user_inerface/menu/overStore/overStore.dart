@@ -33,8 +33,6 @@ class Overstore_Conteroller extends GetxController {
 
 
       _initializeSeePeraList();
-    } catch (e) {
-      print('Error fetching store data: $e');
     } finally {
       isLoading.value = false;
     }

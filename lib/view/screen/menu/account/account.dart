@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use, avoid_print
+// ignore_for_file: must_be_immutable, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:kohira/controller/user_inerface/menu/account/account.dart';
+import 'package:kohira/controller/page_controllers/account_controller.dart';
 import 'package:kohira/modal/menu/account/accountlist.dart';
 import 'package:kohira/view/screen/menu/account/profile%20edit/profileedit.dart';
 import 'package:kohira/view/screen/menu/account/addresses/addresses.dart';
@@ -15,14 +15,14 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
-import '../../../utils/app_String.dart';
+import '../../../utils/app_string.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
 import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 
 class Account extends StatelessWidget {
-  final account = Get.put(AccountController());
+  AccountPageController accountPage = Get.put(AccountPageController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   Account({super.key});
@@ -53,10 +53,10 @@ class Account extends StatelessWidget {
           height: Get.height,
           color: AppColor.white_color,
           child: Obx(() {
-            if (account.profileDetails.isLoading.value) {
+            if (accountPage.profileDetails.isLoading.value) {
               return _buildShimmerLoading();
             }
-            if (account.profileDetails.data['data'] == null) {
+            if (accountPage.profileDetails.data['data'] == null) {
               return Center(child: Lottie.asset(AppJson.noData));
             }
             return SingleChildScrollView(
@@ -92,7 +92,7 @@ class Account extends StatelessWidget {
                   child: Container(
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColor.white_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -102,7 +102,7 @@ class Account extends StatelessWidget {
                   child: Container(
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColor.white_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -116,7 +116,7 @@ class Account extends StatelessWidget {
                   child: Container(
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColor.white_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -126,7 +126,7 @@ class Account extends StatelessWidget {
                   child: Container(
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColor.white_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -140,7 +140,7 @@ class Account extends StatelessWidget {
                 itemBuilder: (_, __) => Container(
                   height: 20,
                   margin: EdgeInsets.symmetric(vertical: 15),
-                  color: Colors.white,
+                  color: AppColor.white_color,
                 ),
               ),
             )
@@ -158,20 +158,20 @@ class Account extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildGridCard(
-                  Icons.person,
-                  Colors.blue,
-                  'Profile',
-                  'Manage Your Account',
+                  AppIcon.personIcon,
+                  AppColor.pink_color,
+                  AppString.profileLabel,
+                  AppString.manageYourAccount,
                   () => Get.to(() => Profileedit()),
                 ),
               ),
               SizedBox(width: 10),
               Expanded(
                 child: _buildGridCard(
-                  Icons.inventory_2,
-                  Colors.orange,
-                  'Orders',
-                  'Track Your Order Status',
+                  AppIcon.inventoryIcon,
+                  AppColor.glodcolor,
+                  AppString.ordersLabel,
+                  AppString.trackYourOrderStatus,
                   () => Get.to(() => Orderhistory()),
                 ),
               ),
@@ -182,20 +182,20 @@ class Account extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildGridCard(
-                  Icons.favorite,
-                  Colors.pink,
-                  'Wishlist',
-                  'Your Most Loved Jewellery...',
+                  AppIcon.favoriteIcon,
+                  AppColor.pink_color,
+                  AppString.wishlistLabel,
+                  AppString.mostLovedJewellery,
                   () => Get.to(() => WishlistScreen()),
                 ),
               ),
               SizedBox(width: 10),
               Expanded(
                 child: _buildGridCard(
-                  Icons.location_on,
-                  Colors.red,
-                  'Address',
-                  'Change Your Address',
+                  AppIcon.locationOnIcon,
+                  AppColor.strikeRed,
+                  AppString.addressLabel,
+                  AppString.changeYourAddress,
                   () => Get.to(() => Addresses()),
                 ),
               ),
@@ -211,7 +211,7 @@ class Account extends StatelessWidget {
       child: Container(
         clipBehavior: Clip.antiAlias, // Clip for rounded corners
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColor.white_color,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: AppColor.borderGrey,
@@ -223,41 +223,42 @@ class Account extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () => account.listButton(
-                  accountlist[index]['route_id'],
-                  context,
-                ),
-                child: horizontalpadding(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    decoration: BoxDecoration(
-                      color: AppColor.white_color,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          accountlist[index]['name'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
+            return GestureDetector(
+              onTap: () => accountPage.account.listButton(
+                accountlist[index]['route_id'],
+                context,
+              ),
+              child: horizontalpadding(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  decoration: BoxDecoration(
+                    color: AppColor.white_color,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        accountlist[index]['name'],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColor.black_color,
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: Colors.grey.shade600,
-                        ),
-                      ],
-                    ),
+                      ),
+                      Icon(
+                        AppIcon.arrowForwardIos,
+                        size: 16,
+                        color: AppColor.grey_color,
+                      ),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
-      );
+      ),
+    );
   }
 
   Widget _buildGridCard(
@@ -272,9 +273,9 @@ class Account extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColor.white_color,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: AppColor.borderGrey),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,12 +284,16 @@ class Account extends StatelessWidget {
             SizedBox(height: 10),
             Text(
               title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColor.black_color,
+              ),
             ),
             SizedBox(height: 4),
             Text(
               subtitle,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+              style: TextStyle(fontSize: 12, color: AppColor.grey_color),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -309,11 +314,12 @@ class Account extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildContactOption(Icons.call_outlined, 'Call', () {}),
-            Container(width: 1, height: 60, color: Colors.black12),
-            _buildContactOption(Icons.mail_outline, 'Mail', () {}),
-            Container(width: 1, height: 60, color: Colors.black12),
-            _buildContactOption(null, 'WhatsApp', () {}, isWhatsApp: true),
+            _buildContactOption(AppIcon.callOutlined, AppString.call, () {}),
+            Container(width: 1, height: 60, color: AppColor.shadowBlack12),
+            _buildContactOption(AppIcon.mailOutline, AppString.mail, () {}),
+            Container(width: 1, height: 60, color: AppColor.shadowBlack12),
+            _buildContactOption(null, AppString.whatsappLabel, () {},
+                isWhatsApp: true),
           ],
         ),
       ),
@@ -329,18 +335,30 @@ class Account extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColor.white_color,
               shape: BoxShape.circle,
             ),
             child: isWhatsApp
-                ? Image.asset(AppIcon.whatsapp,
-                    width: 24, height: 24, color: Colors.black)
-                : Icon(icon, color: Colors.black, size: 24),
+                ? Image.asset(
+                    AppIcon.whatsapp,
+                    width: 24,
+                    height: 24,
+                    color: AppColor.black_color,
+                  )
+                : Icon(
+                    icon,
+                    color: AppColor.black_color,
+                    size: 24,
+                  ),
           ),
           SizedBox(height: 10),
           Text(
             label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColor.black_color,
+            ),
           ),
         ],
       ),

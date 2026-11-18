@@ -67,7 +67,7 @@ class JewelleryList extends GetxController {
             .map((item) => MetalStamp.fromJson(Map<String, dynamic>.from(item)))
             .toList();
       } else {
-        throw Exception('Error Jewellery List: ${200}, ${response}');
+        throw Exception('Error Jewellery List: ${200}, $response');
       }
     } catch (e) {
       log('Error Jewellery List: $e');

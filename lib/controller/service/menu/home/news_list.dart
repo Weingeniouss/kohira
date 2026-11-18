@@ -20,7 +20,7 @@ class NewsListService {
           await ApiCall.postRequest(url, data: body, useAuth: false);
 
       print("News List Response Status: ${200}");
-      print("News List Response Body: ${response}");
+      print("News List Response Body: $response");
 
       if (response != null) {
         final newsListModel = newsListModelFromJson(jsonEncode(response));

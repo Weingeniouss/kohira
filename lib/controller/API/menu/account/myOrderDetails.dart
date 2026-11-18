@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 import 'package:kohira/view/utils/app_url.dart';
 
-import '../../../../view/utils/app_constants.dart';
 import 'package:kohira/api/api_call.dart';
 
 class Myorderdetails extends GetxController {
@@ -26,7 +25,7 @@ class Myorderdetails extends GetxController {
         data.value = jsonDecode(jsonEncode(response));
         log('My Order Details :- ${data.value}');
       } else {
-        throw {'My Order Details Error this :- ${response}, ${200}'};
+        throw {'My Order Details Error this :- $response, ${200}'};
       }
     } catch (e) {
       print("My Order Details Error this :- $e");

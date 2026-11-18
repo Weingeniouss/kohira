@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
 
-import '../../../../../view/utils/API_headers.dart';
 import 'package:kohira/api/api_call.dart';
 
 class Collection extends GetxController {
@@ -24,7 +23,7 @@ class Collection extends GetxController {
         data.value = jsonDecode(jsonEncode(response));
         log('Collection data :- ${data.value}');
       } else {
-        throw {'Collection Error :- ${200}, ${response}'};
+        throw {'Collection Error :- ${200}, $response'};
       }
     } catch (e) {
       log('Collection Error :- $e');

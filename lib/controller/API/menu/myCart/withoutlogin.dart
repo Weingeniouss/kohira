@@ -46,7 +46,7 @@ class Withoutlogin extends GetxController {
         }
         log("WithoutCart To Add Success :- $data");
       } else {
-        throw Exception('WithoutCart To Add Error: ${200}, ${response}');
+        throw Exception('WithoutCart To Add Error: ${200}, $response');
       }
     } catch (e) {
       print('WithoutCart To Add Error: $e');
@@ -90,7 +90,7 @@ class WithoutloginWishList extends GetxController {
         }
         log("WithoutwishData To Add Success :- $data");
       } else {
-        throw Exception('WithoutwishData To Add Error: ${200}, ${response}');
+        throw Exception('WithoutwishData To Add Error: ${200}, $response');
       }
     } catch (e) {
       print('WithoutwishData To Add Error: $e');

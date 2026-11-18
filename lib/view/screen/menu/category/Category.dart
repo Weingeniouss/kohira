@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/page_controllers/category_controller.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_routes.dart';
@@ -21,7 +22,7 @@ import '../home/menuwidget/drawer.dart';
 
 class Categorys extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final category = Get.put(JewelleryFilterCategory());
+  final CategoryPageController categoryPage = Get.put(CategoryPageController());
 
   Categorys({super.key});
 
@@ -51,10 +52,10 @@ class Categorys extends StatelessWidget {
           height: Get.height,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
-            if (category.isLoading.value) {
+            if (categoryPage.filterCategory.isLoading.value) {
               return _buildShimmerLoading();
             }
-            final menuCategories = category.menuCategories;
+            final menuCategories = categoryPage.filterCategory.menuCategories;
             if (menuCategories.isEmpty) {
               return _buildNoDataState();
             }

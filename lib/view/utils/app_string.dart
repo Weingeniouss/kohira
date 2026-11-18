@@ -269,9 +269,33 @@ class AppString {
   static const schedule = 'Schedule An Appointment';
   static const placeget =
       "Place Get in touch with us if you'id like more infromation about our products and services";
+  static const welcomeToKohira = 'Welcome To Kohira';
+  static const stepIntoKohiraStores = 'Step Into Kohira Stores In Your Area And Explore Handcrafted Elegance Up Close.';
+  static const kohiraStoresIn = 'Kohira Stores In ';
+  static const viewStoresDetails = 'View Stores Details';
+  static const getDirection = 'Get Direction';
 
   //Account
   static const accounttitale = 'Account';
+  static const profileLabel = 'Profile';
+  static const manageYourAccount = 'Manage Your Account';
+  static const ordersLabel = 'Orders';
+  static const trackYourOrderStatus = 'Track Your Order Status';
+  static const wishlistLabel = 'Wishlist';
+  static const mostLovedJewellery = 'Your Most Loved Jewellery...';
+  static const addressLabel = 'Address';
+  static const changeYourAddress = 'Change Your Address';
+  static const call = 'Call';
+  static const mail = 'Mail';
+  static const whatsappLabel = 'WhatsApp';
+  static const profileDetails = 'Profile Details';
+  static const personalInformation = 'Personal Information';
+  static const firstNameStar = 'First Name *';
+  static const lastNameStar = 'Last Name *';
+  static const emailIdStar = 'Email ID *';
+  static const mobileNoStar = 'Mobile No *';
+  static const changeBillingState = 'Change Billing State';
+  static const delete = 'Delete';
   //Add New Adress
   static const firstname_hint = 'First Name';
   static const lastname_hint = 'Last Name';

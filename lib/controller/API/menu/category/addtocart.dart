@@ -49,7 +49,7 @@ class Addtocart extends GetxController {
       print('Request body: $body');
 
       final responcse =
-          await ApiCall.postRequest(url, data: body, useAuth: false);
+          await ApiCall.postRequest(url, data: body, useAuth: true);
 
       if (responcse != null) {
         data.value = jsonDecode(jsonEncode(responcse));
@@ -62,8 +62,8 @@ class Addtocart extends GetxController {
         }
       } else {
         throw {
-          'Addtocart to cart data Error :- ${200}, ${responcse}',
-          print('${200}, ${data.value['message']}'),
+          'Addtocart to cart data Error :- 200, $responcse',
+          print('200, ${data.value['message']}'),
           handleHttpError(200),
         };
       }

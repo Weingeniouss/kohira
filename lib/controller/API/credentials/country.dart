@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import 'package:kohira/view/utils/app_constants.dart';
 
 import '../../../modal/credentials/country.dart';
 import '../../../view/utils/app_url.dart';
@@ -72,7 +71,7 @@ class StateCalling extends GetxController {
 
         log("State List :- ${states.value}");
       } else {
-        throw 'State Value Error :- ${200}, ${response}';
+        throw 'State Value Error :- ${200}, $response';
       }
     } catch (e) {
       print('State Value Error :- $e');

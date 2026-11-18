@@ -33,6 +33,22 @@ class AppIcon {
   static const IconData deleteOutlineRounded = Icons.delete_outline_rounded;
   static const IconData checkCircleRounded = Icons.check_circle_rounded;
   static const IconData arrowForwardIosRounded = Icons.arrow_forward_ios_rounded;
+  static const IconData storeIcon = Icons.store;
+  static const IconData accessTimeOutlined = Icons.access_time_outlined;
+  static const IconData locationCity = Icons.location_city;
+  static const IconData personIcon = Icons.person;
+  static const IconData inventoryIcon = Icons.inventory_2;
+  static const IconData favoriteIcon = Icons.favorite;
+  static const IconData locationOnIcon = Icons.location_on;
+  static const IconData callOutlined = Icons.call_outlined;
+  static const IconData mailOutline = Icons.mail_outline;
+  static const IconData keyboardArrowDownOutlined = Icons.keyboard_arrow_down_outlined;
+  static const IconData moreVert = Icons.more_vert;
+  static const IconData personOutlined = Icons.person_outlined;
+  static const IconData locationOnOutlined = Icons.location_on_outlined;
+  static const IconData phoneAndroidOutlined = Icons.phone_android_outlined;
+  static const IconData deleteOutlineOutlined = Icons.delete_outline_outlined;
+  static const IconData checkIcon = Icons.check;
 
   //inputType
   static const mail = 'asset/icon/inputType/mail.svg';

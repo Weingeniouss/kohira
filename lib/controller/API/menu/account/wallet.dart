@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:get/get.dart';
 
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/app_constants.dart';
 
 import 'package:kohira/api/api_call.dart';
 
@@ -26,7 +25,7 @@ class WalletController extends GetxController {
         data.value = jsonDecode(jsonEncode(responce));
         log("Wallet :- ${data.value}");
       } else {
-        'Wallet Error this :- ${200}, ${responce}';
+        'Wallet Error this :- ${200}, $responce';
       }
     } catch (e) {
       print("'Wallet Error this :- $e");

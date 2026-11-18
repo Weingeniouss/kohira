@@ -8,11 +8,8 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../controller/API/menu/account/profiledetails.dart';
-import '../../../../utils/app_String.dart';
 import '../../../../utils/app_icon.dart';
 import '../../../../utils/widget/aapbar.dart';
-import '../../../../utils/widget/button.dart';
-import '../../../../utils/widget/inputField.dart';
 
 class Profileedit extends StatefulWidget {
   const Profileedit({super.key});
@@ -57,18 +54,42 @@ class _ProfileeditState extends State<Profileedit> {
 
     if (profileEdit.data['status'] == 'error') {
       final errors = profileEdit.data['errors'];
-      if (errors != null && errors.containsKey('zip')) ToastificationError.Error(errors['zip'][0]);
-      if (errors != null && errors.containsKey('firstname')) ToastificationError.Error(errors['firstname'][0]);
-      if (errors != null && errors.containsKey('lastname')) ToastificationError.Error(errors['lastname'][0]);
-      if (errors != null && errors.containsKey('email')) ToastificationError.Error(errors['email'][0]);
-      if (errors != null && errors.containsKey('address')) ToastificationError.Error(errors['address'][0]);
-      if (errors != null && errors.containsKey('city')) ToastificationError.Error(errors['city'][0]);
-      if (errors != null && errors.containsKey('state')) ToastificationError.Error(errors['state'][0]);
-      if (errors != null && errors.containsKey('country')) ToastificationError.Error(errors['country'][0]);
-      if (errors != null && errors.containsKey('countrycode')) ToastificationError.Error(errors['countrycode'][0]);
-      if (errors != null && errors.containsKey('mobileno')) ToastificationError.Error(errors['mobileno'][0]);
-      if (errors != null && errors.containsKey('id')) ToastificationError.Error(errors['mobileno'][0]);
-      if (errors != null && errors.containsKey('isdefault')) ToastificationError.Error(errors['isdefault'][0]);
+      if (errors != null && errors.containsKey('zip')) {
+        ToastificationError.Error(errors['zip'][0]);
+      }
+      if (errors != null && errors.containsKey('firstname')) {
+        ToastificationError.Error(errors['firstname'][0]);
+      }
+      if (errors != null && errors.containsKey('lastname')) {
+        ToastificationError.Error(errors['lastname'][0]);
+      }
+      if (errors != null && errors.containsKey('email')) {
+        ToastificationError.Error(errors['email'][0]);
+      }
+      if (errors != null && errors.containsKey('address')) {
+        ToastificationError.Error(errors['address'][0]);
+      }
+      if (errors != null && errors.containsKey('city')) {
+        ToastificationError.Error(errors['city'][0]);
+      }
+      if (errors != null && errors.containsKey('state')) {
+        ToastificationError.Error(errors['state'][0]);
+      }
+      if (errors != null && errors.containsKey('country')) {
+        ToastificationError.Error(errors['country'][0]);
+      }
+      if (errors != null && errors.containsKey('countrycode')) {
+        ToastificationError.Error(errors['countrycode'][0]);
+      }
+      if (errors != null && errors.containsKey('mobileno')) {
+        ToastificationError.Error(errors['mobileno'][0]);
+      }
+      if (errors != null && errors.containsKey('id')) {
+        ToastificationError.Error(errors['mobileno'][0]);
+      }
+      if (errors != null && errors.containsKey('isdefault')) {
+        ToastificationError.Error(errors['isdefault'][0]);
+      }
     }
 
     if (profileEdit.data['success'] == true) {
@@ -93,93 +114,261 @@ class _ProfileeditState extends State<Profileedit> {
             Get.back();
             profile.profiledetailscall();
           },
-          hedingname_2: AppString.editprofile,
+          hedingname_2: "Profile Details",
+          suffixicon_1: AppIcon.like,
+          suffixicon_2: AppIcon.shop,
         ),
         bottomNavigationBar: SafeArea(
-          child: Obx((){
-            if(profile.isLoading.value){
-              return SizedBox();
-            }else{
-             return Container(
-                color: AppColor.white_color,
-                height: Get.height * 0.080,
-                child: horizontalpadding(
-                  child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: editvalue,
-                          child: button(AppString.save),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColor.white_color,
+              border: Border(top: BorderSide(color: AppColor.borderGrey)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 46,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Get.back();
+                        profile.profiledetailscall();
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: AppColor.containerBg,
+                        side: BorderSide(color: AppColor.borderGrey),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        SizedBox(height: Get.height / 50),
-                      ],
+                      ),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: AppColor.black_color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              );
-            }
-          }),
+                SizedBox(width: 12),
+                Expanded(
+                  child: SizedBox(
+                    height: 46,
+                    child: ElevatedButton(
+                      onPressed: editvalue,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColor.pink_color,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                          color: AppColor.white_color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         body: Container(
           width: Get.width,
           height: Get.height,
           decoration: BoxDecoration(color: AppColor.white_color),
-          child: horizontalpadding(
-            child: Obx(() {
-              if (profile.isLoading.value) {
-                return Column(
-                  children: [
-                    Expanded(
-                      flex: 12,
-                      child: Shimmer.fromColors(
-                        baseColor: AppColor.lodingcolor,
-                        highlightColor: AppColor.highlightColor,
-                        child: ListView.builder(
-                          itemCount: 4,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                color: AppColor.white_color,
-                                borderRadius: BorderRadius.circular(Get.width / 80),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 20,horizontal: Get.width),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Shimmer.fromColors(
-                        baseColor: AppColor.lodingcolor,
-                        highlightColor: AppColor.highlightColor,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          decoration: BoxDecoration(
-                            color: AppColor.white_color,
-                            borderRadius: BorderRadius.circular(Get.width / 50),
+          child: SafeArea(
+            child: horizontalpadding(
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Obx(() {
+                  if (profile.isLoading.value) {
+                    return Shimmer.fromColors(
+                      baseColor: AppColor.lodingcolor,
+                      highlightColor: AppColor.highlightColor,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 20),
+                          Container(
+                            height: 350,
+                            decoration: BoxDecoration(
+                              color: AppColor.white_color,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
+                        ],
+                      ),
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16),
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColor.white_color,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColor.borderGrey),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.06),
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Personal Information",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.black_color,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            _buildLabeledField("First Name *", fristname),
+                            SizedBox(height: 16),
+                            _buildLabeledField("Last Name *", lastname),
+                            SizedBox(height: 16),
+                            _buildLabeledField("Email ID *", email,
+                                keyboardType: TextInputType.emailAddress),
+                            SizedBox(height: 16),
+                            _buildMobileField(),
+                          ],
                         ),
                       ),
-                    ),
-                    SizedBox(height: Get.height / 80),
-                  ],
-                );
-              }
-              return Column(
-                children: [
-                  SizedBox(height: Get.height / 50),
-                  inputField(icon: AppIcon.parson, controller: fristname,hintText: AppString.firstname_hint),
-                  inputField(icon: AppIcon.parson, controller: lastname,hintText: AppString.lastname_hint),
-                  inputField(icon: AppIcon.mail, controller: email,hintText: AppString.email_hint),
-                  inputField(icon: AppIcon.mobile, controller: mobile,maxLength: 10,textInputType: TextInputType.phone,hintText: AppString.phone_hint),
-                ],
-              );
-            }),
+                      SizedBox(height: 24),
+                    ],
+                  );
+                }),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLabeledField(
+    String label,
+    TextEditingController? controller, {
+    TextInputType? keyboardType,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        SizedBox(height: 8),
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColor.borderGrey),
+          ),
+          child: Center(
+            child: TextField(
+              controller: controller,
+              keyboardType: keyboardType,
+              style: TextStyle(
+                fontSize: 15,
+                color: AppColor.black_color,
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Mobile No *",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            Container(
+              height: 50,
+              width: 70,
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColor.borderGrey),
+              ),
+              child: Center(
+                child: Image.asset(AppIcon.india, width: 28),
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: AppColor.white_color,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColor.borderGrey),
+                ),
+                child: Center(
+                  child: TextField(
+                    controller: mobile,
+                    maxLength: 10,
+                    keyboardType: TextInputType.phone,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColor.black_color,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    decoration: InputDecoration(
+                      counterText: "",
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

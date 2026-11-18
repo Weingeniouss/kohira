@@ -20,7 +20,7 @@ class CountryService {
         return country;
       } else {
         print('country failed with status: ${200}');
-        print('country body: ${response}');
+        print('country body: $response');
         return null;
       }
     } catch (e) {

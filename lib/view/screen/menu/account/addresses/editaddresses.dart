@@ -158,7 +158,7 @@ class Editaddresses extends StatelessWidget {
                                   maxHeight: Get.height / 3,
                                   decoration: BoxDecoration(color: AppColor.white_color),
                                 ),
-                                iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
+                                iconStyleData: IconStyleData(icon: Icon(AppIcon.keyboardArrowDownOutlined, color: AppColor.dividercolor), iconSize: 24),
                                 dropdownSearchData: DropdownSearchData(
                                   searchController: edit.searchController,
                                   searchInnerWidgetHeight: 40,
@@ -222,7 +222,7 @@ class Editaddresses extends StatelessWidget {
                                   decoration: BoxDecoration(color: AppColor.white_color),
                                 ),
                                 iconStyleData: IconStyleData(
-                                  icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor),
+                                  icon: Icon(AppIcon.keyboardArrowDownOutlined, color: AppColor.dividercolor),
                                   iconSize: 24,
                                 ),
                                 dropdownSearchData: DropdownSearchData(
@@ -264,7 +264,7 @@ class Editaddresses extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(color: AppColor.pink_color,borderRadius: BorderRadius.circular(Get.width / 80)),
-                                  child: Icon(Icons.check,size: 13,color: AppColor.white_color),
+                                  child: Icon(AppIcon.checkIcon,size: 13,color: AppColor.white_color),
                                 ),
                                 SizedBox(width: Get.width / 50),
                                 Text(AppString.setdefult,style: TextStyle(fontSize: Get.width / 25)),

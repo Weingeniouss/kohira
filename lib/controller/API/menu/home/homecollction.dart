@@ -26,7 +26,7 @@ class Homecollction extends GetxController {
         log("homecollction data :- $data");
       } else {
         throw {
-          'homecollction data Error :- ${response}, ${200}',
+          'homecollction data Error :- $response, ${200}',
           print('homecollction data Error :- ${200}'),
         };
       }

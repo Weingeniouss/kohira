@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:kohira/modal/menu/home/drawar/customJewellery/category_customorder.dart';
 
-import 'package:kohira/view/utils/app_constants.dart';
 
 import '../../../../../../view/utils/app_url.dart';
 import 'package:kohira/api/api_call.dart';
@@ -32,7 +31,7 @@ class Customorder extends GetxController {
             .toList();
         log('Fetched ${categories.length} categories');
       } else {
-        throw Exception('${200}, ${response}');
+        throw Exception('${200}, $response');
       }
     } catch (e) {
       print('customorder Error is :- $e');

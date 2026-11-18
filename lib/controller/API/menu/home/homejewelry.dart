@@ -5,7 +5,6 @@ import 'package:kohira/controller/service/menu/home/home_jewelry_sections.dart';
 import 'package:kohira/modal/menu/home/home_jewelry_sections.dart';
 import 'package:kohira/view/utils/app_url.dart';
 import '../../../../view/utils/app_constants.dart';
-import 'dart:convert';
 
 class Homejewelry extends GetxController {
   var isLoading = false.obs;
@@ -30,10 +29,8 @@ class Homejewelry extends GetxController {
       final url = Uri.parse(AppUrl.homepage_JewelryList).toString();
       final responce = await dio.get(url);
       print('Sending to url :- $url');
-      if (responce != null) {
-        homejewelrydata.assignAll(responce.data);
-        print('home Jewellery data:- $homejewelrydata');
-      }
+      homejewelrydata.assignAll(responce.data);
+      print('home Jewellery data:- $homejewelrydata');
     } catch (e) {
       print('home Jewellery data Error :- $e');
     } finally {

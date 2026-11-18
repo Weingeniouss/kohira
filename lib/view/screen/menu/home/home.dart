@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, avoid_print, use_build_context_synchronously
+// ignore_for_file: must_be_immutable, strict_top_level_inference, prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors, deprecated_member_use, non_constant_identifier_names, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, avoid_print, use_build_context_synchronously
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/home/homejewelry.dart';
 import 'package:kohira/controller/API/menu/home/news_list.dart';
 import 'package:kohira/controller/API/menu/home/offer_banner.dart';
-import 'package:kohira/controller/user_inerface/menu/home/home.dart';
+import 'package:kohira/controller/page_controllers/home_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:kohira/controller/user_inerface/menu/home/menuwidget/homedashbord.dart';
 import 'package:kohira/controller/user_inerface/menu/overStore/store_locations_controller.dart';
@@ -28,16 +28,14 @@ import '../../../utils/widget/video.dart';
 import 'Search.dart';
 
 class Home extends StatelessWidget {
+  HomePageController homePage = Get.put(HomePageController());
+
   Home({super.key});
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    final homeController = Get.isRegistered<HomeController>()
-        ? Get.find<HomeController>()
-        : Get.put(HomeController());
-    homeController.callApiHome();
     final List<Widget> homeSections = [
       sarchfild(),
       mainSlider(),

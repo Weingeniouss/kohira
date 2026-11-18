@@ -5,7 +5,6 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import 'package:kohira/view/utils/app_constants.dart';
 
 import '../../../../view/utils/app_url.dart';
 import 'package:kohira/api/api_call.dart';
@@ -35,8 +34,8 @@ class FetchcartCalling extends GetxController {
         log('Fetchcart data :- $data');
       } else {
         throw {
-          'Fetchcart data Error This :- ${200}, ${responses}',
-          print('CountCart data this :- ${200}, ${responses}'),
+          'Fetchcart data Error This :- ${200}, $responses',
+          print('CountCart data this :- ${200}, $responses'),
         };
       }
     } catch (e) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kohira/controller/user_inerface/bottamNavigation/bottamNavigation.dart';
+import 'package:kohira/controller/page_controllers/cart_controller.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/controller/user_inerface/menu/myCart/wishlist/wishlist.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
@@ -20,17 +20,19 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/menu/others/count.dart';
 
 class Mycart extends StatefulWidget {
-  const Mycart({super.key});
+  CartPageController cartPage = Get.put(CartPageController());
+   Mycart({super.key});
 
   @override
   State<Mycart> createState() => _MycartState();
 }
 
 class _MycartState extends State<Mycart> {
-  final myCart = Get.put(MyCartValueChange());
-  final count = Get.put(CountController());
-  final bottamSelect = Get.put(Bottamnavigation());
-  final wishController = Get.put(WishlistController());
+  CartPageController get cartPage => widget.cartPage;
+  MyCartValueChange get myCart => cartPage.myCart;
+  WishlistController get wishController => cartPage.wishlistController;
+  CountController get count => cartPage.count;
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   final Set<int> expandedItemIndices = <int>{};

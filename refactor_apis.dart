@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, curly_braces_in_flow_control_structures, unused_local_variable
+
 import 'dart:io';
 
 void main() async {
@@ -17,12 +19,10 @@ void main() async {
       bool updated = await processFile(entity);
       if (updated) {
         count++;
-        print('Updated: ${entity.path}');
       }
     }
   }
 
-  print('Total files updated: $count');
 }
 
 Future<bool> processFile(File file) async {
@@ -38,9 +38,7 @@ Future<bool> processFile(File file) async {
     if (importsEnd != -1) {
       int lineEnd = content.indexOf('\n', importsEnd);
       if (lineEnd != -1) {
-        content = content.substring(0, lineEnd + 1) +
-                  "import 'package:kohira/api/api_call.dart';\n" +
-                  content.substring(lineEnd + 1);
+        content = "${content.substring(0, lineEnd + 1)}import 'package:kohira/api/api_call.dart';\n${content.substring(lineEnd + 1)}";
       }
     } else {
       content = "import 'package:kohira/api/api_call.dart';\n" + content;

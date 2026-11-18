@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import '../../../../../modal/menu/category/subcategory/filtercategory.dart';
-import '../../../../../view/utils/API_headers.dart';
 import '../../../../../view/utils/app_url.dart';
 import 'package:kohira/api/api_call.dart';
 
@@ -21,7 +20,7 @@ class FilterCategoryService {
         log('FilterCategory $jsonData');
         return Filtercategory.fromJson(jsonData);
       } else {
-        print('Error: ${200} - ${response}');
+        print('Error: ${200} - $response');
         return null;
       }
     } catch (e) {

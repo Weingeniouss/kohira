@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print, invalid_use_of_protected_member
 
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';

@@ -97,7 +97,7 @@ class Processpayment extends GetxController {
         log("Paymant Data :- ${data.value}");
       } else {
         throw {
-          'Paymant Error :-  ${response}, ${200}',
+          'Paymant Error :-  $response, ${200}',
           handleHttpError(200),
         };
       }

@@ -16,7 +16,7 @@ class OfferBannerService {
 
       if (response != null) {
         final offerBanner = offerBannerModelFromJson(jsonEncode(response));
-        print('Offer Banner Data :- ${response}');
+        print('Offer Banner Data :- $response');
         return offerBanner;
       } else {
         print('Offer Banner Error status :- ${200}');

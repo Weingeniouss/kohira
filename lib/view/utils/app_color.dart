@@ -71,5 +71,6 @@ class AppColor {
   static Color strikeRed = Color(0xFFEC7063);
   static Color starAmber = Colors.amber;
   static Color shadowBlack12 = Colors.black12;
+  static Color shadowBlack05 = Colors.black.withOpacity(0.05);
   static Color stepperBg = Color(0xFFF7F7F7);
 }

@@ -114,14 +114,14 @@ class SubmitCustomJewelley extends GetxController {
           await ApiCall.postRequest(apiUrl, data: formData, useAuth: false);
 
       print('📩 Status Code: ${200}');
-      print('📩 Response Body: ${response}');
+      print('📩 Response Body: $response');
 
       if (response != null) {
         customData.value = jsonDecode(jsonEncode(response));
         print('✅ Custom Jewellery Response :- $customData');
         ToastificationSuccess.Success(customData.value['message']);
       } else {
-        throw Exception('${200}, ${response}');
+        throw Exception('${200}, $response');
       }
     } catch (e) {
       print('❌ Error sending custom jewellery request :- $e');

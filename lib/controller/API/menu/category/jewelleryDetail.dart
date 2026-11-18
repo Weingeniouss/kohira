@@ -32,7 +32,7 @@ class JewellerydetailCall extends GetxController {
         log('Jewellery detail :- $data');
       } else {
         ToastificationError.Error(
-            "Jewellery detail Error :- ${200}, ${response}");
+            "Jewellery detail Error :- ${200}, $response");
       }
     } catch (e) {
       ToastificationError.Error("Jewellery detail Error :- $e");
