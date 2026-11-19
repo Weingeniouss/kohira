@@ -22,7 +22,10 @@ import '../home/menuwidget/drawer.dart';
 
 class Categorys extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final CategoryPageController categoryPage = Get.put(CategoryPageController());
+  CategoryPageController get categoryPage =>
+      Get.isRegistered<CategoryPageController>()
+          ? Get.find<CategoryPageController>()
+          : Get.put(CategoryPageController());
 
   Categorys({super.key});
 
@@ -32,10 +35,9 @@ class Categorys extends StatelessWidget {
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        final Bottamnavigation bottomSelectController =
-            Get.find<Bottamnavigation>();
-        Bottom();
-        bottomSelectController.indexOne();
+        if (Get.isRegistered<Bottamnavigation>()) {
+          Get.find<Bottamnavigation>().indexOne();
+        }
       },
       child: Scaffold(
         key: scaffoldKey,
@@ -190,13 +192,14 @@ class Categorys extends StatelessWidget {
             aspectRatio: 1,
             child: Padding(
               padding: EdgeInsets.all(25),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(categorieslist.image.toString()),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  categorieslist.image.toString(),
+                  fit: BoxFit.cover,
+                  cacheWidth: 400,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.image_not_supported, color: Colors.grey),
                 ),
               ),
             ),

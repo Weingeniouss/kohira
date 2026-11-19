@@ -14,7 +14,7 @@ class Bottamnavigation extends GetxController {
   RxInt selectindex = 0.obs;
 
   // Add Screen
-  List<Widget> scrren = [
+  late final List<Widget> scrren = [
     Home(),
     Categorys(),
     Mycart(),
@@ -26,7 +26,9 @@ class Bottamnavigation extends GetxController {
   void indexTwo() => selectindex.value = 1;
   void indexThree() {
     selectindex.value = 2;
-    final myCart = Get.put(MyCartValueChange());
+    final myCart = Get.isRegistered<MyCartValueChange>()
+        ? Get.find<MyCartValueChange>()
+        : Get.put(MyCartValueChange());
     myCart.loadCartData();
   }
   void indexFour() => selectindex.value = 3;
@@ -34,13 +36,9 @@ class Bottamnavigation extends GetxController {
 
   // Switch Screen
   Widget selectscreen(int index) {
-    switch (index) {
-      case 0: return Home();
-      case 1: return Categorys();
-      case 2: return Mycart();
-      case 3: return Overstore();
-      case 4: return Account();
-      default: return Home();
+    if (index >= 0 && index < scrren.length) {
+      return scrren[index];
     }
+    return scrren[0];
   }
 }

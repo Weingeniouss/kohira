@@ -20,15 +20,16 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../controller/API/menu/others/count.dart';
 
 class Mycart extends StatefulWidget {
-  CartPageController cartPage = Get.put(CartPageController());
-   Mycart({super.key});
+  Mycart({super.key});
 
   @override
   State<Mycart> createState() => _MycartState();
 }
 
 class _MycartState extends State<Mycart> {
-  CartPageController get cartPage => widget.cartPage;
+  CartPageController get cartPage => Get.isRegistered<CartPageController>()
+      ? Get.find<CartPageController>()
+      : Get.put(CartPageController());
   MyCartValueChange get myCart => cartPage.myCart;
   WishlistController get wishController => cartPage.wishlistController;
   CountController get count => cartPage.count;

@@ -27,8 +27,26 @@ import '../../../utils/widget/inputField.dart';
 import '../../../utils/widget/video.dart';
 import 'Search.dart';
 
+Homedashbord getHomedashbord() => Get.isRegistered<Homedashbord>()
+    ? Get.find<Homedashbord>()
+    : Get.put(Homedashbord());
+
+OfferBannerCalling getOfferBannerCalling() => Get.isRegistered<OfferBannerCalling>()
+    ? Get.find<OfferBannerCalling>()
+    : Get.put(OfferBannerCalling());
+
+StoreLocationsController getStoreLocationsController() => Get.isRegistered<StoreLocationsController>()
+    ? Get.find<StoreLocationsController>()
+    : Get.put(StoreLocationsController());
+
+NewsListCalling getNewsListCalling() => Get.isRegistered<NewsListCalling>()
+    ? Get.find<NewsListCalling>()
+    : Get.put(NewsListCalling());
+
 class Home extends StatelessWidget {
-  HomePageController homePage = Get.put(HomePageController());
+  HomePageController get homePage => Get.isRegistered<HomePageController>()
+      ? Get.find<HomePageController>()
+      : Get.put(HomePageController());
 
   Home({super.key});
 
@@ -36,6 +54,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    homePage;
     final List<Widget> homeSections = [
       sarchfild(),
       mainSlider(),
@@ -108,7 +127,7 @@ Widget sarchfild() {
 
 //MainSlider
 Widget mainSlider() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
 
   return Obx(() {
     final model = homedashbord.dashboardData.value;
@@ -156,6 +175,7 @@ Widget mainSlider() {
                   Image.network(
                     urlToUse,
                     fit: BoxFit.cover,
+                    cacheWidth: 800,
                     errorBuilder: (context, error, stackTrace) {
                       return Center(
                         child: Text(AppString.imageLoadFailed),
@@ -178,7 +198,7 @@ Widget mainSlider() {
 
 //Slider
 Widget Silder() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
 
   return Obx(() {
     final model = homedashbord.dashboardData.value;
@@ -228,6 +248,7 @@ Widget Silder() {
                   Image.network(
                     urlToUse,
                     fit: BoxFit.cover,
+                    cacheWidth: 800,
                     errorBuilder: (context, error, stackTrace) {
                       return Center(
                         child: Text(AppString.imageLoadFailed),
@@ -250,7 +271,7 @@ Widget Silder() {
 
 //Offer Banner List
 Widget offerBannerList() {
-  final offerBannerCtrl = Get.find<OfferBannerCalling>();
+  final offerBannerCtrl = getOfferBannerCalling();
   return Obx(() {
     final isLoading = offerBannerCtrl.isLoading.value;
     final banners = offerBannerCtrl.offerBanners;
@@ -291,6 +312,7 @@ Widget offerBannerList() {
                   imageUrl,
                   fit: BoxFit.cover,
                   width: Get.width,
+                  cacheWidth: 800,
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
                       child: Text("Image load failed"),
@@ -366,6 +388,7 @@ Widget jewelrySection1() {
             bannerUrl,
             width: Get.width,
             fit: BoxFit.cover,
+            cacheWidth: 800,
             errorBuilder: (context, error, stackTrace) =>
                 const SizedBox.shrink(),
           ),
@@ -637,7 +660,7 @@ Widget jewelrySection2() {
 }
 
 Widget productList() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final model = homedashbord.dashboardData.value;
     final listFromModel = model?.maindesignledjewelleryDetail;
@@ -877,7 +900,7 @@ Widget plan() {
 }
 
 Widget benner() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
     final model = homedashbord.dashboardData.value;
@@ -908,7 +931,7 @@ Widget benner() {
         padding: EdgeInsets.all(160),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(imgUrl),
+            image: ResizeImage(NetworkImage(imgUrl), width: 800),
           ),
         ),
       );
@@ -923,8 +946,11 @@ Widget benner() {
       padding: EdgeInsets.all(160),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: NetworkImage(
-            rawLists[0]['mobile_img'] ?? rawLists[0]['image'] ?? '',
+          image: ResizeImage(
+            NetworkImage(
+              rawLists[0]['mobile_img'] ?? rawLists[0]['image'] ?? '',
+            ),
+            width: 800,
           ),
         ),
       ),
@@ -933,7 +959,7 @@ Widget benner() {
 }
 
 Widget instagramVideo() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
     final model = homedashbord.dashboardData.value;
@@ -1059,7 +1085,7 @@ Widget instagramVideo() {
 }
 
 Widget timelessEditorialSection() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
     final model = homedashbord.dashboardData.value;
@@ -1135,7 +1161,7 @@ Widget timelessEditorialSection() {
 }
 
 Widget storeSliderBanner() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
     final model = homedashbord.dashboardData.value;
@@ -1199,7 +1225,7 @@ Widget storeSliderBanner() {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
-                      image: NetworkImage(product['image']),
+                      image: ResizeImage(NetworkImage(product['image']), width: 500),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -1240,7 +1266,7 @@ Widget storeSliderBanner() {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: NetworkImage(product.image ?? ''),
+                    image: ResizeImage(NetworkImage(product.image ?? ''), width: 500),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -1471,7 +1497,7 @@ Widget buildEditorialCollage2(List<String> images) {
 }
 
 Widget lovedCollection() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
     final model = homedashbord.dashboardData.value;
@@ -1597,7 +1623,7 @@ Widget lovedCollection() {
 }
 
 Widget customerReviews() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final isLoading = homedashbord.isLoading.value;
     final model = homedashbord.dashboardData.value;
@@ -1781,7 +1807,7 @@ Widget promise() {
 }
 
 Widget storeLocationsSection() {
-  final storeController = Get.find<StoreLocationsController>();
+  final storeController = getStoreLocationsController();
   return Obx(() {
     final isLoading = storeController.isLoading.value;
     final states = storeController.storeLocations;
@@ -2005,7 +2031,7 @@ Widget storeLocationsSection() {
 
 String getHomepageTitleText(String key, String fallback) {
   try {
-    final homedashbord = Get.find<Homedashbord>();
+    final homedashbord = getHomedashbord();
     final model = homedashbord.dashboardData.value;
     final hp = model?.homepageTitle;
     TitleDetailItem? item;
@@ -2038,7 +2064,7 @@ String getHomepageTitleText(String key, String fallback) {
 
 String getHomepageDescText(String key, String fallback) {
   try {
-    final homedashbord = Get.find<Homedashbord>();
+    final homedashbord = getHomedashbord();
     final model = homedashbord.dashboardData.value;
     final hp = model?.homepageTitle;
     TitleDetailItem? item;
@@ -2131,7 +2157,7 @@ Widget newsStorySection() {
 }
 
 Widget educationSection() {
-  final homedashbord = Get.find<Homedashbord>();
+  final homedashbord = getHomedashbord();
   return Obx(() {
     final model = homedashbord.dashboardData.value;
     final educationList = model?.mainhomeeducationlistDetail ??
@@ -2209,7 +2235,7 @@ Widget gifts() {
 }
 
 Widget newsListSection() {
-  final newsController = Get.find<NewsListCalling>();
+  final newsController = getNewsListCalling();
   return Obx(() {
     if (newsController.isLoading.value && newsController.newsItems.isEmpty) {
       return Shimmer.fromColors(

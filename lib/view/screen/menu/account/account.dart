@@ -19,10 +19,12 @@ import '../../../utils/app_string.dart';
 import '../../../utils/app_icon.dart';
 import '../../../utils/app_json.dart';
 import '../../../utils/widget/aapbar.dart';
-import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 
 class Account extends StatelessWidget {
-  AccountPageController accountPage = Get.put(AccountPageController());
+  AccountPageController get accountPage =>
+      Get.isRegistered<AccountPageController>()
+          ? Get.find<AccountPageController>()
+          : Get.put(AccountPageController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   Account({super.key});
@@ -33,10 +35,9 @@ class Account extends StatelessWidget {
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        final Bottamnavigation bottomSelectController =
-            Get.find<Bottamnavigation>();
-        Bottom();
-        bottomSelectController.indexOne();
+        if (Get.isRegistered<Bottamnavigation>()) {
+          Get.find<Bottamnavigation>().indexOne();
+        }
       },
       child: Scaffold(
         key: scaffoldKey,

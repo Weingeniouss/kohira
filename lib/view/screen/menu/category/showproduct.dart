@@ -45,17 +45,42 @@ class Showproduct extends StatelessWidget {
   final bool isGuest = (tokans.isEmpty ?? true);
 
   // GetX Controllers
-  final productController = Get.put(ShowproductController());
-  final bottamSelect = Get.put(Bottamnavigation());
-  final jewellerydetail = Get.put(JewellerydetailCall());
-  final recommendedjewellerylist = Get.put(Recommendedjewellerylist());
-  final wishlist = Get.put(Wishlist());
-  final count = Get.put(CountController());
-  final myCart = Get.put(MyCartValueChange());
-  final wish = Get.put(WishlistController());
-  final category = Get.put(JewelleryFilterCategory());
-  final userguest = Get.put(CartControllor());
-  final wishguest = Get.put(WishcartControllet());
+  ShowproductController get productController =>
+      Get.isRegistered<ShowproductController>()
+          ? Get.find<ShowproductController>()
+          : Get.put(ShowproductController());
+  Bottamnavigation get bottamSelect => Get.isRegistered<Bottamnavigation>()
+      ? Get.find<Bottamnavigation>()
+      : Get.put(Bottamnavigation());
+  JewellerydetailCall get jewellerydetail => Get.isRegistered<JewellerydetailCall>()
+      ? Get.find<JewellerydetailCall>()
+      : Get.put(JewellerydetailCall());
+  Recommendedjewellerylist get recommendedjewellerylist =>
+      Get.isRegistered<Recommendedjewellerylist>()
+          ? Get.find<Recommendedjewellerylist>()
+          : Get.put(Recommendedjewellerylist());
+  Wishlist get wishlist => Get.isRegistered<Wishlist>()
+      ? Get.find<Wishlist>()
+      : Get.put(Wishlist());
+  CountController get count => Get.isRegistered<CountController>()
+      ? Get.find<CountController>()
+      : Get.put(CountController());
+  MyCartValueChange get myCart => Get.isRegistered<MyCartValueChange>()
+      ? Get.find<MyCartValueChange>()
+      : Get.put(MyCartValueChange());
+  WishlistController get wish => Get.isRegistered<WishlistController>()
+      ? Get.find<WishlistController>()
+      : Get.put(WishlistController());
+  JewelleryFilterCategory get category =>
+      Get.isRegistered<JewelleryFilterCategory>()
+          ? Get.find<JewelleryFilterCategory>()
+          : Get.put(JewelleryFilterCategory());
+  CartControllor get userguest => Get.isRegistered<CartControllor>()
+      ? Get.find<CartControllor>()
+      : Get.put(CartControllor());
+  WishcartControllet get wishguest => Get.isRegistered<WishcartControllet>()
+      ? Get.find<WishcartControllet>()
+      : Get.put(WishcartControllet());
 
   void initializeData() {
     productController.resetState();
@@ -1849,6 +1874,7 @@ class Showproduct extends StatelessWidget {
                             width: 145,
                             height: 135,
                             fit: BoxFit.cover,
+                            cacheWidth: 300,
                             errorBuilder: (context, error, stackTrace) =>
                                 Center(child: Icon(AppIcon.brokenImage)),
                           ),

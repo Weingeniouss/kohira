@@ -13,10 +13,17 @@ import '../../../../controller/user_inerface/checkinternet/checkinternet.dart';
 
 class Bottom extends StatelessWidget {
   final void Function()? onTap;
-  final internetController = Get.put(InternetCheckerController());
-  final bottamSelect = Get.put(Bottamnavigation());
 
-  Bottom({super.key, this.onTap});
+  const Bottom({super.key, this.onTap});
+
+  InternetCheckerController get internetController =>
+      Get.isRegistered<InternetCheckerController>()
+          ? Get.find<InternetCheckerController>()
+          : Get.put(InternetCheckerController());
+
+  Bottamnavigation get bottamSelect => Get.isRegistered<Bottamnavigation>()
+      ? Get.find<Bottamnavigation>()
+      : Get.put(Bottamnavigation());
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +143,10 @@ class Bottom extends StatelessWidget {
             ),
           ),
         ),
-        body: bottamSelect.selectscreen(bottamSelect.selectindex.value),
+        body: IndexedStack(
+          index: bottamSelect.selectindex.value,
+          children: bottamSelect.scrren,
+        ),
       );
     });
   }

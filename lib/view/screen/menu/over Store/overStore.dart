@@ -22,7 +22,10 @@ class Overstore extends StatelessWidget {
   Overstore({super.key});
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final OutStorePageController outPageStore = Get.put(OutStorePageController());
+  OutStorePageController get outPageStore =>
+      Get.isRegistered<OutStorePageController>()
+          ? Get.find<OutStorePageController>()
+          : Get.put(OutStorePageController());
 
   OutStorePageController get over => outPageStore;
 
@@ -32,10 +35,9 @@ class Overstore extends StatelessWidget {
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        final Bottamnavigation bottomSelectController =
-            Get.find<Bottamnavigation>();
-        Bottom();
-        bottomSelectController.indexOne();
+        if (Get.isRegistered<Bottamnavigation>()) {
+          Get.find<Bottamnavigation>().indexOne();
+        }
       },
       child: Scaffold(
         key: scaffoldKey,
@@ -297,6 +299,7 @@ class Overstore extends StatelessWidget {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 180,
+                      cacheWidth: 600,
                       errorBuilder: (context, error, stackTrace) {
                         return SizedBox(
                           height: 180,
@@ -537,6 +540,7 @@ Widget buildCityImage(String url) {
     height: 65,
     width: 65,
     fit: BoxFit.cover,
+    cacheWidth: 200,
     errorBuilder: (context, error, stackTrace) => _defaultCityIcon(),
   );
 }

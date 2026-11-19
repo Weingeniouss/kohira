@@ -55,7 +55,10 @@ class Subcategorys extends StatefulWidget {
 
 class _SubcategorysState extends State<Subcategorys> {
   late SubcetegroryUIController subUI;
-  final wishController = Get.put(WishlistController());
+  WishlistController get wishController =>
+      Get.isRegistered<WishlistController>()
+          ? Get.find<WishlistController>()
+          : Get.put(WishlistController());
 
   @override
   void initState() {
@@ -660,7 +663,10 @@ class _SubcategorysState extends State<Subcategorys> {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(item['default_image']),
+                      image: ResizeImage(
+                        NetworkImage(item['default_image']),
+                        width: 400,
+                      ),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(12),
