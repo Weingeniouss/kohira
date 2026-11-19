@@ -15,126 +15,140 @@ class Bottom extends StatelessWidget {
   final void Function()? onTap;
   final internetController = Get.put(InternetCheckerController());
   final bottamSelect = Get.put(Bottamnavigation());
+
   Bottom({super.key, this.onTap});
+
   @override
   Widget build(BuildContext context) {
-    return Obx((){
-      if(!internetController.isConnected.value){
-        return  Scaffold(
+    return Obx(() {
+      if (!internetController.isConnected.value) {
+        return Scaffold(
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.wifi_off, size: 80, color: AppColor.pink_color),
                 SizedBox(height: Get.height / 50),
-                Text("No Internet Connection", style: TextStyle(fontSize: Get.width / 20,color: AppColor.pink_color)),
+                Text(
+                  "No Internet Connection",
+                  style: TextStyle(
+                    fontSize: Get.width / 20,
+                    color: AppColor.pink_color,
+                  ),
+                ),
                 SizedBox(height: Get.height / 50),
                 ElevatedButton(
                   onPressed: () => internetController.retryConnection(),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColor.pink_color),
-                  child: Text("Retry", style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.pink_color,
+                  ),
+                  child: Text(
+                    "Retry",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         );
       }
-     return  Scaffold(
-       backgroundColor: AppColor.white_color,
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          height: Get.height * 0.075,
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: AppColor.textfild_color)),
-            color: AppColor.white_color,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-
-              //Default home Screen
-              InkWell(
-                onTap: onTap ?? bottamSelect.indexOne,
-                child: bottamIcon(
-                  context: context,
-                  icon: AppIcon.home,
-                  name: AppString.home,
-                  onTap: bottamSelect.indexOne,
-                  condition: bottamSelect.selectindex.value == 0,
-                ),
-              ),
-
-              //Category Screen
-              GestureDetector(
-                onTap: bottamSelect.indexTwo,
-                child: bottamIcon(
-                  context: context,
-                  icon: AppIcon.category,
-                  name: AppString.category,
-                  onTap: bottamSelect.indexTwo,
-                  condition: bottamSelect.selectindex.value == 1,
-                ),
-              ),
-
-              //Mycart Screen
-              InkWell(
-                onTap: bottamSelect.indexThree,
-                child: bottamIcon(
-                  context: context,
-                  icon: AppIcon.cart,
-                  name: AppString.cart,
-                  onTap: bottamSelect.indexThree,
-                  condition: bottamSelect.selectindex.value == 2,
-                ),
-              ),
-
-              //Our Store
-              InkWell(
-                onTap: bottamSelect.indexFour,
-                child: bottamIcon(
-                  context: context,
-                  icon: AppIcon.location,
-                  name: AppString.Our,
-                  onTap: bottamSelect.indexFour,
-                  condition: bottamSelect.selectindex.value == 3,
-                ),
-              ),
-
-              //Account
-              (tokans.isEmpty ?? true)
-                  ? bottamIcon(
+      return Scaffold(
+        backgroundColor: AppColor.white_color,
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            height: Get.height * 0.075,
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: AppColor.textfild_color)),
+              color: AppColor.white_color,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                //Default home Screen
+                InkWell(
+                  onTap: onTap ?? bottamSelect.indexOne,
+                  child: bottamIcon(
                     context: context,
-                    icon: AppIcon.account,
-                    name: AppString.account,
-                    color : AppColor.textfild_color,
-                  )
-                  : InkWell(
-                    onTap: bottamSelect.indexFive,
-                    child: bottamIcon(
-                      context: context,
-                      icon: AppIcon.account,
-                      name: AppString.account,
-                      onTap: bottamSelect.indexFive,
-                      condition: bottamSelect.selectindex.value == 4,
+                    icon: AppIcon.home,
+                    name: AppString.home,
+                    onTap: bottamSelect.indexOne,
+                    condition: bottamSelect.selectindex.value == 0,
                   ),
-              ),
-            ],
+                ),
+
+                //Category Screen
+                GestureDetector(
+                  onTap: bottamSelect.indexTwo,
+                  child: bottamIcon(
+                    context: context,
+                    icon: AppIcon.category,
+                    name: AppString.category,
+                    onTap: bottamSelect.indexTwo,
+                    condition: bottamSelect.selectindex.value == 1,
+                  ),
+                ),
+
+                //Mycart Screen
+                InkWell(
+                  onTap: bottamSelect.indexThree,
+                  child: bottamIcon(
+                    context: context,
+                    icon: AppIcon.cart,
+                    name: AppString.cart,
+                    onTap: bottamSelect.indexThree,
+                    condition: bottamSelect.selectindex.value == 2,
+                  ),
+                ),
+
+                //Our Store
+                InkWell(
+                  onTap: bottamSelect.indexFour,
+                  child: bottamIcon(
+                    context: context,
+                    icon: AppIcon.location,
+                    name: AppString.Our,
+                    onTap: bottamSelect.indexFour,
+                    condition: bottamSelect.selectindex.value == 3,
+                  ),
+                ),
+
+                //Account
+                (tokans.isEmpty ?? true)
+                    ? bottamIcon(
+                        context: context,
+                        icon: AppIcon.account,
+                        name: AppString.account,
+                        color: AppColor.textfild_color,
+                      )
+                    : InkWell(
+                        onTap: bottamSelect.indexFive,
+                        child: bottamIcon(
+                          context: context,
+                          icon: AppIcon.account,
+                          name: AppString.account,
+                          onTap: bottamSelect.indexFive,
+                          condition: bottamSelect.selectindex.value == 4,
+                        ),
+                      ),
+              ],
+            ),
           ),
-          ),
-        ),body: bottamSelect.selectscreen(bottamSelect.selectindex.value),
+        ),
+        body: bottamSelect.selectscreen(bottamSelect.selectindex.value),
       );
     });
   }
 }
 
-Widget bottamIcon({
-  void Function()? onTap,
-  required String icon,
-  required String name,
-  bool condition = false,
-  Color? color,
-  context
-}) {
+Widget bottamIcon(
+    {void Function()? onTap,
+    required String icon,
+    required String name,
+    bool condition = false,
+    Color? color,
+    context}) {
   return Container(
     color: AppColor.white_color,
     width: Get.width / 5.5,
@@ -143,18 +157,25 @@ Widget bottamIcon({
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(icon, color:  condition ? color ?? AppColor.pink_color : color ??  AppColor.bottomColor,
+          SvgPicture.asset(
+            icon,
+            color: condition
+                ? color ?? AppColor.pink_color
+                : color ?? AppColor.desbaleiconColor,
             width: MediaQuery.of(context).size.width * 0.058,
             height: MediaQuery.of(context).size.width * 0.058,
           ),
           SizedBox(height: Get.height / 200),
           Text(
             textAlign: TextAlign.center,
-            name,style: TextStyle(
-            color: condition ? color ?? AppColor.pink_color : color ?? AppColor.bottomColor,
-            fontWeight: condition ? FontWeight.w600 : FontWeight.w500,
-            fontSize: MediaQuery.of(context).size.width * 0.03,
-           ),
+            name,
+            style: TextStyle(
+              color: condition
+                  ? color ?? AppColor.pink_color
+                  : color ?? AppColor.desbaleiconColor,
+              fontWeight: condition ? FontWeight.w600 : FontWeight.w500,
+              fontSize: MediaQuery.of(context).size.width * 0.03,
+            ),
           ),
         ],
       ),

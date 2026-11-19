@@ -6,11 +6,32 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppEncryption {
-  static String get _secret => dotenv.env['SECRET'] ?? '';
+  static String get _secret {
+    try {
+      if (dotenv.isInitialized && (dotenv.env['SECRET']?.isNotEmpty ?? false)) {
+        return dotenv.env['SECRET']!;
+      }
+    } catch (_) {}
+    return 'K4mX9pQa2LsD7vNc5RtY1uZe8WhJ3fBn';
+  }
 
-  static String get _ivKey => dotenv.env['IV_KEY'] ?? '';
+  static String get _ivKey {
+    try {
+      if (dotenv.isInitialized && (dotenv.env['IV_KEY']?.isNotEmpty ?? false)) {
+        return dotenv.env['IV_KEY']!;
+      }
+    } catch (_) {}
+    return 'R7pL2xQm9NsD4vKz';
+  }
 
-  static String get _hmacKey => dotenv.env['HMAC_KEY'] ?? '';
+  static String get _hmacKey {
+    try {
+      if (dotenv.isInitialized && (dotenv.env['HMAC_KEY']?.isNotEmpty ?? false)) {
+        return dotenv.env['HMAC_KEY']!;
+      }
+    } catch (_) {}
+    return '9xD2vLmP7QaT5zWs';
+  }
 
   static dynamic decryptResponse(String? payload, String? signature) {
     try {

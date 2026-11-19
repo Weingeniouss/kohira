@@ -73,4 +73,6 @@ class AppColor {
   static Color shadowBlack12 = Colors.black12;
   static Color shadowBlack05 = Colors.black.withOpacity(0.05);
   static Color stepperBg = Color(0xFFF7F7F7);
+
+  static const desbaleiconColor =  Color(0xff333333);
 }

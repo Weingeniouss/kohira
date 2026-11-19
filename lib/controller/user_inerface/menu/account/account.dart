@@ -25,7 +25,9 @@ class AccountController extends GetxController{
   }
 
   void listButton(String routeId, context) {
-    if (routeId == 'shipping_policy') {
+    if (routeId == 'change_password') {
+      ChangePassword().passwordchange(context);
+    } else if (routeId == 'shipping_policy') {
       Get.to(() => Shipping(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
     } else if (routeId == 'return_policy') {
       Get.to(() => Retray(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
@@ -35,9 +37,6 @@ class AccountController extends GetxController{
       Get.to(() => Terms(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 800));
     } else if (routeId == 'logout') {
       logoutUser();
-    } else {
-      // Implement missing routes or show message
-      // print('Route not implemented: $routeId');
     }
   }
 }

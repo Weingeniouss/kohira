@@ -112,10 +112,10 @@ class Overstore extends StatelessWidget {
 
   Widget _buildCityHorizontalList(List city) {
     return SizedBox(
-      height: Get.height * 0.2,
+      height: 175,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         itemCount: city.length + 1,
         itemBuilder: (BuildContext context, int index) {
           return _buildCityItemTile(city, index);
@@ -131,10 +131,11 @@ class Overstore extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                height: 125,
-                width: 125,
+                height: 115,
+                width: 115,
                 decoration: BoxDecoration(
                   color: AppColor.containerBg,
                   borderRadius: BorderRadius.circular(10),
@@ -144,14 +145,16 @@ class Overstore extends StatelessWidget {
                   child: SvgPicture.asset(
                     AppIcon.allstore,
                     fit: BoxFit.cover,
-                    height: 125,
+                    height: 115,
                   ),
                 ),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Text(
                 AppString.allStores,
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -182,10 +185,11 @@ class Overstore extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 125,
-                height: 125,
+                width: 115,
+                height: 115,
                 decoration: BoxDecoration(
                   color: AppColor.containerBg,
                   borderRadius: BorderRadius.circular(10),
@@ -196,19 +200,21 @@ class Overstore extends StatelessWidget {
                   child: buildCityImage(cityImage),
                 ),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Text(
                 cityName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 "($storeCount Stores)",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 10,
                   color: AppColor.grey_color,
