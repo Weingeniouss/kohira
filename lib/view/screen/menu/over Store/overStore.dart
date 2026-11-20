@@ -16,7 +16,6 @@ import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
-import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
 
 class Overstore extends StatelessWidget {
   Overstore({super.key});

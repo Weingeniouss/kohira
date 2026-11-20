@@ -1,4 +1,4 @@
-// ignore_for_file: dead_null_aware_expression, unused_field, strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
+// ignore_for_file: deprecated_member_use, dead_null_aware_expression, unused_field, strict_top_level_inference, avoid_print, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:io';
 import 'package:flutter/material.dart';

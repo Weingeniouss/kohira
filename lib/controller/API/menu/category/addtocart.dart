@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, invalid_use_of_protected_member, non_constant_identifier_names, duplicate_ignore
+// ignore_for_file: deprecated_member_use, avoid_print, invalid_use_of_protected_member, non_constant_identifier_names, duplicate_ignore
 
 import 'dart:convert';
 

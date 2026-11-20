@@ -63,10 +63,14 @@ class Account extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.lock_outline, size: 70, color: AppColor.pink_color),
+                      Icon(
+                        Icons.lock_outline,
+                        size: 70,
+                        color: AppColor.pink_color,
+                      ),
                       SizedBox(height: 16),
                       Text(
-                        "Account Disabled",
+                        AppString.accountDisabled,
                         style: TextStyle(
                           fontSize: Get.width * 0.05,
                           fontWeight: FontWeight.bold,
@@ -75,7 +79,7 @@ class Account extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        "Please login via OTP to view your account, orders, and profile.",
+                        AppString.accountDisabledMsg,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: Get.width * 0.035,
@@ -87,11 +91,17 @@ class Account extends StatelessWidget {
                         onPressed: () => Get.to(() => Otp()),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.pink_color,
-                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 12,
+                          ),
                         ),
                         child: Text(
-                          "Login with OTP",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          AppString.loginWithOtp,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ],

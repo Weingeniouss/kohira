@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unnecessary_null_comparison, prefer_typing_uninitialized_variables, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, avoid_print, unnecessary_null_comparison, prefer_typing_uninitialized_variables, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

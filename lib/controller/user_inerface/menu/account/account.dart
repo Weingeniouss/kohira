@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, prefer_const_constructors, avoid_print, strict_top_level_inference
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

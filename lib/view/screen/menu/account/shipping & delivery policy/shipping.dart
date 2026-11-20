@@ -1,4 +1,4 @@
-// ignore_for_file: curly_braces_in_flow_control_structures, prefer_const_constructors
+// ignore_for_file: deprecated_member_use, curly_braces_in_flow_control_structures, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';

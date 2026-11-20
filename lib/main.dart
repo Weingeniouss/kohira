@@ -1,4 +1,4 @@
-// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, avoid_print
+// ignore_for_file: deprecated_member_use, dead_null_aware_expression, prefer_const_constructors, avoid_print
 // Registered a new Firebase ios app on Firebase project kohira-2ac25.
 // Firebase configuration file lib\firebase_options.dart generated successfully with the following Firebase apps:
 //

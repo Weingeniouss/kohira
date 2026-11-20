@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unused_local_variable, avoid_print, invalid_use_of_protected_member
+// ignore_for_file: deprecated_member_use, non_constant_identifier_names, prefer_typing_uninitialized_variables, unused_local_variable, avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
 import 'dart:developer';

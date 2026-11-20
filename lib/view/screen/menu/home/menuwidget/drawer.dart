@@ -122,8 +122,11 @@ class Drawers extends StatelessWidget {
 
                   // Close Drawer Icon
                   IconButton(
-                    icon: Icon(Icons.close,
-                        color: AppColor.white_color, size: 24),
+                    icon: Icon(
+                      Icons.close,
+                      color: AppColor.white_color,
+                      size: 24,
+                    ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
@@ -222,8 +225,10 @@ class Drawers extends StatelessWidget {
                       ),
                       _buildMenuItem(
                         title: AppString.collection,
-                        onTap: () => _openDefaultSubcategory(
-                            context, "collections", AppString.collection),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          AppRoutes.toCollections();
+                        },
                       ),
                       _buildMenuItem(
                         title: AppString.custom,
@@ -239,10 +244,14 @@ class Drawers extends StatelessWidget {
 
                       // 3. Gold Mine Promo Card
                       Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColor.promoCardBg,
                           borderRadius: BorderRadius.circular(6),
@@ -252,7 +261,9 @@ class Drawers extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 border: Border.all(color: AppColor.pink_color),
                                 borderRadius: BorderRadius.circular(4),

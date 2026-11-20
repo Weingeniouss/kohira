@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kohira/controller/API/menu/myCart/withoutlogin.dart';
 import 'package:kohira/view/utils/app_String.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -21,6 +20,84 @@ import '../../../../utils/app_json.dart';
 import '../../../../utils/widget/horizontalpading.dart';
 import '../../category/showproduct.dart';
 
+List<dynamic> extractWishlistsList(dynamic rawData) {
+  if (rawData == null) return [];
+  if (rawData is List) return rawData;
+  if (rawData is Map) {
+    if (rawData['wishlists'] is List) return List<dynamic>.from(rawData['wishlists']);
+    if (rawData['data'] != null) {
+      final inner = rawData['data'];
+      if (inner is List) return List<dynamic>.from(inner);
+      if (inner is Map && inner['wishlists'] is List) {
+        return List<dynamic>.from(inner['wishlists']);
+      }
+    }
+    if (rawData['carts'] is List) return List<dynamic>.from(rawData['carts']);
+  }
+  return [];
+}
+
+dynamic extractJewelryData(dynamic wishlistItem) {
+  if (wishlistItem == null || wishlistItem is! Map) return null;
+  if (wishlistItem['WishlistJewelryData'] != null) return wishlistItem['WishlistJewelryData'];
+  if (wishlistItem['CartJewelryData'] != null) return wishlistItem['CartJewelryData'];
+  if (wishlistItem['jewelry'] != null) return wishlistItem['jewelry'];
+  if (wishlistItem['jewelry_data'] != null) return wishlistItem['jewelry_data'];
+  return wishlistItem;
+}
+
+String extractImageUrl(dynamic fetch, dynamic wishlistItem) {
+  if (fetch is Map) {
+    if (fetch['default'] != null && fetch['default'] is Map && fetch['default']['path'] != null) {
+      return fetch['default']['path'].toString();
+    }
+    if (fetch['default_image'] != null && fetch['default_image'].toString().isNotEmpty) {
+      return fetch['default_image'].toString();
+    }
+    if (fetch['image'] != null && fetch['image'].toString().isNotEmpty) {
+      return fetch['image'].toString();
+    }
+    if (fetch['images'] != null && fetch['images'] is List && fetch['images'].isNotEmpty) {
+      final first = fetch['images'][0];
+      if (first is Map && first['path'] != null) return first['path'].toString();
+      if (first is String) return first;
+    }
+  }
+  if (wishlistItem is Map && wishlistItem['default_image'] != null) {
+    return wishlistItem['default_image'].toString();
+  }
+  return '';
+}
+
+double extractItemPrice(dynamic fetch, dynamic wishlistItem) {
+  if (fetch is Map) {
+    if (fetch['offer_price'] != null) {
+      final p = double.tryParse(fetch['offer_price'].toString());
+      if (p != null && p > 0) return p;
+    }
+    if (fetch['setting_price'] != null) {
+      final p = double.tryParse(fetch['setting_price'].toString());
+      if (p != null && p > 0) return p;
+    }
+    if (fetch['price'] != null) {
+      final p = double.tryParse(fetch['price'].toString());
+      if (p != null && p > 0) return p;
+    }
+    if (fetch['jewelry_diamonds'] != null &&
+        fetch['jewelry_diamonds'] is List &&
+        fetch['jewelry_diamonds'].isNotEmpty) {
+      final firstDia = fetch['jewelry_diamonds'][0];
+      if (firstDia is Map && firstDia['price'] != null) {
+        return double.tryParse(firstDia['price'].toString()) ?? 0.0;
+      }
+    }
+  }
+  if (wishlistItem is Map && wishlistItem['price'] != null) {
+    return double.tryParse(wishlistItem['price'].toString()) ?? 0.0;
+  }
+  return 0.0;
+}
+
 class WishlistScreen extends StatelessWidget {
   WishlistScreen({super.key});
   final wish = Get.put(WishlistController());
@@ -35,7 +112,7 @@ class WishlistScreen extends StatelessWidget {
         width: Get.width,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Obx(() {
-          final bool isGuest = (tokans.isEmpty ?? true);
+          final bool isGuest = (!islogin || tokans.isEmpty);
           final bool isLoading = isGuest
               ? wish.withoutloginWish.isLoading.value
               : wish.fetchwishlist.isLoading.value;
@@ -44,21 +121,15 @@ class WishlistScreen extends StatelessWidget {
             return _buildSkeletonLoading();
           }
 
-          final wishlists = isGuest
-              ? wish.withoutloginWish.data['wishlists']
-              : wish.fetchwishlist.data['wishlists'];
+          final rawData = isGuest
+              ? wish.withoutloginWish.data
+              : wish.fetchwishlist.data;
 
-          if (wishlists == null || wishlists is! List || wishlists.isEmpty) {
+          final List<dynamic> wishlistItemsList = extractWishlistsList(rawData);
+
+          if (wishlistItemsList.isEmpty) {
             return Center(child: Lottie.asset(AppJson.noData));
           }
-
-          final int wishlistCount = isGuest
-              ? (wish.withoutloginWish.data['wishlists'] != null
-                  ? wish.withoutloginWish.data['wishlists'].length
-                  : 0)
-              : (wish.fetchwishlist.data['wishlists'] != null
-                  ? wish.fetchwishlist.data['wishlists'].length
-                  : 0);
 
           final indianFormat =
               NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
@@ -72,46 +143,28 @@ class WishlistScreen extends StatelessWidget {
                     crossAxisCount: 2,
                     childAspectRatio: 0.68,
                   ),
-                  itemCount: wishlistCount,
+                  itemCount: wishlistItemsList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final wishlistsData = isGuest
-                        ? wish.withoutloginWish.data['wishlists']
-                        : wish.fetchwishlist.data['wishlists'];
-                    dynamic wishlistItem;
-                    if (wishlistsData is List) {
-                      wishlistItem = wishlistsData[index];
-                    } else if (wishlistsData is Map) {
-                      wishlistItem = wishlistsData[index.toString()];
-                    } else {
-                      print("Unexpected wishlist type: ${wishlistsData.runtimeType}");
-                      return const SizedBox();
-                    }
-
-                    // Extract jewelry data
-                    final fetch = wishlistItem['WishlistJewelryData'];
-                    final id = wishlistItem['id'].toString();
+                    final wishlistItem = wishlistItemsList[index];
+                    final fetch = extractJewelryData(wishlistItem);
+                    final id = (wishlistItem['id'] ?? wishlistItem['jewelryid'] ?? '').toString();
                     final ringSize = wishlistItem['ringsize'];
-
-                    String priceText = '0';
-                    if (fetch != null &&
-                        fetch['jewelry_diamonds'] != null &&
-                        fetch['jewelry_diamonds'] is List &&
-                        fetch['jewelry_diamonds'].isNotEmpty) {
-                      priceText =
-                          fetch['jewelry_diamonds'][0]['price'].toString();
-                    }
-
-                    final double parsedPrice =
-                        double.tryParse(priceText) ?? 0.0;
+                    final imageUrl = extractImageUrl(fetch, wishlistItem);
+                    final parsedPrice = extractItemPrice(fetch, wishlistItem);
+                    final titleText = (fetch != null && fetch['title'] != null)
+                        ? fetch['title'].toString()
+                        : (wishlistItem['title']?.toString() ?? '');
 
                     return GestureDetector(
                       onTap: () {
-                        if (fetch != null && fetch['slug'] != null) {
-                          print(fetch['slug']);
+                        final slug = (fetch != null && fetch['slug'] != null)
+                            ? fetch['slug'].toString()
+                            : (wishlistItem['slug']?.toString());
+                        if (slug != null && slug.isNotEmpty) {
                           AppRoutes.toShowProduct(
-                            slug: fetch['slug'],
-                            categoryslug: fetch['category'] != null
-                                ? fetch['category']['slug']
+                            slug: slug,
+                            categoryslug: (fetch != null && fetch['category'] != null && fetch['category']['slug'] != null)
+                                ? fetch['category']['slug'].toString()
                                 : '',
                           );
                         }
@@ -126,17 +179,30 @@ class WishlistScreen extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    if (fetch != null && fetch['default'] != null)
-                                      Image(
-                                        image: NetworkImage(
-                                            fetch['default']['path']),
-                                        fit: BoxFit.cover,
-                                        width: 150,
-                                        height: 150,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Icon(Icons.error),
-                                      ),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: imageUrl.isNotEmpty
+                                          ? Image.network(
+                                              imageUrl,
+                                              fit: BoxFit.cover,
+                                              width: 150,
+                                              height: 150,
+                                              cacheWidth: 300,
+                                              errorBuilder: (context, error, stackTrace) =>
+                                                  Container(
+                                                width: 150,
+                                                height: 150,
+                                                color: Colors.grey.shade100,
+                                                child: Icon(Icons.broken_image, color: Colors.grey),
+                                              ),
+                                            )
+                                          : Container(
+                                              width: 150,
+                                              height: 150,
+                                              color: Colors.grey.shade100,
+                                              child: Icon(Icons.broken_image, color: Colors.grey),
+                                            ),
+                                    ),
                                   ],
                                 ),
                                 Positioned(
@@ -146,41 +212,18 @@ class WishlistScreen extends StatelessWidget {
                                     onTap: () async {
                                       if (isGuest) {
                                         List<JewelryItemWish> currentItemswish =
-                                            await localdatabase
-                                                .getJewelryItemsWish();
-                                        final jewelryId = wish
-                                            .withoutloginWish
-                                            .data['wishlists'][index]['jewelryid']
-                                            .toString();
+                                            await localdatabase.getJewelryItemsWish();
+                                        final jewelryId = (wishlistItem['jewelryid'] ?? wishlistItem['id'] ?? id).toString();
                                         currentItemswish.removeWhere(
                                             (item) => item.jewelryId == jewelryId);
-                                        await localdatabase
-                                            .saveJewelryItemsWish(currentItemswish);
-                                        wish.withoutloginWish
-                                            .data['wishlists']
-                                            .removeWhere((item) =>
-                                                item['jewelryid'].toString() ==
-                                                jewelryId);
-                                        wish.withoutloginWish.refresh();
-                                        WithoutloginWishList()
-                                            .withoutloginwishlist(currentItemswish);
-                                        wish.onInit();
-                                        wishguest.wishcount.value =
-                                            currentItemswish.length;
-                                        pref!.setString('wishcount',
-                                            wishguest.wishcount.value.toString());
-                                        wishCount =
-                                            pref!.getString('wishcount') ?? '0';
-                                        ToastificationSuccess.Success(
-                                            'Item removed from wishlist');
-                                        Get.forceAppUpdate();
+                                        await localdatabase.saveJewelryItemsWish(currentItemswish);
+                                        await wish.loadWishlist();
+                                        ToastificationSuccess.Success('Item removed from wishlist');
                                       } else {
                                         wish.deleteItem(id).then(
                                           (_) {
                                             wish.onInit();
-                                            if (wish.deletWishtlist
-                                                    .data['success'] ==
-                                                true) {
+                                            if (wish.deletWishtlist.data['success'] == true) {
                                               ToastificationSuccess.Success(
                                                   '${fetch != null ? fetch['title'] : ''}, ${wish.deletWishtlist.data['message'].replaceAll('Item', '')}');
                                             }
@@ -204,7 +247,7 @@ class WishlistScreen extends StatelessWidget {
                             SizedBox(height: Get.height / 80),
                             Flexible(
                               child: Text(
-                                (fetch != null ? fetch['title'] : '') ?? '',
+                                titleText,
                                 style: TextStyle(fontSize: Get.width / 30),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
@@ -223,8 +266,7 @@ class WishlistScreen extends StatelessWidget {
                             SizedBox(height: Get.height / 150),
                             (ringSize == null ||
                                     ringSize.toString().isEmpty ||
-                                    ringSize.toString().toLowerCase() ==
-                                        'null')
+                                    ringSize.toString().toLowerCase() == 'null')
                                 ? const SizedBox()
                                 : Row(
                                     children: [

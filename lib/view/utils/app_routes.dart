@@ -22,6 +22,7 @@ import 'package:kohira/view/screen/menu/account/terms%20&%20condition/terms.dart
 import 'package:kohira/view/screen/menu/account/wallet/wallet.dart';
 import 'package:kohira/view/screen/menu/account/warranty%20&%20jewellery%20cleam/warranty.dart';
 import 'package:kohira/view/screen/menu/category/category_menu_detail_screen.dart';
+import 'package:kohira/view/screen/menu/category/collections_screen.dart';
 import 'package:kohira/view/screen/menu/category/showproduct.dart';
 import 'package:kohira/view/screen/menu/category/subcategory.dart';
 import 'package:kohira/view/screen/menu/home/Search.dart';
@@ -62,6 +63,10 @@ class AppRoutes {
 
   static Future<T?>? toOtp<T>() {
     return Get.to<T>(() => Otp());
+  }
+
+  static Future<T?>? toCollections<T>() {
+    return Get.to<T>(() => CollectionsScreen());
   }
 
   static Future<T?>? toCategoryDetail<T>({required Datum categoryItem}) {

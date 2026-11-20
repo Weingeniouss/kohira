@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, avoid_print, camel_case_types, prefer_const_constructors, strict_top_level_inference
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/modal/menu/category/subcategory/addtocart.dart';
 import 'package:kohira/modal/menu/category/subcategory/addtowish.dart';
 import 'package:kohira/view/utils/app_json.dart';
@@ -26,6 +27,9 @@ class localdatabase {
     pref ??= await SharedPreferences.getInstance();
     final jsonList = items.map((item) => item.toJson()).toList();
     await pref!.setString(_jewelryItemsKeyWish, json.encode(jsonList));
+    if (Get.isRegistered<CountController>()) {
+      Get.find<CountController>().updateCounts();
+    }
   }
 
   // Get jewelry items from local storage
@@ -54,6 +58,9 @@ class localdatabase {
     final jsonStr = json.encode(jsonList);
     print('saveJewelryItems saving to pref $_jewelryItemsKeyCart: $jsonStr');
     await pref!.setString(_jewelryItemsKeyCart, jsonStr);
+    if (Get.isRegistered<CountController>()) {
+      Get.find<CountController>().updateCounts();
+    }
   }
 
   // Get jewelry items from local storage

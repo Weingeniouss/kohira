@@ -14,7 +14,7 @@ import 'package:kohira/controller/user_inerface/menu/myCart/wishlist/wishlist.da
 import 'package:kohira/view/screen/menu/category/filter_screen.dart';
 import 'package:kohira/view/screen/menu/category/showproduct.dart'
     show Showproduct;
-import 'package:kohira/view/utils/app_String.dart';
+import 'package:kohira/view/utils/app_string.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_routes.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -170,10 +170,10 @@ class _SubcategorysState extends State<Subcategorys> {
             Icon(Icons.swap_vert_rounded, color: AppColor.pink_color, size: 22),
             const SizedBox(width: 8),
             Text(
-              "SORT",
+              AppString.sortUpper,
               style: TextStyle(
                 fontSize: 15,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: AppColor.pink_color,
                 letterSpacing: 1.0,
               ),
@@ -242,10 +242,10 @@ class _SubcategorysState extends State<Subcategorys> {
             ),
             const SizedBox(width: 8),
             Text(
-              "FILTERS",
+              AppString.filtersUpper,
               style: TextStyle(
                 fontSize: 15,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: AppColor.pink_color,
                 letterSpacing: 1.0,
               ),
@@ -464,7 +464,7 @@ class _SubcategorysState extends State<Subcategorys> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Clear All",
+                          AppString.clearAll,
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColor.grey_color,

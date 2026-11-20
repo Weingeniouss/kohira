@@ -1,7 +1,8 @@
-// ignore_for_file: avoid_print, invalid_use_of_protected_member
+// ignore_for_file: deprecated_member_use, avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
 import 'dart:developer';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

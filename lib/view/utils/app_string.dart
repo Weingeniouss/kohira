@@ -200,6 +200,13 @@ class AppString {
   static const weight = 'Weight';
   static const price = 'Price';
   static const shape = 'Shape';
+  static const sortUpper = 'SORT';
+  static const filtersUpper = 'FILTERS';
+  static const clearAll = 'Clear All';
+  static const applyUpper = 'APPLY';
+  static const reset = 'Reset';
+  static const subCategory = 'Sub Category';
+  static const ringSizeColon = 'Ring Size :- ';
 
   //Show Product / Product Detail Strings
   static const threeSixty = '360°';
@@ -277,6 +284,9 @@ class AppString {
 
   //Account
   static const accounttitale = 'Account';
+  static const accountDisabled = 'Account Disabled';
+  static const accountDisabledMsg = 'Please login via OTP to view your account, orders, and profile.';
+  static const loginWithOtp = 'Login with OTP';
   static const profileLabel = 'Profile';
   static const manageYourAccount = 'Manage Your Account';
   static const ordersLabel = 'Orders';

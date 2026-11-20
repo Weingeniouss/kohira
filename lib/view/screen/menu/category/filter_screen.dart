@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, non_constant_identifier_names
+// ignore_for_file: deprecated_member_use, prefer_const_constructors, avoid_print, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +6,7 @@ import 'package:kohira/controller/API/menu/category/subcategrory/filtercategory.
 import 'package:kohira/controller/API/menu/category/subcategrory/jewelleryfilter.dart';
 import 'package:kohira/controller/user_inerface/menu/categroy/subcetegroy/filter.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_string.dart';
 
 void showFilterBottomSheet(
   BuildContext context, {
@@ -59,13 +60,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   int selectedTabIndex = 0;
 
   final List<String> categories = [
-    'Category',
-    'Sub Category',
-    'Metal Stamp',
-    'Metal Type',
-    'Diamond Type',
-    'Price',
-    'Weight',
+    AppString.categories,
+    AppString.subCategory,
+    AppString.metalstamp,
+    AppString.metaltaype,
+    AppString.diamond_Type,
+    AppString.price,
+    AppString.weight,
   ];
 
   @override
@@ -167,7 +168,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     onPressed: () => Get.back(),
                   ),
                   Text(
-                    "Filters",
+                    AppString.filter,
                     style: TextStyle(
                       color: AppColor.pink_color,
                       fontSize: 20,
@@ -644,7 +645,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     ),
                   ),
                   child: Text(
-                    "APPLY",
+                    AppString.applyUpper,
                     style: TextStyle(
                       color: AppColor.white_color,
                       fontSize: 16,
@@ -671,7 +672,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     ),
                   ),
                   child: Text(
-                    "Reset",
+                    AppString.reset,
                     style: TextStyle(
                       color: AppColor.pink_color,
                       fontSize: 16,

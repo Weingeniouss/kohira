@@ -152,37 +152,23 @@ Widget _buildWishlistIcon(
       Positioned(
         right: -8,
         top: 4,
-        child: isGuest
-            ? CircleAvatar(
-                radius: 10,
-                backgroundColor: AppColor.pink_color,
-                child: Text(
-                  wishCount,
-                  style: TextStyle(
-                    color: AppColor.white_color,
-                    fontSize: Get.width / 38,
-                  ),
-                ),
-              )
-            : Obx(() {
-                if (count.isLoading.value ||
-                    count.data == null ||
-                    count.data['wishlist'] == null ||
-                    count.data['wishlist']['count'] == 0) {
-                  return const SizedBox.shrink();
-                }
-                return CircleAvatar(
-                  radius: 10,
-                  backgroundColor: AppColor.pink_color,
-                  child: Text(
-                    count.data['wishlist']['count'].toString(),
-                    style: TextStyle(
-                      color: AppColor.white_color,
-                      fontSize: Get.width / 38,
-                    ),
-                  ),
-                );
-              }),
+        child: Obx(() {
+          final wishCountVal = count.wishCountRx.value;
+          if (wishCountVal <= 0) {
+            return const SizedBox.shrink();
+          }
+          return CircleAvatar(
+            radius: 10,
+            backgroundColor: AppColor.pink_color,
+            child: Text(
+              wishCountVal.toString(),
+              style: TextStyle(
+                color: AppColor.white_color,
+                fontSize: Get.width / 38,
+              ),
+            ),
+          );
+        }),
       ),
     ],
   );
@@ -191,7 +177,9 @@ Widget _buildWishlistIcon(
 Widget _buildCartIcon(String iconPath, bool isGuest, CountController count,
     Bottamnavigation bottamSelect) {
   void navigateToCart() {
-    final myCart = Get.put(MyCartValueChange());
+    final myCart = Get.isRegistered<MyCartValueChange>()
+        ? Get.find<MyCartValueChange>()
+        : Get.put(MyCartValueChange());
     myCart.loadCartData();
     AppRoutes.toCart();
   }
@@ -210,43 +198,26 @@ Widget _buildCartIcon(String iconPath, bool isGuest, CountController count,
       Positioned(
         right: -8,
         top: 4,
-        child: isGuest
-            ? GestureDetector(
-                onTap: navigateToCart,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: AppColor.pink_color,
-                  child: Text(
-                    cartCount,
-                    style: TextStyle(
-                      color: AppColor.white_color,
-                      fontSize: Get.width / 38,
-                    ),
-                  ),
+        child: Obx(() {
+          final cartCountVal = count.cartCountRx.value;
+          if (cartCountVal <= 0) {
+            return const SizedBox.shrink();
+          }
+          return GestureDetector(
+            onTap: navigateToCart,
+            child: CircleAvatar(
+              radius: 10,
+              backgroundColor: AppColor.pink_color,
+              child: Text(
+                cartCountVal.toString(),
+                style: TextStyle(
+                  color: AppColor.white_color,
+                  fontSize: Get.width / 38,
                 ),
-              )
-            : Obx(() {
-                if (count.isLoading.value ||
-                    count.data == null ||
-                    count.data['cart'] == null ||
-                    count.data['cart']['count'] == 0) {
-                  return const SizedBox.shrink();
-                }
-                return GestureDetector(
-                  onTap: navigateToCart,
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: AppColor.pink_color,
-                    child: Text(
-                      count.data['cart']['count'].toString(),
-                      style: TextStyle(
-                        color: AppColor.white_color,
-                        fontSize: Get.width / 38,
-                      ),
-                    ),
-                  ),
-                );
-              }),
+              ),
+            ),
+          );
+        }),
       ),
     ],
   );

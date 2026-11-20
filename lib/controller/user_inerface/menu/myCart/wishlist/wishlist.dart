@@ -18,7 +18,7 @@ class WishlistController extends GetxController {
   final wishlist = Get.put(Wishlist());
 
   var wishlistItems = <dynamic>[].obs;
-  final bool isGuestUser = (tokans.isEmpty ?? true);
+  bool get isGuestUser => (!islogin || tokans.isEmpty);
   RxList<JewelryItemWish> existingItemswish = <JewelryItemWish>[].obs;
 
   // Reactive set of wishlisted item IDs for INSTANT UI color change
@@ -35,11 +35,18 @@ class WishlistController extends GetxController {
       final itemswish = await localdatabase.getJewelryItemsWish();
       existingItemswish.value = itemswish;
       wishlistedIds.assignAll(itemswish.map((item) => item.jewelryId.toString()));
-      await withoutloginWish.withoutloginwishlist(itemswish);
+      if (itemswish.isNotEmpty) {
+        await withoutloginWish.withoutloginwishlist(itemswish);
+      } else {
+        withoutloginWish.data.value = {'wishlists': []};
+      }
     } else {
       await fetchwishlist.fechwishlist();
       await count.counting();
       _syncUserWishlistIds();
+    }
+    if (Get.isRegistered<CountController>()) {
+      Get.find<CountController>().updateCounts();
     }
   }
 
