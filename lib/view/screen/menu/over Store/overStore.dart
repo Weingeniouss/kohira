@@ -1,45 +1,42 @@
-
 // ignore_for_file: file_names, prefer_const_constructors, must_call_super, deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kohira/controller/user_inerface/menu/overStore/overStore.dart';
+import 'package:kohira/controller/page_controllers/out_store_controller.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/screen/menu/over%20Store/overStoredetails.dart';
-import 'package:kohira/view/utils/app_String.dart';
+import 'package:kohira/view/utils/app_string.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/dio_client.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
-import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
-import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../controller/user_inerface/bottamNavigation/bottamNavigation.dart';
 import '../../../utils/app_json.dart';
-import '../../../utils/widget/bottomNavigation/bottomNavigation.dart';
-import 'package:http/http.dart' as http;
 
-class Overstore extends StatefulWidget {
-  const Overstore({super.key});
+class Overstore extends StatelessWidget {
+  Overstore({super.key});
 
-  @override
-  State<Overstore> createState() => _OverstoreState();
-}
-
-class _OverstoreState extends State<Overstore> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final over = Get.put(Overstore_Conteroller());
+  OutStorePageController get outPageStore =>
+      Get.isRegistered<OutStorePageController>()
+          ? Get.find<OutStorePageController>()
+          : Get.put(OutStorePageController());
+
+  OutStorePageController get over => outPageStore;
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        final Bottamnavigation bottomSelectController = Get.find<Bottamnavigation>();
-        Bottom();
-        bottomSelectController.indexOne();
+        if (Get.isRegistered<Bottamnavigation>()) {
+          Get.find<Bottamnavigation>().indexOne();
+        }
       },
       child: Scaffold(
         key: scaffoldKey,
@@ -52,285 +49,458 @@ class _OverstoreState extends State<Overstore> {
         ),
         drawer: Drawers(),
         body: Container(
-          height: Get.height, width: Get.width,
+          height: Get.height,
+          width: Get.width,
           decoration: BoxDecoration(color: AppColor.white_color),
           child: Obx(() {
-            if(over.store.isLoading.value){
-              return Shimmer.fromColors(
-                baseColor: AppColor.lodingcolor,
-                highlightColor: AppColor.highlightColor,
-                child: horizontalpadding(
-                  child: Column(
-                    children: [
-                      SizedBox(height: Get.height / 50),
-                      Container(
-                        height: Get.height * 0.05,
-                        decoration: BoxDecoration(
-                          color: AppColor.white_color,
-                          border: Border.all(color: AppColor.textfild_color),
-                          borderRadius: BorderRadiusDirectional.circular(Get.width / 50),
-                        ),
-                      ),
-                      SizedBox(height: Get.height / 50),
-                      SizedBox(
-                        height: Get.height / 10,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                             padding: EdgeInsets.all(40),
-                              margin: EdgeInsets.only(right: Get.width / 50),
-                              decoration: BoxDecoration(
-                                color: AppColor.white_color,
-                                borderRadius: BorderRadius.circular(Get.width / 50),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(height: Get.height / 50),
-                      Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColor.white_color),
-                                borderRadius: BorderRadius.circular(Get.width / 50),
-                              ),
-                              margin: EdgeInsets.only(bottom: Get.height / 80),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: Get.width,vertical: 90),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
-                                  ),
-                                  SizedBox(height: Get.height / 80),
-                                  Container(
-                                    width: Get.width / 1.4,
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
-                                  ),
-                                  SizedBox(height: Get.height / 80),
-                                  Container(
-                                    width: Get.width / 1.7,
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
-                                  ),
-                                  SizedBox(height: Get.height / 80),
-                                  Container(
-                                    width: Get.width / 1.9,
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 50),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+            if (outPageStore.store.isLoading.value) {
+              return _buildSkeletonLoading();
             }
-            final city = over.citylist.data['data'] ?? [];
-            final stores = over.store.data['data'] ?? [];
-            if(stores.isEmpty || city.isEmpty) return Center(child: Lottie.asset(AppJson.noData));
+
+            final city = outPageStore.cityListData['data'] ?? [];
+            final stores = outPageStore.storeData['data'] ?? [];
+
+            if (stores.isEmpty || city.isEmpty) {
+              return Center(child: Lottie.asset(AppJson.noData));
+            }
+
             return Column(
               children: [
-                SizedBox(height: Get.height / 50),
-                horizontalpadding(child: searchField(onSubmitted: (val) => over.submitval(val),textInputAction: TextInputAction.search)),
-                SizedBox(height: Get.height / 150),
-                SizedBox(
-                  height: Get.height * 0.16,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: city.length + 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) {
-                        return GestureDetector(
-                          onTap: () => over.store.overStore(),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(AppIcon.allstore, fit: BoxFit.cover, height: 60),
-                                Text(AppString.allStores),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        final cityIndex = index - 1;
-                        if (cityIndex >= city.length) return const SizedBox.shrink();
-                        final cityData = city[cityIndex];
-                        final cityName = cityData['name']?.toString() ?? 'Unknown City';
-                        final cityImage = cityData['city_image_path']?.toString() ?? cityData['city_image']?.toString() ?? '';
-                        final cityId = cityData['id']?.toString();
-                        return GestureDetector(
-                          onTap: () {
-                            if (cityId != null) {
-                              over.store.overStore(store_city_id: cityId);
-                            }},
-                          child: Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              children: [
-                                buildCityImage(cityImage),
-                                Text(cityName, maxLines: 1, overflow: TextOverflow.ellipsis),
-                              ],
-                            ),
-                          ),
-                        );
-                      }},
-                    ),
+                _buildWelcomeBanner(),
+                _buildCityHorizontalList(city),
+                SizedBox(height: 10),
+                Expanded(child: _buildStoresVerticalList(stores)),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeBanner() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: AppColor.promoCardBg,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Text(
+            AppString.welcomeToKohira,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColor.pink_color,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            AppString.stepIntoKohiraStores,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColor.grey_color,
+              height: 1.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCityHorizontalList(List city) {
+    return SizedBox(
+      height: 175,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemCount: city.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildCityItemTile(city, index);
+        },
+      ),
+    );
+  }
+
+  Widget _buildCityItemTile(List city, int index) {
+    if (index == 0) {
+      return GestureDetector(
+        onTap: () => over.fetchStoreData(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 115,
+                width: 115,
+                decoration: BoxDecoration(
+                  color: AppColor.containerBg,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.borderGrey),
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    AppIcon.allstore,
+                    fit: BoxFit.cover,
+                    height: 115,
                   ),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: stores['allstoreList']?.length ?? 0,
-                    itemBuilder: (BuildContext context, int index) {
-                      final details =  stores['allstoreList'][index];
-                      final cityname = details['store_city']['cityname'];
-                      final image =  details['store_image_path'];
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                AppString.allStores,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      final cityIndex = index - 1;
+      if (cityIndex >= city.length) return const SizedBox.shrink();
+      final cityData = city[cityIndex];
+      final cityName = cityData['name']?.toString() ?? 'Unknown City';
+      final cityImage = cityData['city_image_path']?.toString() ??
+          cityData['city_image']?.toString() ??
+          '';
+      final cityId = cityData['id']?.toString() ??
+          cityData['city_id']?.toString() ??
+          cityData['store_city_id']?.toString() ??
+          cityData['state_id']?.toString();
+      final storeCount = cityData['stores_count']?.toString() ??
+          cityData['store_count']?.toString() ??
+          '1';
 
-                      // Extract latitude and longitude from your data
-                      // You'll need to adjust these based on your API response structure
-                      final double lat = double.tryParse(details['latitude']?.toString() ?? '0') ?? 0;
-                      final double lng = double.tryParse(details['longitude']?.toString() ?? '0') ?? 0;
+      return GestureDetector(
+        onTap: () {
+          if (cityId != null || cityName.isNotEmpty) {
+            over.fetchStoreData(storeCityId: cityId);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 115,
+                height: 115,
+                decoration: BoxDecoration(
+                  color: AppColor.containerBg,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.borderGrey),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: buildCityImage(cityImage),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                cityName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                "($storeCount Stores)",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: AppColor.grey_color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
 
-                      // Safety: if seePeraList is not long enough, expand it
-                      if (over.seePeraList.length < stores['allstoreList'].length) {
-                        over.seePeraList = List.filled(stores['allstoreList'].length, false);
-                      }
+  Widget _buildStoresVerticalList(dynamic stores) {
+    final List storeList = stores['allstoreList'] ?? [];
 
-                      return horizontalpadding(
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(width: 80, height: 1, color: AppColor.pink_color),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: Text(cityname['name'], style: TextStyle(color: AppColor.pink_color, fontWeight: FontWeight.w600)),
-                                    ),
-                                    Container(width: 80, height: 1, color: AppColor.pink_color),
-                                  ],
-                                ),
-                                SizedBox(height: Get.height / 50),
-                                GestureDetector(
-                                  onTap: () => Get.to(() => OverstoredetailsScreen(slug: details['store_slug'])),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: kElevationToShadow[1],
-                                      color: AppColor.white_color,
-                                      borderRadius: BorderRadius.circular(Get.width / 70),
-                                    ),
-                                    width: Get.width,
-                                    child: Column(
-                                      children: [
-                                        image != null && image.isNotEmpty ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(Get.width / 70),
-                                          child: Image.network(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: Get.width,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return SizedBox();
-                                              },
-                                            ),
-                                          ) : Image.network(image),
-                                        Container(
-                                          padding: EdgeInsets.all(15),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(height: Get.height / 50),
-                                              Text(details['store_city']['state_name']['name'],style: TextStyle(color: AppColor.pink_color)),
-                                              Text(details['store_name']),
-                                              Row(
-                                                children: [
-                                                  Text(AppString.contact),
-                                                  Text(details['contact_number']),
-                                                ],
-                                              ),
-                                              SizedBox(height: Get.height / 50),
-                                              GetBuilder<Overstore_Conteroller>(
-                                                builder: (over) {
-                                                  return Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      GestureDetector(
-                                                          onTap: () => over.persee(index),
-                                                          child: Text(over.seePeraList[index] ? "See Less Info" : "See More Info",style: TextStyle(color: AppColor.pink_color)),
-                                                        ),
-                                                        Visibility(
-                                                          visible: over.seePeraList[index],
-                                                          child: Column(
-                                                            children: [
-                                                              SizedBox(height: Get.height / 180),
-                                                              Text(details['address']),
-                                                              SizedBox(height: Get.height / 50),
-                                                              Row(
-                                                                children: [
-                                                                  Text('Timaing :- '),
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(details['opening_hours']), SizedBox(width: Get.width / 50),
-                                                                      Text("To"),
-                                                                      SizedBox(width: Get.width / 50), Text(details['closing_hours']),
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () => over.openMapDirections(lat, lng, details['store_name']),
-                                            child: Padding(padding: EdgeInsets.all(15), child: button('Get Directions')),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                 ),
-                                  SizedBox(height: Get.height / 50),
-                                ],
-                              )
-                            ],
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: storeList.length,
+      itemBuilder: (BuildContext context, int index) {
+        final details = storeList[index] ?? {};
+        return _buildStoreCard(details, index, storeList.length);
+      },
+    );
+  }
+
+  Widget _buildStoreCard(dynamic details, int index, int totalStores) {
+    final storeCity = details['store_city'] is Map ? details['store_city'] : {};
+    final String cityNameStr = storeCity['name']?.toString() ??
+        storeCity['cityname']?.toString() ??
+        '';
+    final String storeNameStr = details['store_name']?.toString() ?? '';
+    final String addressStr = details['address']?.toString() ?? '';
+    final String contactStr = details['contact_number']?.toString() ?? '';
+    final String openingHoursStr = details['opening_hours']?.toString() ?? '';
+    final String closingHoursStr = details['closing_hours']?.toString() ?? '';
+    final String imagePath = details['store_image_path']?.toString() ??
+        details['store_image']?.toString() ??
+        '';
+
+    final double lat =
+        double.tryParse(details['latitude']?.toString() ?? '0') ?? 0;
+    final double lng =
+        double.tryParse(details['longitude']?.toString() ?? '0') ?? 0;
+
+    return horizontalpadding(
+      child: Column(
+        children: [
+          SizedBox(height: 6),
+          Text(
+            "${AppString.kohiraStoresIn}${cityNameStr.isNotEmpty ? cityNameStr : 'Surat'}",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: AppColor.black_color,
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColor.white_color,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.borderGrey),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.shadowBlack05,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (imagePath.isNotEmpty)
+                  ClipRRect(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(12)),
+                    child: Image.network(
+                      imagePath,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 180,
+                      cacheWidth: 600,
+                      errorBuilder: (context, error, stackTrace) {
+                        return SizedBox(
+                          height: 180,
+                          child: Center(
+                            child: Icon(
+                              AppIcon.storeIcon,
+                              size: 40,
+                              color: AppColor.grey_color,
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
-                ],
-              );
+                Padding(
+                  padding: EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        storeNameStr,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black_color,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        addressStr,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColor.grey_color,
+                          height: 1.3,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      if (contactStr.isNotEmpty) ...[
+                        Row(
+                          children: [
+                            Icon(
+                              AppIcon.phoneOutlined,
+                              size: 16,
+                              color: AppColor.grey_color,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              contactStr,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: AppColor.black_color,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                      if (openingHoursStr.isNotEmpty ||
+                          closingHoursStr.isNotEmpty) ...[
+                        Row(
+                          children: [
+                            Icon(
+                              AppIcon.accessTimeOutlined,
+                              size: 16,
+                              color: AppColor.grey_color,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "$openingHoursStr To $closingHoursStr",
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: AppColor.black_color,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                      ],
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 42,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (details['store_slug'] != null) {
+                                    Get.to(
+                                      () => OverstoredetailsScreen(
+                                        slug: details['store_slug'].toString(),
+                                      ),
+                                    );
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColor.pink_color,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  AppString.viewStoresDetails,
+                                  style: TextStyle(
+                                    color: AppColor.white_color,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: SizedBox(
+                              height: 42,
+                              child: OutlinedButton(
+                                onPressed: () => over.openMapDirections(
+                                    lat, lng, storeNameStr),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: AppColor.pink_color),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  AppString.getDirection,
+                                  style: TextStyle(
+                                    color: AppColor.pink_color,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
 
-          }),
+  Widget _buildSkeletonLoading() {
+    return Shimmer.fromColors(
+      baseColor: AppColor.lodingcolor,
+      highlightColor: AppColor.highlightColor,
+      child: horizontalpadding(
+        child: Column(
+          children: [
+            SizedBox(height: Get.height / 50),
+            Container(
+              height: Get.height * 0.08,
+              decoration: BoxDecoration(
+                color: AppColor.white_color,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            SizedBox(height: Get.height / 50),
+            SizedBox(
+              height: 90,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    width: 65,
+                    height: 65,
+                    margin: EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: Get.height / 50),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: AppColor.white_color,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    height: 300,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -343,52 +513,51 @@ Widget buildCityImage(String url) {
   }
 
   if (url.toLowerCase().endsWith(".svg")) {
-    // For SVG we validate before showing
     return FutureBuilder<bool>(
       future: _isValidSvg(url),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _defaultCityIcon(); // show placeholder while loading
+          return _defaultCityIcon();
         }
         if (snapshot.hasData && snapshot.data == true) {
           return SvgPicture.network(
             url,
-            height: 60,
+            height: 65,
+            width: 65,
             fit: BoxFit.cover,
             placeholderBuilder: (context) => _defaultCityIcon(),
           );
         } else {
-          return _defaultCityIcon(); // fallback if invalid
+          return _defaultCityIcon();
         }
       },
     );
   }
 
-  // Otherwise treat as normal image
   return Image.network(
     url,
-    height: 60,
+    height: 65,
+    width: 65,
     fit: BoxFit.cover,
+    cacheWidth: 200,
     errorBuilder: (context, error, stackTrace) => _defaultCityIcon(),
   );
 }
 
 Widget _defaultCityIcon() {
   return Container(
-    height: 60,
-    width: 60,
-    color: Colors.grey[300],
-    child: const Icon(Icons.location_city),
+    height: 65,
+    width: 65,
+    color: AppColor.lodingcolor,
+    child: const Icon(AppIcon.locationCity, size: 30),
   );
 }
 
-/// check if given URL returns a valid SVG response
 Future<bool> _isValidSvg(String url) async {
   try {
-    final res = await http.get(Uri.parse(url));
+    final res = await DioClient.dio.get(url);
     if (res.statusCode == 200) {
-      final body = res.body.toLowerCase();
-      // crude check: svg file should contain `<svg`
+      final body = res.data.toString().toLowerCase();
       return body.contains("<svg");
     }
   } catch (e) {

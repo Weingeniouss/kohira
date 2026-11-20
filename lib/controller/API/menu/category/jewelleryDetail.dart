@@ -2,29 +2,37 @@
 
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
+import 'package:kohira/modal/menu/category/jewelleryDetail.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
+
 import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class JewellerydetailCall extends GetxController {
   var isLoading = false.obs;
+  var detailModel = Rxn<JewelleryDetailModel>();
+  var detailData = Rxn<JewelleryDetailData>();
   var data = {}.obs;
 
   Future<void> jewellerydetailservices({required String slug}) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse("${AppUrl.jewelleryDetail}/$slug");
+      final url = "${AppUrl.jewelleryDetail}/$slug";
       print("Sending request to: $url");
-      final response = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
+      if (response != null) {
+        final decoded = jsonDecode(jsonEncode(response));
+        data.value = decoded;
+        detailModel.value = JewelleryDetailModel.fromJson(decoded);
+        detailData.value = detailModel.value?.data;
         log('Jewellery detail :- $data');
       } else {
-        'Jewellery detail Error :- ${response.statusCode}, ${response.body}';
-        ToastificationError.Error("Jewellery detail Error :- ${response.statusCode}, ${response.body}");
+        ToastificationError.Error(
+            "Jewellery detail Error :- ${200}, $response");
       }
     } catch (e) {
       ToastificationError.Error("Jewellery detail Error :- $e");

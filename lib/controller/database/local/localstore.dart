@@ -1,12 +1,14 @@
-// ignore_for_file: avoid_print, camel_case_types, prefer_const_constructors, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, avoid_print, camel_case_types, prefer_const_constructors, strict_top_level_inference
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kohira/controller/API/menu/others/count.dart';
 import 'package:kohira/modal/menu/category/subcategory/addtocart.dart';
 import 'package:kohira/modal/menu/category/subcategory/addtowish.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lottie/lottie.dart';
 import '../../../view/screen/credentials/login.dart' show Login;
 import '../../API/credentials/logout.dart';
@@ -22,36 +24,62 @@ class localdatabase {
 
   //wishlist
   static Future<void> saveJewelryItemsWish(List<JewelryItemWish> items) async {
+    pref ??= await SharedPreferences.getInstance();
     final jsonList = items.map((item) => item.toJson()).toList();
     await pref!.setString(_jewelryItemsKeyWish, json.encode(jsonList));
+    if (Get.isRegistered<CountController>()) {
+      Get.find<CountController>().updateCounts();
+    }
   }
 
   // Get jewelry items from local storage
   static Future<List<JewelryItemWish>> getJewelryItemsWish() async {
+    pref ??= await SharedPreferences.getInstance();
     final jsonString = pref!.getString(_jewelryItemsKeyWish);
 
-    if (jsonString != null) {
-      final jsonList = json.decode(jsonString) as List<dynamic>;
-      return jsonList.map((item) => JewelryItemWish.fromJson(item)).toList();
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != 'null') {
+      try {
+        final jsonList = json.decode(jsonString) as List<dynamic>;
+        return jsonList
+            .map((item) => JewelryItemWish.fromJson(Map<String, dynamic>.from(item)))
+            .toList();
+      } catch (e) {
+        print('Error parsing $_jewelryItemsKeyWish: $e');
+      }
     }
 
     return [];
   }
 
-
   //Cart
   static Future<void> saveJewelryItems(List<JewelryItem> items) async {
+    pref ??= await SharedPreferences.getInstance();
     final jsonList = items.map((item) => item.toJson()).toList();
-    await pref!.setString(_jewelryItemsKeyCart, json.encode(jsonList));
+    final jsonStr = json.encode(jsonList);
+    print('saveJewelryItems saving to pref $_jewelryItemsKeyCart: $jsonStr');
+    await pref!.setString(_jewelryItemsKeyCart, jsonStr);
+    if (Get.isRegistered<CountController>()) {
+      Get.find<CountController>().updateCounts();
+    }
   }
 
   // Get jewelry items from local storage
   static Future<List<JewelryItem>> getJewelryItems() async {
+    pref ??= await SharedPreferences.getInstance();
     final jsonString = pref!.getString(_jewelryItemsKeyCart);
+    print('getJewelryItems read from pref $_jewelryItemsKeyCart: $jsonString');
 
-    if (jsonString != null) {
-      final jsonList = json.decode(jsonString) as List<dynamic>;
-      return jsonList.map((item) => JewelryItem.fromJson(item)).toList();
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != 'null') {
+      try {
+        final jsonList = json.decode(jsonString) as List<dynamic>;
+        final items = jsonList
+            .map((item) => JewelryItem.fromJson(Map<String, dynamic>.from(item)))
+            .toList();
+        print('getJewelryItems parsed ${items.length} items');
+        return items;
+      } catch (e) {
+        print('Error parsing $_jewelryItemsKeyCart: $e');
+      }
     }
 
     return [];
@@ -94,6 +122,7 @@ class localdatabase {
       List<dynamic> jewelryItems = jsonDecode(jewelryItemsJson);
       if (index >= 0 && index < jewelryItems.length) {
         var item = jewelryItems[index];
+        item['qty'] = newCount;
         item['count'] = newCount;
         jewelryItems[index] = item;
         await pref!.setString(_jewelryItemsKeyCart, jsonEncode(jewelryItems));
@@ -113,6 +142,7 @@ class localdatabase {
       List<dynamic> jewelryItems = jsonDecode(jewelryItemsJson);
       if (index >= 0 && index < jewelryItems.length) {
         var item = jewelryItems[index];
+        item['qty'] = newCount;
         item['count'] = newCount;
         jewelryItems[index] = item;
         await pref!.setString(_jewelryItemsKeyCart, jsonEncode(jewelryItems));
@@ -177,6 +207,31 @@ class localdatabase {
     //
     //   print('isLogin :- $islogin');
     // }
+  }
+
+  void saveToken(String token) {
+    pref?.setString('tokan', token);
+    tokans = pref?.getString('tokan') ?? token;
+    pref?.setBool('login', true);
+    islogin = true;
+    print('Saved Token :- $tokans');
+  }
+
+  void savePhoneAndLogin({String? mobile, String? token}) {
+    pref?.setBool('login', true);
+    islogin = true;
+
+    if (mobile != null && mobile.trim().isNotEmpty) {
+      pref?.setString('mobile', mobile.trim());
+      Mobile = mobile.trim();
+    }
+
+    if (token != null && token.trim().isNotEmpty) {
+      pref?.setString('tokan', token.trim());
+      tokans = token.trim();
+    }
+
+    print('Saved Phone and Login State: islogin=$islogin, Mobile=$Mobile, tokans=$tokans');
   }
 
   Future logout() async{

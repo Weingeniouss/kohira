@@ -1,11 +1,14 @@
-// ignore_for_file: non_constant_identifier_names, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, non_constant_identifier_names, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../../../API/menu/category/subcategrory/subCategrory.dart';
 
 class SubcetegroryUIController extends GetxController {
-  final subcategrory = Get.put(Subcategrory(), permanent: true);
+  Subcategrory get subcategrory => Get.isRegistered<Subcategrory>()
+      ? Get.find<Subcategrory>()
+      : Get.put(Subcategrory());
+
   final ScrollController scrollController = ScrollController();
   var currentSubcategoryName = ''.obs;
 
@@ -46,8 +49,18 @@ class SubcetegroryUIController extends GetxController {
     });
 
     scrollController.addListener(() {
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 && !subcategrory.isLoading.value && subcategrory.hasMore.value) {
-        subcategrory.subcategroryuser(category_slug: subcategrorys, isLoadMore: true);
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 &&
+          !subcategrory.isLoading.value &&
+          subcategrory.hasMore.value) {
+        subcategrory.subcategroryuser(
+          category_slug: subcategrorys,
+          subcategory_slug: subcategory_slug,
+          collection_id: collection_id,
+          metal_type: metal_type,
+          price_min: price_min,
+          price_max: price_max,
+          isLoadMore: true,
+        );
       }
     });
   }
@@ -55,6 +68,12 @@ class SubcetegroryUIController extends GetxController {
   void updateSubcategoryName(String newName) {
     currentSubcategoryName.value = newName;
     update();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }
 

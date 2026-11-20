@@ -3,6 +3,10 @@
 import 'package:get/state_manager.dart';
 
 class FilterController extends GetxController {
+  var selectedCategorySlug = ''.obs;
+  var selectedCategoryName = ''.obs;
+  var selectedSubcategorySlug = ''.obs;
+  var selectedSubcategoryName = ''.obs;
   var metalstapid = ''.obs;
   var diamondtype = ''.obs;
   var colortype = ''.obs;
@@ -31,45 +35,67 @@ class FilterController extends GetxController {
     '₹40,000 To ₹50,000',
   ];
 
-  //Select 14k  or 18K
-  void setMetalStamp(String slug) => metalstapid.value = slug;
-
-  //Select Diamond Shap
-  void setDiamondType(String slug, String id) {
-    diamondtype.value = slug;
-    selectedShapeId.value = id;
+  void setCategorySlug(String slug, [String name = '']) {
+    if (selectedCategorySlug.value == slug) {
+      selectedCategorySlug.value = '';
+      selectedCategoryName.value = '';
+    } else {
+      selectedCategorySlug.value = slug;
+      selectedCategoryName.value = name;
+    }
   }
 
-  //Select Color Type - FIXED: Added toggle functionality
+  void setSubcategorySlug(String slug, [String name = '']) {
+    if (selectedSubcategorySlug.value == slug) {
+      selectedSubcategorySlug.value = '';
+      selectedSubcategoryName.value = '';
+    } else {
+      selectedSubcategorySlug.value = slug;
+      selectedSubcategoryName.value = name;
+    }
+  }
+
+  void setMetalStamp(String slug) {
+    if (metalstapid.value == slug) {
+      metalstapid.value = '';
+    } else {
+      metalstapid.value = slug;
+    }
+  }
+
+  void setDiamondType(String slug, String id) {
+    if (diamondtype.value == slug) {
+      diamondtype.value = '';
+      selectedShapeId.value = '';
+    } else {
+      diamondtype.value = slug;
+      selectedShapeId.value = id;
+    }
+  }
+
   void setColoeType(String slug, String id) {
     if (colortype.value == slug) {
-      colortype.value = ''; // Deselect if same color is clicked again
+      colortype.value = '';
     } else {
-      colortype.value = id;
-      colortype.value = slug; // Select new color
+      colortype.value = slug;
     }
-    print('Selected color type: ${colortype.value}');
   }
 
-  //Select Metal Type - IMPROVED: Fixed the logic
   void setMetalType(String? id) {
-    if (selectedMetalType.value == id) {
-      selectedMetalType.value = ''; // Deselect if same metal type is clicked
+    if (id == null || selectedMetalType.value == id) {
+      selectedMetalType.value = '';
     } else {
-      selectedMetalType.value = id ?? ''; // Select new metal type
+      selectedMetalType.value = id;
     }
-    print('Selected metal type: ${selectedMetalType.value}');
   }
 
-  //Select Weight
   void setWeight(String value) {
     if (selectedWeight.value == value) {
-      selectedWeight.value = ''; // Deselect if same weight is clicked
+      selectedWeight.value = '';
       weightMin.value = null;
       weightMax.value = null;
     } else {
       selectedWeight.value = value;
-
       if (value.contains('Less Then')) {
         weightMin.value = null;
         weightMax.value = 2.0;
@@ -80,7 +106,6 @@ class FilterController extends GetxController {
           final max = double.tryParse(parts[1].trim());
           weightMin.value = min;
           weightMax.value = max;
-          print('Selected weight range: min=$min, max=$max');
         } else {
           weightMin.value = null;
           weightMax.value = null;
@@ -89,26 +114,24 @@ class FilterController extends GetxController {
     }
   }
 
-  //Select Price
   void setPrice(String value) {
     if (selectedPrice.value == value) {
-      selectedPrice.value = ''; // Deselect if same price is clicked
+      selectedPrice.value = '';
       priceMin.value = null;
       priceMax.value = null;
     } else {
       selectedPrice.value = value;
-
       if (value.contains('Below')) {
         priceMin.value = null;
         priceMax.value = 10000.0;
       } else {
-        final parts = value.replaceAll('₹', '').replaceAll(',', '').split(' To ');
+        final parts =
+            value.replaceAll('₹', '').replaceAll(',', '').split(' To ');
         if (parts.length == 2) {
           final min = double.tryParse(parts[0].trim());
           final max = double.tryParse(parts[1].trim());
           priceMin.value = min;
           priceMax.value = max;
-          print('Selected price range: min=$min, max=$max');
         } else {
           priceMin.value = null;
           priceMax.value = null;
@@ -117,8 +140,12 @@ class FilterController extends GetxController {
     }
   }
 
-  //All Value Clear
+  //All Value Clear - ONLY called when Reset button is clicked!
   void clearFilters() {
+    selectedCategorySlug.value = '';
+    selectedCategoryName.value = '';
+    selectedSubcategorySlug.value = '';
+    selectedSubcategoryName.value = '';
     metalstapid.value = '';
     diamondtype.value = '';
     colortype.value = '';

@@ -5,8 +5,9 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:kohira/view/utils/widget/pop.dart';
+import 'package:kohira/api/api_call.dart';
 
 class SearchProduct extends GetxController {
   var isLoading = false.obs;
@@ -46,7 +47,7 @@ class SearchProduct extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.search);
+      final url = AppUrl.search;
 
       final body = {
         'search': search,
@@ -70,14 +71,15 @@ class SearchProduct extends GetxController {
         'page': page,
       }..removeWhere((key, value) => value == null);
 
-      final response = await http.post(url, body: body);
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final json = jsonDecode(response.body);
+      if (response != null) {
+        final json = jsonDecode(jsonEncode(response));
         data.value = json['data'];
         ToastificationSuccess.Success(data.value['message']);
       } else {
-        log("API Error: ${response.statusCode}");
+        log("API Error: ${200}");
       }
     } catch (e) {
       log("Search Error: $e");

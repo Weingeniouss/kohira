@@ -1,125 +1,4 @@
-
 // ignore_for_file: dead_null_aware_expression, file_names, prefer_const_constructors, strict_top_level_inference, avoid_print
-
-// class MyCartValueChange extends GetxController {
-//   var hasDialogShownOnce = false.obs;
-//   var isDialogVisible = false.obs;
-//
-//   final fetchcart = Get.put(FetchcartCalling());
-//   final countcart = Get.put(CountCart());
-//   final deletcount = Get.put(Deletcart());
-//
-//   var subTotal = 0.0.obs;
-//   var discount = 0.0.obs;
-//   var total = 0.0.obs;
-//   var tax = 0.0.obs;
-//
-//   var itemCounts = <int>[].obs;
-//   Timer? _debounce;
-//
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     loadCartData();
-//   }
-//
-//   //load data
-//   Future<void> loadCartData() async {
-//     try {
-//       await fetchcart.fetchcartcall();
-//
-//       if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
-//         final newItemCounts = fetchcart.data['carts'].map<int>((item) {
-//           return int.tryParse(item['qty'].toString()) ?? 1;
-//         }).toList();
-//         itemCounts.value = newItemCounts;
-//         subTotal.value = double.tryParse(fetchcart.data['cart_gross'].toString()) ?? 0.0;
-//         discount.value = double.tryParse(fetchcart.data['discount'].toString()) ?? 0.0;
-//         total.value = double.tryParse(fetchcart.data['net_amount'].toString()) ?? 0.0;
-//         if (fetchcart.data['global_tax'] != null) {
-//           tax.value = double.tryParse(fetchcart.data['global_tax']['globaltaxcharge'].toString()) ?? 0.0;
-//         }
-//       }
-//     } catch (e) {
-//       if (kDebugMode) {
-//         print('Error loading cart data: $e');
-//       }
-//     }
-//   }
-//
-//   // View of Index
-//   void initializeItemCounts() {
-//     if (fetchcart.data.isNotEmpty && fetchcart.data['carts'] != null) {
-//       itemCounts.value = List.generate(fetchcart.data['carts'].length, (index) => int.parse(fetchcart.data['carts'][index]['qty'].toString()));
-//     }
-//   }
-//
-//   // Helper method to update cart totals from API response
-//   void updateCartTotals() {
-//     if (fetchcart.data.isNotEmpty) {
-//       subTotal.value = double.tryParse(fetchcart.data['cart_gross'].toString()) ?? subTotal.value;
-//       discount.value = double.tryParse(fetchcart.data['discount'].toString()) ?? discount.value;
-//       total.value = double.tryParse(fetchcart.data['net_amount'].toString()) ?? total.value;
-//
-//       if (fetchcart.data['global_tax'] != null) {
-//         tax.value = double.tryParse(fetchcart.data['global_tax']['globaltaxcharge'].toString()) ?? tax.value;
-//       }
-//     }
-//   }
-//
-//   //increment Value
-//   Future<void> incrementValueOfCount(int index) async {
-//     if (index >= itemCounts.length) return;
-//     final item = fetchcart.data['carts'][index];
-//     final price = double.parse(item['CartJewelryData']['offerprice'].toString());
-//     final cartId = item['id'].toString();
-//     final updatedQty = itemCounts[index] + 1;
-//     itemCounts[index] = updatedQty;
-//     subTotal.value += price;
-//     total.value = subTotal.value - discount.value;
-//     _debounce?.cancel();
-//     _debounce = Timer(Duration(milliseconds: 800), () async {
-//       await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: updatedQty.toString(), type: 'mobile');
-//       if (!isClosed) {
-//         updateCartTotals();
-//       }
-//       ToastificationSuccess.Success('Increment QTY Successfully');
-//     });
-//   }
-//
-//   //Decrement Value
-//   Future<void> decrementValueOfCount(int index) async {
-//     if (index >= itemCounts.length || itemCounts[index] <= 1) return;
-//     final item = fetchcart.data['carts'][index];
-//     final price = double.parse(item['CartJewelryData']['offerprice'].toString());
-//     final cartId = item['id'].toString();
-//     final updatedQty = itemCounts[index] - 1;
-//     itemCounts[index] = updatedQty;
-//     subTotal.value -= price;
-//     total.value = subTotal.value - discount.value;
-//     _debounce?.cancel();
-//     _debounce = Timer(Duration(milliseconds: 800), () async {
-//       await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: updatedQty.toString(), type: 'mobile');
-//       if (!isClosed) {
-//         updateCartTotals();
-//       }
-//       ToastificationSuccess.Success('Decrement QTY Successfully');
-//     });
-//   }
-//
-//   //Delete Value
-//   Future<void> deletValueofcount(item, fetch, int index) async {
-//     final deletid = item['id'].toString();
-//     final diamondid = item['diamondid'].toString();
-//     final jewelryid = item['jewelryid'].toString();
-//     final itemcode = item['CartJewelryData']['title'];
-//     await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
-//     ToastificationSuccess.Success("$itemcode, ${deletcount.data['message'].replaceAll('Cart', '')}");
-//     if (index < itemCounts.length) itemCounts.removeAt(index);
-//     await fetchcart.fetchcartcall();
-//     updateCartTotals();
-//   }
-// }
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
@@ -131,6 +10,16 @@ import '../../../API/menu/myCart/deletcart.dart';
 import '../../../API/menu/myCart/fetchcart.dart';
 import '../../../API/menu/myCart/withoutlogin.dart';
 import '../../../database/local/localstore.dart';
+
+Map<String, dynamic> extractCartData(dynamic rawData) {
+  if (rawData == null || rawData is! Map) return {};
+  if (rawData.containsKey('data') &&
+      rawData['data'] is Map &&
+      (rawData['data'] as Map).containsKey('carts')) {
+    return Map<String, dynamic>.from(rawData['data']);
+  }
+  return Map<String, dynamic>.from(rawData);
+}
 
 class MyCartValueChange extends GetxController {
   var hasDialogShownOnce = false.obs;
@@ -146,13 +35,11 @@ class MyCartValueChange extends GetxController {
   var tax = 0.0.obs;
 
   var itemCounts = <int>[].obs;
-  bool get isGuestUser => (tokans.isEmpty ?? true);
+
+  bool get isGuestUser => (!islogin || tokans.isEmpty);
   RxList<JewelryItem> existingItems = <JewelryItem>[].obs;
 
-  // Store pending updates for each cart item
-  Map<int, int> pendingUpdates = {};
-  Timer? _debounce;
-  bool _isUpdating = false;
+  Timer? _quantityDebounceTimer;
 
   @override
   void onInit() {
@@ -162,21 +49,9 @@ class MyCartValueChange extends GetxController {
 
   @override
   void onClose() {
-    _debounce?.cancel();
+    _quantityDebounceTimer?.cancel();
     super.onClose();
   }
-
-  // Load data
-  // Future<void> loadCartData() async {
-  //   try {
-  //     await fetchcart.fetchcartcall();
-  //     _updateAllCartData();
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print('Error loading cart data: $e');
-  //     }
-  //   }
-  // }
 
   Future<void> loadCartData() async {
     try {
@@ -197,31 +72,46 @@ class MyCartValueChange extends GetxController {
   }
 
   void initializeItemCounts() {
-    final cartData = isGuestUser ? witoutlogin.data : fetchcart.data;
+    final rawData = isGuestUser ? witoutlogin.data : fetchcart.data;
+    final cartData = extractCartData(rawData);
 
-    if (cartData.isNotEmpty && cartData['carts'] != null) {
-      itemCounts.value = List.generate(cartData['carts'].length, (index) => int.parse(cartData['carts'][index]['qty'].toString()));
+    if (cartData.isNotEmpty &&
+        cartData['carts'] != null &&
+        cartData['carts'] is List) {
+      itemCounts.value = List.generate(
+          (cartData['carts'] as List).length,
+          (index) =>
+              int.tryParse(cartData['carts'][index]['qty'].toString()) ?? 1);
     }
   }
 
   // Update all cart data from API response
   void _updateAllCartData() {
-    final cartData = isGuestUser ? witoutlogin.data : fetchcart.data;
+    final rawData = isGuestUser ? witoutlogin.data : fetchcart.data;
+    final cartData = extractCartData(rawData);
 
-    if (cartData.isNotEmpty && cartData['carts'] != null) {
+    if (cartData.isNotEmpty &&
+        cartData['carts'] != null &&
+        cartData['carts'] is List) {
+      final List cartsList = cartData['carts'];
       // Update item counts
-      final newItemCounts = cartData['carts'].map<int>((item) {
-        return int.tryParse(item['qty'].toString()) ?? 1;
+      final newItemCounts = cartsList.map<int>((item) {
+        return int.tryParse(item['qty']?.toString() ?? '1') ?? 1;
       }).toList();
       itemCounts.value = newItemCounts;
 
       // Update totals
-      subTotal.value = double.tryParse(cartData['cart_gross'].toString()) ?? 0.0;
-      discount.value = double.tryParse(cartData['discount'].toString()) ?? 0.0;
-      total.value = double.tryParse(cartData['net_amount'].toString()) ?? 0.0;
+      subTotal.value =
+          double.tryParse(cartData['cart_gross']?.toString() ?? '0') ?? 0.0;
+      discount.value =
+          double.tryParse(cartData['discount']?.toString() ?? '0') ?? 0.0;
+      total.value =
+          double.tryParse(cartData['net_amount']?.toString() ?? '0') ?? 0.0;
 
-      if (fetchcart.data['global_tax'] != null) {
-        tax.value = double.tryParse(cartData['global_tax']['globaltaxcharge'].toString()) ?? 0.0;
+      if (cartData['global_tax'] != null && cartData['global_tax'] is Map) {
+        tax.value = double.tryParse(
+                cartData['global_tax']['globaltaxcharge']?.toString() ?? '0') ??
+            0.0;
       }
     } else {
       // Reset values if cart is empty
@@ -233,156 +123,118 @@ class MyCartValueChange extends GetxController {
     }
   }
 
-  // Process all pending updates
-  Future<void> _processPendingUpdates() async {
-    if (_isUpdating || pendingUpdates.isEmpty) return;
-
-    _isUpdating = true;
-
-    try {
-      // Process each pending update
-      for (var entry in pendingUpdates.entries) {
-        final index = entry.key;
-        final finalQty = entry.value;
-        if (index < fetchcart.data['carts'].length) {
-          final item = fetchcart.data['carts'][index];
-          final cartId = item['id'].toString();
-          await fetchcart.fetchcartcall(flag: 'flag', cart: cartId, qty: finalQty.toString(), type: 'mobile');
-        }
-      }
-
-      // Clear pending updates after processing
-      pendingUpdates.clear();
-
-      // Refresh cart data to get updated totals
-      if (!isClosed) {
-        await fetchcart.fetchcartcall();
-        _updateAllCartData();
-        ToastificationSuccess.Success('Cart updated successfully');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error processing pending updates: $e');
-      }
-      // Revert on error
-      await loadCartData();
-    } finally {
-      _isUpdating = false;
-    }
-  }
-
-  // Increment Value of Localy
-  void incrementValueOfLocal(int index) async {
+  // Instant local UI quantity increment with debounced API call
+  void incrementQuantity(int index) {
     if (index >= itemCounts.length) return;
 
-    try {
-
-      itemCounts[index] = itemCounts[index] + 1;
-
-      List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
-
-      if (index < currentItems.length) {
-        currentItems[index] = JewelryItem(
-          diamondId: currentItems[index].diamondId,
-          jewelryId: currentItems[index].jewelryId,
-          ringSize: currentItems[index].ringSize,
-          qty: itemCounts[index],
-        );
-
-        await localdatabase.saveJewelryItems(currentItems);
-
-        print('Updated quantity for item at index $index → ${itemCounts[index]}');
-      }
-
-      await localdatabase().incrementItemCountInLocal(index, itemCounts[index]);
-
-      await loadCartData();
-
-      print('Incremented item count locally and updated local DB at index $index → ${itemCounts[index]}');
-
-    } catch (e) {
-      print('Error incrementing value: $e');
-    }
-  }
-
-
-  // Increment Value
-  void incrementValueOfCount(int index) {
-    if (index >= itemCounts.length) return;
-
-    // Update local state immediately
     itemCounts[index] = itemCounts[index] + 1;
+    itemCounts.refresh();
+    _recalculateLocalTotals();
 
-    // Store the pending update
-    pendingUpdates[index] = itemCounts[index];
+    _debounceQuantityUpdate(index);
+  }
 
-    // Cancel existing timer and start new one
-    _debounce?.cancel();
-    _debounce = Timer(Duration(milliseconds: 300), () {
-      _processPendingUpdates();
+  // Instant local UI quantity decrement with debounced API call
+  void decrementQuantity(int index) {
+    if (index >= itemCounts.length || itemCounts[index] <= 1) return;
+
+    itemCounts[index] = itemCounts[index] - 1;
+    itemCounts.refresh();
+    _recalculateLocalTotals();
+
+    _debounceQuantityUpdate(index);
+  }
+
+  // Alias methods for backward compatibility
+  void incrementValueOfLocal(int index) => incrementQuantity(index);
+
+  void decrementValueOfLocal(int index) => decrementQuantity(index);
+
+  void incrementValueOfCount(int index) => incrementQuantity(index);
+
+  void decrementValueOfCount(int index) => decrementQuantity(index);
+
+  // Instant local recalculation of subTotal and total
+  void _recalculateLocalTotals() {
+    final rawData = isGuestUser ? witoutlogin.data : fetchcart.data;
+    final cartData = extractCartData(rawData);
+    final fetch = cartData['carts'] ?? [];
+
+    if (fetch is List && fetch.isNotEmpty) {
+      double newSubTotal = 0.0;
+      for (int i = 0; i < fetch.length; i++) {
+        final item = fetch[i];
+        final fetchdata = item['CartJewelryData'] ?? {};
+        final double discountVal =
+            double.tryParse(fetchdata['discount']?.toString() ?? '0') ?? 0.0;
+        final double price = double.tryParse(((discountVal > 0
+                        ? fetchdata['offer_price']
+                        : fetchdata['setting_price'])
+                    ?.toString() ??
+                '0')) ??
+            0.0;
+
+        final int q = (i < itemCounts.length) ? itemCounts[i] : 1;
+        newSubTotal += (price * q);
+      }
+      subTotal.value = newSubTotal;
+      total.value = (newSubTotal - discount.value) > 0
+          ? (newSubTotal - discount.value)
+          : 0.0;
+    }
+  }
+
+  // Debounce API call / Local DB sync (triggers 800ms after last tap)
+  void _debounceQuantityUpdate(int index) {
+    _quantityDebounceTimer?.cancel();
+    _quantityDebounceTimer = Timer(const Duration(milliseconds: 800), () async {
+      await _syncFinalQuantity(index);
     });
   }
 
-  void decrementValueOfLocal(int index) async {
-    if (index >= itemCounts.length) return;
-
+  Future<void> _syncFinalQuantity(int index) async {
     try {
-      // Ensure quantity doesn't go below 1 (or 0 if you want to allow removal)
-      if (itemCounts[index] > 1) {
-        itemCounts[index] = itemCounts[index] - 1;
+      final finalQty = itemCounts[index];
 
+      if (isGuestUser) {
         List<JewelryItem> currentItems = await localdatabase.getJewelryItems();
-
         if (index < currentItems.length) {
           currentItems[index] = JewelryItem(
             diamondId: currentItems[index].diamondId,
             jewelryId: currentItems[index].jewelryId,
             ringSize: currentItems[index].ringSize,
-            qty: itemCounts[index],
+            qty: finalQty,
           );
-
           await localdatabase.saveJewelryItems(currentItems);
-
-          print('Decremented quantity for item at index $index → ${itemCounts[index]}');
+          await witoutlogin.withoutlogin(currentItems);
+          _updateAllCartData();
         }
-
-        await localdatabase().incrementItemCountInLocal(index, itemCounts[index]);
-
-        await loadCartData();
-
-        print('Decremented item count locally and updated local DB at index $index → ${itemCounts[index]}');
       } else {
-        print('Cannot decrement below 1 at index $index');
-        // Optional: You can remove the item if quantity reaches 0
-        // await removeItemFromLocal(index);
+        final rawData = fetchcart.data;
+        final cartData = extractCartData(rawData);
+        final fetch = cartData['carts'] ?? [];
+        if (index < fetch.length) {
+          final item = fetch[index];
+          final cartId = item['id'].toString();
+          await fetchcart.fetchcartcall(
+            flag: 'flag',
+            cart: cartId,
+            qty: finalQty.toString(),
+            type: 'mobile',
+          );
+          _updateAllCartData();
+        }
       }
-
     } catch (e) {
-      print('Error decrementing value: $e');
+      if (kDebugMode) {
+        print('Error syncing final quantity: $e');
+      }
     }
   }
 
-  // Decrement Value
-  void decrementValueOfCount(int index) {
-    if (index >= itemCounts.length || itemCounts[index] <= 1) return;
-
-    // Update local state immediately
-    itemCounts[index] = itemCounts[index] - 1;
-
-    // Store the pending update
-    pendingUpdates[index] = itemCounts[index];
-
-    // Cancel existing timer and start new one
-    _debounce?.cancel();
-    _debounce = Timer(Duration(milliseconds: 300), () {
-      _processPendingUpdates();
-    });
-  }
-
-  Future<void> deletvalueoflocal(int index) async{
+  Future<void> deletvalueoflocal(int index) async {
     if (index >= itemCounts.length) return;
 
-    // Update local state immediately
     localdatabase().deleteJewelryItem(index);
     ToastificationSuccess.Success("Item Deleted Successfully");
     await loadCartData();
@@ -395,39 +247,29 @@ class MyCartValueChange extends GetxController {
       final diamondid = item['diamondid'].toString();
       final jewelryid = item['jewelryid'].toString();
       final itemcode = item['CartJewelryData']['title'];
-      await deletcount.deletcartcall(id: deletid, jewelryid: jewelryid, diamondid: diamondid);
-      ToastificationSuccess.Success("$itemcode, ${deletcount.data['message'].replaceAll('Cart', '')}");
+      await deletcount.deletcartcall(
+          id: deletid, jewelryid: jewelryid, diamondid: diamondid);
+      ToastificationSuccess.Success(
+          "$itemcode, ${deletcount.data['message'].replaceAll('Cart', '')}");
 
-      // Remove from pending updates if exists
-      pendingUpdates.remove(index);
-
-      // Remove item from local state
       if (index < itemCounts.length) {
         itemCounts.removeAt(index);
       }
 
-      // Refresh all cart data from API
       await fetchcart.fetchcartcall();
       _updateAllCartData();
-
     } catch (e) {
       if (kDebugMode) {
         print('Error deleting cart item: $e');
       }
-      // Revert on error
       await loadCartData();
     }
   }
 
-  // Force refresh cart data (useful for pull-to-refresh)
   Future<void> refreshCartData() async {
     try {
-      // Cancel any pending updates
-      _debounce?.cancel();
-      pendingUpdates.clear();
-
-      await fetchcart.fetchcartcall();
-      _updateAllCartData();
+      _quantityDebounceTimer?.cancel();
+      await loadCartData();
     } catch (e) {
       if (kDebugMode) {
         print('Error refreshing cart data: $e');
@@ -435,18 +277,15 @@ class MyCartValueChange extends GetxController {
     }
   }
 
-  // Get cart items count for badge, etc.
   int get cartItemsCount {
     return itemCounts.fold(0, (sum, count) => sum + count);
   }
 
-  // Check if cart is empty
   bool get isCartEmpty {
-    return itemCounts.isEmpty || fetchcart.data['carts'] == null || fetchcart.data['carts'].isEmpty;
-  }
-
-  // Check if there are pending updates
-  bool get hasPendingUpdates {
-    return pendingUpdates.isNotEmpty;
+    final rawData = isGuestUser ? witoutlogin.data : fetchcart.data;
+    final cartData = extractCartData(rawData);
+    return itemCounts.isEmpty ||
+        cartData['carts'] == null ||
+        (cartData['carts'] as List).isEmpty;
   }
 }

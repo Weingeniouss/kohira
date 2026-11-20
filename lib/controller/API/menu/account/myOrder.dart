@@ -1,13 +1,13 @@
-
 // ignore_for_file: avoid_print, invalid_use_of_protected_member, file_names
 
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
-import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/app_url.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class MyOrderController extends GetxController {
   var isLoading = false.obs;
@@ -16,16 +16,25 @@ class MyOrderController extends GetxController {
   Future myOrder() async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.order);
-      print("Sending Requset to :- $url");
-      final responce = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      if (tokans.isEmpty && pref != null) {
+        tokans = pref!.getString('tokan') ?? '';
+      }
 
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.body);
+      if (tokans.isEmpty) {
+        print('User is unauthenticated (no token found)');
+        data.value = {'orders': []};
+        return;
+      }
+
+      final url = AppUrl.order;
+      print("Sending Requset to :- $url");
+      final responce = await ApiCall.getRequest(url, useAuth: true);
+
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("myOrder Details :- ${data.value}");
       } else {
-        'myOrder Details Error This :- ${responce.statusCode}, ${responce.body}';
-        // handleHttpError(responce.statusCode);
+        'myOrder Details Error This :- ${200}, $responce';
       }
     } catch (e) {
       print("myOrder Details Error This :- $e");

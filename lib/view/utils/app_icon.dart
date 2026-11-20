@@ -1,6 +1,55 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/material.dart';
+
 class AppIcon {
+  // Material Icons
+  static const IconData imageNotSupported = Icons.image_not_supported;
+  static const IconData starIcon = Icons.star;
+  static const IconData starBorderIcon = Icons.star_border;
+  static const IconData storefrontRoundedIcon = Icons.storefront_rounded;
+  static const IconData locationPinIcon = Icons.location_pin;
+  static const IconData arrowBack = Icons.arrow_back;
+  static const IconData phoneOutlined = Icons.phone_outlined;
+  static const IconData shoppingBagOutlined = Icons.shopping_bag_outlined;
+  static const IconData arrowBackIosNew = Icons.arrow_back_ios_new;
+  static const IconData arrowForwardIos = Icons.arrow_forward_ios;
+  static const IconData arrowBackIos = Icons.arrow_back_ios;
+  static const IconData playCircleFill = Icons.play_circle_fill;
+  static const IconData autorenew = Icons.autorenew;
+  static const IconData shoppingCartOutlined = Icons.shopping_cart_outlined;
+  static const IconData chatBubbleOutline = Icons.chat_bubble_outline;
+  static const IconData keyboardArrowDown = Icons.keyboard_arrow_down;
+  static const IconData keyboardArrowUp = Icons.keyboard_arrow_up;
+  static const IconData workspacePremiumOutlined =
+      Icons.workspace_premium_outlined;
+  static const IconData diamondOutlined = Icons.diamond_outlined;
+  static const IconData straightenOutlined = Icons.straighten_outlined;
+  static const IconData favoriteBorder = Icons.favorite_border;
+  static const IconData verifiedOutlined = Icons.verified_outlined;
+  static const IconData errorOutline = Icons.error_outline;
+  static const IconData brokenImage = Icons.broken_image;
+  static const IconData stars = Icons.stars;
+  static const IconData deleteOutlineRounded = Icons.delete_outline_rounded;
+  static const IconData checkCircleRounded = Icons.check_circle_rounded;
+  static const IconData arrowForwardIosRounded = Icons.arrow_forward_ios_rounded;
+  static const IconData storeIcon = Icons.store;
+  static const IconData accessTimeOutlined = Icons.access_time_outlined;
+  static const IconData locationCity = Icons.location_city;
+  static const IconData personIcon = Icons.person;
+  static const IconData inventoryIcon = Icons.inventory_2;
+  static const IconData favoriteIcon = Icons.favorite;
+  static const IconData locationOnIcon = Icons.location_on;
+  static const IconData callOutlined = Icons.call_outlined;
+  static const IconData mailOutline = Icons.mail_outline;
+  static const IconData keyboardArrowDownOutlined = Icons.keyboard_arrow_down_outlined;
+  static const IconData moreVert = Icons.more_vert;
+  static const IconData personOutlined = Icons.person_outlined;
+  static const IconData locationOnOutlined = Icons.location_on_outlined;
+  static const IconData phoneAndroidOutlined = Icons.phone_android_outlined;
+  static const IconData deleteOutlineOutlined = Icons.delete_outline_outlined;
+  static const IconData checkIcon = Icons.check;
+
   //inputType
   static const mail = 'asset/icon/inputType/mail.svg';
   static const password = 'asset/icon/inputType/password.svg';
@@ -12,6 +61,10 @@ class AppIcon {
 
   //storicon
   static const allstore = 'asset/icon/storeicon/AllStores.svg';
+
+  //otp
+  static const india = 'asset/icon/otp/India.png';
+  static const whatsapp = 'asset/icon/otp/whatsapp.png';
 
   //otherIcon
   static const facebook = 'asset/icon/otherIcon/facebook.svg';
@@ -29,7 +82,7 @@ class AppIcon {
 
   //AppbarIcon
   static const shop = 'asset/icon/appbaricon/shop.svg';
-  static const menu ='asset/icon/appbaricon/menu.svg';
+  static const menu = 'asset/icon/appbaricon/menu.svg';
   static const like = 'asset/icon/appbaricon/like.svg';
   static const left = 'asset/icon/appbaricon/left.svg';
   static const heart = 'asset/icon/appbaricon/heart.svg';
@@ -59,20 +112,24 @@ class AppIcon {
   static const HelpCenter = 'asset/icon/drawericon/Helpcenter.svg';
   static const PrivacyPolicy = 'asset/icon/drawericon/Privacy.svg';
   static const Logout = 'asset/icon/drawericon/logout.svg';
-      //customJewellery
-          static const appx_weight = 'asset/icon/drawericon/appx_weight.svg';
-          static const ethical = 'asset/icon/drawericon/ethical.svg';
-          static const jewellery_type = 'asset/icon/drawericon/jewellery_type.svg';
-          static const metal_type = 'asset/icon/drawericon/metal_type.svg';
-          static const remark = 'asset/icon/drawericon/remark.svg';
-          static const returns = 'asset/icon/drawericon/return.svg';
-          static const budget = 'asset/icon/drawericon/budget.svg';
-          static const cat_jewelry = 'asset/icon/drawericon/cat_jewelry.svg';
-          static const cat_necklace1 = 'asset/icon/drawericon/cat_necklace1.svg';
-          static const cat_necklace = 'asset/icon/drawericon/cat_necklace.svg';
-          static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
-          static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
-          static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
+
+  //customJewellery & categories
+  static const appx_weight = 'asset/icon/drawericon/appx_weight.svg';
+  static const ethical = 'asset/icon/drawericon/ethical.svg';
+  static const jewellery_type = 'asset/icon/drawericon/jewellery_type.svg';
+  static const metal_type = 'asset/icon/drawericon/metal_type.svg';
+  static const remark = 'asset/icon/drawericon/remark.svg';
+  static const returns = 'asset/icon/drawericon/return.svg';
+  static const budget = 'asset/icon/drawericon/budget.svg';
+  static const cat_jewelry = 'asset/icon/drawericon/cat_jewelry.svg';
+  static const cat_necklace1 = 'asset/icon/drawericon/cat_necklace1.svg';
+  static const cat_necklace = 'asset/icon/drawericon/cat_necklace.svg';
+  static const cat_bracelet = 'asset/icon/drawericon/cat_bracelet.svg';
+  static const cat_collection = 'asset/icon/drawericon/cat_collection.svg';
+  static const cat_mangalsutra = 'asset/icon/drawericon/cat_mangalsutra.svg';
+  static const cat_earrings = 'asset/icon/drawericon/cat_earrings.svg';
+  static const cat_ring = 'asset/icon/drawericon/cat_ring.svg';
+  static const ring_size = 'asset/icon/drawericon/ring_size.svg';
 
   //Paymants
   static const carts = 'asset/icon/payments/card.svg';

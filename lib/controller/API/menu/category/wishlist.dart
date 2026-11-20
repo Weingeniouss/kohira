@@ -1,17 +1,19 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unused_local_variable, avoid_print, invalid_use_of_protected_member
+// ignore_for_file: deprecated_member_use, non_constant_identifier_names, prefer_typing_uninitialized_variables, unused_local_variable, avoid_print, invalid_use_of_protected_member
 
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
-import 'package:kohira/view/utils/app_url.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+
+import 'package:kohira/view/utils/app_url.dart';
+
 import 'package:kohira/view/utils/errorcode.dart';
 import 'package:kohira/view/utils/widget/pop.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../view/utils/app_json.dart';
+import 'package:kohira/api/api_call.dart';
 
 //Add WishList
 class Wishlist extends GetxController {
@@ -27,16 +29,19 @@ class Wishlist extends GetxController {
     String? metal_type,
     String? metal_stamp,
     String? sideDiaGrpId,
-    required String tokan
+    required String tokan,
+    bool showDialog = true,
   }) async {
     try {
       isLoading.value = true;
-      Get.dialog(
-        Center(child: Lottie.asset(AppJson.loading2)),
-        barrierDismissible: false,
-      );
+      if (showDialog) {
+        Get.dialog(
+          Center(child: Lottie.asset(AppJson.loading2)),
+          barrierDismissible: false,
+        );
+      }
 
-      final url = Uri.parse(AppUrl.wishlist);
+      final url = AppUrl.wishlist;
       print("Sending request to: $url");
 
       final body = {
@@ -50,84 +55,83 @@ class Wishlist extends GetxController {
 
       print('Wishlist body :- $body');
 
-      final response = await http.post(
-        url,
-        headers: {
-          ApiHeaders.heading: ApiHeaders.peramitters,
-          ApiHeaders.authorization: tokan
-        },
-        body: body,
-      );
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('Add to wishlist response :- $data');
-        ToastificationSuccess.Success(data['message']);
+        if (data['message'] != null && data['message'].toString().isNotEmpty) {
+          ToastificationSuccess.Success(data['message']);
+        }
       } else {
-        throw 'Add to wishlist Error :- ${response.body}, ${response.statusCode}';
+        throw 'Add to wishlist Error :- $response, ${200}';
       }
     } catch (e) {
       print('Add to wishlist Error :- $e');
-      ToastificationSuccess.Success('$e');
     } finally {
       isLoading.value = false;
-      if (Get.isDialogOpen == true) Get.back();
+      if (showDialog && Get.isDialogOpen == true) Get.back();
     }
   }
 }
 
 //FetchWish List
-class FetchWishtlist extends GetxController{
+class FetchWishtlist extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future fechwishlist()async{
-    try{
+  Future fechwishlist() async {
+    if (!islogin || tokans.isEmpty) {
+      isLoading.value = false;
+      return;
+    }
+    try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.wishlist);
+      final url = AppUrl.wishlist;
       print("Sending Request To :- $url");
-      final responce = await http.get(url,headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
-      if(responce.statusCode == 200 || responce.statusCode == 201){
-        data.value = jsonDecode(responce.body);
+      final responce = await ApiCall.getRequest(url, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Wishlist data :- ${data.value}");
-      }else{
-        throw{
-          'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
-          // handleHttpError(responce.statusCode),
+      } else {
+        throw {
+          'Wishlist data Error :- ${200}, $responce',
         };
       }
-    }catch(e){
+    } catch (e) {
       print('Wishlist data Error :- $e');
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }
 }
 
 //Delet WishList
-class DeletWishtlist extends GetxController{
+class DeletWishtlist extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
-  Future deletwishlist({required String id})async{
-    try{
+  Future deletwishlist({required String id}) async {
+    try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.wishlistdelete);
-      final body = {'id' : id};
+      final url = AppUrl.wishlistdelete;
+      final body = {'id': id};
       print("Sending Request To :- $url");
       print("Sending Request To delet Wishlist :- $body");
-      final responce = await http.post(url,body: body, headers: {ApiHeaders.heading : ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
-      if(responce.statusCode == 200 || responce.statusCode == 201){
-        data.value = jsonDecode(responce.body);
+      final responce =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Wishlist data :- ${data.value}");
-      }else{
-        throw{
-          'Wishlist data Error :- ${responce.statusCode}, ${responce.body}',
-          handleHttpError(responce.statusCode),
+      } else {
+        throw {
+          'Wishlist data Error :- ${200}, $responce',
+          handleHttpError(200),
         };
       }
-    }catch(e){
+    } catch (e) {
       print('Wishlist data Error :- $e');
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }

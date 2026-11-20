@@ -2,7 +2,6 @@
 
 import 'package:get/get.dart';
 import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
-import '../../../../view/screen/credentials/login.dart';
 import '../../../../view/utils/app_constants.dart';
 
 class LogoController extends GetxController {
@@ -11,10 +10,16 @@ class LogoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (pref != null) {
+      tokans = pref!.getString('tokan') ?? '';
+      islogin = (pref!.getBool('login') ?? false) && tokans.isNotEmpty;
+      Mobile = pref!.getString('mobile') ?? '';
+    }
+
     Future.delayed(Duration(seconds: 2), () {
       if (!navigated) {
         navigated = true;
-        Get.offAll(() => (islogin) ?  Bottom() : Login());
+        Get.offAll(() => Bottom());
       }
     });
   }

@@ -20,17 +20,18 @@ class VideoPlayerMenu extends StatefulWidget {
 
 class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
   late VideoPlayerController _controller;
+  bool _isReady = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
-        _controller.setVolume(0.0); // Mute video
+        if (!mounted) return;
+        _controller.setVolume(0.0);
         _controller.setLooping(true);
         _controller.play();
-        setState(() {
-        });
+        setState(() => _isReady = true);
       });
   }
 
@@ -42,26 +43,17 @@ class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isReady) {
+      return const ColoredBox(color: Colors.black12);
+    }
 
-    //Loading
-
-    // if (!_isReady) {
-    //   return Center(child: Lottie.asset(AppJson.loading2));
-    // }
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _controller.value.size.width,
-            height: _controller.value.size.height,
-            child: VideoPlayer(_controller),
-          ),
-        ),
-        Container(color: Colors.black.withOpacity(0.0)),
-      ],
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: SizedBox(
+        width: _controller.value.size.width,
+        height: _controller.value.size.height,
+        child: VideoPlayer(_controller),
+      ),
     );
   }
 }
@@ -72,7 +64,8 @@ class VideoPlayerMenuContainer extends StatefulWidget {
   const VideoPlayerMenuContainer({super.key, required this.videoUrl});
 
   @override
-  _VideoPlayerMenuContainerState createState() => _VideoPlayerMenuContainerState();
+  _VideoPlayerMenuContainerState createState() =>
+      _VideoPlayerMenuContainerState();
 }
 
 class _VideoPlayerMenuContainerState extends State<VideoPlayerMenuContainer> {
@@ -349,41 +342,43 @@ class _VideoPlayerMenuSecondState extends State<VideoPlayerMenuSecond> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     if (_showControls)
-                    // Progress Slider
-                    Row(
-                      children: [
-                        // Current time
-                        Text(
-                          _formatDuration(_currentPosition),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                      // Progress Slider
+                      Row(
+                        children: [
+                          // Current time
+                          Text(
+                            _formatDuration(_currentPosition),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
 
-                        Expanded(
-                          child: Slider(
-                            value: _videoDuration.inSeconds > 0 ? _currentPosition.inSeconds / _videoDuration.inSeconds : 0,
-                            onChanged: _seekToPosition,
-                            min: 0.0,
-                            max: 1.0,
-                            activeColor: Colors.white,
-                            inactiveColor: Colors.white.withOpacity(0.3),
+                          Expanded(
+                            child: Slider(
+                              value: _videoDuration.inSeconds > 0
+                                  ? _currentPosition.inSeconds /
+                                      _videoDuration.inSeconds
+                                  : 0,
+                              onChanged: _seekToPosition,
+                              min: 0.0,
+                              max: 1.0,
+                              activeColor: Colors.white,
+                              inactiveColor: Colors.white.withOpacity(0.3),
+                            ),
                           ),
-                        ),
 
-                        // Total time
-                        Text(
-                          _formatDuration(_videoDuration),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                          // Total time
+                          Text(
+                            _formatDuration(_videoDuration),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
                     // Additional controls (visible only when controls are shown)
                     if (_showControls)

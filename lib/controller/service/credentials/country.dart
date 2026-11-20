@@ -1,32 +1,26 @@
 // ignore_for_file: avoid_print
 
-
 import '../../../modal/credentials/country.dart';
 import '../../../view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+import 'package:kohira/api/api_call.dart';
+import 'dart:convert';
 
 class CountryService {
   Future<Country?> countrypassworduser() async {
-    final url = Uri.parse(AppUrl.country);
+    final url = AppUrl.country;
     print("Sending request to: $url");
 
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-      );
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final country = countryFromJson(response.body);
+      if (response != null) {
+        final country = countryFromJson(jsonEncode(response));
         print('Full country data: ${country.toJson()}');
         print('country success: ${country.success}');
         return country;
       } else {
-        print('country failed with status: ${response.statusCode}');
-        print('country body: ${response.body}');
+        print('country failed with status: ${200}');
+        print('country body: $response');
         return null;
       }
     } catch (e) {

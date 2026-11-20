@@ -38,18 +38,17 @@ class _BuynowState extends State<Buynow> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   double getProductPrice(Map<String, dynamic> fetchdata) {
-    // Safely check if discount exists and is greater than 0
-    final discount = fetchdata['discount'];
+    final double discountVal =
+        double.tryParse(fetchdata['discount']?.toString() ?? '0') ?? 0.0;
     final offerPrice = fetchdata['offer_price'];
     final settingPrice = fetchdata['setting_price'];
 
-    // Use offer price if discount exists and is greater than 0, otherwise use setting price
-    if (discount != null && discount > 0 && offerPrice != null) {
-      return offerPrice.toDouble();
+    if (discountVal > 0 && offerPrice != null) {
+      return double.tryParse(offerPrice.toString()) ?? 0.0;
     } else if (settingPrice != null) {
-      return settingPrice.toDouble();
+      return double.tryParse(settingPrice.toString()) ?? 0.0;
     } else {
-      return 0.0; // Default fallback
+      return 0.0;
     }
   }
 
@@ -216,11 +215,7 @@ class _BuynowState extends State<Buynow> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              if(isGuest){
-                                                myCart.decrementValueOfLocal(index);
-                                              }else{
-                                                myCart.decrementValueOfCount(index);
-                                              }
+                                              myCart.decrementQuantity(index);
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -244,11 +239,7 @@ class _BuynowState extends State<Buynow> {
                                           SizedBox(width: Get.width / 20),
                                           GestureDetector(
                                             onTap: () {
-                                              if (isGuest) {
-                                                myCart.incrementValueOfLocal(index);
-                                              } else {
-                                                myCart.incrementValueOfCount(index);
-                                              }
+                                              myCart.incrementQuantity(index);
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(

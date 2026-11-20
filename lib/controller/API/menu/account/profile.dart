@@ -3,10 +3,10 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/app_constants.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class ProfileEdit extends GetxController {
   var isLoading = false.obs;
@@ -25,7 +25,7 @@ class ProfileEdit extends GetxController {
     try {
       isLoading.value = true;
 
-      final url = Uri.parse(AppUrl.profile);
+      final url = AppUrl.profile;
       print('Sending request to: $url');
 
       final body = {
@@ -41,12 +41,13 @@ class ProfileEdit extends GetxController {
 
       print('Sending request to Profile Edit:- $body');
 
-      final response = await http.post( url,body: body, headers: {ApiHeaders.heading: ApiHeaders.peramitters,ApiHeaders.authorization: tokans});
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: true);
 
-      final responseData = jsonDecode(response.body);
+      final responseData = jsonDecode(jsonEncode(response));
       print('Profile Edit Raw Response: $responseData');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response != null) {
         data.value = responseData;
         return responseData;
       } else {

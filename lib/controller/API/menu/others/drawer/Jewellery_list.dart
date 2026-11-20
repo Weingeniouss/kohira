@@ -1,12 +1,13 @@
-
 // ignore_for_file: file_names
 
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:kohira/api/api_call.dart';
 
 class MetalType {
   final int id;
@@ -49,24 +50,24 @@ class JewelleryList extends GetxController {
   Future<void> jewellerylist() async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.jewellery_filter);
-      final response = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final url = AppUrl.jewellery_filter;
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('Jewellery List :- $data');
 
-        // Convert metal types from JSON to MetalType objects
         final List<dynamic> metalTypesData = data['data']['Metal_Type'] ?? [];
-        metalTypes.value = metalTypesData.map((item) => MetalType.fromJson(Map<String, dynamic>.from(item))).toList();
+        metalTypes.value = metalTypesData
+            .map((item) => MetalType.fromJson(Map<String, dynamic>.from(item)))
+            .toList();
 
-        // Convert metal Stamp from JSON to MetalType objects
         final List<dynamic> metalTypesStamp = data['data']['Metal_Stamp'] ?? [];
-        metalStamp.value = metalTypesStamp.map((item) => MetalStamp.fromJson(Map<String,dynamic>.from(item))).toList();
-
-
+        metalStamp.value = metalTypesStamp
+            .map((item) => MetalStamp.fromJson(Map<String, dynamic>.from(item)))
+            .toList();
       } else {
-        throw Exception('Error Jewellery List: ${response.statusCode}, ${response.body}');
+        throw Exception('Error Jewellery List: ${200}, $response');
       }
     } catch (e) {
       log('Error Jewellery List: $e');

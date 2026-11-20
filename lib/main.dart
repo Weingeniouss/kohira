@@ -1,4 +1,4 @@
-// ignore_for_file: dead_null_aware_expression, prefer_const_constructors, avoid_print
+// ignore_for_file: deprecated_member_use, dead_null_aware_expression, prefer_const_constructors, avoid_print
 // Registered a new Firebase ios app on Firebase project kohira-2ac25.
 // Firebase configuration file lib\firebase_options.dart generated successfully with the following Firebase apps:
 //
@@ -8,8 +8,10 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/screen/splace/logo/logo.dart';
+import 'package:kohira/view/screen/credentials/otp.dart';
+import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import 'package:kohira/view/utils/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
@@ -17,16 +19,13 @@ import 'firebase_options.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final bool isGuest = (tokans.isEmpty ?? true);
-  pref = await SharedPreferences.getInstance();
-
-  if(isGuest){
-    cartCount = pref!.getString('count') ?? '0';
-    wishCount = pref!.getString('wishcount') ?? '0';
-    print('Guestuser Cartcount :- $cartCount');
-    print('Guestuser Wishcount :- $wishCount');
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print('Failed to load .env file: $e');
   }
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  pref = await SharedPreferences.getInstance();
 
   Fristname = pref!.getString('fristname') ?? '';
   Lastname = pref!.getString('lastname') ?? '';
@@ -36,8 +35,19 @@ Future<void> main() async{
   Password = pref!.getString('password') ?? '';
 
   tokans = pref!.getString('tokan') ?? '';
-
   islogin = pref!.getBool('login') ?? false;
+
+  if (tokans.isNotEmpty || Mobile.isNotEmpty) {
+    islogin = true;
+    pref!.setBool('login', true);
+  }
+
+  if (!islogin) {
+    cartCount = pref!.getString('count') ?? '0';
+    wishCount = pref!.getString('wishcount') ?? '0';
+    print('Guestuser Cartcount :- $cartCount');
+    print('Guestuser Wishcount :- $wishCount');
+  }
 
   print('Fristname $Fristname');
   print('Lastname $Lastname');
@@ -62,7 +72,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
         title: 'Kohira',
-        home: Logo(),
+        home: islogin ? Bottom() : Otp(),
       ),
     );
   }

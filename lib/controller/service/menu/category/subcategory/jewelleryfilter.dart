@@ -2,24 +2,25 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
+
 import '../../../../../modal/menu/category/subcategory/jewelleryfilter.dart';
+import 'package:kohira/api/api_call.dart';
 
 class JewelleryFilterService {
   Future<JewelleryFilterModel?> fetchFilter() async {
     try {
-      final url = Uri.parse(AppUrl.jewelleryfilter);
+      final url = AppUrl.jewelleryfilter;
       print('Sending request to: $url');
-      final response = await http.get(url, headers: {ApiHeaders.heading : ApiHeaders.peramitters});
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
+      if (response != null) {
+        final jsonData = json.decode(jsonEncode(response));
         log('Jewellery = $jsonData');
         return JewelleryFilterModel.fromJson(jsonData);
       } else {
-        print('Error: ${response.statusCode} - ${response.body}');
+        print('Error: ${200} - $response');
         return null;
       }
     } catch (e) {

@@ -2,33 +2,32 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/app_url.dart';
-import '../../../../../view/utils/API_headers.dart';
 
-class Collection extends GetxController{
+import 'package:get/get.dart';
+import 'package:kohira/view/utils/app_url.dart';
+
+import 'package:kohira/api/api_call.dart';
+
+class Collection extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
   Future<void> collectiondata() async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.collection);
+      final url = AppUrl.collection;
       print('Sending To url :- $url');
-      final response = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final response = await ApiCall.getRequest(url, useAuth: false);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('Collection data :- ${data.value}');
-      }else{
-        throw{
-          'Collection Error :- ${response.statusCode}, ${response.body}'
-        };
+      } else {
+        throw {'Collection Error :- ${200}, $response'};
       }
-    }catch(e){
+    } catch (e) {
       log('Collection Error :- $e');
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }

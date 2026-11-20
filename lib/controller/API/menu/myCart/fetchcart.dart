@@ -2,34 +2,45 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
-import 'package:kohira/view/utils/app_constants.dart';
-import '../../../../view/utils/app_url.dart';
 
-//Fetch items
+import 'package:get/get.dart';
+import 'package:kohira/view/utils/app_constants.dart';
+
+
+import '../../../../view/utils/app_url.dart';
+import 'package:kohira/api/api_call.dart';
+
 class FetchcartCalling extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future fetchcartcall({String? flag, String? qty, String? cart, String? type}) async {
+  Future fetchcartcall(
+      {String? flag, String? qty, String? cart, String? type}) async {
+    if (!islogin || tokans.isEmpty) {
+      isLoading.value = false;
+      return;
+    }
     try {
       isLoading.value = true;
 
-      final url = Uri.parse('${AppUrl.cart}?flag=${flag ?? ''}&qty=${qty ?? ''}&cart=${cart ?? ''}&type=${type ?? ''}');
+      final url =
+          '${AppUrl.cart}?flag=${flag ?? ''}&qty=${qty ?? ''}&cart=${cart ?? ''}&type=${type ?? ''}';
       print('Sending request to: $url');
-      final responses = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final responses = await ApiCall.getRequest(url, useAuth: true);
 
-      if (responses.statusCode == 200 || responses.statusCode == 201) {
-        data.value = jsonDecode(responses.body);
+      if (responses != null) {
+        if (responses is Map) {
+          data.value = Map<String, dynamic>.from(responses);
+        } else if (responses is String) {
+          data.value = jsonDecode(jsonEncode(responses));
+        } else {
+          data.value = jsonDecode(jsonEncode(responses));
+        }
         log('Fetchcart data :- $data');
-        // ToastificationSuccess.Success(data['message']);
       } else {
         throw {
-          'Fetchcart data Error This :- ${responses.statusCode}, ${responses.body}',
-          print('CountCart data this :- ${responses.statusCode}, ${responses.body}'),
-          // handleHttpError(responses.statusCode),
+          'Fetchcart data Error This :- ${200}, $responses',
+          print('CountCart data this :- ${200}, $responses'),
         };
       }
     } catch (e) {

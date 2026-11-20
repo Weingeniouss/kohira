@@ -4,24 +4,23 @@ import 'dart:convert';
 import 'dart:developer';
 
 import '../../../../../modal/menu/category/subcategory/filtercategory.dart';
-import '../../../../../view/utils/API_headers.dart';
 import '../../../../../view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+import 'package:kohira/api/api_call.dart';
 
 class FilterCategoryService {
   Future<Filtercategory?> fetchFilter() async {
     try {
-      final url = Uri.parse(AppUrl.filtercategory);
+      final url = AppUrl.filtercategory;
       print('Sending request to :- $url');
 
-      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final response = await ApiCall.postRequest(url, useAuth: false);
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
+      if (response != null) {
+        final jsonData = json.decode(jsonEncode(response));
         log('FilterCategory $jsonData');
         return Filtercategory.fromJson(jsonData);
       } else {
-        print('Error: ${response.statusCode} - ${response.body}');
+        print('Error: ${200} - $response');
         return null;
       }
     } catch (e) {

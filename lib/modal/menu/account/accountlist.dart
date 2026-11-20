@@ -1,59 +1,10 @@
-import 'package:kohira/view/utils/app_icon.dart';
+import 'package:kohira/view/utils/app_string.dart';
 
-List accountlist =[
-  {
-    'image' : AppIcon.Order,
-    'name': 'Order History',
-  },
-  {
-    'image' : AppIcon.like,
-    'name': 'Wishlist',
-  },
-  {
-    'image' : AppIcon.Wallet,
-    'name': 'Wallet',
-  },
-  {
-    'image' : AppIcon.Addresses,
-    'name': 'Addresses',
-  },
-  {
-    'image' : AppIcon.Addresses,
-    'name': 'Change Password',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Help Center',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Shipping & Delivery Policy',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Retry & Refund Policy',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Privacy Policy',
-  },{
-    'image' : AppIcon.edit,
-    'name': 'Terms & Condition',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Returns & Exchanges',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Warranty & jewellery claim',
-  },
-  {
-    'image' : AppIcon.edit,
-    'name': 'Compliance policy',
-  },
-  {
-    'image' : AppIcon.Logout,
-    'name': 'Logout',
-  },
+List accountlist = [
+  {'name': AppString.changepasswoard, 'route_id': 'change_password'},
+  {'name': AppString.shippingPolicy, 'route_id': 'shipping_policy'},
+  {'name': AppString.returnPolicy, 'route_id': 'return_policy'},
+  {'name': AppString.termsCondition, 'route_id': 'terms_condition'},
+  {'name': AppString.PrivacyPolicy, 'route_id': 'privacy_policy'},
+  {'name': AppString.Logout, 'route_id': 'logout'},
 ];

@@ -3,31 +3,32 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/services/api_service.dart';
 
 class Overstore_Controller extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future<void> overStore({String? page, String? search, String? store_city_id}) async {
+  Future<void> overStore(
+      {String? page, String? search, String? store_city_id, String? city}) async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.store);
-      print('Sending request to: $url');
+      final url = AppUrl.store;
+
       final body = {
-        if (page != null)  'page': page,
+        if (page != null) 'page': page,
         if (search != null) 'search': search,
-        if (store_city_id != null) 'store_city_id': store_city_id,
-      }..removeWhere((key,value) => value == null);
-      print('Store body :- $body');
-      final response = await http.post(url, body: body, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        data.value = jsonDecode(response.body);
-        // log('Over Store :- ${data.value}');
-      }
+        if (store_city_id != null && store_city_id.isNotEmpty) ...{
+          'store_city_id': store_city_id,
+          'city_id': store_city_id,
+        },
+        if (city != null && city.isNotEmpty) 'city': city,
+      };
+
+      print('Fetching store data with body: $body');
+      final response = await ApiService.postApi(url, data: body);
+      data.value = response;
     } catch (e) {
       print('Over Store :- $e');
     } finally {

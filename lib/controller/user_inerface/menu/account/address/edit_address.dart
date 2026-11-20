@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, strict_top_level_inference, non_constant_identifier_names, unnecessary_null_comparison
+// ignore_for_file: deprecated_member_use, avoid_print, strict_top_level_inference, non_constant_identifier_names, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

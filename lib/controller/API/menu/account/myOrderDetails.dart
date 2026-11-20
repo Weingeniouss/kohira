@@ -2,35 +2,34 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
-import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
-import '../../../../view/utils/app_constants.dart';
 
-class Myorderdetails extends GetxController{
+import 'package:get/get.dart';
+
+import 'package:kohira/view/utils/app_url.dart';
+
+import 'package:kohira/api/api_call.dart';
+
+class Myorderdetails extends GetxController {
   var isLoading = false.obs;
   var data = {}.obs;
 
-  Future<void> myorderdatails(id)async{
-    try{
+  Future<void> myorderdatails(id) async {
+    try {
       isLoading.value = true;
-      final url =  Uri.parse('${AppUrl.orderdetail}$id/myorder');
+      final url = '${AppUrl.orderdetail}$id/myorder';
       print("Sending Request To :- $url");
 
-      final response = await http.get(url,headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization : tokans});
+      final response = await ApiCall.getRequest(url, useAuth: true);
 
-      if(response.statusCode == 200 || response.statusCode == 201){
-        data.value = jsonDecode(response.body);
+      if (response != null) {
+        data.value = jsonDecode(jsonEncode(response));
         log('My Order Details :- ${data.value}');
-      }else{
-        throw{
-          'My Order Details Error this :- ${response.body}, ${response.statusCode}'
-        };
+      } else {
+        throw {'My Order Details Error this :- $response, ${200}'};
       }
-    }catch(e){
+    } catch (e) {
       print("My Order Details Error this :- $e");
-    }finally{
+    } finally {
       isLoading.value = false;
     }
   }

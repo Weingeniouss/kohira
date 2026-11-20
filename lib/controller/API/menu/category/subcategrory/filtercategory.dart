@@ -27,6 +27,14 @@ class JewelleryFilterCategory extends GetxController {
     isLoading.value = false;
   }
 
+  /// Getter to return only categories where [ismenu] is "Active"
+  List<Datum> get menuCategories {
+    if (filterData.value?.data == null) return [];
+    return filterData.value!.data
+        .where((item) => item.ismenu.toLowerCase() == 'active')
+        .toList();
+  }
+
   void selectCategorySlug(String slug) {
     selectedSlug.value = slug;
     print("Selected category slug: $slug");

@@ -2,11 +2,12 @@
 
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/app_constants.dart';
+
+import 'package:kohira/api/api_call.dart';
 
 class WalletController extends GetxController {
   var isLoading = false.obs;
@@ -15,17 +16,16 @@ class WalletController extends GetxController {
   Future wallet() async {
     try {
       isLoading.value = true;
-      final url = Uri.parse(AppUrl.wallet);
+      final url = AppUrl.wallet;
       print("Sending Request to :- $url");
 
-      final responce = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters, ApiHeaders.authorization: tokans});
+      final responce = await ApiCall.getRequest(url, useAuth: true);
 
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        data.value = jsonDecode(responce.body);
+      if (responce != null) {
+        data.value = jsonDecode(jsonEncode(responce));
         log("Wallet :- ${data.value}");
       } else {
-        'Wallet Error this :- ${responce.statusCode}, ${responce.body}';
-        // handleHttpError(responce.statusCode);
+        'Wallet Error this :- ${200}, $responce';
       }
     } catch (e) {
       print("'Wallet Error this :- $e");

@@ -28,13 +28,15 @@ class CategoryCalling extends GetxController {
         // Debug prints
         print('Category list fetched:');
         for (var category in data) {
-          print('ID: ${category.id}, Name: ${category.name}, Image: ${category.image}');
+          print(
+              'ID: ${category.id}, Name: ${category.name}, Image: ${category.image}');
           for (var sub in category.subcategory ?? []) {
             print('   Sub: ${sub.name}, Image: ${sub.image}');
           }
         }
       } else {
-        ToastificationError.Error('Category API failed: ${categoryResponse?.message}');
+        ToastificationError.Error(
+            'Category API failed: ${categoryResponse?.message}');
         print('Category API failed: ${categoryResponse?.message}');
       }
     } catch (e) {

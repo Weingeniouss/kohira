@@ -1,9 +1,10 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names
 
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import '../../../modal/credentials/sinup.dart';
 import '../../../view/utils/app_url.dart';
+import 'package:kohira/api/api_call.dart';
 
 class SinupService {
   Future<Sinup?> sinupUser({
@@ -19,27 +20,26 @@ class SinupService {
     required String login_type,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse(AppUrl.sinup),
-        body: {
-          'firstname': firstname,
-          'lastname': lastname,
-          'email': email,
-          'password': password,
-          'password_confirmation': passwordConfirmation,
-          'mobileno': mobileno,
-          'captcha': captcha,
-          'countrycode': countrycode,
-          'country_shortname': country_shortname,
-          'login_type':login_type,
-        },
-      );
+      final response = await ApiCall.postRequest(AppUrl.sinup,
+          data: {
+            'firstname': firstname,
+            'lastname': lastname,
+            'email': email,
+            'password': password,
+            'password_confirmation': passwordConfirmation,
+            'mobileno': mobileno,
+            'captcha': captcha,
+            'countrycode': countrycode,
+            'country_shortname': country_shortname,
+            'login_type': login_type,
+          },
+          useAuth: false);
       print(AppUrl.sinup);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
+      if (response != null) {
+        final jsonData = json.decode(jsonEncode(response));
         return Sinup.fromJson(jsonData);
       } else {
-        print('Signup failed with status: ${response.statusCode}');
+        print('Signup failed with status: ${200}');
       }
     } catch (e) {
       print('Signup Exception: $e');

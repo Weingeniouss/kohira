@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, non_constant_identifier_names, prefer_const_constructors, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

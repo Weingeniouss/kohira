@@ -1,27 +1,25 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names
 
-
-import 'package:http/http.dart' as http;
-import 'package:kohira/view/utils/API_headers.dart';
 import 'package:kohira/view/utils/app_url.dart';
+
 import '../../../../modal/menu/home/categories.dart';
+import 'package:kohira/api/api_call.dart';
+import 'dart:convert';
 
 class CategoriesModal {
-  final url = Uri.parse(AppUrl.categories);
+  final url = AppUrl.categories;
 
   Future<Categories?> categories_Service() async {
     print("Sending request to: $url");
     try {
-      final responce = await http.get(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters});
+      final responce = await ApiCall.getRequest(url, useAuth: false);
 
-      if (responce.statusCode == 200 || responce.statusCode == 201) {
-        final categories = categoriesFromJson(responce.body);
+      if (responce != null) {
+        final categories = categoriesFromJson(jsonEncode(responce));
         print('categories Data :- $categories');
         return categories;
       } else {
-        throw {
-          'categories Data Error : - ${responce.statusCode}, ${responce.body}'
-        };
+        throw {'categories Data Error : - ${200}, $responce'};
       }
     } catch (e) {
       print('categories Data Error :- $e');

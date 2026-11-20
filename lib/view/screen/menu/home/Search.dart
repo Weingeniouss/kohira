@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/menu/home/Search.dart';
-import 'package:kohira/view/utils/app_String.dart';
+import 'package:kohira/view/utils/app_string.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:lottie/lottie.dart';
@@ -44,14 +44,18 @@ class _SearchState extends State<Search> {
     return Scaffold(
       appBar: Appbar(lefticon: AppIcon.left, hedingname: AppString.Searchs),
       body: Container(
-        width: Get.width, height: Get.height,
+        width: Get.width,
+        height: Get.height,
         decoration: BoxDecoration(color: AppColor.white_color),
         child: Column(
           children: [
             SizedBox(height: Get.height / 50),
 
             //SearchBar Start
-            horizontalpadding(child: searchField(focusNode: focusNode,onChanged: (val) => search.searchQuery.value = val)),
+            horizontalpadding(
+                child: searchField(
+                    focusNode: focusNode,
+                    onChanged: (val) => search.searchQuery.value = val)),
 
             //List of Product
             Expanded(
@@ -75,20 +79,31 @@ class _SearchState extends State<Search> {
                     final item = jewelryList[index];
                     return horizontalpadding(
                       child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           print(jewelryList[index]['slug']);
-                         Get.to(() => Showproduct(slug: jewelryList[index]['slug'].toString(), categoryslug: jewelryList[index]['category_slug'],));
+                          Get.to(() => Showproduct(
+                                slug: jewelryList[index]['slug'].toString(),
+                                categoryslug: jewelryList[index]
+                                    ['category_slug'],
+                              ));
                         },
                         child: Container(
-                          margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                          margin:
+                              EdgeInsets.symmetric(vertical: Get.height * 0.01),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColor.textfild_color),
-                            borderRadius: BorderRadius.circular(Get.width * 0.04)
-                          ),
+                              border:
+                                  Border.all(color: AppColor.textfild_color),
+                              borderRadius:
+                                  BorderRadius.circular(Get.width * 0.04)),
                           child: ListTile(
                             leading: Image.network(item['default_image']),
-                            title: Text(item['title'] ?? 'No Title'),
-                            subtitle: Text('₹ ${item['setting_price'].toString()} /-',style: TextStyle(color: AppColor.pink_color,fontWeight: FontWeight.w500),),
+                            title: Text(item['title'] ?? AppString.noTitle),
+                            subtitle: Text(
+                              '₹ ${item['setting_price'].toString()} /-',
+                              style: TextStyle(
+                                  color: AppColor.pink_color,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ),
                       ),

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unnecessary_null_comparison, prefer_typing_uninitialized_variables, strict_top_level_inference
+// ignore_for_file: deprecated_member_use, avoid_print, unnecessary_null_comparison, prefer_typing_uninitialized_variables, strict_top_level_inference
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -15,13 +15,16 @@ class ForgetpassswordCalling extends GetxController {
       isLoading.value = true;
       print("Attempting login for $email");
 
-       data = await ForgetpasswordService().forgetpassworduser(email: email);
+      data = await ForgetpasswordService().forgetpassworduser(email: email);
 
       if (data != null) {
         ToastificationSuccess.Success("'Success', ${data?.message}");
-        Container(decoration: BoxDecoration(color: AppColor.green_color), child: Text(data?.message));
+        Container(
+            decoration: BoxDecoration(color: AppColor.green_color),
+            child: Text(data?.message));
       } else {
-        ToastificationError.Error("'Error', ${data?.message ?? 'Is Your Empty Email'}");
+        ToastificationError.Error(
+            "'Error', ${data?.message ?? 'Is Your Empty Email'}");
       }
     } catch (e) {
       ToastificationError.Error("Error, Something went wrong");

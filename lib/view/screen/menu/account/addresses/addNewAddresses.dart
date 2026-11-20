@@ -2,7 +2,6 @@
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/user_inerface/menu/account/address/add_address.dart';
 import 'package:kohira/view/utils/app_color.dart';
@@ -10,7 +9,6 @@ import 'package:kohira/view/utils/app_icon.dart';
 import 'package:kohira/view/utils/widget/aapbar.dart';
 import 'package:kohira/view/utils/widget/button.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
-import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../modal/credentials/country.dart';
 import '../../../../utils/app_string.dart';
@@ -18,6 +16,7 @@ import '../../../../utils/app_string.dart';
 class AddNewAddresses extends StatelessWidget {
   final AddAddress = Get.put(AddAddressController());
   AddNewAddresses({super.key});
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -36,8 +35,8 @@ class AddNewAddresses extends StatelessWidget {
           hedingname_2: 'Add New ${AppString.Addresses}',
         ),
         bottomNavigationBar: SafeArea(
-          child: Obx((){
-            if(AddAddress.fech.isLoading.value){
+          child: Obx(() {
+            if (AddAddress.fech.isLoading.value) {
               return horizontalpadding(
                 child: SingleChildScrollView(
                   child: Column(
@@ -47,7 +46,11 @@ class AddNewAddresses extends StatelessWidget {
                         highlightColor: AppColor.highlightColor,
                         child: Container(
                           padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(color: AppColor.grey_color,borderRadius:BorderRadiusDirectional.circular(Get.width * (3 / 400))),
+                          decoration: BoxDecoration(
+                            color: AppColor.grey_color,
+                            borderRadius: BorderRadiusDirectional.circular(
+                                Get.width * (3 / 400)),
+                          ),
                           child: Center(child: Text('')),
                         ),
                       ),
@@ -56,13 +59,14 @@ class AddNewAddresses extends StatelessWidget {
                   ),
                 ),
               );
-            }else{
-             return Container(
+            } else {
+              return Container(
                 color: AppColor.white_color,
                 height: Get.height * 0.080,
-                child: Obx(() {
-                  if (AddAddress.fech.isLoading.value) SizedBox();
-                  return horizontalpadding(
+                child: Obx(
+                  () {
+                    if (AddAddress.fech.isLoading.value) SizedBox();
+                    return horizontalpadding(
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
@@ -79,30 +83,13 @@ class AddNewAddresses extends StatelessWidget {
                 ),
               );
             }
-          })
+          }),
         ),
         body: Container(
-          width: Get.width, height: Get.height,
-          decoration: BoxDecoration(color: AppColor.white_color),
+          width: Get.width,
+          height: Get.height,
+          decoration: BoxDecoration(color: Color(0xFFF9F9F9)),
           child: Obx(() {
-            // if (AddAddress.fech.isLoading.value) {
-            //   WidgetsBinding.instance.addPostFrameCallback((_) {
-            //     if (Get.isDialogOpen != true) {
-            //       Get.dialog(
-            //         Center(child: Lottie.asset(AppJson.loading2)),
-            //         barrierDismissible: false,
-            //       );
-            //     }
-            //   });
-            //   return Scaffold(backgroundColor: Colors.transparent);
-            // } else {
-            //   WidgetsBinding.instance.addPostFrameCallback((_) {
-            //     if (Get.isDialogOpen == true) {
-            //       Get.back();
-            //     }
-            //   });
-            // }
-
             if (AddAddress.fech.isLoading.value) {
               return Shimmer.fromColors(
                 baseColor: AppColor.lodingcolor,
@@ -118,120 +105,138 @@ class AddNewAddresses extends StatelessWidget {
                 ),
               );
             }
+
             return horizontalpadding(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: Get.height / 50),
-                    inputField(icon: AppIcon.parson, hintText: AppString.firstname_hint, controller: AddAddress.fristname),
-                    inputField(icon: AppIcon.parson, hintText: AppString.lastname_hint, controller: AddAddress.lastname),
-                    inputField(icon: AppIcon.location, hintText: AppString.address_hint, controller: AddAddress.address, iconcolor: AppColor.pink_color),
+                    SizedBox(height: 16),
+                    // Personal Information Card
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
-                      child: Row(
-                        children: [
-                          SizedBox(width: Get.width / 50),
-                          SvgPicture.asset(AppIcon.location, fit: BoxFit.cover, color: AppColor.pink_color, width: 20, height: 20),
-                          //Country
-                          Expanded(
-                            child: Obx(() {
-                              return DropdownButton2<Data>(
-                                style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 28),
-                                value: AddAddress.Country.selectedCountry.value,
-                                hint: Text('Select Country *', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 28)),
-                                isExpanded: true,
-                                underline: SizedBox(),
-                                items: AddAddress.Country.countries.map((item) {
-                                  return DropdownMenuItem<Data>(value: item, child: Text(item.label.toString()));
-                                }).toList(),
-                                onChanged: (newValue) => AddAddress.countryCalling(newValue),
-                                dropdownStyleData: DropdownStyleData(offset: Offset(0, -10), maxHeight: Get.height / 3, decoration: BoxDecoration(color: AppColor.white_color)),
-                                iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
-                                dropdownSearchData: DropdownSearchData(
-                                  searchController: AddAddress.searchController,
-                                  searchInnerWidgetHeight: 40,
-                                  searchInnerWidget: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: TextField(
-                                      controller: AddAddress.searchController,
-                                      decoration: InputDecoration(
-                                        hintText: 'Search Country...',
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                  ),
-                                  searchMatchFn: (item, searchValue) =>  item.value?.label?.toLowerCase().contains(searchValue.toLowerCase()) ?? false,
-                                ),
-                              );
-                            }),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFFE5E5E5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: Get.height / 80),
-                    // inputField(icon: AppIcon.location, hintText: 'Selected State',controller: state,iconcolor: AppColor.pink_color),
-
-                    //State
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.textfild_color))),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: Get.width / 50),
-                          SvgPicture.asset(AppIcon.location, fit: BoxFit.cover, color: AppColor.pink_color, width: 20, height: 20),
-                          Expanded(
-                            child: DropdownButton2<Map<String, dynamic>>(
-                              style: TextStyle(fontWeight: FontWeight.w400,color: AppColor.black_color,fontSize: Get.width / 27),
-                              value: AddAddress.State.selectedState.value,
-                              hint: Text('Select State *', style: TextStyle(color: AppColor.black_color, fontWeight: FontWeight.w400,fontSize: Get.width / 27)),
-                              isExpanded: true,
-                              underline: SizedBox(),
-                              items: AddAddress.State.states.map((item) {
-                                return DropdownMenuItem<Map<String, dynamic>>(value: item, child: Text(item["label"]));
-                              }).toList(),
-                              onChanged: (newValue) => AddAddress.stateCalling(newValue),
-                              dropdownStyleData: DropdownStyleData(offset: Offset(0, -10), maxHeight: Get.height / 3, decoration: BoxDecoration(color: AppColor.white_color)),
-                              iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColor.dividercolor), iconSize: 24),
-                              dropdownSearchData: DropdownSearchData(
-                                searchController: AddAddress.statesearchController,
-                                searchInnerWidgetHeight: 40,
-                                searchInnerWidget: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: TextField(
-                                    controller: AddAddress.statesearchController,
-                                    decoration: InputDecoration(
-                                      hintText: 'Search State...',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                                searchMatchFn: (item, searchValue) {
-                                  final map = item.value as Map<String, dynamic>;
-                                  return map["label"].toLowerCase().contains(searchValue.toLowerCase());
-                                },
-                              ),
+                          const Text(
+                            "Personal Information",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2D2D2D),
                             ),
                           ),
+                          const SizedBox(height: 20),
+                          _buildLabeledInput(
+                            "First Name *",
+                            AddAddress.fristname,
+                            hint: AppString.firstname_hint,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildLabeledInput(
+                            "Last Name *",
+                            AddAddress.lastname,
+                            hint: AppString.lastname_hint,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildLabeledInput(
+                            "Email ID *",
+                            AddAddress.mail,
+                            hint: AppString.email_hint,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildMobileInput("Mobile No *", AddAddress.mobile),
                         ],
                       ),
                     ),
-                    SizedBox(height: Get.height / 80),
-                    inputField(icon: AppIcon.location, hintText: AppString.city_hint, controller: AddAddress.city, iconcolor: AppColor.pink_color),
-                    inputField(icon: AppIcon.earth, hintText: AppString.zipcode_hint, controller: AddAddress.zip, iconwidth: 20, iconheight: 20, iconcolor: AppColor.pink_color, textInputType: TextInputType.number, maxLength: 6),
-                    inputField(icon: AppIcon.mail, hintText: AppString.email_hint, controller: AddAddress.mail),
-                    inputField(icon: AppIcon.mobile, hintText: AppString.phone_hint, controller: AddAddress.mobile, maxLength: 10, textInputType: TextInputType.number),
-                    Row(
-                      children: [
-                        Checkbox(
-                          activeColor: AppColor.pink_color,
-                          checkColor: Colors.white,
-                          value: AddAddress.isChecked.value,
-                          onChanged: (bool? value) => AddAddress.setDefaultAddress(value),
-                        ),
-                        Text(AppString.setdefult, style: TextStyle(fontSize: Get.width / 25)),
-                      ],
+                    SizedBox(height: 16),
+                    // Address Details Card
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFFE5E5E5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Address Details",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2D2D2D),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          _buildLabeledInput(
+                            "Address *",
+                            AddAddress.address,
+                            hint: AppString.address_hint,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildCountryDropdown(),
+                          const SizedBox(height: 16),
+                          _buildStateDropdown(),
+                          const SizedBox(height: 16),
+                          _buildLabeledInput(
+                            "City *",
+                            AddAddress.city,
+                            hint: AppString.city_hint,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildLabeledInput(
+                            "Zip Code / Pincode *",
+                            AddAddress.zip,
+                            hint: AppString.zipcode_hint,
+                            keyboardType: TextInputType.number,
+                            maxLength: 6,
+                          ),
+                          const SizedBox(height: 12),
+                          Obx(() => Row(
+                                children: [
+                                  Checkbox(
+                                    activeColor: AppColor.pink_color,
+                                    checkColor: Colors.white,
+                                    value: AddAddress.isChecked.value,
+                                    onChanged: (bool? value) =>
+                                        AddAddress.setDefaultAddress(value),
+                                  ),
+                                  const Text(
+                                    AppString.setdefult,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xFF2D2D2D),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
                     ),
+                    SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -241,14 +246,319 @@ class AddNewAddresses extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildLabeledInput(
+    String label,
+    TextEditingController? controller, {
+    String? hint,
+    TextInputType? keyboardType,
+    int? maxLength,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: const Color(0xFFE0E0E0)),
+          ),
+          child: Center(
+            child: TextField(
+              controller: controller,
+              keyboardType: keyboardType,
+              maxLength: maxLength,
+              style: TextStyle(
+                fontSize: 15,
+                color: AppColor.black_color,
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                hintText: hint,
+                hintStyle: const TextStyle(
+                  color: Color(0xFF9E9E9E),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+                counterText: "",
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileInput(String label, TextEditingController? controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Container(
+              height: 50,
+              width: 70,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF2F2F2),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(4),
+                  bottomLeft: Radius.circular(4),
+                ),
+                border: Border.all(color: const Color(0xFFE0E0E0)),
+              ),
+              child: Center(
+                child: Image.asset(AppIcon.india, width: 28),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: AppColor.white_color,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(4),
+                    bottomRight: Radius.circular(4),
+                  ),
+                  border: const Border(
+                    top: BorderSide(color: Color(0xFFE0E0E0)),
+                    bottom: BorderSide(color: Color(0xFFE0E0E0)),
+                    right: BorderSide(color: Color(0xFFE0E0E0)),
+                  ),
+                ),
+                child: Center(
+                  child: TextField(
+                    controller: controller,
+                    maxLength: 10,
+                    keyboardType: TextInputType.phone,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColor.black_color,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    decoration: const InputDecoration(
+                      hintText: AppString.phone_hint,
+                      hintStyle: TextStyle(
+                        color: Color(0xFF9E9E9E),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      counterText: "",
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCountryDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Country *",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: const Color(0xFFE0E0E0)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Obx(() {
+            return DropdownButton2<Data>(
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: AppColor.black_color,
+                fontSize: 15,
+              ),
+              value: AddAddress.Country.selectedCountry.value,
+              hint: const Text(
+                'Select Country *',
+                style: TextStyle(
+                  color: Color(0xFF9E9E9E),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                ),
+              ),
+              isExpanded: true,
+              underline: const SizedBox(),
+              items: AddAddress.Country.countries.map((item) {
+                return DropdownMenuItem<Data>(
+                  value: item,
+                  child: Text(item.label.toString()),
+                );
+              }).toList(),
+              onChanged: (newValue) => AddAddress.countryCalling(newValue),
+              dropdownStyleData: DropdownStyleData(
+                offset: const Offset(0, -10),
+                maxHeight: Get.height / 3,
+                decoration: BoxDecoration(color: AppColor.white_color),
+              ),
+              iconStyleData: IconStyleData(
+                icon: Icon(
+                  AppIcon.keyboardArrowDownOutlined,
+                  color: AppColor.dividercolor,
+                ),
+                iconSize: 24,
+              ),
+              dropdownSearchData: DropdownSearchData(
+                searchController: AddAddress.searchController,
+                searchInnerWidgetHeight: 40,
+                searchInnerWidget: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextField(
+                    controller: AddAddress.searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search Country...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                searchMatchFn: (item, searchValue) =>
+                    item.value?.label
+                        ?.toLowerCase()
+                        .contains(searchValue.toLowerCase()) ??
+                    false,
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStateDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "State *",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColor.white_color,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: const Color(0xFFE0E0E0)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Obx(() {
+            return DropdownButton2<Map<String, dynamic>>(
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: AppColor.black_color,
+                fontSize: 15,
+              ),
+              value: AddAddress.State.selectedState.value,
+              hint: const Text(
+                'Select State *',
+                style: TextStyle(
+                  color: Color(0xFF9E9E9E),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                ),
+              ),
+              isExpanded: true,
+              underline: const SizedBox(),
+              items: AddAddress.State.states.map((item) {
+                return DropdownMenuItem<Map<String, dynamic>>(
+                  value: item,
+                  child: Text(item["label"]),
+                );
+              }).toList(),
+              onChanged: (newValue) => AddAddress.stateCalling(newValue),
+              dropdownStyleData: DropdownStyleData(
+                offset: const Offset(0, -10),
+                maxHeight: Get.height / 3,
+                decoration: BoxDecoration(color: AppColor.white_color),
+              ),
+              iconStyleData: IconStyleData(
+                icon: Icon(
+                  AppIcon.keyboardArrowDownOutlined,
+                  color: AppColor.dividercolor,
+                ),
+                iconSize: 24,
+              ),
+              dropdownSearchData: DropdownSearchData(
+                searchController: AddAddress.statesearchController,
+                searchInnerWidgetHeight: 40,
+                searchInnerWidget: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextField(
+                    controller: AddAddress.statesearchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search State...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                searchMatchFn: (item, searchValue) {
+                  final map = item.value as Map<String, dynamic>;
+                  return map["label"]
+                      .toLowerCase()
+                      .contains(searchValue.toLowerCase());
+                },
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
 }
 
-
-Widget loadingpanal(){
+Widget loadingpanal() {
   return Column(
     children: [
       Container(
-        height: Get.height * 0.05, width: Get.width,
+        height: Get.height * 0.05,
+        width: Get.width,
         decoration: BoxDecoration(
           color: AppColor.grey_color,
           borderRadius: BorderRadius.circular(Get.width / 60),
@@ -256,7 +566,8 @@ Widget loadingpanal(){
       ),
       SizedBox(height: Get.height / 100),
       Container(
-        height: Get.height * 0.05, width: Get.width,
+        height: Get.height * 0.05,
+        width: Get.width,
         decoration: BoxDecoration(
           color: AppColor.grey_color,
           borderRadius: BorderRadius.circular(Get.width / 60),
@@ -264,7 +575,8 @@ Widget loadingpanal(){
       ),
       SizedBox(height: Get.height / 100),
       Container(
-        height: Get.height * 0.05, width: Get.width,
+        height: Get.height * 0.05,
+        width: Get.width,
         decoration: BoxDecoration(
           color: AppColor.grey_color,
           borderRadius: BorderRadius.circular(Get.width / 60),
@@ -272,71 +584,8 @@ Widget loadingpanal(){
       ),
       SizedBox(height: Get.height / 100),
       Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
-        decoration: BoxDecoration(
-          color: AppColor.grey_color,
-          borderRadius: BorderRadius.circular(Get.width / 60),
-        ),
-      ),
-      SizedBox(height: Get.height / 100),
-      Container(
-        height: Get.height * 0.05, width: Get.width,
+        height: Get.height * 0.05,
+        width: Get.width,
         decoration: BoxDecoration(
           color: AppColor.grey_color,
           borderRadius: BorderRadius.circular(Get.width / 60),

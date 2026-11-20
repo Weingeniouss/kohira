@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, equal_keys_in_map, unused_local_variable, file_names, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
+// ignore_for_file: unnecessary_brace_in_string_interps, prefer_typing_uninitialized_variables, equal_keys_in_map, unused_local_variable, file_names, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
 
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:get/get.dart';
-import 'package:kohira/view/utils/API_headers.dart';
+
 import 'package:kohira/view/utils/app_url.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:kohira/api/api_call.dart';
 
 class Subcategrory extends GetxController {
   var isLoading = false.obs;
@@ -56,14 +58,15 @@ class Subcategrory extends GetxController {
     String? j_count,
     String? userid,
   }) async {
-    if (isLoading.value || !hasMore.value) return;
+    if (isLoadMore && (!hasMore.value || isLoading.value)) return;
 
-    // Save selected filters (used for next pagination)
     if (!isLoadMore) {
-      start.value = 0; // reset if new filter is applied
+      start.value = 0;
       draw.value = 1;
       hasMore.value = true;
+      isLoading.value = false;
       allData.clear();
+      data.clear();
 
       selectedMetalType = metal_type;
       selectedMetalStamp = metal_stamp;
@@ -77,40 +80,62 @@ class Subcategrory extends GetxController {
       selectcenterstoneshape = center_stone_shape;
     }
 
-
     try {
       isLoading.value = true;
 
-      final url = Uri.parse(AppUrl.product);
+      final url = AppUrl.product;
       print("Sending request to: $url");
 
       final Map<String, String> body = {
-        'draw':  draws ?? draw.value.toString(),
-        'start': starts ??start.value.toString(),
+        'draw': draws ?? draw.value.toString(),
+        'start': starts ?? start.value.toString(),
         'length': lengths ?? length.value.toString(),
-        if (selectedMetalType != null) 'metal_type': selectedMetalType!,
-        if (selectedMetalStamp != null) 'metal_stamp': selectedMetalStamp!,
-        if (selectedCategorySlug != null) 'category_slug': selectedCategorySlug!,
-        if (selectedSubcategorySlug != null) 'subcategory_slug': selectedSubcategorySlug!,
-        if (selectediamondtype != null) 'diamond_type' : selectediamondtype!,
-        if (selectedweightmin != null) 'weight_min': selectedweightmin!,
-        if (selectedweightmax != null) 'weight_max': selectedweightmax!,
-        if (selectedpricemin != null) 'price_min': selectedpricemin!,
-        if (selectedpricemax != null) 'price_max': selectedpricemax!,
-        if (order_column != null) 'order_column': order_column,
-        if (sort != null) 'sort': sort,
-        if (finish_status != null) 'finish_status': finish_status,
-        if (center_stone_caret != null) 'center_stone_caret': center_stone_caret,
-        if (selectcenterstoneshape != null) 'center_stone_shape': selectcenterstoneshape!,
-        if (collection_id != null) 'collection_id': collection_id,
-        if (j_count != null) 'j_count': j_count,
-        if (userid != null) 'userid': userid,
-      }..removeWhere((key,value) => value == null);
+        if (selectedMetalType != null && selectedMetalType!.isNotEmpty)
+          'metal_type': selectedMetalType!,
+        if (selectedMetalStamp != null && selectedMetalStamp!.isNotEmpty)
+          'metal_stamp': selectedMetalStamp!,
+        if (selectedCategorySlug != null && selectedCategorySlug!.isNotEmpty)
+          'category_slug': selectedCategorySlug!,
+        if (selectedSubcategorySlug != null &&
+            selectedSubcategorySlug!.isNotEmpty)
+          'subcategory_slug': selectedSubcategorySlug!,
+        if (selectediamondtype != null && selectediamondtype!.isNotEmpty)
+          'diamond_type': selectediamondtype!,
+        if (selectedweightmin != null && selectedweightmin!.isNotEmpty)
+          'weight_min': selectedweightmin!,
+        if (selectedweightmax != null && selectedweightmax!.isNotEmpty)
+          'weight_max': selectedweightmax!,
+        if (selectedpricemin != null && selectedpricemin!.isNotEmpty)
+          'price_min': selectedpricemin!,
+        if (selectedpricemax != null && selectedpricemax!.isNotEmpty)
+          'price_max': selectedpricemax!,
+        if (order_column != null && order_column.isNotEmpty)
+          'order_column': order_column,
+        if (sort != null && sort.isNotEmpty) 'sort': sort,
+        if (finish_status != null && finish_status.isNotEmpty)
+          'finish_status': finish_status,
+        if (center_stone_caret != null && center_stone_caret.isNotEmpty)
+          'center_stone_caret': center_stone_caret,
+        if (selectcenterstoneshape != null &&
+            selectcenterstoneshape!.isNotEmpty)
+          'center_stone_shape': selectcenterstoneshape!,
+        if (collection_id != null && collection_id.isNotEmpty)
+          'collection_id': collection_id,
+        if (j_count != null && j_count.isNotEmpty) 'j_count': j_count,
+        if (userid != null && userid.isNotEmpty) 'userid': userid,
+      }..removeWhere((key, value) => value == null || value.toString().isEmpty);
       print('Subcategory BODY:- $body');
-      final response = await http.post(url, headers: {ApiHeaders.heading: ApiHeaders.peramitters}, body: body);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = jsonDecode(response.body);
-        final newItems = jsonData['data'] ?? [];
+      final response =
+          await ApiCall.postRequest(url, data: body, useAuth: false);
+      if (response != null) {
+        final jsonData = jsonDecode(jsonEncode(response));
+        List<dynamic> newItems = [];
+        if (jsonData['data'] is List) {
+          newItems = List<dynamic>.from(jsonData['data']);
+        } else if (jsonData['data'] is Map && jsonData['data']['items'] is List) {
+          newItems = List<dynamic>.from(jsonData['data']['items']);
+        }
+
         if (newItems.isEmpty) {
           hasMore.value = false;
         } else {
@@ -118,28 +143,28 @@ class Subcategrory extends GetxController {
             allData.addAll(newItems);
             data.addAll(newItems);
           } else {
-            allData = newItems;
-            data.value = newItems;
+            allData = List.from(newItems);
+            data.value = List.from(newItems);
           }
           draw.value++;
           start.value += length.value;
         }
         log('Subcategrory Response: $jsonData');
       } else {
-        // ToastificationError.Error('Subcategrory Error: ${response.statusCode}, ${response.body}');
-        print('Subcategrory Error: ${response.statusCode}, ${response.body}');
+        print('Subcategrory Error: ${200}, ${response}');
       }
     } catch (e) {
-      // ToastificationError.Error('Subcategrory Exception: $e');
       print('Subcategrory Exception: $e');
     } finally {
       isLoading.value = false;
     }
   }
+
   void resetPagination() {
     draw.value = 1;
     start.value = 0;
     hasMore.value = true;
+    isLoading.value = false;
     data.clear();
     allData.clear();
   }
@@ -150,11 +175,9 @@ class Subcategrory extends GetxController {
 
     _searchTimer = Timer(const Duration(milliseconds: 500), () {
       if (query.isEmpty) {
-        // 🔹 Search cleared → restore original data
         data.value = List.from(allData);
         isSearching.value = false;
       } else if (query.length >= 2) {
-        // 🔹 Only search when user typed at least 2 characters
         _performSearch(query);
       }
     });
@@ -168,18 +191,10 @@ class Subcategrory extends GetxController {
       return title.contains(query.toLowerCase());
     }).toList();
 
-    data.value = localResults; // Always show local results
+    data.value = localResults;
     isSearching.value = false;
   }
 
-  // void _searchFromAPI(String query) {
-  //   // Implement API search with proper parameters
-  //   // Make sure to reset pagination when doing new searches
-  //   resetPagination();
-  //   // Call your API method with search parameters
-  // }
-
-  // Clear search and reset to original data
   void clearSearch() {
     searchQuery.value = '';
     data.value = List.from(allData);
@@ -188,12 +203,17 @@ class Subcategrory extends GetxController {
   }
 
   void filterSearch(String query) {
-    if (allData.isEmpty) return; // Prevent unnecessary logic when data not loaded
+    if (allData.isEmpty) return;
 
     if (query.isEmpty) {
       data.value = allData;
     } else {
-      data.value = allData.where((item) => item['title'].toString().toLowerCase().contains(query.toLowerCase())).toList();
+      data.value = allData
+          .where((item) => item['title']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
     }
   }
 }
