@@ -36,7 +36,7 @@ class MyCartValueChange extends GetxController {
 
   var itemCounts = <int>[].obs;
 
-  bool get isGuestUser => (tokans.isEmpty ?? true);
+  bool get isGuestUser => (!islogin || tokans.isEmpty);
   RxList<JewelryItem> existingItems = <JewelryItem>[].obs;
 
   Timer? _quantityDebounceTimer;

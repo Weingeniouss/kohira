@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:kohira/controller/API/credentials/Sinup.dart';
 import 'package:kohira/modal/credentials/country.dart';
+import 'package:kohira/view/screen/credentials/otp.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_json.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
@@ -170,7 +171,11 @@ void _showRecaptchaVerification() {
                   countrycode: Country.selectedCountry.value!.countrycode.toString(),
                   country_shortname: Country.selectedCountry.value!.countryShortname.toString(),
                   login_type: 'mobile',
-                );
+                ).then((_) {
+                  if (Sinup.response.value?.status == true) {
+                    Get.to(() => Otp());
+                  }
+                });
                 localdatabase().sinupstore(
                   fristname: validation.frist_controller.text,
                   lastname: validation.last_controller.text,

@@ -105,6 +105,14 @@ class ApiService {
         }
 
         return responseData;
+      } else if (response.statusCode == 401) {
+        if (useAuth) {
+          islogin = false;
+          tokans = '';
+          pref?.setBool('login', false);
+          pref?.setString('tokan', '');
+        }
+        throw Exception('API Error: 401 - Unauthenticated');
       } else {
         throw Exception('API Error: ${response.statusCode} - ${response.data}');
       }

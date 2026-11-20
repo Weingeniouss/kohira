@@ -10,6 +10,7 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import '../../utils/app_logo.dart';
 import '../../utils/app_string.dart';
 
@@ -34,6 +35,19 @@ class Otp extends StatelessWidget {
                 logo(),
                 SizedBox(height: Get.height * 0.075),
                 signIn(controller: controller),
+                SizedBox(height: Get.height * 0.025),
+                GestureDetector(
+                  onTap: () => Get.offAll(() => Bottom()),
+                  child: Text(
+                    "Skip & Browse App",
+                    style: TextStyle(
+                      color: AppColor.pink_color,
+                      fontSize: Get.width * 0.038,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

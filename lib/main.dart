@@ -10,7 +10,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:kohira/view/screen/splace/logo/logo.dart';
+import 'package:kohira/view/screen/credentials/otp.dart';
+import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
 import 'package:kohira/view/utils/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
@@ -34,14 +35,11 @@ Future<void> main() async{
   Password = pref!.getString('password') ?? '';
 
   tokans = pref!.getString('tokan') ?? '';
-  islogin = (pref!.getBool('login') ?? false) && tokans.isNotEmpty;
+  islogin = pref!.getBool('login') ?? false;
 
-  if (tokans.isNotEmpty) {
+  if (tokans.isNotEmpty || Mobile.isNotEmpty) {
     islogin = true;
     pref!.setBool('login', true);
-  } else {
-    islogin = false;
-    pref!.setBool('login', false);
   }
 
   if (!islogin) {
@@ -74,7 +72,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
         title: 'Kohira',
-        home: Logo(),
+        home: islogin ? Bottom() : Otp(),
       ),
     );
   }

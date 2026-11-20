@@ -129,7 +129,13 @@ class Subcategrory extends GetxController {
           await ApiCall.postRequest(url, data: body, useAuth: false);
       if (response != null) {
         final jsonData = jsonDecode(jsonEncode(response));
-        final newItems = jsonData['data'] ?? [];
+        List<dynamic> newItems = [];
+        if (jsonData['data'] is List) {
+          newItems = List<dynamic>.from(jsonData['data']);
+        } else if (jsonData['data'] is Map && jsonData['data']['items'] is List) {
+          newItems = List<dynamic>.from(jsonData['data']['items']);
+        }
+
         if (newItems.isEmpty) {
           hasMore.value = false;
         } else {

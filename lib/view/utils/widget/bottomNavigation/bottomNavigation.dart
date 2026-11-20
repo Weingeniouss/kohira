@@ -122,14 +122,8 @@ class Bottom extends StatelessWidget {
                 ),
 
                 //Account
-                (tokans.isEmpty ?? true)
-                    ? bottamIcon(
-                        context: context,
-                        icon: AppIcon.account,
-                        name: AppString.account,
-                        color: AppColor.textfild_color,
-                      )
-                    : InkWell(
+                (islogin && tokans.isNotEmpty)
+                    ? InkWell(
                         onTap: bottamSelect.indexFive,
                         child: bottamIcon(
                           context: context,
@@ -138,6 +132,12 @@ class Bottom extends StatelessWidget {
                           onTap: bottamSelect.indexFive,
                           condition: bottamSelect.selectindex.value == 4,
                         ),
+                      )
+                    : bottamIcon(
+                        context: context,
+                        icon: AppIcon.account,
+                        name: AppString.account,
+                        color: AppColor.desbaleiconColor,
                       ),
               ],
             ),
@@ -152,13 +152,14 @@ class Bottom extends StatelessWidget {
   }
 }
 
-Widget bottamIcon(
-    {void Function()? onTap,
-    required String icon,
-    required String name,
-    bool condition = false,
-    Color? color,
-    context}) {
+Widget bottamIcon({
+  void Function()? onTap,
+  required String icon,
+  required String name,
+  bool condition = false,
+  Color? color,
+  context,
+}) {
   return Container(
     color: AppColor.white_color,
     width: Get.width / 5.5,
@@ -171,7 +172,7 @@ Widget bottamIcon(
             icon,
             color: condition
                 ? color ?? AppColor.pink_color
-                : color ?? AppColor.desbaleiconColor,
+                : color ?? AppColor.black_color,
             width: MediaQuery.of(context).size.width * 0.058,
             height: MediaQuery.of(context).size.width * 0.058,
           ),
@@ -182,7 +183,7 @@ Widget bottamIcon(
             style: TextStyle(
               color: condition
                   ? color ?? AppColor.pink_color
-                  : color ?? AppColor.desbaleiconColor,
+                  : color ?? AppColor.black_color,
               fontWeight: condition ? FontWeight.w600 : FontWeight.w500,
               fontSize: MediaQuery.of(context).size.width * 0.03,
             ),

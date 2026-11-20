@@ -7,6 +7,7 @@ import 'package:kohira/controller/database/local/localstore.dart';
 import 'package:kohira/controller/user_inerface/checkinternet/checkinternet.dart';
 import 'package:kohira/controller/user_inerface/credentials/login_controller.dart';
 import 'package:kohira/view/screen/credentials/forgetpassword.dart';
+import 'package:kohira/view/screen/credentials/otp.dart';
 import 'package:kohira/view/screen/credentials/signup.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_icon.dart';
@@ -66,8 +67,9 @@ class Login extends StatelessWidget {
                           LoginSubmitButton(),
                           SizedBox(height: Get.height / 40),
                           OrDividerWidget(),
-                          SizedBox(height: Get.height / 30),
-                          SizedBox(height: Get.height / 50),
+                          SizedBox(height: Get.height / 40),
+                          LoginWithOtpWidget(),
+                          SizedBox(height: Get.height / 40),
                           ContinueButtonWidget(),
                         ],
                       ),
@@ -225,6 +227,32 @@ class Login extends StatelessWidget {
         SizedBox(width: Get.width / 20),
         Expanded(child: Divider(color: AppColor.textfild_color)),
       ],
+    );
+  }
+
+  /// 'Login with OTP' button widget
+  Widget LoginWithOtpWidget() {
+    return GestureDetector(
+      onTap: () => Get.to(() => Otp()),
+      child: Container(
+        height: 48,
+        width: Get.width,
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColor.pink_color, width: 1.5),
+          borderRadius: BorderRadius.circular(8),
+          color: AppColor.white_color,
+        ),
+        child: Center(
+          child: Text(
+            "Login with OTP",
+            style: TextStyle(
+              color: AppColor.pink_color,
+              fontSize: Get.width * 0.040,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
     );
   }
 

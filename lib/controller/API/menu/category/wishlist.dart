@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 
 import 'package:kohira/view/utils/app_url.dart';
 
@@ -81,6 +82,10 @@ class FetchWishtlist extends GetxController {
   var data = {}.obs;
 
   Future fechwishlist() async {
+    if (!islogin || tokans.isEmpty) {
+      isLoading.value = false;
+      return;
+    }
     try {
       isLoading.value = true;
       final url = AppUrl.wishlist;

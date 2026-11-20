@@ -75,7 +75,9 @@ class _SubcategorysState extends State<Subcategorys> {
       ),
       tag: widget.subcategory_slug ?? widget.subcategrorys ?? widget.metal_type ?? widget.collection_id,
     );
-    loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
   }
 
   void loadData() {
@@ -609,23 +611,33 @@ class _SubcategorysState extends State<Subcategorys> {
     );
   }
 
+  num _parsePrice(dynamic val) {
+    if (val == null) return 0;
+    if (val is num) return val;
+    return double.tryParse(val.toString()) ?? 0;
+  }
+
   Widget _buildProductItem(dynamic item, NumberFormat indianFormat) {
     final discount =
         double.tryParse(item['discount']?.toString() ?? '0') ?? 0.0;
-    final price = discount > 0 ? item['offer_price'] : item['setting_price'];
+    final rawPrice = discount > 0 ? item['offer_price'] : item['setting_price'];
+    final price = _parsePrice(rawPrice);
+    final originalPrice = _parsePrice(item['setting_price']);
     final couponType =
         item['coupon_type']?.toString().capitalizeFirst ?? 'Labour';
-    final itemId = item['id'].toString();
+    final itemId = item['id']?.toString() ?? '';
+    final defaultImage = item['default_image']?.toString() ?? '';
 
     return GestureDetector(
       onTap: () {
         print('Id :- ${item['id']}');
         print('Slug :- ${item['slug']}');
-        AppRoutes.toShowProduct(
-          slug: item['slug'],
-          categoryslug: item.toString(),
-        );
-        print('Title :- ${item.toString()}');
+        if (item['slug'] != null) {
+          AppRoutes.toShowProduct(
+            slug: item['slug'].toString(),
+            categoryslug: item.toString(),
+          );
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -660,17 +672,23 @@ class _SubcategorysState extends State<Subcategorys> {
             children: [
               AspectRatio(
                 aspectRatio: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: ResizeImage(
-                        NetworkImage(item['default_image']),
-                        width: 400,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: defaultImage.isNotEmpty
+                      ? Image.network(
+                          defaultImage,
+                          fit: BoxFit.cover,
+                          cacheWidth: 400,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            color: Colors.grey.shade100,
+                            child: Icon(Icons.image_not_supported, color: Colors.grey),
+                          ),
+                        )
+                      : Container(
+                          color: Colors.grey.shade100,
+                          child: Icon(Icons.image_not_supported, color: Colors.grey),
+                        ),
                 ),
               ),
               Positioned(
@@ -729,10 +747,10 @@ class _SubcategorysState extends State<Subcategorys> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              if (discount > 0 && item['setting_price'] != null) ...[
+              if (discount > 0 && originalPrice > 0) ...[
                 SizedBox(width: 4),
                 Text(
-                  indianFormat.format(item['setting_price']),
+                  indianFormat.format(originalPrice),
                   style: TextStyle(
                     fontSize: Get.height / 80,
                     fontFamily: 'Lora',

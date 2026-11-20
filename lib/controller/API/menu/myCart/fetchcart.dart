@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 
 
 import '../../../../view/utils/app_url.dart';
@@ -15,6 +16,10 @@ class FetchcartCalling extends GetxController {
 
   Future fetchcartcall(
       {String? flag, String? qty, String? cart, String? type}) async {
+    if (!islogin || tokans.isEmpty) {
+      isLoading.value = false;
+      return;
+    }
     try {
       isLoading.value = true;
 

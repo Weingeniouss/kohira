@@ -6,6 +6,7 @@ import 'package:kohira/controller/user_inerface/menu/myCart/myCart.dart';
 import 'package:kohira/view/screen/menu/account/account.dart';
 import 'package:kohira/view/screen/menu/home/home.dart';
 import 'package:kohira/view/screen/menu/myCart/myCart.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 import '../../../view/screen/menu/category/Category.dart';
 import '../../../view/screen/menu/over Store/overStore.dart';
 
@@ -32,7 +33,11 @@ class Bottamnavigation extends GetxController {
     myCart.loadCartData();
   }
   void indexFour() => selectindex.value = 3;
-  void indexFive() => selectindex.value = 4;
+  void indexFive() {
+    if (islogin && tokans.isNotEmpty) {
+      selectindex.value = 4;
+    }
+  }
 
   // Switch Screen
   Widget selectscreen(int index) {

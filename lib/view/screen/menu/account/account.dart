@@ -10,7 +10,9 @@ import 'package:kohira/view/screen/menu/account/addresses/addresses.dart';
 import 'package:kohira/view/screen/menu/account/order%20history/orderhistory.dart';
 import 'package:kohira/view/screen/menu/myCart/wishList/wishlist.dart';
 import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
+import 'package:kohira/view/screen/credentials/otp.dart';
 import 'package:kohira/view/utils/app_color.dart';
+import 'package:kohira/view/utils/app_constants.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -54,6 +56,49 @@ class Account extends StatelessWidget {
           height: Get.height,
           color: AppColor.white_color,
           child: Obx(() {
+            if (!islogin) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.lock_outline, size: 70, color: AppColor.pink_color),
+                      SizedBox(height: 16),
+                      Text(
+                        "Account Disabled",
+                        style: TextStyle(
+                          fontSize: Get.width * 0.05,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.pink_color,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Please login via OTP to view your account, orders, and profile.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: Get.width * 0.035,
+                          color: AppColor.desbaleiconColor,
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () => Get.to(() => Otp()),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.pink_color,
+                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                        ),
+                        child: Text(
+                          "Login with OTP",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
             if (accountPage.profileDetails.isLoading.value) {
               return _buildShimmerLoading();
             }
