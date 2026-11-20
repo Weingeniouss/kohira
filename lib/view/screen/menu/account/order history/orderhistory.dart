@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kohira/controller/user_inerface/menu/account/orderhistory.dart';
 import 'package:kohira/view/screen/credentials/login.dart';
 import 'package:kohira/view/screen/menu/account/order%20history/orderdetails.dart';
@@ -29,6 +30,57 @@ List extractOrdersList(dynamic rawData) {
   return [];
 }
 
+String _orderField(dynamic item, List<String> keys, {String fallback = ''}) {
+  if (item is! Map) return fallback;
+  for (final key in keys) {
+    final value = item[key];
+    if (value != null && value.toString().trim().isNotEmpty) {
+      return value.toString().trim();
+    }
+  }
+  return fallback;
+}
+
+String _shipToAddress(dynamic item) {
+  if (item is! Map) return '-';
+
+  final direct = _orderField(item, [
+    'ship_to',
+    'shipping_address',
+    'shippingAddress',
+    'address',
+    'full_address',
+  ]);
+  if (direct.isNotEmpty) return direct;
+
+  final users = item['users'] ?? item['user'] ?? item['shipping'];
+  if (users is Map) {
+    final parts = <String>[
+      users['address']?.toString() ?? '',
+      users['address2']?.toString() ?? '',
+      users['city']?.toString() ?? '',
+      users['state']?.toString() ?? '',
+      users['zipcode']?.toString() ?? users['zip']?.toString() ?? '',
+    ].where((e) => e.trim().isNotEmpty).toList();
+    if (parts.isNotEmpty) return parts.join(', ');
+  }
+
+  return '-';
+}
+
+String _formatOrderTotal(dynamic item) {
+  final raw =
+      _orderField(item, ['totalamount', 'amount', 'total', 'order_total']);
+  if (raw.isEmpty) return '₹ 0';
+  final value = double.tryParse(raw.replaceAll(',', '')) ?? 0;
+  final formatted = NumberFormat.currency(
+    locale: 'en_IN',
+    symbol: '₹ ',
+    decimalDigits: value % 1 == 0 ? 0 : 2,
+  ).format(value);
+  return formatted;
+}
+
 class Orderhistory extends StatelessWidget {
   final order = Get.put(OrderhistoryControll());
 
@@ -39,7 +91,7 @@ class Orderhistory extends StatelessWidget {
     return Scaffold(
       appBar: Appbar(
         lefticon: AppIcon.left,
-        hedingname_2: AppString.orderhistroy,
+        hedingname_2: AppString.Order,
         suffixicon_1: AppIcon.like,
         suffixicon_2: AppIcon.shop,
       ),
@@ -125,66 +177,185 @@ class Orderhistory extends StatelessWidget {
   Widget _buildOrderList(List oderList) {
     return horizontalpadding(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: Get.height / 50),
-
-          // Header Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(AppString.orderid),
-              Text(AppString.orderDate),
-              Text(AppString.orderTotal),
-              Text(AppString.orderstatas),
-            ],
+          SizedBox(height: Get.height * 0.02),
+          Text(
+            'My Orders',
+            style: TextStyle(
+              fontSize: Get.width * 0.048,
+              fontWeight: FontWeight.w700,
+              color: AppColor.black_color,
+            ),
           ),
-
-          SizedBox(height: Get.height / 60),
-
-          // Order List
+          SizedBox(height: Get.height * 0.018),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: oderList.length,
+              physics: const ClampingScrollPhysics(),
+              separatorBuilder: (_, __) => SizedBox(height: Get.height * 0.018),
               itemBuilder: (BuildContext context, int index) {
                 final item = oderList[index] ?? {};
-                return _buildOrderItem(item);
+                return _buildOrderCard(item);
               },
             ),
           ),
+          SizedBox(height: Get.height * 0.015),
         ],
       ),
     );
   }
 
-  Widget _buildOrderItem(dynamic item) {
-    return Column(
-      children: [
-        GestureDetector(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+  Widget _buildOrderCard(dynamic item) {
+    final orderId = _orderField(item, ['order_no', 'order_id', 'id']);
+    final date = _orderField(item, ['order_date', 'date', 'created_at']);
+    final shipTo = _shipToAddress(item);
+    final total = _formatOrderTotal(item);
+    final status = _orderField(
+        item, ['status', 'order_status', 'current_status'],
+        fallback: 'Pending');
+    final idForDetails = _orderField(item, ['id', 'order_id', 'order_no']);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColor.white_color,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColor.borderGrey),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: Get.width * 0.035,
+              vertical: Get.height * 0.014,
+            ),
+            color: AppColor.Appbercolor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(item['order_no']?.toString() ??
-                    item['id']?.toString() ??
-                    ''),
-                Text(item['order_date']?.toString() ??
-                    item['date']?.toString() ??
-                    ''),
-                Text(item['totalamount']?.toString() ??
-                    item['amount']?.toString() ??
-                    ''),
                 Text(
-                  item['status']?.toString() ?? '',
-                  style: TextStyle(color: AppColor.glodcolor),
+                  'ORDER DETAILS',
+                  style: TextStyle(
+                    fontSize: Get.width * 0.034,
+                    fontWeight: FontWeight.w700,
+                    color: AppColor.black_color,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (idForDetails.isEmpty) return;
+                    Get.to(() => Orderdetails(id: idForDetails));
+                  },
+                  child: Text(
+                    'View',
+                    style: TextStyle(
+                      fontSize: Get.width * 0.034,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.black_color,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          onTap: () => Get.to(() => Orderdetails(id: item['id'].toString())),
+          _detailRow('Order Id', orderId, isFirst: true),
+          _detailRow('Date', date),
+          _detailRow('Ship To', shipTo),
+          _detailRow('Order Total', total),
+          _detailRow('Status', status, isStatus: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRow(
+    String label,
+    String value, {
+    bool isStatus = false,
+    bool isFirst = false,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: isFirst
+              ? BorderSide.none
+              : BorderSide(color: AppColor.lightDivider),
         ),
-        Divider(color: AppColor.dividercolor),
-      ],
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: Get.width * 0.28,
+              padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.03,
+                vertical: Get.height * 0.016,
+              ),
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(color: AppColor.lightDivider),
+                ),
+              ),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: Get.width * 0.033,
+                  fontWeight: FontWeight.w700,
+                  color: AppColor.black_color,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.03,
+                  vertical: Get.height * 0.014,
+                ),
+                alignment: Alignment.centerLeft,
+                child: isStatus
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Get.width * 0.035,
+                            vertical: Get.height * 0.006,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: AppColor.pink_color,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              fontSize: Get.width * 0.032,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.pink_color,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Text(
+                        value,
+                        style: TextStyle(
+                          fontSize: Get.width * 0.033,
+                          fontWeight: FontWeight.w400,
+                          color: AppColor.black_color,
+                          height: 1.35,
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

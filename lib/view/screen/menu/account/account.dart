@@ -13,6 +13,7 @@ import 'package:kohira/view/screen/menu/home/menuwidget/drawer.dart';
 import 'package:kohira/view/screen/credentials/otp.dart';
 import 'package:kohira/view/utils/app_color.dart';
 import 'package:kohira/view/utils/app_constants.dart';
+import 'package:kohira/view/utils/whatsapp_helper.dart';
 import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -370,12 +371,22 @@ class Account extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildContactOption(AppIcon.callOutlined, AppString.call, () {}),
+            _buildContactOption(AppIcon.callOutlined, AppString.call, () {
+              WhatsAppHelper.makePhoneCall();
+            }),
             Container(width: 1, height: 60, color: AppColor.shadowBlack12),
-            _buildContactOption(AppIcon.mailOutline, AppString.mail, () {}),
+            _buildContactOption(AppIcon.mailOutline, AppString.mail, () {
+              WhatsAppHelper.sendEmail();
+            }),
             Container(width: 1, height: 60, color: AppColor.shadowBlack12),
-            _buildContactOption(null, AppString.whatsappLabel, () {},
-                isWhatsApp: true),
+            _buildContactOption(
+              null,
+              AppString.whatsappLabel,
+              () {
+                WhatsAppHelper.launchWhatsApp();
+              },
+              isWhatsApp: true,
+            ),
           ],
         ),
       ),
@@ -399,7 +410,6 @@ class Account extends StatelessWidget {
                     AppIcon.whatsapp,
                     width: 24,
                     height: 24,
-                    color: AppColor.black_color,
                   )
                 : Icon(
                     icon,

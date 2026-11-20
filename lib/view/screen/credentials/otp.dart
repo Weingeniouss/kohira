@@ -11,6 +11,7 @@ import 'package:kohira/view/utils/widget/inputField.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:kohira/view/utils/widget/bottomNavigation/bottomNavigation.dart';
+import 'package:kohira/view/utils/whatsapp_helper.dart';
 import '../../utils/app_logo.dart';
 import '../../utils/app_string.dart';
 
@@ -139,7 +140,10 @@ Widget textfield({required OtpUiController controller}) {
         SizedBox(height: Get.height * 0.005),
         Row(
           children: [
-            Image.asset(AppIcon.whatsapp, width: Get.width * 0.07),
+            GestureDetector(
+              onTap: () => WhatsAppHelper.launchWhatsApp(message: "Hello Kohira, I need help with OTP login."),
+              child: Image.asset(AppIcon.whatsapp, width: Get.width * 0.07),
+            ),
             SizedBox(width: Get.width * 0.02),
             Image.asset(AppIcon.india, width: Get.width * 0.07),
             SizedBox(width: Get.width * 0.02),

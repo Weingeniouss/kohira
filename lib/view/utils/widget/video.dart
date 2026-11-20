@@ -20,16 +20,18 @@ class VideoPlayerMenu extends StatefulWidget {
 
 class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
   late VideoPlayerController _controller;
+  bool _isReady = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
-        _controller.setVolume(0.0); // Mute video
+        if (!mounted) return;
+        _controller.setVolume(0.0);
         _controller.setLooping(true);
         _controller.play();
-        setState(() {});
+        setState(() => _isReady = true);
       });
   }
 
@@ -41,25 +43,17 @@ class _VideoPlayerMenuState extends State<VideoPlayerMenu> {
 
   @override
   Widget build(BuildContext context) {
-    //Loading
+    if (!_isReady) {
+      return const ColoredBox(color: Colors.black12);
+    }
 
-    // if (!_isReady) {
-    //   return Center(child: Lottie.asset(AppJson.loading2));
-    // }
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _controller.value.size.width,
-            height: _controller.value.size.height,
-            child: VideoPlayer(_controller),
-          ),
-        ),
-        Container(color: Colors.black.withOpacity(0.0)),
-      ],
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: SizedBox(
+        width: _controller.value.size.width,
+        height: _controller.value.size.height,
+        child: VideoPlayer(_controller),
+      ),
     );
   }
 }

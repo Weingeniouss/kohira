@@ -31,13 +31,15 @@ Homedashbord getHomedashbord() => Get.isRegistered<Homedashbord>()
     ? Get.find<Homedashbord>()
     : Get.put(Homedashbord());
 
-OfferBannerCalling getOfferBannerCalling() => Get.isRegistered<OfferBannerCalling>()
-    ? Get.find<OfferBannerCalling>()
-    : Get.put(OfferBannerCalling());
+OfferBannerCalling getOfferBannerCalling() =>
+    Get.isRegistered<OfferBannerCalling>()
+        ? Get.find<OfferBannerCalling>()
+        : Get.put(OfferBannerCalling());
 
-StoreLocationsController getStoreLocationsController() => Get.isRegistered<StoreLocationsController>()
-    ? Get.find<StoreLocationsController>()
-    : Get.put(StoreLocationsController());
+StoreLocationsController getStoreLocationsController() =>
+    Get.isRegistered<StoreLocationsController>()
+        ? Get.find<StoreLocationsController>()
+        : Get.put(StoreLocationsController());
 
 NewsListCalling getNewsListCalling() => Get.isRegistered<NewsListCalling>()
     ? Get.find<NewsListCalling>()
@@ -55,27 +57,28 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     homePage;
-    final List<Widget> homeSections = [
-      sarchfild(),
-      mainSlider(),
-      horizontalpadding(child: productList()),
-      plan(),
-      Silder(),
-      instagramVideo(),
-      benner(),
-      gifts(),
-      jewelrySection2(),
-      jewelrySection1(),
-      horizontalpadding(child: storeSliderBanner()),
-      // horizontalpadding(child: timelessEditorialSection()),
-      // horizontalpadding(child: newsStorySection()),
-      // horizontalpadding(child: educationSection()),
-      offerBannerList(),
-      horizontalpadding(child: customerReviews()),
-      lovedCollection(),
-      promise(),
-      storeLocationsSection(),
-      horizontalpadding(child: newsListSection()),
+    // Build sections lazily so off-screen widgets are not created up front.
+    final List<Widget Function()> homeSections = [
+      () => sarchfild(),
+      () => mainSlider(),
+      () => horizontalpadding(child: productList()),
+      () => plan(),
+      () => Silder(),
+      () => instagramVideo(),
+      () => benner(),
+      () => gifts(),
+      () => jewelrySection2(),
+      () => jewelrySection1(),
+      () => horizontalpadding(child: storeSliderBanner()),
+      // () => horizontalpadding(child: timelessEditorialSection()),
+      // () => horizontalpadding(child: newsStorySection()),
+      // () => horizontalpadding(child: educationSection()),
+      () => offerBannerList(),
+      () => horizontalpadding(child: customerReviews()),
+      () => lovedCollection(),
+      () => promise(),
+      () => storeLocationsSection(),
+      () => horizontalpadding(child: newsListSection()),
     ];
 
     return Scaffold(
@@ -88,10 +91,14 @@ class Home extends StatelessWidget {
         decoration: BoxDecoration(color: AppColor.white_color),
         child: ListView.builder(
           itemCount: homeSections.length,
-          addAutomaticKeepAlives: true,
+          addAutomaticKeepAlives: false,
           addRepaintBoundaries: true,
+          cacheExtent: 350,
+          physics: const ClampingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           itemBuilder: (context, index) {
-            return RepaintBoundary(child: homeSections[index]);
+            return RepaintBoundary(child: homeSections[index]());
           },
         ),
       ),
@@ -189,6 +196,10 @@ Widget mainSlider() {
             autoPlay: true,
             viewportFraction: 1,
             height: Get.height * 0.35,
+            pauseAutoPlayOnTouch: true,
+            autoPlayInterval: const Duration(seconds: 4),
+            autoPlayAnimationDuration: const Duration(milliseconds: 450),
+            autoPlayCurve: Curves.easeOut,
           ),
         ),
       ],
@@ -262,6 +273,10 @@ Widget Silder() {
             autoPlay: true,
             viewportFraction: 1,
             height: Get.height * 0.35,
+            pauseAutoPlayOnTouch: true,
+            autoPlayInterval: const Duration(seconds: 4),
+            autoPlayAnimationDuration: const Duration(milliseconds: 450),
+            autoPlayCurve: Curves.easeOut,
           ),
         ),
       ],
@@ -326,6 +341,10 @@ Widget offerBannerList() {
             autoPlay: true,
             viewportFraction: 1,
             height: Get.height * 0.22,
+            pauseAutoPlayOnTouch: true,
+            autoPlayInterval: const Duration(seconds: 4),
+            autoPlayAnimationDuration: const Duration(milliseconds: 450),
+            autoPlayCurve: Curves.easeOut,
           ),
         ),
       ],
@@ -414,6 +433,9 @@ Widget jewelrySection1() {
               itemCount: items.length,
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
+              physics: const ClampingScrollPhysics(),
+              addAutomaticKeepAlives: false,
+              cacheExtent: 200,
               itemBuilder: (context, index) {
                 final item = items[index];
                 final imgUrl =
@@ -441,7 +463,6 @@ Widget jewelrySection1() {
                       border: Border.all(
                         color: AppColor.pink_color.withOpacity(0.3),
                       ),
-                      boxShadow: kElevationToShadow[2],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,6 +472,8 @@ Widget jewelrySection1() {
                             child: Image.network(
                               imgUrl,
                               fit: BoxFit.contain,
+                              cacheWidth: 320,
+                              filterQuality: FilterQuality.low,
                               errorBuilder: (context, error, stackTrace) =>
                                   const Icon(AppIcon.imageNotSupported),
                             ),
@@ -584,6 +607,9 @@ Widget jewelrySection2() {
               itemCount: items.length,
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
+              physics: const ClampingScrollPhysics(),
+              addAutomaticKeepAlives: false,
+              cacheExtent: 200,
               itemBuilder: (context, index) {
                 final item = items[index];
                 final imgUrl =
@@ -611,7 +637,6 @@ Widget jewelrySection2() {
                       border: Border.all(
                         color: AppColor.pink_color.withOpacity(0.3),
                       ),
-                      boxShadow: kElevationToShadow[2],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -621,6 +646,8 @@ Widget jewelrySection2() {
                             child: Image.network(
                               imgUrl,
                               fit: BoxFit.contain,
+                              cacheWidth: 320,
+                              filterQuality: FilterQuality.low,
                               errorBuilder: (context, error, stackTrace) =>
                                   const Icon(AppIcon.imageNotSupported),
                             ),
@@ -725,6 +752,8 @@ Widget productList() {
                   child: Image.network(
                     bannerImg,
                     fit: BoxFit.cover,
+                    cacheWidth: 800,
+                    filterQuality: FilterQuality.medium,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: AppColor.pink_color.withOpacity(0.2),
                     ),
@@ -740,6 +769,9 @@ Widget productList() {
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   itemCount: items.length,
+                  physics: const ClampingScrollPhysics(),
+                  addAutomaticKeepAlives: false,
+                  cacheExtent: 200,
                   itemBuilder: (context, index) {
                     final product = items[index];
                     final String imgUrl =
@@ -770,13 +802,6 @@ Widget productList() {
                                 color: AppColor.pink_color,
                                 width: 1.5,
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 6,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.5),
@@ -785,6 +810,8 @@ Widget productList() {
                                 child: Image.network(
                                   imgUrl,
                                   fit: BoxFit.contain,
+                                  cacheWidth: 280,
+                                  filterQuality: FilterQuality.low,
                                   errorBuilder: (context, error, stackTrace) =>
                                       Icon(AppIcon.imageNotSupported,
                                           color: AppColor.grey_color),
@@ -1012,14 +1039,42 @@ Widget instagramVideo() {
             itemCount: rawReels.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
               final product = rawReels[index];
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: VideoPlayerMenu(videoUrl: product['image'] ?? ''),
+              final String imageUrl = product['image'] ?? '';
+              final String imageType =
+                  (product['image_type'] ?? '').toString().toLowerCase();
+              final String link = product['buttonlink'] ?? '';
+
+              final bool isVideo = imageType == 'video' ||
+                  imageUrl.toLowerCase().endsWith('.mp4') ||
+                  imageUrl.toLowerCase().contains('.mp4');
+
+              return GestureDetector(
+                onTap: () async {
+                  if (link.isNotEmpty) {
+                    final uri = Uri.parse(link);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                    }
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: isVideo
+                        ? VideoPlayerMenu(videoUrl: imageUrl)
+                        : Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            cacheWidth: 400,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.image_not_supported),
+                          ),
+                  ),
                 ),
               );
             },
@@ -1028,9 +1083,10 @@ Widget instagramVideo() {
               autoPlay: true,
               viewportFraction: 0.45,
               enableInfiniteScroll: true,
-              autoPlayInterval: Duration(seconds: 3),
-              autoPlayAnimationDuration: Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
+              pauseAutoPlayOnTouch: true,
+              autoPlayInterval: const Duration(seconds: 5),
+              autoPlayAnimationDuration: const Duration(milliseconds: 450),
+              autoPlayCurve: Curves.easeOut,
               enlargeCenterPage: false,
             ),
           ),
@@ -1056,14 +1112,40 @@ Widget instagramVideo() {
           itemCount: reelList.length,
           itemBuilder: (BuildContext context, int index, int realIndex) {
             final product = reelList[index];
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: VideoPlayerMenu(videoUrl: product.image ?? ''),
+            final String imageUrl = product.image ?? '';
+            final String imageType = (product.imageType ?? '').toLowerCase();
+            final String link = product.buttonlink ?? '';
+
+            final bool isVideo = imageType == 'video' ||
+                imageUrl.toLowerCase().endsWith('.mp4') ||
+                imageUrl.toLowerCase().contains('.mp4');
+
+            return GestureDetector(
+              onTap: () async {
+                if (link.isNotEmpty) {
+                  final uri = Uri.parse(link);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: isVideo
+                      ? VideoPlayerMenu(videoUrl: imageUrl)
+                      : Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          cacheWidth: 400,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.image_not_supported),
+                        ),
+                ),
               ),
             );
           },
@@ -1072,9 +1154,10 @@ Widget instagramVideo() {
             autoPlay: true,
             viewportFraction: 0.45,
             enableInfiniteScroll: true,
-            autoPlayInterval: Duration(seconds: 3),
-            autoPlayAnimationDuration: Duration(milliseconds: 800),
-            autoPlayCurve: Curves.fastOutSlowIn,
+            pauseAutoPlayOnTouch: true,
+            autoPlayInterval: const Duration(seconds: 5),
+            autoPlayAnimationDuration: const Duration(milliseconds: 450),
+            autoPlayCurve: Curves.easeOut,
             enlargeCenterPage: false,
           ),
         ),
@@ -1214,9 +1297,11 @@ Widget storeSliderBanner() {
             height: Get.height * 0.40,
             child: ListView.builder(
               itemCount: rawEditorial.length,
-              shrinkWrap: true,
               padding: EdgeInsets.zero,
               scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              addAutomaticKeepAlives: false,
+              cacheExtent: 200,
               itemBuilder: (BuildContext context, int index) {
                 final product = rawEditorial[index];
                 return Container(
@@ -1225,7 +1310,8 @@ Widget storeSliderBanner() {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
-                      image: ResizeImage(NetworkImage(product['image']), width: 500),
+                      image: ResizeImage(NetworkImage(product['image']),
+                          width: 500),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -1255,9 +1341,11 @@ Widget storeSliderBanner() {
           height: Get.height * 0.40,
           child: ListView.builder(
             itemCount: productList.length,
-            shrinkWrap: true,
             padding: EdgeInsets.zero,
             scrollDirection: Axis.horizontal,
+            physics: const ClampingScrollPhysics(),
+            addAutomaticKeepAlives: false,
+            cacheExtent: 200,
             itemBuilder: (BuildContext context, int index) {
               final product = productList[index];
               return Container(
@@ -1266,7 +1354,8 @@ Widget storeSliderBanner() {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: ResizeImage(NetworkImage(product.image ?? ''), width: 500),
+                    image: ResizeImage(NetworkImage(product.image ?? ''),
+                        width: 500),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -1561,9 +1650,11 @@ Widget lovedCollection() {
           height: Get.height * 0.38,
           child: ListView.builder(
             itemCount: items.length,
-            shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 12),
             scrollDirection: Axis.horizontal,
+            physics: const ClampingScrollPhysics(),
+            addAutomaticKeepAlives: false,
+            cacheExtent: 200,
             itemBuilder: (BuildContext context, int index) {
               final product = items[index];
               final String imageUrl = product is HomeCategoryItem
@@ -1585,16 +1676,12 @@ Widget lovedCollection() {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
-                            image: NetworkImage(imageUrl),
+                            image: ResizeImage(
+                              NetworkImage(imageUrl),
+                              width: 600,
+                            ),
                             fit: BoxFit.cover,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
                         ),
                       ),
                     ),
@@ -1790,9 +1877,10 @@ Widget customerReviews() {
             autoPlay: true,
             viewportFraction: 0.82,
             enableInfiniteScroll: true,
-            autoPlayInterval: Duration(seconds: 4),
-            autoPlayAnimationDuration: Duration(milliseconds: 800),
-            autoPlayCurve: Curves.fastOutSlowIn,
+            pauseAutoPlayOnTouch: true,
+            autoPlayInterval: const Duration(seconds: 5),
+            autoPlayAnimationDuration: const Duration(milliseconds: 450),
+            autoPlayCurve: Curves.easeOut,
             enlargeCenterPage: true,
           ),
         ),
@@ -1885,9 +1973,11 @@ Widget storeLocationsSection() {
           height: Get.height * 0.22,
           child: ListView.builder(
             itemCount: allStores.length,
-            shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 8),
             scrollDirection: Axis.horizontal,
+            physics: const ClampingScrollPhysics(),
+            addAutomaticKeepAlives: false,
+            cacheExtent: 200,
             itemBuilder: (BuildContext context, int index) {
               final item = allStores[index];
               final store = item['store'] as StoreItem;

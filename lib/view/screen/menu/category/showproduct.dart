@@ -20,7 +20,7 @@ import 'package:kohira/view/utils/widget/horizontalpading.dart';
 import 'package:kohira/view/utils/widget/video.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:kohira/view/utils/whatsapp_helper.dart';
 import '../../../../controller/API/menu/category/addtocart.dart';
 import '../../../../controller/API/menu/category/subcategrory/filtercategory.dart';
 import '../../../../controller/API/menu/category/wishlist.dart';
@@ -49,35 +49,45 @@ class Showproduct extends StatelessWidget {
       Get.isRegistered<ShowproductController>()
           ? Get.find<ShowproductController>()
           : Get.put(ShowproductController());
+
   Bottamnavigation get bottamSelect => Get.isRegistered<Bottamnavigation>()
       ? Get.find<Bottamnavigation>()
       : Get.put(Bottamnavigation());
-  JewellerydetailCall get jewellerydetail => Get.isRegistered<JewellerydetailCall>()
-      ? Get.find<JewellerydetailCall>()
-      : Get.put(JewellerydetailCall());
+
+  JewellerydetailCall get jewellerydetail =>
+      Get.isRegistered<JewellerydetailCall>()
+          ? Get.find<JewellerydetailCall>()
+          : Get.put(JewellerydetailCall());
+
   Recommendedjewellerylist get recommendedjewellerylist =>
       Get.isRegistered<Recommendedjewellerylist>()
           ? Get.find<Recommendedjewellerylist>()
           : Get.put(Recommendedjewellerylist());
-  Wishlist get wishlist => Get.isRegistered<Wishlist>()
-      ? Get.find<Wishlist>()
-      : Get.put(Wishlist());
+
+  Wishlist get wishlist =>
+      Get.isRegistered<Wishlist>() ? Get.find<Wishlist>() : Get.put(Wishlist());
+
   CountController get count => Get.isRegistered<CountController>()
       ? Get.find<CountController>()
       : Get.put(CountController());
+
   MyCartValueChange get myCart => Get.isRegistered<MyCartValueChange>()
       ? Get.find<MyCartValueChange>()
       : Get.put(MyCartValueChange());
+
   WishlistController get wish => Get.isRegistered<WishlistController>()
       ? Get.find<WishlistController>()
       : Get.put(WishlistController());
+
   JewelleryFilterCategory get category =>
       Get.isRegistered<JewelleryFilterCategory>()
           ? Get.find<JewelleryFilterCategory>()
           : Get.put(JewelleryFilterCategory());
+
   CartControllor get userguest => Get.isRegistered<CartControllor>()
       ? Get.find<CartControllor>()
       : Get.put(CartControllor());
+
   WishcartControllet get wishguest => Get.isRegistered<WishcartControllet>()
       ? Get.find<WishcartControllet>()
       : Get.put(WishcartControllet());
@@ -104,12 +114,9 @@ class Showproduct extends StatelessWidget {
   }
 
   void _launchWhatsapp(String title, String sku) async {
-    final message =
-        Uri.encodeComponent("Hello! I am interested in $title (SKU: $sku).");
-    final whatsappUrl = Uri.parse("https://wa.me/917851005200?text=$message");
-    if (await canLaunchUrl(whatsappUrl)) {
-      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
-    }
+    WhatsAppHelper.launchWhatsApp(
+      message: "Hello! I am interested in $title (SKU: $sku).",
+    );
   }
 
   @override
@@ -2196,8 +2203,11 @@ class Showproduct extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              icon: Icon(AppIcon.chatBubbleOutline,
-                  size: 18, color: Colors.white),
+              icon: Image.asset(
+                AppIcon.whatsapp,
+                width: 20,
+                height: 20,
+              ),
               label: Text(
                 AppString.whatsapp,
                 style: TextStyle(
